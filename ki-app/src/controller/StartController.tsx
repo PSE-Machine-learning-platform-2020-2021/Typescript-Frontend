@@ -1,5 +1,7 @@
 import { PageController } from "./PageController";
+import { SensorManager } from "./SensorManager";
 class StartController implements PageController{
+    sensorManager: SensorManager
     getSensors() {
         return Sensor[]
     }

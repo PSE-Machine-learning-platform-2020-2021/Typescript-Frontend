@@ -1,23 +1,23 @@
 import { MainControllerInterface } from "./MainControllerInterface";
 class MainController implements MainControllerInterface{
-    getInstance() {
+    static getInstance() {
         return self
     }
 
-    checkConnection() {
+    static checkConnection() {
         return false
     }
 
-    checkLoginStatus() {
+    static checkLoginStatus() {
         return false
     }
-    getSession() {
+    static getSession() {
         return false
     }
-    changeTo(destinationPage: view.Page){
+    static changeTo(destinationPage: view.Page){
         
     }
-    getFacade() {
+    static getFacade() {
         return facade
     }
 }
