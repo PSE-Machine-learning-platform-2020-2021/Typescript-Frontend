@@ -1,24 +1,48 @@
-import logo from './logo.svg';
+import React from 'react'
+import {Link,Route} from 'react-router-dom'
 import './App.css';
-
+import ReferringPage from './pages/ReferringPage'
+import FinishPage from './pages/FinishPage'
+import DataCollectionPage from './pages/DataCollectionPage'
+import DeliveryPage from './pages/DeliveryPage'
+import ModelCreationPage from './pages/ModelCreationPage'
+import StartPage from './pages/StartPage'
+import VisualizationPage from './pages/VisualizationPage'
 function App() {
   return (
-    <div className="App">
-      <header className="App-header">
-        <img src={logo} className="App-logo" alt="logo" />
-        <p>
-          Edit <code>src/App.js</code> and save to reload.
-        </p>
-        <a
-          className="App-link"
-          href="https://reactjs.org"
-          target="_blank"
-          rel="noopener noreferrer"
-        >
-          Learn React
-        </a>
-      </header>
-    </div>
+    <div>
+				<div className="row">
+					<div className="col-xs-offset-2 col-xs-8">
+						<div className="page-header"><h2>React Router Demo</h2></div>
+					</div>
+				</div>
+				<div className="row">
+					<div className="col-xs-2 col-xs-offset-2">
+						<div className="list-group">
+							<Link className="list-group-item" to="/ReferringPage">ReferringPage</Link>
+							<Link className="list-group-item" to="/FinishPage">FinishPage</Link>
+							<Link className="list-group-item" to="/DataCollectionPage">DataCollectionPage</Link>
+							<Link className="list-group-item" to="/DeliveryPage">DeliveryPage</Link>
+							<Link className="list-group-item" to="/ModelCreationPage">ModelCreationPage</Link>
+							<Link className="list-group-item" to="/StartPage">StartPage</Link>
+							<Link className="list-group-item" to="/VisualizationPage">VisualizationPage</Link>
+						</div>
+					</div>
+					<div className="col-xs-6">
+						<div className="panel">
+							<div className="panel-body">
+								<Route path="/ReferringPage" component={ReferringPage}/>
+								<Route path="/FinishPage" component={FinishPage}/>
+								<Route path="/DataCollectionPage" component={DataCollectionPage}/>
+								<Route path="/DeliveryPage" component={DeliveryPage}/>
+								<Route path="/ModelCreationPage" component={ModelCreationPage}/>
+								<Route path="/StartPage" component={StartPage}/>
+								<Route path="/VisualizationPage" component={VisualizationPage}/>
+							</div>
+						</div>
+					</div>
+				</div>
+			</div>
   );
 }
 
