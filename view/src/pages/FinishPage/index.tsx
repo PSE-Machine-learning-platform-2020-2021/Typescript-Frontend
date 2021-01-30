@@ -1,10 +1,13 @@
 import React, { Component } from 'react'
+import Title from '../../components/FinishComponents/Title'
+import Description from '../../components/FinishComponents/Description'
 
 export default class FinishPage extends Component {
     render() {
         return (
             <div>
-                <h1>Here FinishPage</h1>
+                <Title/>
+                <Description/>
             </div>
         )
     }
