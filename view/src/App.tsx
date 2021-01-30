@@ -12,12 +12,9 @@ function App() {
   return (
     <div>
 				<div className="row">
-					<div className="col-xs-offset-2 col-xs-8">
 						<div className="page-header"><h2>React Router Demo</h2></div>
-					</div>
 				</div>
 				<div className="row">
-					<div className="col-xs-2 col-xs-offset-2">
 						<div className="list-group">
 							<Link className="list-group-item" to="/ReferringPage">ReferringPage</Link>
 							<Link className="list-group-item" to="/FinishPage">FinishPage</Link>
@@ -27,10 +24,7 @@ function App() {
 							<Link className="list-group-item" to="/StartPage">StartPage</Link>
 							<Link className="list-group-item" to="/VisualizationPage">VisualizationPage</Link>
 						</div>
-					</div>
-					<div className="col-xs-6">
-						<div className="panel">
-							<div className="panel-body">
+						<div className="checkPage">
 								<Route path="/ReferringPage" component={ReferringPage}/>
 								<Route path="/FinishPage" component={FinishPage}/>
 								<Route path="/DataCollectionPage" component={DataCollectionPage}/>
@@ -38,9 +32,7 @@ function App() {
 								<Route path="/ModelCreationPage" component={ModelCreationPage}/>
 								<Route path="/StartPage" component={StartPage}/>
 								<Route path="/VisualizationPage" component={VisualizationPage}/>
-							</div>
 						</div>
-					</div>
 				</div>
 			</div>
   );
