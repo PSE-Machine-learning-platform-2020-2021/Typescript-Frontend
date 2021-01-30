@@ -1,5 +1,5 @@
 import { MainControllerInterface } from "./MainControllerInterface";
-class MainController implements MainControllerInterface{
+export class MainController {
     static getInstance() {
         return self
     }
