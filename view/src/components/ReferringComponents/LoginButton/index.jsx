@@ -7,24 +7,25 @@ export default class index extends Component {
           openNewWindow: false,
           username: '',
           password: '',
-          
-        }
+      }
     
       openNewWindow = () => {
         this.setState({openNewWindow: true})
       };
-     changeUsername(event) {
+     changeUsername(e) {
       this.setState(() => ({
-        username: event.target.value
+        username: e.target.value
       }))
       }
-      changePassword(event) {
+      changePassword(e) {
         this.setState(() => ({
-          password: event.target.value
+          password: e.target.value
         }))
         }
       submit = ()=> {
+        /** nach submit newFenster schliessen */
         this.setState({openNewWindow: false})
+        /** mit controller weiter veraendern*/
         if(this.state.username === '123' && this.state.password === 'abc') {
           alert('success')
         }
@@ -47,7 +48,7 @@ export default class index extends Component {
                         </label>
                         <label>
                             <p>Password</p>
-                            <input type="text" value={this.state.password} onChange={this.changePassword.bind(this)} />
+                            <input type="text" value={this.state.password} onChange={this.changePassword.bind(this)} type="password" />
                         </label>
                     <div>
                     <button type="submit" onClick={(e)=> this.submit(e)}>Submit</button>

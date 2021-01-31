@@ -12,7 +12,7 @@ function App() {
   return (
     <div>
 				<div className="row">
-						<div className="page-header"><h2>React Router Demo</h2></div>
+						<div className="page-header"><h2>Page Header</h2></div>
 				</div>
 				<div className="row">
 						<div className="list-group">
