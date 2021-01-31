@@ -6,7 +6,6 @@ export enum Extraction {
     MEAN,
     AUTOREGRESSIVE,
     IQR,
-    PEARSON_CORRELATION,
     SKEWNESS,
     KURTOSIS,
     FOURIER_TRANSFORM
