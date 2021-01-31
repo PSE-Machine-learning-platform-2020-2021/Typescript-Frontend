@@ -1,5 +1,5 @@
 import React, { Component } from 'react'
-import qr from "../../../images/exampleQRImage.png"
+import qr from '../../../images/exampleQRImage.png'
 
 export default class QRImage extends Component {
     render() {
