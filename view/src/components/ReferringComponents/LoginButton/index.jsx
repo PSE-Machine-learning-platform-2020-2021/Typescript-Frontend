@@ -1,4 +1,4 @@
-import React, { Component, useState } from 'react'
+import React, { Component } from 'react'
 import NewWindow from "react-new-window";
 
 export default class index extends Component {
