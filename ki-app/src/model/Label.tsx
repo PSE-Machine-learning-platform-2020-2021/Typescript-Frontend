@@ -1,0 +1,47 @@
+import { TimeSpan } from "./TimeSpan";
+
+//Diese Klasse ist fürs labeln zuständig, sie besitzt ein Zeitfenster und dazu einen Namen.
+class Label {
+  private name:string //Der Name des Labels.
+  private labelID:number //Die ID des Labels.
+  private timeSpan:TimeSpan //Das Zeitfenster des Labels mit Start- und Endzeit.
+
+  /*
+   * name: Ist der Name des Labels
+   * labelID: Ist die eindeutige Label ID des Labels
+   * start: Ist die Startzeit des Labels.
+   * end: Ist die Endzeit des Labels.
+   */
+  constructor(name:string, labelID:number, start:number, end:number) {
+    this.name = name;
+    this.labelID = labelID;
+    this.timeSpan = new TimeSpan(start, end);
+  }
+
+  public setLabel(start:number, end:number, name?:string) {
+    if (name != null) {
+      this.name = name;
+    }
+    this.timeSpan.setStart(start);
+    this.timeSpan.setEnd(end);
+  }
+
+  /*
+   * Gibt das Label als Objekt zurück.
+   * In diesem Objekt werden die Start- und Endzeit als "start" und "end", der Label Name als "name" sowie die Label ID als "id" übergeben.
+   */
+  public getLabel():{name:string, id:number, start:number, end:number} {
+    var label = {
+      name:this.name,
+      id:this.labelID,
+      start:this.timeSpan.getStart(),
+      end:this.timeSpan.getEnd()
+    }
+    return label;
+  }
+
+  //Gibt die LabelID zurück.
+  getID():number {
+    return this.labelID;
+  }
+} export {Label}
