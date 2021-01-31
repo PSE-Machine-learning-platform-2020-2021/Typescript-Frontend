@@ -3,15 +3,36 @@ import { StartController } from "./StartController";
 import {RefferingController} from "./ReferringController";
 export class MainController {
 
-    private static facade : view.Facade;
+    private facade : view.Facade;
 
-    private static currentPageController : PageController;
+    private static mainController : MainController
+
+    private currentPageController : PageController | undefined;
+
+   /**
+    * Konstruktor des MainControllers. Holt sich die Fassade.
+    */
+    MainController() {
+        this.facade = new DataView.Facade()
+    }
+
+    /**
+    * Gibt sich selber zurück und sorgt dafür das nur ein MainController besteht.
+    * @returns MainController
+    */
+    static getInstance() {
+        if (this.mainController == undefined) {
+            this.mainController = new MainController()
+            return (this.mainController)
+        }
+        return (this.mainController)
+    }
 
     /**
     * Prüft ob das Gerät auf das Internet zugreifen kann.
     * @returns Gibt true zurück falls eine Internetverbindung besteht, sonst wird false zurück gegeben.
     */
-    static checkConnection() {
+    checkConnection() {
         return (window.navigator.onLine);
     }
 
@@ -19,7 +40,7 @@ export class MainController {
     * Prüft ob der Benutzer angemeldet ist.
     * @returns Gibt true zurück falls der Benutzer angemeldet ist, sonst wird false zurück gegeben.
     */
-    static checkLoginStatus() {
+    checkLoginStatus() {
         return (this.facade.checkLogin());
     }
 
@@ -31,14 +52,14 @@ export class MainController {
     * Setzt den momentanen Seitenverwalter neu
     * @param destinationPageController Der neue Seitenverwalter
     */
-    static changeTo(destinationPageController: PageController){
+    changeTo(destinationPageController: PageController){
         this.currentPageController = destinationPageController;
     }
 
     /**
     * Andwendungstart für einen Desktop
     */
-    static startDesktop() {
+    startDesktop() {
         let refferingController: RefferingController  = new RefferingController()
         this.changeTo(refferingController)
     }
@@ -46,7 +67,7 @@ export class MainController {
     /**
     * Andwendungstart für ein Smartphone
     */
-    static startSmartphone() {
+    startSmartphone() {
         let startController: StartController  = new StartController()
         this.changeTo(startController)
     }
@@ -54,7 +75,7 @@ export class MainController {
     /**
     * @returns Gibt die Fassade zurück
     */
-    static getFacade() {
+    getFacade() {
         return this.facade;
     }
 }
