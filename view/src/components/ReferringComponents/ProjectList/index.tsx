@@ -6,7 +6,7 @@ export default class ProjectList extends Component {
             project: '',
             click : false
         }
-    handleChange (e) { 
+    handleChange =(e: React.ChangeEvent<HTMLSelectElement>)=> { 
         this.setState({
             project: e.target.value
         })
@@ -20,7 +20,7 @@ export default class ProjectList extends Component {
         return (
             <section>
                     <label>ProjectList</label>
-                    <select onChange={this.handleChange.bind(this)}>
+                    <select onChange={this.handleChange}>
                         <option value="choose project">choose project</option>
                         <option value="project1">project1</option>
                         <option value="project2">project2</option>

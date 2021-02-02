@@ -1,7 +1,7 @@
 import React, { Component } from 'react'
 import NewWindow from "react-new-window";
 
-export default class index extends Component {
+export default class LoginButton extends Component {
 
       state = {
           openNewWindow: false,
@@ -12,12 +12,12 @@ export default class index extends Component {
       openNewWindow = () => {
         this.setState({openNewWindow: true})
       };
-     changeUsername(e) {
+      changeUsername =(e: React.ChangeEvent<HTMLInputElement>) =>{
       this.setState(() => ({
         username: e.target.value
       }))
       }
-      changePassword(e) {
+      changePassword =(e: React.ChangeEvent<HTMLInputElement>) =>{
         this.setState(() => ({
           password: e.target.value
         }))
@@ -44,14 +44,14 @@ export default class index extends Component {
                     <form>
                         <label>
                             <p>Username</p>
-                            <input type="text" value={this.state.username} onChange={this.changeUsername.bind(this)} />
+                            <input type="text" value={this.state.username} onChange={this.changeUsername} />
                         </label>
                         <label>
                             <p>Password</p>
-                            <input type="text" value={this.state.password} onChange={this.changePassword.bind(this)} type="password" />
+                            <input type="password" value={this.state.password} onChange={this.changePassword.bind(this)}/>
                         </label>
                     <div>
-                    <button type="submit" onClick={(e)=> this.submit(e)}>Submit</button>
+                    <button type="submit" onClick={this.submit}>Submit</button>
                     </div>
                     </form>
           </div>

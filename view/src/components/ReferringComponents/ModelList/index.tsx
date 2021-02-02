@@ -4,7 +4,7 @@ export default class ModelList extends Component {
     state = {
             value: ''
         }
-    handleChange (e) { 
+    handleChange =(e: React.ChangeEvent<HTMLSelectElement>)=> { 
         this.setState({
             value: e.target.value
         })
@@ -21,7 +21,7 @@ export default class ModelList extends Component {
         return (
             <section>
                 <label>ModelList</label>
-                <select onChange={this.handleChange.bind(this)}>
+                <select onChange={this.handleChange}>
                         <option value="choose model">choose model</option>
                         <option value="model1">model1</option>
                         <option value="model2">model2</option>
