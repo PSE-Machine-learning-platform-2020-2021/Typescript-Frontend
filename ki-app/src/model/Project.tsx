@@ -1,6 +1,9 @@
 import { DataRow } from "./DataRow"
 import { Accelerometer, Sensor } from "./Sensor"
 
+/**
+ * 
+ */
 class Project {
     private id:number
     private name:string

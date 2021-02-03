@@ -1,24 +1,30 @@
 import { DataPoint } from "./DataPoint"
 import { Sensor } from "./Sensor";
 
-//Die Klasse DataRow beschreibt eine Reihe aufgenommener Daten eines Sensors.
+/**
+ * Die Klasse DataRow beschreibt eine Reihe aufgenommener Daten eines Sensors.
+ */
 class DataRow{
     private id:number //Dies ist die DataRow ID, diese ist eindeutig für Datensätze.
     private recordingStart:number //Dies ist der Aufnahmestartpunkt der Datenreihe.
     private datapoint:DataPoint[] = new Array //Dies ist Datenreihe, eine Reihe von Datenpunkten.
     private sensor:Sensor //Dies ist der Sensor von dem die Daten gelesen wurden.
 
-    //Eine DataRow kann mit dem Sensor, von dem die Daten gelesen werden, und der Datenreihen ID erzeugt werden.
+    /**
+     * Eine neue Datenreihe erstellen.
+     * @param sensor Sensor, von dem die Daten gelesen werden.
+     * @param dataRowID Eine eindeutige Datenreihen ID.
+     */
     constructor(sensor:Sensor, dataRowID:number);
 
-    /*
+    /**
      * Eine bereits existierende Datenreihe kann wie folgt in das Model geladen werden.
-     * sensor: der Sensor von dem die Daten gelesen wurden
-     * dataRowID: die ID, welche die Datenreihe bei der ersten Erstellung zugeteilt bekommen hat
-     * recordingStart: der Aufnahmezeitpunkt in Millisekunden
-     * dataRow: die aufgenommenen Daten
-     *   value: der Sensor Messwert
-     *   relativeTime: die relative Zeit zum Aufnahmestart
+     * @param sensor der Sensor von dem die Daten gelesen wurden
+     * @param dataRowID die ID, welche die Datenreihe bei der ersten Erstellung zugeteilt bekommen hat
+     * @param recordingStart der Aufnahmezeitpunkt in Millisekunden
+     * @param dataRow die aufgenommenen Daten
+     * @param dataRow.value der Sensor Messwert
+     * @param dataRow.relativeTime die relative Zeit zum Aufnahmestart
      */
     constructor(sensor:Sensor, dataRowID:number, recordingStart:number, dataRow:{value:number, relativeTime:number}[]);
     constructor(sensor:Sensor, dataRowID:number, recordingStart?:number, dataRow?:{value:number, relativeTime:number}[]) {
@@ -36,14 +42,16 @@ class DataRow{
       }
     }
 
-    //Gibt die DataRow ID zurück
+    /**
+     * Gibt die DataRow ID zurück.
+     */
     public getID():number {
       return this.id;
     }
 
-    /*
+    /**
      * Erzeugt mit dem aktuellen Messwert einen Datenpunkt und gibt diesen zurück.
-     * Zurück gegeben wird "value" der Messwert und "relativeTime" die relative Zeit in Millisekunden zum Aufnahmestart.
+     * @returns value ist der neu gelesene Messwert und relativeTime die relative Zeit in Millisekunden zum Aufnahmestart.
      */
     public createCurrentDataPoint():{value:number, relativeTime:number} {
       if (this.recordingStart == -1) {
@@ -54,7 +62,10 @@ class DataRow{
       return {value:this.sensor.getCurrentValue(), relativeTime};
     }
     
-    //Gibt die Datenreihe zurück, value ist der Messwert und relativeTime die relative Zeit in Millisekunden zum Aufnahmestart.
+    /**
+     * Gibt die Datenreihe zurück.
+     * @returns value ist der Messwert und relativeTime die relative Zeit in Millisekunden zum Aufnahmestart.
+     */
     public getDataRow():{value:number, relativeTime:number}[] {
       var dataRow:{value:number, relativeTime:number}[] = new Array();
       for(let i = 0; i<this.datapoint.length; i++) {
@@ -66,7 +77,9 @@ class DataRow{
       return dataRow;
     }
 
-    //Gibt den Aufnahmestartpunkt in Millisekunden zurück. Kann "-1" sein, wenn noch keine Aufnahme gestartet wurde.
+    /**
+     * Gibt den Aufnahmestartpunkt in Millisekunden zurück. Kann "-1" sein, wenn noch keine Aufnahme gestartet wurde.
+     */
     public getRecordingStart():number {
       return this.recordingStart;
     }

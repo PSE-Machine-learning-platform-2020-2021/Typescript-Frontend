@@ -1,62 +1,160 @@
 import { DataRow } from "./DataRow";
 import { Label } from "./Label";
+import { Sensor } from "./Sensor";
 
-//Die Klasse fasst Datenreihen, welche Sensorwerte und deren relative Zeit besitzen, zu einem Datensatz zusammen.
+/**
+ * Die Klasse fasst Datenreihen, welche Sensorwerte und deren relative Zeit besitzen, zu einem Datensatz zusammen.
+ */
 class DataSet{
-    private generateDate:Date //Dies ist die Erstellungszeit dieses Datensatzes in Millisekunden.
+    private generateDate:number //Dies ist die Erstellungszeit dieses Datensatzes in Millisekunden.
     private id:number //Dies ist die Datensatz ID.
     private name:string //Dies ist der Name des Datensatzes.
-    private dataRow:DataRow[]
-    private label:Label[]
+    private dataRow:DataRow[] = new Array(); //Dies sind die Datenreihen, welche zu dem Datensatz gehören.
+    private label:Label[] = new Array(); //Dies sind die existierenden Labels für den Datensatz.
   
 
-    constructor(dataRowSensors:Sensor[], dataSetID:number, generateDate:number, dataSetName:string) {}
-    //constructor(dataSet:object)
-    
-    //Gibt die Datensatz ID zurück.
+    /**
+     * Erstellt einen neuen Datensatz.
+     * @param dataRowSensors die Sensoren, von denen die Daten ausgelesen werden
+     * @param dataSetID die eindeutige Datensatz ID
+     * @param dataSetName der Datensatznamen
+     * @param generateDate die Erstellungszeit von dem Datensatz
+     */
+    constructor(dataRowSensors:Sensor[], dataSetID:number, dataSetName:string, generateDate?:number);
+
+    /**
+     * Eine bereits existierende Datensatz kann wie folgt in das Model geladen werden.
+     * @param dataRowSensors die Sensoren, von denen die Daten ausgelesen werden, 
+     * die Anzahl muss mit der Anzahl der Datenreihen übereinstimmen. Und der i´te Sensor wird zur i´ten Datenreihe hinzugefügt.
+     * @param dataSetID die eindeutige Datensatz ID
+     * @param dataSetName der Datensatznamen
+     * @param generateDate die Erstellungszeit von dem Datensatz
+     * @param dataRows die schon existierenden Datenreihen
+     * @param label die schon existierenden Labels
+     */
+    constructor(dataRowSensors:Sensor[], dataSetID:number, dataSetName:string, generateDate:number, dataRows:{dataRowID:number, recordingStart:number, dataRow:{value:number, relativeTime:number}[]}[], label:{name:string, labelID:number, start:number, end:number}[]);
+    constructor(dataRowSensors:Sensor[], dataSetID:number, dataSetName:string, generateDate?:number, dataRows?:{dataRowID:number, recordingStart:number, dataRow:{value:number, relativeTime:number}[]}[], label?:{name:string, labelID:number, start:number, end:number}[]) {
+      if (dataRows != null) {
+        for (let i:number = 0; i < dataRows.length && i < dataRowSensors.length; i++) {
+          this.dataRow.push(new DataRow(dataRowSensors[i], dataRows[i].dataRowID, dataRows[i].recordingStart, dataRows[i].dataRow));
+        }
+      } else {
+        for (let i = 0; i < dataRowSensors.length; i++) {
+          this.dataRow.push(new DataRow(dataRowSensors[i], i));
+        }
+      }
+      if (label != null) {
+        for (let i = 0; i < label.length; i++) {
+          this.label.push(new Label(label[i].name, label[i].labelID, label[i].start, label[i].end));
+        }
+      }
+      if (generateDate != null) {
+        this.generateDate = generateDate;
+      } else {
+        this.generateDate = new Date().getTime();
+      }
+      this.id = dataSetID;
+      this.name = dataSetName;
+    }
+
+    /**
+     * Gibt die Datensatz ID zurück.
+     */
     public getID():number {
       return this.id;
     }
 
-    //Gibt den Datensatz Namen zurück.
+    /**
+     * Gibt den Datensatz Namen zurück.
+     */
     public getName():string {
       return this.name;
     }
     
+    /**
+     * Liest einen neuen Datenpunkt, speichert diesen und gibt ihn zurück.
+     * @param dataRowID Datenreihe ID, von der die Daten ausgelesen werden sollen.
+     * @returns die gelesenen Daten von der Datenreihe. Falls die Datenreihe nicht existiert, wird die relative Time auf -1 gesetzt.
+     */
     public readDataPoint(dataRowID:number):{value:number, relativeTime:number} {
-      
+      for (let i = 0; i < this.dataRow.length; i++) {
+        if(this.dataRow[i].getID() == dataRowID) {
+          return this.dataRow[i].createCurrentDataPoint();
+        }
+      }
+      return {value:0, relativeTime:-1};
     }
 
-    public getDataRows(dataSetID):number[][][] {}
-
-    public createLabel() {
-      
+    /**
+     * Gibt alle Datenreihen zurück.
+     * @returns Ein zwei Dimensionales Array, die Erste Dimension wählt die Datenreihe und die zweite Dimension den Datenpunkt.
+     */
+    public getDataRows():{value:number, relativeTime:number}[][] {
+      var dataRows:{value:number, relativeTime:number}[][] = new Array();
+      for (let i = 0; i < this.dataRow.length; i++) {
+        dataRows.push(this.dataRow[i].getDataRow());
+      }
+      return dataRows;
     }
 
-    public setLabel(start:number, end:number, labelID:number):Boolean {
+    /**
+     * Erstellt ein Label
+     * @param labelID die eindeutige Label ID
+     * @param name der Labelname
+     * @param start die Startzeit des Zeitfensters in Millisekunden
+     * @param end die Endzeit des Zeitfensters in Millisekunden
+     * @returns falls das Label mit der ID schon existiert wird false zurück gegeben
+     */
+    public createLabel(name:string, labelID:number, start:number, end:number):Boolean {
+      for (let i = 0; i < this.label.length; i++) {
+        if (this.label[i].getID() == labelID) {
+          return false;
+        }
+      }
+      this.label.push(new Label(name, labelID, start, end));
+      return true;
+    }
+    
+    /**
+     * Setzt dem Label mit der übergebenen ID neue Werte.
+     * @param start Ist die neue Startzeit des Labels.
+     * @param end Ist die neue Endzeit des Labels.
+     * @param labelID Die Label ID, welche überarbeitet werden soll.
+     * @param labelName Ist bei Angabe der neue Name des Labels.
+     * @returns falls das Label nicht existiert wird false zurück gegeben
+     */
+    public setLabel(start:number, end:number, labelID:number, labelName?:string):Boolean {
       for (let i = 0; i < this.label.length; i++) {
         if(this.label[i].getID() == labelID) {
-          this.label[i].setLabel(start, end);
+          this.label[i].setLabel(start, end, labelName);
           return true;
         }
       }
       return false;
     }
 
+    /**
+     * Löscht das Label mit der übergebenen LabelID.
+     * @param labelID die LabelID
+     */
+    public deleteLabel(labelID:number):Boolean {
+      for (let i = 0; i < this.label.length; i++) {
+        if (this.label[i].getID() == labelID) {
+          delete this.label[i];
+          return true;
+        }
+      }
+      return false;
+    }
+
+    /**
+     * Gibt alle Daten von allen Labeln zurück.
+     */
     public getLabels():{name:string, id:number, start:number, end:number}[] {
       var labelList:{name:string, id:number, start:number, end:number}[] = new Array;
       for (let i = 0; i < this.label.length; i++) {
         labelList.push(this.label[i].getLabel());
       }
       return labelList;
-    }
-
-    private getDataRow(dataRowID:number):DataRow {
-      for (let i = 0; i < this.dataRow.length; i++) {
-        if(this.dataRow[i].getID() == dataRowID) {
-          return this.dataRow[i];
-        }
-      }
-      //TODO Was passiert wenn die Datenreihe mit der DatenreihenID nicht existiert?//////////////////////////////////////////////////////////////////////////////////////////
     }
   } export {DataSet}

@@ -7,6 +7,7 @@ interface FacadeInterface{
     getDataSetMeta():string[]
     getSessionID():number
     getDataRows(dataSetID:number):number[][][]
+    getCurrentDataRows():{value:number, relativeTime:number}[]
     getMessage(messageID:number):string
     setLanguage(languageCode:string):Boolean
     getLanguageMetas():object[]
@@ -19,6 +20,7 @@ interface FacadeInterface{
     logoutAdmin():Boolean
     createProject(projectName:string):Boolean
     setLabel(labelID:number, start:number, end:number):Boolean
+    createLabel():number //labelid von datenbank
     getLabels():object[]
     checkLogin():Boolean
     classify(aiId:number, dataSetId:number, callBack:Function):void
