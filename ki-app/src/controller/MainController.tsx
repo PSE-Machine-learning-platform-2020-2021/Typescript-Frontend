@@ -78,4 +78,21 @@ export class MainController {
     getFacade() {
         return this.facade;
     }
+
+    /**
+     * @param ids Alle ids, zu denen man die Texte möchte.
+     * @returns Gibt alle texte zu den übergebenen ids zurück.
+     */
+    getMessage(ids: number[]) {
+        return(MainController.getInstance().getFacade().getMessage(ids));
+    }
+
+    /**
+     * @param languageCode Das Sprachkürzel als string.
+     * @returns Gibt true zurück falls der wechsel erfolgt ist, sonst false.
+     */
+    setLanguage(languageCode: string) {
+        let changed = this.facade.setLanguage(languageCode)
+        return changed
+    }
 }
