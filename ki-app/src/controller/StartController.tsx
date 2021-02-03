@@ -1,22 +1,32 @@
+import { read } from "fs";
 import { PageController } from "./PageController";
 import { SensorManager } from "./SensorManager";
-class StartController implements PageController{
-    sensorManager: SensorManager
-    getSensors() {
-        return Sensor[]
-    }
-    DataReadWaitingTime(waitingTime: number) {
+export class StartController implements PageController{
+    
+    private sensorManager = new SensorManager();
+    private waitingTime = 5 
+    private readTime = 10
 
+    //getSensors() {
+    //    return Sensor[];
+    //}
+
+    DataReadWaitingTime(waitingTime: number) {
+        this.waitingTime = waitingTime;
     }
+
     labelDataSet(label: string) {
 
     }
+
     setLanguage() {
-
+        
     }
+
     setDataReadTime(readTime: number) {
-
+        this.readTime = readTime
     }
+
     update(){
 
     }

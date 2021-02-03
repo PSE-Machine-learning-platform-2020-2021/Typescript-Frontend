@@ -1,8 +1,8 @@
 import { MainController } from "./MainController";
 export class SensorManager {  
 
-    currentSensors = [""]
-    facade = MainController.getFacade()
+    currentSensors = [""];
+    facade = MainController.getFacade();
 
     /**
     * Erzeugt eine neue Datenreihe und setzt diese damit als momentan benutzte Datenreihe. 
@@ -10,8 +10,8 @@ export class SensorManager {
     * @returns Gibt true für ein erfolgreiches Erstellen eines Dataensatzes zurück, gibt sonst false zurück.
     */
     setUpDataRead(sensorTypes:string[], dataSetName:string) {
-        this.currentSensors = sensorTypes
-        return (this.facade.createDataSet(sensorTypes, dataSetName)) 
+        this.currentSensors = sensorTypes;
+        return (this.facade.createDataSet(sensorTypes, dataSetName));
     }
 
     /**
@@ -20,13 +20,13 @@ export class SensorManager {
     * die jeder Sensor erfasst hat.
     */
     readData() {
-        let data = []
+        let data = [];
         for (let index = 0; index < this.currentSensors.length; index++) {
-            data.push(this.facade.readDataPoint(index))
+            data.push(this.facade.readDataPoint(index));
         }
         for (let index = 0; index < this.currentSensors.length; index++) {
-            this.facade.sendDataPoint(index, data[index])
+            this.facade.sendDataPoint(index, data[index]);
         }
-        return data
+        return data;
     }
 }

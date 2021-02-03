@@ -1,5 +1,8 @@
 export interface MainControllerInterface {
-    getInstance(): typeof self;
+    //getInstance(): typeof self;
+
+    private facade = "A"
+
     checkConnection(): boolean;
     checkLoginStatus(): boolean;
     getSession(): boolean;

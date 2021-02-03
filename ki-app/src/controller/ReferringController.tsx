@@ -1,6 +1,6 @@
 import { PageController } from "./PageController";
 
-class RefferingController implements PageController{
+export class RefferingController implements PageController{
     currentProjekt: object
     createQR(sessionNum: string) {
         return string
