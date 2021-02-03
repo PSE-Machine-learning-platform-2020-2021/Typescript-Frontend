@@ -4,20 +4,20 @@ import { MainController } from "./MainController";
 import { FinishController } from "./FinishController"
 export class DataCollectionController implements PageController{
 
-    sensorManager: SensorManager
-    private page = new view.DataCollection() 
-    private waitTime = 10
-    private readTime = 10
-    readonly SECOND = 1000
+    private sensorManager: SensorManager;
+    private page = new view.DataCollection();
+    private waitTime = 10;
+    private readTime = 10;
+    private readonly SECOND = 1000;
 
     /**
      * Konstruktor des Seitenverwalters. Registriert sich als Beobachter auf seiner Seite und setzt den start Status.
      * Dieser Seitenverwalter benötigt einen SensorManager, welcher schon initilisiert wurde. 
      */
     constructor(sensorManager: SensorManager) {
-        this.sensorManager = sensorManager
-        this.page.attach(this)
-        this.page.setState("needMessage")
+        this.sensorManager = sensorManager;
+        this.page.attach(this);
+        this.page.setState("needMessage");
     }
 
     /**
@@ -44,7 +44,7 @@ export class DataCollectionController implements PageController{
      * Startet die Datenaufnahme. zuerst werden die Wart- und Aufnahmezeit aus dem Sensormanager bezogen. Darauf wird
      * für die Wartezeit gewartet. Danach erfolgt die Aufnahme bis die Aufnahmezeit erreicht wurde.
      */
-    startDataRead() {
+    private startDataRead() {
         this.waitTime = this.sensorManager.getWaitTime() * this.SECOND;
         this.readTime = this.sensorManager.getReadTime() * this.SECOND;
         this.page.setState("wait");
@@ -74,7 +74,7 @@ export class DataCollectionController implements PageController{
     /**
      * Wechselt die Seite zur Fertigungsseite.
      */
-    changePageToFinishPage() {
+    private changePageToFinishPage() {
         let finishController = new FinishController();
         MainController.getInstance().changeTo(finishController);
     }

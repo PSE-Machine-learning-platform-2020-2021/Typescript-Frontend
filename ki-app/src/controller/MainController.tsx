@@ -1,7 +1,8 @@
 import { PageController } from "./PageController";
 import { StartController } from "./StartController";
 import {RefferingController} from "./ReferringController";
-export class MainController {
+import { MainControllerInterface } from "./MainControllerInterface"
+export class MainController implements MainControllerInterface{
 
     private facade : view.Facade;
 

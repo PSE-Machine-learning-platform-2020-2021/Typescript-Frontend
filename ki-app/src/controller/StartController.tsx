@@ -43,7 +43,7 @@ export class StartController implements PageController{
      * Holt sich alle wichtigen Daten für die Datenaufnahme aus der momentanen Seite. Darauf wird mit dem Sensormanager
      * die Datenaufnahme initialisiert. Zum Schluss wird der Seitenwechsel zur Erfassungseite durchgeführt. 
      */
-    start() {
+    private start() {
         let sensorTypes = this.page.getSensorTypes()
         let dataSetName = this.page.getDataSetName()
         let waitTime = this.page.getWaitTime()

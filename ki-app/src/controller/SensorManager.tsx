@@ -1,8 +1,8 @@
 import { MainController } from "./MainController";
 export class SensorManager {  
 
-    currentSensors = [""];
-    facade = MainController.getFacade();
+    private currentSensors = [""];
+    private facade = MainController.getInstance().getFacade();
     private waitTime = 5;
     private readTime = 10;
 
@@ -13,9 +13,9 @@ export class SensorManager {
     */
     setUpDataRead(sensorTypes:string[], dataSetName:string, waitTime: number, readTime: number) {
         this.currentSensors = sensorTypes;
+        this.waitTime = waitTime;
+        this.readTime = readTime;
         return (this.facade.createDataSet(sensorTypes, dataSetName));
-        this.waitTime = waitTime
-        this.readTime = readTime
     }
 
     /**

@@ -44,7 +44,7 @@ export class FinishController implements PageController {
     /**
      * Holt die Datenreihen aus dem Modell und übergibt sie an die momentane Seite.
      */
-    getDataRows() {
+    private getDataRows() {
         let rows = MainController.getInstance().getFacade().getCurrentDataRows();
         this.page.setDataRows(rows);
     }
@@ -52,7 +52,7 @@ export class FinishController implements PageController {
     /**
      * Ändert die Einstellungen eines DatenLabels gemäß den Änderungen aus der momentanen Seite.
      */
-    changeDataLabel() {
+    private changeDataLabel() {
         let label = this.page.getChangedLabel();
         MainController.getInstance().getFacade().setDataLabel(label.id, label.start, label.end);
     }
@@ -61,7 +61,7 @@ export class FinishController implements PageController {
      * Erstellt ein neues Datenlabel. Dafür werden die neuen Daten des Labels aus der momentanene Seite an das
      * Modell geleitet. Die ID des neuen Labels wird darauf an die momentane Seite übergeben.
      */
-    newDataLabel() {
+    private newDataLabel() {
         let start = this.page.getNewLabelStart();
         let end = this.page.getNewLabelEnd();
         let id = MainController.getInstance().getFacade().createLabel(start, end);
@@ -71,7 +71,7 @@ export class FinishController implements PageController {
     /**
      * Löscht das Label welches gemäß der Methode getDeleteLabelID von der momentanen Seite angegeben wurde.
      */
-    deleteDataLabel() {
+    private deleteDataLabel() {
         let id = this.page.getDeleteLabelID();
         MainController.getInstance().getFacade().deleteLabel(id);
     }
