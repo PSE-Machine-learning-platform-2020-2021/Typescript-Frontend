@@ -69,10 +69,7 @@ class DataRow{
     public getDataRow():{value:number, relativeTime:number}[] {
       var dataRow:{value:number, relativeTime:number}[] = new Array();
       for(let i = 0; i<this.datapoint.length; i++) {
-        dataRow[i] = {
-          value:this.datapoint[i].getValue(),
-          relativeTime:this.datapoint[i].getRelativeTime()
-        }
+        dataRow[i] = {value:this.datapoint[i].getValue(), relativeTime:this.datapoint[i].getRelativeTime()}
       }
       return dataRow;
     }

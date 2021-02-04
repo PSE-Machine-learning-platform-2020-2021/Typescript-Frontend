@@ -74,15 +74,15 @@ class DataSet{
     /**
      * Liest einen neuen Datenpunkt, speichert diesen und gibt ihn zurück.
      * @param dataRowID Datenreihe ID, von der die Daten ausgelesen werden sollen.
-     * @returns die gelesenen Daten von der Datenreihe. Falls die Datenreihe nicht existiert, wird die relative Time auf -1 gesetzt.
+     * @returns die gelesenen Daten von der Datenreihe. Falls die Datenreihe nicht existiert oder kein aktueller Datensatz existiert, sind die Daten leer.
      */
-    public readDataPoint(dataRowID:number):{value:number, relativeTime:number} {
+    public readDataPoint(dataRowID:number):{dataPoint?:{value:number, relativeTime:number}} {
       for (let i = 0; i < this.dataRow.length; i++) {
         if(this.dataRow[i].getID() == dataRowID) {
-          return this.dataRow[i].createCurrentDataPoint();
+          return {dataPoint:this.dataRow[i].createCurrentDataPoint()};
         }
       }
-      return {value:0, relativeTime:-1};
+      return {};
     }
 
     /**
