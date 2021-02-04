@@ -5,7 +5,7 @@ import LinkText from '../LinkText'
 export default class NewProjectButton extends Component {
     state = {click : false}
     handleCreate = ()=> {
-            this.setState({click:true})
+      this.setState({click:true})
     }
        
     render() {
