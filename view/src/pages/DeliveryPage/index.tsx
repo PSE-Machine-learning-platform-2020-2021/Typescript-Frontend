@@ -73,14 +73,14 @@ export default class DeliveryPage extends Component {
 	render() {
 		const {emails} = this.state
 		return (
-			<div className="emailList-container">
-				<div className="email-wrap">
+			<div className="deliverypage">
+				<div className="emailList-wrap">
 					<AddEmailButton addEmail={this.addEmail} deleteEmail={this.deleteEmail}/>
 					<EmailList emails={emails} updateEmail={this.updateEmail} deleteEmail={this.deleteEmail}/>
 					<HandleAllEmail emails={emails} chooseAllEmail={this.chooseAllEmail} clearAllChosen={this.clearAllChosen}/>
+				</div>
 					<DownloadButton/>
 					<SendButton/>
-				</div>
 			</div>
 		)
 	}
