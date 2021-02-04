@@ -1,7 +1,7 @@
 import React, { Component } from 'react'
 import input from './index.module.css'
 
-export default class ConstantsText extends Component {
+export default class Input extends Component {
     render() {
         return (
             <div className="input" >
