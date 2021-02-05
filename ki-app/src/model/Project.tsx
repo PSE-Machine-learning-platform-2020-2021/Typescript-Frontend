@@ -23,6 +23,7 @@ class Project {
    * @param projectID Die Projekt ID
    * @param sessionID Die global eindeutige Session ID
    * @param projectName Der Projektnamen
+   * @param admin Der Admin, dem das Projekt gehört
    */
   constructor(projectID: number, sessionID: number, projectName: string, admin: Admin);
 
@@ -38,11 +39,22 @@ class Project {
   constructor(projectID: number, sessionID: number, projectName: string, admin: Admin, aiModelID: number[],
     dataSet: {
       dataRowSensors: Sensor[], dataSetID: number, dataSetName: string, generateDate: number,
-      dataRows: { dataRowID: number, recordingStart: number, dataRow: { value: number, relativeTime: number; }[]; }[],
+      dataRows: {
+        dataRowID: number, recordingStart: number,
+        dataRow: { value: number, relativeTime: number; }[];
+      }[],
       label: { name: string, labelID: number, start: number, end: number; }[];
     }[]);
 
-  constructor(projectID: number, sessionID: number, projectName: string, admin: Admin, aiModelID?: number[], dataSet?: { dataRowSensors: Sensor[], dataSetID: number, dataSetName: string, generateDate: number, dataRows: { dataRowID: number, recordingStart: number, dataRow: { value: number, relativeTime: number; }[]; }[], label: { name: string, labelID: number, start: number, end: number; }[]; }[]) {
+  constructor(projectID: number, sessionID: number, projectName: string, admin: Admin, aiModelID?: number[],
+    dataSet?: {
+      dataRowSensors: Sensor[], dataSetID: number, dataSetName: string, generateDate: number,
+      dataRows: {
+        dataRowID: number, recordingStart: number,
+        dataRow: { value: number, relativeTime: number; }[];
+      }[],
+      label: { name: string, labelID: number, start: number, end: number; }[];
+    }[]) {
     this.id = projectID;
     this.name = projectName;
     this.session = new Session(sessionID, admin);
@@ -69,7 +81,7 @@ class Project {
    * Löscht den Datensatz mit der DatensatzID
    * @param dataSetID die Datensatz ID
    */
-  deleteDataSet(dataSetID: number): Boolean {
+  deleteDataSet(dataSetID: number): boolean {
     for (let i = 0; i < this.dataSet.length; i++) {
       if (this.dataSet[i].getID() == dataSetID) {
         delete this.dataSet[i];
@@ -179,11 +191,19 @@ class Project {
    * @param labelName Ist bei Angabe der neue Name des Labels.
    * @returns falls das Label nicht existiert oder es kein aktuellen Datensatz gibt wird false zurück gegeben
    */
-  setLabel(start: number, end: number, labelID: number, labelName?: string): Boolean {
+  createLabel(start: number, end: number, labelID: number, labelName?: string): boolean {
     if (this.currentDataSet != null) {
       return this.currentDataSet.setLabel(start, end, labelID, labelName);
     }
     return false;
+  }
+
+  deleteLabel(labelID: number): boolean {
+    if (this.currentDataSet != null) {
+      return this.currentDataSet.deleteLabel(labelID);
+    } else {
+      return false;
+    }
   }
 
   /**

@@ -4,6 +4,7 @@ abstract class Device {
   private name: string;
   private firmware: string;
   private generation: string;
+  private deviceType: string;
 
   constructor(deviceID: number) { }
   constructor(deviceID: number, MACADRESS: string, deviceName: string, firmware: string, generation: string);
@@ -13,19 +14,28 @@ abstract class Device {
   getGeneration(): string { }
   getSensors(): Sensor[] { }
   getSensor(id: number): Sensor { }
+
+  /**
+   * Prüft das aktuelle Gerät auf
+   */
+  static loadDevice(deviceID: number, device?: { MACADRESS: string, deviceName: string, firmware: string, generation: string, deviceType: string; }): Device {
+
+  }
+
+
   protected abstract searchSensor(): void;
 
 } export { Device };
 
 class Smartphone extends Device {
-  constructor(deviceID: number) {
+  protected constructor(deviceID: number) {
     super(deviceID);
   }
   protected searchSensor(): void { }
 } export { Smartphone };
 
 class Desktop extends Device {
-  constructor(deviceID: number) {
+  protected constructor(deviceID: number) {
     super(deviceID);
   }
   protected searchSensor(): void { }

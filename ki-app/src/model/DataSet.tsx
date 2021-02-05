@@ -105,7 +105,7 @@ class DataSet {
    * @param end die Endzeit des Zeitfensters in Millisekunden
    * @returns falls das Label mit der ID schon existiert wird false zurück gegeben
    */
-  public createLabel(name: string, labelID: number, start: number, end: number): Boolean {
+  public createLabel(name: string, labelID: number, start: number, end: number): boolean {
     for (let i = 0; i < this.label.length; i++) {
       if (this.label[i].getID() == labelID) {
         return false;
@@ -123,7 +123,7 @@ class DataSet {
    * @param labelName Ist bei Angabe der neue Name des Labels.
    * @returns falls das Label nicht existiert wird false zurück gegeben
    */
-  public setLabel(start: number, end: number, labelID: number, labelName?: string): Boolean {
+  public setLabel(start: number, end: number, labelID: number, labelName?: string): boolean {
     for (let i = 0; i < this.label.length; i++) {
       if (this.label[i].getID() == labelID) {
         this.label[i].setLabel(start, end, labelName);
@@ -137,7 +137,7 @@ class DataSet {
    * Löscht das Label mit der übergebenen LabelID.
    * @param labelID die LabelID
    */
-  public deleteLabel(labelID: number): Boolean {
+  public deleteLabel(labelID: number): boolean {
     for (let i = 0; i < this.label.length; i++) {
       if (this.label[i].getID() == labelID) {
         delete this.label[i];

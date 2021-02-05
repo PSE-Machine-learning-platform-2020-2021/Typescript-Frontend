@@ -30,7 +30,7 @@ class Session {
    * Meldet einen User von der aktuellen Session ab
    * @param user Der User, der abgemeldet werdern soll
    */
-  disconnectUser(user: User): Boolean {
+  disconnectUser(user: User): boolean {
     for (let i = 0; i < this.connectedUser.length; i++) {
       if (this.connectedUser[i].getID() == user.getID()) {
         delete this.connectedUser[i];

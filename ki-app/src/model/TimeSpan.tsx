@@ -20,7 +20,7 @@ class TimeSpan {
    * Setzt den übergebenen Startpunkt als Startpunkt, wenn dieser ein positiver Wert ist.
    * @param start start: Startpunkt in Millisekunden
    */
-  public setStart(start: number): Boolean {
+  public setStart(start: number): boolean {
     if (start >= 0) {
       this.start = start;
       return true;
@@ -32,7 +32,7 @@ class TimeSpan {
    * Setzt den übergebenen Endpunkt als Endpunkt, wenn dieser ein positiver Wert ist.
    * @param end Endpunkt in Millisekunden
    */
-  public setEnd(end: number): Boolean {
+  public setEnd(end: number): boolean {
     if (end >= 0) {
       this.end = end;
       return true;
