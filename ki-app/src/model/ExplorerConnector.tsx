@@ -15,13 +15,23 @@ class ExplorerConnector {
   createProject(adminEmail: string, projectName: string): object { }
 
   //Erzeugt einen Datensatz mit übergebenen Parametern
-  createDataSet(sessionID: number, sensorTypes: string, dataminerName: string, dataSetName: string): number { }
+  createDataSet(sessionID: number, sensorTypes: string[], dataminerName: string, dataSetName: string): number { }
 
   //Sendet den Datenpunkt mit den übergebenen Parametern
   sendDataPoint(sessionID: number, datSetID: number, dataRowID: number, value: number, relativeTime: number): boolean { }
 
   //Lädt das Projekt mit der ensprechenden Email und ProjektID.
-  loadProject(adminEmail: string, projectID: number): object { }
+  loadProject(adminEmail: string, projectID: number): {
+    projectID: number, sessionID: number, projectName: string, aiModelID: number[],
+    dataSet: {
+      dataRowSensors: Sensor[], dataSetID: number, dataSetName: string, generateDate: number,
+      dataRows: {
+        dataRowID: number, recordingStart: number,
+        dataRow: { value: number, relativeTime: number; }[];
+      }[],
+      label: { name: string, labelID: number, start: number, end: number; }[];
+    }[];
+  } { }
 
   //Gibt von allen Projekten des angemeldeten Ad-mins, mit der Email adminEmail, die Projekt ID und den Projekt Namen zurück
   getProjectMetas(adminEmail: string): string { }

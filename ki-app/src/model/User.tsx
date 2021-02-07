@@ -83,42 +83,38 @@ class Admin extends User {
    * @param adminName der Admin Name
    * @param email die Emailadresse des Admins
    * @param device das Gerät des Admins
-   * @param project die Projekte des Admins
    */
   constructor(adminID: number, deviceID: number, adminName: string, email: string,
-    device: { MACADRESS: string, deviceName: string, firmware: string, generation: string, deviceType: string; },
-    project?: {
-      projectID: number, sessionID: number, projectName: string, aiModelID: number[],
-      dataSet: {
-        dataRowSensors: Sensor[], dataSetID: number, dataSetName: string, generateDate: number,
-        dataRows: {
-          dataRowID: number, recordingStart: number,
-          dataRow: { value: number, relativeTime: number; }[];
-        }[],
-        label: { name: string, labelID: number, start: number, end: number; }[];
-      }[];
-    }[]);
+    device: { MACADRESS: string, deviceName: string, firmware: string, generation: string, deviceType: string; });
 
   constructor(adminID: number, deviceID: number, adminName: string, email: string,
-    device?: { MACADRESS: string, deviceName: string, firmware: string, generation: string, deviceType: string; },
-    project?: {
-      projectID: number, sessionID: number, projectName: string, aiModelID: number[],
-      dataSet: {
-        dataRowSensors: Sensor[], dataSetID: number, dataSetName: string, generateDate: number,
-        dataRows: {
-          dataRowID: number, recordingStart: number,
-          dataRow: { value: number, relativeTime: number; }[];
-        }[],
-        label: { name: string, labelID: number, start: number, end: number; }[];
-      }[];
-    }[]) {
+    device?: { MACADRESS: string, deviceName: string, firmware: string, generation: string, deviceType: string; }) {
     super(adminID, adminName);
     this.email = email;
     this.device = Device.loadDevice(deviceID, device);
-    if (project != null) {
-      for (let i = 0; i < project?.length; i++) {
-        this.project.push(new Project(project[i].projectID, project[i].sessionID, project[i].projectName, this, project[i].aiModelID, project[i].dataSet));
-      }
+  }
+
+  /**
+   * Lädt ein bestehendes Projekt in das Model
+   * @param project das Projekt des Admins
+   * @returns false, falls die Projekt ID schon existiert
+   */
+  loadProject(project: {
+    projectID: number, sessionID: number, projectName: string, aiModelID: number[],
+    dataSet: {
+      dataRowSensors: Sensor[], dataSetID: number, dataSetName: string, generateDate: number,
+      dataRows: {
+        dataRowID: number, recordingStart: number,
+        dataRow: { value: number, relativeTime: number; }[];
+      }[],
+      label: { name: string, labelID: number, start: number, end: number; }[];
+    }[];
+  }) {
+    if (!this.existProject(project.projectID)) {
+      this.project.push(new Project(project.projectID, project.sessionID, project.projectName, this, project.aiModelID, project.dataSet));
+      return true;
+    } else {
+      return false;
     }
   }
 
@@ -322,8 +318,8 @@ class Dataminer extends User {
   /**
    * Gibt alle Sensoren aus, die das Benutzergerät und das Programm unterstützt
    */
-  getDeviceSensors(): Sensor[] {
-    return this.device.getSensors();
+  getDeviceSensors(sensorTypes: string[]): Sensor[] {
+    return this.device.getSensors(sensorTypes);
   }
 } export { Dataminer };
 

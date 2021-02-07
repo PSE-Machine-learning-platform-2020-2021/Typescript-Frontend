@@ -12,7 +12,7 @@ abstract class Device {
   getMACADDRESS(): string { }
   getFirmware(): string { }
   getGeneration(): string { }
-  getSensors(): Sensor[] { }
+  getSensors(sensorTypes: string[]): Sensor[] { }
   getSensor(id: number): Sensor { }
 
   /**
