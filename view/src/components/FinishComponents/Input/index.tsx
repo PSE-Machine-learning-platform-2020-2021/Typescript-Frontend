@@ -6,15 +6,7 @@ export default class Input extends Component {
         return (
             <div className="input">
                 <form>
-                    Anfang:
-          <input type="start" name="start" />
-          Ende:
-          <input type="end" name="end" />
-                    <br />
-          Label benennen:
-          <input type="label" name="label" />
-                    <br />
-          Datensatz benennen:
+                    Datensatz benennen:
           <input type="dataname" name="dataname" />
                     <br />
                     <button>Finish</button>

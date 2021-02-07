@@ -15,8 +15,8 @@ export default class EmailList extends Component {
 		return (
 			<ul className="email-main">
 				{
-					emails.map( todo =>{
-						return <EmailItem key={todo.id} {...todo} updateEmail={updateEmail} deleteEmail={deleteEmail}/>
+					emails.map( email =>{
+						return <EmailItem key={email.id} {...email} updateEmail={updateEmail} deleteEmail={deleteEmail}/>
 					})
 				}
 			</ul>

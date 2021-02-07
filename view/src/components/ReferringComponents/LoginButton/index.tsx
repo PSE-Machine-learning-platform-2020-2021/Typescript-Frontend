@@ -36,10 +36,11 @@ export default class LoginButton extends Component {
     
       render() {
         return (
-          <div className="App">
+          <div className="login-button">
+            <button onClick={this.openNewWindow}> Open New Window </button>
             {this.state.openNewWindow && (
               <NewWindow>
-                <div className="login-wrapper">
+                <div className="login-window">
                     <h1>Please Log In</h1>
                     <form>
                         <label>
@@ -54,10 +55,9 @@ export default class LoginButton extends Component {
                     <button type="submit" onClick={this.submit}>Submit</button>
                     </div>
                     </form>
-          </div>
+                </div>
               </NewWindow>
             )}
-            <button onClick={this.openNewWindow}> Open New Window </button>
           </div>
         );
       }

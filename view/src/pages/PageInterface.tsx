@@ -1,5 +1,8 @@
+import { Observer } from '../pages/ObserverInterface';
+
 export interface Page {
-  attach(): void;
+
+  attach(observer: Observer): void;
 
   detach(): void;
 
