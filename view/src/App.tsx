@@ -16,13 +16,13 @@ function App() {
 				</div>
 				<div className="row">
 						<div className="list-group">
-							<Link className="list-group-item" to="/ReferringPage">ReferringPage</Link>
-							<Link className="list-group-item" to="/FinishPage">FinishPage</Link>
-							<Link className="list-group-item" to="/DataCollectionPage">DataCollectionPage</Link>
-							<Link className="list-group-item" to="/DeliveryPage">DeliveryPage</Link>
-							<Link className="list-group-item" to="/ModelCreationPage">ModelCreationPage</Link>
-							<Link className="list-group-item" to="/StartPage">StartPage</Link>
-							<Link className="list-group-item" to="/VisualizationPage">VisualizationPage</Link>
+							•<Link className="list-group-item" to="/ReferringPage">ReferringPage</Link>
+							•<Link className="list-group-item" to="/FinishPage">FinishPage</Link>
+							•<Link className="list-group-item" to="/DataCollectionPage">DataCollectionPage</Link>
+							•<Link className="list-group-item" to="/DeliveryPage">DeliveryPage</Link>
+							•<Link className="list-group-item" to="/ModelCreationPage">ModelCreationPage</Link>
+							•<Link className="list-group-item" to="/StartPage">StartPage</Link>
+							•<Link className="list-group-item" to="/VisualizationPage">VisualizationPage</Link>
 						</div>
 						<div className="checkPage">
 								<Route path="/ReferringPage" component={ReferringPage}/>
