@@ -1,10 +1,10 @@
 import React, { Component } from 'react'
 
-export default class ConstantsText extends Component {
+export default class FinishButton extends Component {
     render() {
         return (
             <div>
-                
+
             </div>
         )
     }

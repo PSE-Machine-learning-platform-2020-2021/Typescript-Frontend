@@ -1,10 +1,21 @@
 import React, { Component } from 'react'
-
+import ImageList from '../../components/VisualizationComponents/ImageList'
+import eximage1 from '../../images/exImage1.svg'
+import './VisualizationPage.css'
 export default class VisualizationPage extends Component {
+    state = {
+        imageSrc: eximage1
+    }
+
+    setImageSrc = (newSrc: string) => {
+        const newState = { imageSrc: newSrc }
+        this.setState(newState)
+    }
     render() {
         return (
-            <div>
-                <h1>Here VisualizationPage</h1>
+            <div className="visualizationpage">
+                <img src={this.state.imageSrc} alt="2" className="showImage" ></img>
+                <ImageList setImageSrc={this.setImageSrc} />
             </div>
         )
     }
