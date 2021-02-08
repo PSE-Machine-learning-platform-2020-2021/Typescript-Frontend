@@ -13,7 +13,7 @@ export class AIController implements PageController {
 
     }
 
-    callback(prediction: any) {
+    callback(prediction: string | object) {
 
     }
 

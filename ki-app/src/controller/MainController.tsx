@@ -2,8 +2,10 @@ import { PageController } from "./PageController";
 import { StartController } from "./StartController";
 import { RefferingController } from "./ReferringController";
 import { MainControllerInterface } from "./MainControllerInterface";
+import { Facade } from "../model/Facade";
+
 export class MainController implements MainControllerInterface {
-  private facade: view.Facade;
+  private facade: Facade;
 
   private static mainController: MainController;
 
@@ -12,8 +14,8 @@ export class MainController implements MainControllerInterface {
   /**
    * Konstruktor des MainControllers. Holt sich die Fassade.
    */
-  MainController() {
-    this.facade = new DataView.Facade();
+  constructor() {
+    this.facade = new Facade("de");
   }
 
   /**
