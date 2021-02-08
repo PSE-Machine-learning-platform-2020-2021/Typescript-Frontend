@@ -1,5 +1,6 @@
 abstract class Device {
   private id: number;
+  private const sensorTypeID: number;
   private const MACADDRESS: string;
   private name: string;
   private firmware: string;
@@ -12,8 +13,13 @@ abstract class Device {
   getMACADDRESS(): string { }
   getFirmware(): string { }
   getGeneration(): string { }
-  getSensors(sensorTypes: string[]): Sensor[] { }
+  getSensors(sensorTypeID: number[]): Sensor[] { }
   getSensor(id: number): Sensor { }
+
+  /**
+   * Gibt alle Sensoren aus, die das Benutzergerät und das Programm unterstützt
+   */
+  getAvailableSensors(): number[] { }
 
   /**
    * Prüft das aktuelle Gerät auf

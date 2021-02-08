@@ -109,7 +109,7 @@ class Admin extends User {
       }[],
       label: { name: string, labelID: number, start: number, end: number; }[];
     }[];
-  }) {
+  }): boolean {
     if (!this.existProject(project.projectID)) {
       this.project.push(new Project(project.projectID, project.sessionID, project.projectName, this, project.aiModelID, project.dataSet));
       return true;
@@ -127,6 +127,13 @@ class Admin extends User {
     } else {
       return -1;
     }
+  }
+
+  getCurrentProjectID(): number {
+    if (this.currentProject != null) {
+      return this.currentProject.getID();
+    }
+    return -1;
   }
 
   /**
@@ -162,9 +169,9 @@ class Admin extends User {
    * Gibt von allen Datensätzen vom aktuellen Projekt Informationen zurück
    * @returns dataSetID ist die DatensatzID und dataSetName ist der Datensatzname
    */
-  getDataSetMeta(): { dataSetID: number, dataSetName: string; }[] {
+  getDataSetMetas(): { dataSetID: number, dataSetName: string; }[] {
     if (this.currentProject != null) {
-      return this.currentProject.getDataSetMeta();
+      return this.currentProject.getDataSetMetas();
     } else {
       return [];
     }
@@ -318,8 +325,15 @@ class Dataminer extends User {
   /**
    * Gibt alle Sensoren aus, die das Benutzergerät und das Programm unterstützt
    */
-  getDeviceSensors(sensorTypes: string[]): Sensor[] {
-    return this.device.getSensors(sensorTypes);
+  getDeviceSensors(sensorTypeID: number[]): Sensor[] {
+    return this.device.getSensors(sensorTypeID);
+  }
+
+  /**
+   * Gibt die SensorTypID der auswählbaren Sensoren zurück
+   */
+  getAvailableSensors(): number[] {
+    return this.device.getAvailableSensors();
   }
 } export { Dataminer };
 

@@ -6,7 +6,7 @@ class ExplorerConnector {
   registerDevice(firmware: string, generation: string, sensorNamelist: string[]): number { }
 
   //Gibt Name und Code jeder verfügbaren Sprache zurück
-  getLanguageMetas(): object[] { }
+  getLanguageMetas(): { languageCode: number, languageName: string; }[] { }
 
   //Lade die Sprache mit dem gegebenen Code.
   loadLanguage(languageCode: string): string[] { }
@@ -34,7 +34,7 @@ class ExplorerConnector {
   } { }
 
   //Gibt von allen Projekten des angemeldeten Ad-mins, mit der Email adminEmail, die Projekt ID und den Projekt Namen zurück
-  getProjectMetas(adminEmail: string): string { }
+  getProjectMetas(adminEmail: string): { projectID: number, projectName: string; }[] { }
 
   //Löscht den Datensatz im Projekt welcher die angegebene ID besitzt. Der Datensatz wird im Programm und auf der Explorer-Datenbank gelöscht.
   deleteDataSet(email: string, projectID: number, dataSetID: number): boolean { }
@@ -61,3 +61,7 @@ class ExplorerConnector {
   //Sendet das Label label an die Datenbank mit den Parametern. 
   sendLabel(sessionID: number, datasetID: number, label: object): boolean { }
 } export { ExplorerConnector };
+
+
+////////////////////IDs als Parameter immer auf >= 0 prüfen, da -1 eine Fehlermeldung ist. Sowie Admin Email auf inhalt prüfen, "" ist nicht angemeldet
+////////////////////Und überall prüfen, dass id < 0 nicht möglich ist

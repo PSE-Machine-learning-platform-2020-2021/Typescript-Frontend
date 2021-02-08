@@ -142,12 +142,12 @@ class Project {
    * Gibt von allen Datensätzen Informationen zurück
    * @returns dataSetID ist die DatensatzID und dataSetName ist der Datensatzname
    */
-  getDataSetMeta(): { dataSetID: number, dataSetName: string; }[] {
-    var dataSetMeta: { dataSetID: number, dataSetName: string; }[] = new Array();
+  getDataSetMetas(): { dataSetID: number, dataSetName: string; }[] {
+    var dataSetMetas: { dataSetID: number, dataSetName: string; }[] = new Array();
     for (let i = 0; i < this.dataSet.length; i++) {
-      dataSetMeta.push({ dataSetID: this.dataSet[i].getID(), dataSetName: this.dataSet[i].getName() });
+      dataSetMetas.push({ dataSetID: this.dataSet[i].getID(), dataSetName: this.dataSet[i].getName() });
     }
-    return dataSetMeta;
+    return dataSetMetas;
   }
 
   /**

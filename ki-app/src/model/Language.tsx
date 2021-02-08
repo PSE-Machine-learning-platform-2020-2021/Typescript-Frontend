@@ -25,13 +25,13 @@ class Language {
   /**
    * Gibt aus der geladenen Sprache die Nachrichten die über die IDs angegeben werden.
    * @param id Array von den IDs, von denen die Nachricht geladen werden soll
-   * @returns id mit der Nachricht
+   * @returns id mit der Nachricht in der gleichen Reihenfolge, wie angefordert.
    */
   getMessage(id: number[]): { messageID: number, message: string; }[] {
     var messages: { messageID: number, message: string; }[] = new Array();
     for (let i = 0; i < id.length; i++) {
       if (this.language.length > id[i]) {
-        messages.push({ messageID: id[i], message: this.language[i] });
+        messages.push({ messageID: id[i], message: this.language[id[i]] });
       } else {
         messages.push({ messageID: id[i], message: "" });
       }
@@ -43,7 +43,13 @@ class Language {
    * Setzt eine neue Sprache
    * @param language die neue Sprache die geladen werden soll, Stelle 0 ist der Sprachencode und Stelle 1 ist der Sprachenname
    */
-  setLanguage(language: string[]): void {
-    this.language = language;
+  setLanguage(language: string[]): boolean {
+    if (language.length >= 2) {
+      this.language = language;
+      return true;
+    } else {
+      return false;
+    }
+
   }
 } export { Language };
