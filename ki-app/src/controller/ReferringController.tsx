@@ -22,14 +22,16 @@ export class RefferingController implements PageController {
         let state = this.page.getState();
         switch (state.action) {
             case "needQR":
-                break;
-            case "neenLink":
+                this.createQR();
                 break;
             case "login":
+                this.login();
                 break;
             case "newProjekt":
+                this.createNewProject();
                 break;
             case "loadModel":
+                this.loadModel();
                 break;
             case "setLanguage":
                 let languageCode = this.page.getLanguageCode();
@@ -64,7 +66,7 @@ export class RefferingController implements PageController {
         this.page.setState("showQRcode");
     }
 
-    createNewProject(projectName: string) {
+    createNewProject() {
         let sucess: boolean = MainController.getInstance().getFacade().createProject(this.page.getNewProjectName());
         if (sucess) {
             this.page.setState("needQR");

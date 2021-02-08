@@ -1,15 +1,30 @@
 import { PageController } from "./PageController";
-class ModelCreationController implements PageController{
-    changeHyperparamter(hyperparamterChange: string, hyperparamterId: number) {
+import { MainController } from "./MainController";
+export class ModelCreationController implements PageController {
 
-    }
-    checkMail(email: string) {
-        return false
-    }
-    sendMail(to: string) {
+    private page = new view.ModelCreationController();
 
-    }
     update() {
+        let state = this.page.getState();
+        switch (state) {
+            case "needAviableParamater":
+                break;
+            case "startTraining":
+                break;
+            case "needMessage":
+                let ids = this.page.getIds();
+                this.page.setMessages(MainController.getInstance().getMessage(ids));
+                break;
+            default:
+                break;
+        }
+    }
 
+    setAviableParameter() {
+        //todo
+    }
+
+    startTraining() {
+        //todo
     }
 }

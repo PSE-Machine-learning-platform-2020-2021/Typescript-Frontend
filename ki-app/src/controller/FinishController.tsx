@@ -1,24 +1,24 @@
 import { timeStamp } from "console";
 import { PageController } from "./PageController";
-import { MainController } from "./MainController"
+import { MainController } from "./MainController";
 
 export class FinishController implements PageController {
-    
-    private page = new view.FinishPage() 
+
+    private page = new view.FinishPage();
 
     /**
      * Konstruktor des Seitenverwalters. Registriert sich als Beobachter auf seiner Seite und setzt den start Status. 
      */
     constructor() {
-        this.page.attach(this)
-        this.page.setState("needMessage")
+        this.page.attach(this);
+        this.page.setState("needMessage");
     }
 
     /**
      * Die Update Methode des Seitenverwalters.
      */
-    update(){
-        let state = this.page.getState()
+    update() {
+        let state = this.page.getState();
         switch (state) {
             case "needDataRows":
                 this.getDataRows();
@@ -34,7 +34,7 @@ export class FinishController implements PageController {
                 this.newDataLabel();
                 break;
             case "deleteDataLabel":
-                this.deleteDataLabel()
+                this.deleteDataLabel();
                 break;
             default:
                 break;

@@ -1,8 +1,8 @@
 import { PageController } from "./PageController";
 import { SensorManager } from "./SensorManager";
 import { MainController } from "./MainController";
-import { FinishController } from "./FinishController"
-export class DataCollectionController implements PageController{
+import { FinishController } from "./FinishController";
+export class DataCollectionController implements PageController {
 
     private sensorManager: SensorManager;
     private page = new view.DataCollection();
@@ -23,14 +23,14 @@ export class DataCollectionController implements PageController{
     /**
      * Die Update Methode des Seitenverwalters.
      */
-    update(){
-        let state = this.page.getState()
+    update() {
+        let state = this.page.getState();
         switch (state.action) {
             case "start":
                 this.startDataRead();
                 break;
             case "finishPage":
-                this.changePageToFinishPage()
+                this.changePageToFinishPage();
                 break;
             case "needMessage":
                 let ids = this.page.getIds();
@@ -51,22 +51,22 @@ export class DataCollectionController implements PageController{
         this.page.setWaitTime(this.waitTime);
 
         let intervalId1 = setInterval(() => {
-            this.page.setState(state)
+            this.page.setState(state);
             this.waitTime = this.waitTime - 1;
             this.page.setWaitTime(this.waitTime);
-            if(this.waitTime === 0) clearInterval(intervalId1)
-        }, 1)
+            if (this.waitTime === 0) clearInterval(intervalId1);
+        }, 1);
 
         this.page.setState("read");
         this.page.setReadTime(this.readTime);
         let intervalId2 = setInterval(() => {
-            this.page.setState(state)
+            this.page.setState(state);
             this.readTime = this.readTime - 1;
             let data = this.sensorManager.readData();
             this.page.addDataPoint(data);
             this.page.setReadTime(this.readTime);
-            if(this.readTime === 0) clearInterval(intervalId2)
-        }, 1)
+            if (this.readTime === 0) clearInterval(intervalId2);
+        }, 1);
 
         this.page.setState("finishDataRead");
     }
