@@ -1,15 +1,15 @@
 import { Page } from "../view/pages/PageInterface";
 import { ReferringPage } from "../view/pages/ReferringPage/index";
-import { State } from "../view/pages/ReferringPage/State";
+import { State, States } from "../view/pages/ReferringPage/State";
 import { PageController } from "./PageController";
 import { MainController } from "./MainController";
-import { VisualizationController } from "./VisualizationController";
-import { AIController } from "./AIController";
-import { qrcodegen } from "../qrcode/qrcodegen";
+//import { VisualizationController } from "./VisualizationController";
+//import { AIController } from "./AIController";
+import { QRCode, ErrorCorrectLevel, QRNumber, QRAlphaNum, QR8BitByte, QRKanji } from 'qrcode-generator-ts/js';
+import { QRData } from "qrcode-generator-ts/js/qrcode/QRData";
 
 export class RefferingController implements PageController {
     private page: Page;
-    private qrc = qrcodegen.QrCode;
 
     /**
      * Konstruktor des Seitenverwalters. Registriert sich als Beobachter auf seiner Seite und setzt den start Status. 
@@ -23,25 +23,25 @@ export class RefferingController implements PageController {
      * Die Update Methode des Seitenverwalters.
      */
     update() {
-        let currentState: State.States = this.page.getState();
+        let currentState: States = this.page.getState();
         switch (currentState) {
-            case State.States.NeedQR:
+            case States.NeedQR:
                 this.createQR();
                 break;
-            case State.States.Login:
+            case States.Login:
                 this.login();
                 break;
-            case State.States.NewProjekt:
+            case States.NewProjekt:
                 this.createNewProject();
                 break;
-            case State.States.LoadModel:
+            case States.LoadModel:
                 this.loadModel();
                 break;
-            case State.States.SetLanguage:
+            case States.SetLanguage:
                 let languageCode = this.page.getState().languageCode;
                 //this.page.languageChanged(MainController.getInstance().setLanguage(languageCode));
                 break;
-            case State.States.NeedMessage:
+            case States.NeedMessage:
                 let ids = this.page.getState().messageIDs;
                 this.page.getState().messages = MainController.getInstance().getMessage(ids);
                 break;
@@ -52,9 +52,9 @@ export class RefferingController implements PageController {
 
     login() {
         let loginData: string[] = this.page.getState().loginData;
-        let loginSucess: boolean = MainController.getInstance().getFacade().loginAdmin(loginData[0], loginData[0]);
+        let loginSucess: boolean = false;//MainController.getInstance().getFacade().loginAdmin(loginData[0], loginData[0]);
         if (loginSucess) {
-            let projectMeta: { projectID: number; projectName: string; }[] = MainController.getInstance().getFacade().getProjectMetas();
+            let projectMeta: { projectID: number; projectName: string; }[] = [{ projectID: 1, projectName: "w" }]; //MainController.getInstance().getFacade().getProjectMetas();
             this.page.getState().projectMeta = projectMeta;
             this.page.setState("loggedIn");
         } else {
@@ -63,15 +63,19 @@ export class RefferingController implements PageController {
     }
 
     createQR() {
-        let link: string = MainController.getInstance().getFacade().getDataMinerLink();
-        let qr0 = this.qrc.encodeText(link, this.qrc.Ecc.MEDIUM);
-        let svg = qr0.toSvgString(4);
-        this.page.getState().qrSvg = svg;
-        this.page.setState(State.States.ShowQR);
+        let link: string = "test"; //MainController.getInstance().getFacade().getDataMinerLink();
+
+        var qr = new QRCode();
+        qr.setTypeNumber(5);
+        qr.setErrorCorrectLevel(ErrorCorrectLevel.L);
+        qr.addData(link);
+        qr.make();
+
+        this.page.setState(States.ShowQR);
     }
 
     createNewProject() {
-        let sucess: boolean = MainController.getInstance().getFacade().createProject(this.page.getState().toLoadProjectID);
+        let sucess: boolean = false;//MainController.getInstance().getFacade().createProject(this.page.getState().toLoadProjectID);
         if (sucess) {
             this.page.setState("needQR");
         } else {
@@ -81,7 +85,7 @@ export class RefferingController implements PageController {
 
     loadProject() {
         let projectId: number = this.page.getState().toLoadProjectID;
-        let sucess: boolean = MainController.getInstance().getFacade().loadProject(projectId);
+        let sucess: boolean = false;//MainController.getInstance().getFacade().loadProject(projectId);
         if (sucess) {
             this.page.setState("needQR");
         } else {
@@ -91,17 +95,17 @@ export class RefferingController implements PageController {
 
     loadModel() {
         let projectId: number = this.page.getState().toLoadProjectID;
-        let sucess: boolean = MainController.getInstance().getFacade().loadProject(projectId);
+        let sucess: boolean = false;// MainController.getInstance().getFacade().loadProject(projectId);
         if (sucess) {
-            let aiController: AIController = new AIController();
-            MainController.getInstance().changeTo(aiController);
+            //let aiController: AIController = new AIController();
+            //MainController.getInstance().changeTo(aiController);
         } else {
             this.page.setState("ProjectError");
         }
     }
 
     changeToVisualization() {
-        let visualizationController: VisualizationController = new VisualizationController();
-        MainController.getInstance().changeTo(visualizationController);
+        //let visualizationController: VisualizationController = new VisualizationController();
+        //MainController.getInstance().changeTo(visualizationController);
     }
 }

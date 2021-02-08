@@ -6,6 +6,8 @@ import LoadModelButton from '../../components/ReferringComponents/LoadModelButto
 import { Page } from "../PageInterface";
 import { PageController } from "../../../controller/PageController";
 import { State } from "./State";
+import { MainController } from '../../../controller/MainController';
+import ReactDOM from 'react-dom';
 
 type Props = {
 };
@@ -17,9 +19,18 @@ export class ReferringPage extends React.Component<Props, State> implements Page
 
     constructor(props: Props) {
         super(props);
+        this.render();
     }
 
+
     render() {
+        ReactDOM.render(<div>
+            <ConstantsText />
+            <NewProjectButton />
+            <LoginButton />
+            <LoadModelButton />
+        </div>, document.getElementById('root'));
+
         return (
             <div>
                 <ConstantsText />

@@ -1,9 +1,18 @@
 import React from 'react';
 import logo from './logo.svg';
 import './App.css';
+import { MainController } from "./controller/MainController";
 
 function App() {
   return (
+    MainController.getInstance().startDesktop()
+  );
+}
+
+export default App;
+
+/**
+ * return (
     <div className="App">
       <header className="App-header">
         <img src={logo} className="App-logo" alt="logo" />
@@ -21,6 +30,4 @@ function App() {
       </header>
     </div>
   );
-}
-
-export default App;
+ */

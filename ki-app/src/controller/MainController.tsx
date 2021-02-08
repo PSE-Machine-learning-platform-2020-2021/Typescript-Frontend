@@ -1,5 +1,5 @@
 import { PageController } from "./PageController";
-import { StartController } from "./StartController";
+//import { StartController } from "./StartController";
 import { RefferingController } from "./ReferringController";
 import { MainControllerInterface } from "./MainControllerInterface";
 import { Facade } from "../model/Facade";
@@ -15,7 +15,7 @@ export class MainController implements MainControllerInterface {
    * Konstruktor des MainControllers. Holt sich die Fassade.
    */
   constructor() {
-    this.facade = new Facade("de");
+    this.facade = new Facade();
   }
 
   /**
@@ -43,7 +43,7 @@ export class MainController implements MainControllerInterface {
    * @returns Gibt true zurück falls der Benutzer angemeldet ist, sonst wird false zurück gegeben.
    */
   checkLoginStatus() {
-    return this.facade.checkLogin();
+    return false;//this.facade.checkLogin();
   }
 
   // static getSession() {
@@ -70,8 +70,8 @@ export class MainController implements MainControllerInterface {
    * Andwendungstart für ein Smartphone
    */
   startSmartphone() {
-    let startController: StartController = new StartController();
-    this.changeTo(startController);
+    //let startController: StartController = new StartController();
+    //this.changeTo(startController);
   }
 
   /**
@@ -86,7 +86,7 @@ export class MainController implements MainControllerInterface {
    * @returns Gibt alle texte zu den übergebenen ids zurück.
    */
   getMessage(ids: number[]) {
-    return MainController.getInstance().getFacade().getMessage(ids);
+    return [];//MainController.getInstance().getFacade().getMessage(ids);
   }
 
   /**
@@ -94,7 +94,7 @@ export class MainController implements MainControllerInterface {
    * @returns Gibt true zurück falls der wechsel erfolgt ist, sonst false.
    */
   setLanguage(languageCode: string) {
-    let changed = this.facade.setLanguage(languageCode);
+    let changed = true;//this.facade.setLanguage(languageCode);
     return changed;
   }
 }

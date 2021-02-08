@@ -1,4 +1,4 @@
-import React, { Component } from 'react'
+import React, { Component } from 'react';
 import NewWindow from "react-new-window";
 
 export default class LoginButton extends Component {
@@ -7,32 +7,32 @@ export default class LoginButton extends Component {
     openNewWindow: false,
     username: '',
     password: '',
-  }
+  };
 
   openNewWindow = () => {
-    this.setState({ openNewWindow: true })
+    this.setState({ openNewWindow: true });
   };
   changeUsername = (e: React.ChangeEvent<HTMLInputElement>) => {
     this.setState(() => ({
       username: e.target.value
-    }))
-  }
+    }));
+  };
   changePassword = (e: React.ChangeEvent<HTMLInputElement>) => {
     this.setState(() => ({
       password: e.target.value
-    }))
-  }
+    }));
+  };
   submit = () => {
     /** nach submit newFenster schliessen */
-    this.setState({ openNewWindow: false })
+    this.setState({ openNewWindow: false });
     /** mit controller weiter veraendern*/
     if (this.state.username === '123' && this.state.password === 'abc') {
-      alert('success')
+      alert('success');
     }
     else {
-      alert('fail')
+      alert('fail');
     }
-  }
+  };
 
   render() {
     return (
