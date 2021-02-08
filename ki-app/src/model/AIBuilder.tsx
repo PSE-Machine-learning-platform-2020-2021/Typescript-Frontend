@@ -1,5 +1,4 @@
 import { findAllByPlaceholderText } from "@testing-library/react"
-import { Facade, FacadeInterface } from "./Facade"
 
 /**
  * Diese Klasse verwaltet die Interaktion mit dem Python-Backend und die zugehörige Kommunikation.
@@ -32,7 +31,7 @@ export class AIBuilder {
      * @param dataSetId Die ID des Datensatzes, den das KI-Modell klassifizieren soll.
      * @param callBack Eine Rückmelde-Funktion des "aufrufenden" Controllers, mit der das Ergebnis der Klassifizierung an den Controller zurückgegeben wird.
      */
-    classify(dataSetId: number, callBack: <T = unknown, R = unknown>(prediction: T) => R): void {
+    classify(dataSetId: number, callBack: <R = unknown>(prediction: string|object) => R): void {
         let requestData: string = JSON.stringify({"classifier": this.modelId, "dataSet": dataSetId})
         this.sendRequest(requestData, AIBuilder.url + AIBuilder.classify, callBack)
     }
