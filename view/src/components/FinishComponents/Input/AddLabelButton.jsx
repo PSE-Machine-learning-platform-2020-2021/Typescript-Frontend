@@ -28,7 +28,7 @@ export default class AddLabelButton extends Component {
     };
 
     handleAdd = (event) => {
-        const labelObj = { id: nanoid(), name: this.state.name, done: false };
+        const labelObj = { id: nanoid(), name: this.state.name, start: this.state.start, end: this.state.end };
         this.props.addLabel(labelObj);
         this.setState({
             name: '', start: '', end: ''

@@ -1,5 +1,5 @@
 export enum Status {
-  NeedDiagram,
-  GotDiagram,
+  NeedData,
+  GotData,
   ChangePage
 }
