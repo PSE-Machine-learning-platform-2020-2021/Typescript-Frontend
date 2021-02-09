@@ -2,6 +2,7 @@ import { PageController } from "./PageController";
 import { SensorManager } from "./SensorManager";
 import { MainController } from "./MainController";
 import { FinishController } from "./FinishController";
+import { STATUS_CODES } from "http";
 export class DataCollectionController implements PageController {
 
     private sensorManager: SensorManager;
@@ -17,22 +18,21 @@ export class DataCollectionController implements PageController {
     constructor(sensorManager: SensorManager) {
         this.sensorManager = sensorManager;
         this.page.attach(this);
-        this.page.setState("needMessage");
     }
 
     /**
      * Die Update Methode des Seitenverwalters.
      */
     update() {
-        let state = this.page.getState();
-        switch (state.action) {
-            case "start":
+        let state: State = this.page.getState();
+        switch (state.currentState) {
+            case States.start:
                 this.startDataRead();
                 break;
-            case "finishPage":
+            case States.finishPage:
                 this.changePageToFinishPage();
                 break;
-            case "needMessage":
+            case States.needMessage:
                 let ids = this.page.getIds();
                 this.page.setMessages(MainController.getInstance().getMessage(ids));
                 break;
@@ -47,7 +47,7 @@ export class DataCollectionController implements PageController {
     private startDataRead() {
         this.waitTime = this.sensorManager.getWaitTime() * this.SECOND;
         this.readTime = this.sensorManager.getReadTime() * this.SECOND;
-        this.page.setState("wait");
+        this.page.setState(States.wait);
         this.page.setWaitTime(this.waitTime);
 
         let intervalId1 = setInterval(() => {
@@ -57,7 +57,7 @@ export class DataCollectionController implements PageController {
             if (this.waitTime === 0) clearInterval(intervalId1);
         }, 1);
 
-        this.page.setState("read");
+        this.page.setState(States.read);
         this.page.setReadTime(this.readTime);
         let intervalId2 = setInterval(() => {
             this.page.setState(state);
@@ -68,7 +68,7 @@ export class DataCollectionController implements PageController {
             if (this.readTime === 0) clearInterval(intervalId2);
         }, 1);
 
-        this.page.setState("finishDataRead");
+        this.page.setState(States.finishDataRead);
     }
 
     /**

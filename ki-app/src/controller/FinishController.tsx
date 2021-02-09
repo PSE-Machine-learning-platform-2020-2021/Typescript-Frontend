@@ -4,36 +4,36 @@ import { MainController } from "./MainController";
 
 export class FinishController implements PageController {
 
-    private page = new view.FinishPage();
+    private page;
 
     /**
      * Konstruktor des Seitenverwalters. Registriert sich als Beobachter auf seiner Seite und setzt den start Status. 
      */
     constructor() {
+        this.page = new FinishPage({});
         this.page.attach(this);
-        this.page.setState("needMessage");
     }
 
     /**
      * Die Update Methode des Seitenverwalters.
      */
     update() {
-        let state = this.page.getState();
+        let state: State = this.page.getState();
         switch (state) {
-            case "needDataRows":
+            case States.needDataRows:
                 this.getDataRows();
                 break;
-            case "needMessage":
+            case States.needMessage:
                 let ids = this.page.getIds();
                 this.page.setMessages(MainController.getInstance().getMessage(ids));
                 break;
-            case "changeDataLabel":
+            case States.changeDataLabel:
                 this.changeDataLabel();
                 break;
-            case "newDataLabel":
+            case States.newDataLabel:
                 this.newDataLabel();
                 break;
-            case "deleteDataLabel":
+            case States.deleteDataLabel:
                 this.deleteDataLabel();
                 break;
             default:
