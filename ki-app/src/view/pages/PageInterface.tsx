@@ -4,7 +4,7 @@ export interface Page {
 
   attach(observer: PageController): void;
 
-  detach(): void;
+  detach(observer: PageController): void;
 
   notify(): void;
 

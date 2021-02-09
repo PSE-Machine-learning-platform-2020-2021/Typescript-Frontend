@@ -61,18 +61,11 @@ export class MainController implements MainControllerInterface {
   /**
    * Andwendungstart für einen Desktop
    */
-  startDesktop() {
+  startApp() {
     let refferingController: RefferingController = new RefferingController();
     this.changeTo(refferingController);
   }
 
-  /**
-   * Andwendungstart für ein Smartphone
-   */
-  startSmartphone() {
-    //let startController: StartController = new StartController();
-    //this.changeTo(startController);
-  }
 
   /**
    * @returns Gibt die Fassade zurück

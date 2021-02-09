@@ -14,25 +14,13 @@ type Props = {
 
 export class ReferringPage extends React.Component<Props, State> implements Page {
 
-    observer: PageController[] = [];
-    state: State = new State();
-
+    observers: PageController[] = [];
     bttn: HTMLElement;
 
 
 
     constructor(props: Props) {
         super(props);
-        this.render();
-
-        this.bttn = document.getElementById("new")!;
-        console.log(this.bttn);
-        this.bttn.onclick = function () {
-            console.log("test");
-        };
-    }
-
-    render() {
         ReactDOM.render(<div>
             <ConstantsText />
             <NewProjectButton />
@@ -40,6 +28,16 @@ export class ReferringPage extends React.Component<Props, State> implements Page
             <LoadModelButton />
         </div>, document.getElementById('root'));
 
+        this.bttn = document.getElementById("new")!;
+        console.log(this.bttn);
+        this.bttn.onclick = function () {
+            console.log("test");
+        };
+
+
+    }
+
+    render() {
         return (
             <div>
                 <ConstantsText />
@@ -51,19 +49,22 @@ export class ReferringPage extends React.Component<Props, State> implements Page
     }
 
     attach(observer: PageController) {
-        this.observer.push(observer);
+        this.observers.push(observer);
     }
 
-    detach() {
-        //todo
+    detach(observer: PageController) {
+        const index = this.observers.indexOf(observer, 0);
+        if (index > -1) {
+            this.observers.splice(index, 1);
+        }
     }
+
 
     notify() {
-        for (let index = 0; index < this.observer.length; index++) {
-            const element = this.observer[index];
+        for (let index = 0; index < this.observers.length; index++) {
+            const element = this.observers[index];
             element.update();
         }
-
     }
 
     getState() {
@@ -72,5 +73,6 @@ export class ReferringPage extends React.Component<Props, State> implements Page
 
     setState(state: State) {
         this.state = state;
+        this.notify();
     }
 }
