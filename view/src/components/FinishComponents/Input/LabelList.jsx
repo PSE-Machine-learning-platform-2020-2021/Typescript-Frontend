@@ -12,7 +12,7 @@ export default class LabelList extends Component {
     render() {
         const { labels, deleteLabel } = this.props;
         return (
-            <ul className="label-main">
+            <ul class="label-main">
                 {
                     labels.map(label => {
                         return <LabelItem key={label.id} {...label} deleteLabel={deleteLabel} />;

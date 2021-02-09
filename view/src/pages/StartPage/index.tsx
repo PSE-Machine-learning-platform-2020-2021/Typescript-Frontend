@@ -6,7 +6,12 @@ import { Page } from "../PageInterface";
 import Observer from '../Observer';
 
 export default class StartPage extends Component implements Page {
-    state = { Observer: new Observer(), Status: Status.NeedData, AvailableSensors: ['', '', '', ''], ChosenSensors: ['', '', '', ''] };
+    state = {
+        Observer: new Observer(),
+        Status: Status.NeedData, //NeedData means need diagram and text with the chosen language
+        AvailableSensors: ['', '', '', ''],
+        ChosenSensors: ['', '', '', '']
+    };
 
     attach(observer: Observer) {
         this.setState(state => ({

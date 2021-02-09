@@ -12,30 +12,10 @@ import LabelList from '../../components/FinishComponents/Input/LabelList';
 
 export default class FinishPage extends Component implements Page {
   state = {
-    Observer: new Observer(), Status: Status.NeedDiagram, Diagram: Document, labels: [
-      { id: '0', name: 'example-label', chosen: false, start: '0', end: '0' },
-    ]
-  };
-
-  addLabel = (labelObj) => {
-
-    const labels = this.state.labels;
-
-    const newLabels = [labelObj, ...labels];
-
-    this.setState({ labels: newLabels });
-  };
-
-
-  deleteLabel = (id) => {
-
-    const labels = this.state.labels;
-
-    const newLabels = labels.filter((labelObj) => {
-      return labelObj.id !== id;
-    });
-
-    this.setState({ labels: newLabels });
+    Observer: new Observer(),
+    Status: Status.NeedData, //NeedData means need diagram and text with the chosen language
+    Diagram: Document, //the diagram is saved here
+    Labels: [{ id: '0', name: 'example-label', chosen: false, start: '0', end: '0' }]
   };
 
   attach(observer: Observer) {
@@ -74,9 +54,41 @@ export default class FinishPage extends Component implements Page {
     }));
   }
 
+  getLabels() {
+    return this.state.Labels;
+  }
+
+  setLabels(newLabels) {
+    this.setState(state => ({
+      Labels: newLabels
+    }));
+  }
+
+
+  addLabel = (labelObj) => {
+
+    const labels = this.state.Labels;
+
+    const newLabels = [labelObj, ...labels];
+
+    this.setState({ labels: newLabels });
+  };
+
+
+  deleteLabel = (id) => {
+
+    const labels = this.state.Labels;
+
+    const newLabels = labels.filter((labelObj) => {
+      return labelObj.id !== id;
+    });
+    this.setState({ labels: newLabels });
+  };
+
+
 
   render() {
-    const labels = this.state.labels;
+    const labels = this.state.Labels;
     return (
       <div>
         <Title />
