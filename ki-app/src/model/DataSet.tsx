@@ -35,7 +35,7 @@ class DataSet {
   constructor(dataRowSensors: Sensor[], dataSetID: number, dataSetName: string, generateDate: number, dataRows: { dataRowID: number, recordingStart: number, dataRow: { value: number, relativeTime: number; }[]; }[], label: { name: string, labelID: number, start: number, end: number; }[]);
   constructor(dataRowSensors: Sensor[], dataSetID: number, dataSetName: string, generateDate?: number, dataRows?: { dataRowID: number, recordingStart: number, dataRow: { value: number, relativeTime: number; }[]; }[], label?: { name: string, labelID: number, start: number, end: number; }[]) {
     if (dataRows != null) {
-      for (let i: number = 0; i < dataRows.length && i < dataRowSensors.length; i++) {
+      for (let i = 0; i < dataRows.length && i < dataRowSensors.length; i++) {
         this.dataRow.push(new DataRow(dataRowSensors[i], dataRows[i].dataRowID, dataRows[i].recordingStart, dataRows[i].dataRow));
       }
     } else {

@@ -243,11 +243,14 @@ class Admin extends User {
    * @param dataSetID die Datensatz ID
    * @returns false, falls der Datensatz mit der ID nicht existiert oder kein aktuelles Projekt existiert
    */
-  deleteDataSet(dataSetID: number): boolean {
+  deleteDataSet(dataSetID: number): number {
     if (this.currentProject != null) {
-      return this.currentProject.deleteDataSet(dataSetID);
+      let datasetExist: boolean = this.currentProject.deleteDataSet(dataSetID);
+      if (datasetExist) {
+        return this.currentProject.getID();
+      }
     }
-    return false;
+    return -1;
   }
 
   /**
@@ -289,7 +292,7 @@ class Admin extends User {
     return {};
   }
 
-  private existProject(projectID: number): boolean {
+  existProject(projectID: number): boolean {
     for (let i = 0; i < this.project.length; i++) {
       if (this.project[i].getID() == projectID) {
         return true;

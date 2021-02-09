@@ -62,9 +62,11 @@ class Facade {
    */
   createDataSet(sensorTypeID: number[], dataSetName: string): boolean {
     if (this.user != null && this.user instanceof Dataminer && this.admin != null) {
+      let dataminerName: string = this.user.getName();
+      let sessionID: number = this.getSessionID();
       let dataRowSensors: Sensor[] = this.user.getDeviceSensors(sensorTypeID);
-      if (dataRowSensors.length > 0) {
-        let dataSetID: number = this.explorerConnector.createDataSet(this.getSessionID(), sensorTypes, this.user.getName(), dataSetName);
+      if (dataRowSensors.length > 0 && dataRowSensors.length == sensorTypeID.length) {
+        let dataSetID: number = this.explorerConnector.createDataSet(sessionID, sensorTypeID, dataminerName, dataSetName);
         return this.admin.createDataSet(dataRowSensors, dataSetID, dataSetName);
       }
     }
@@ -80,8 +82,9 @@ class Facade {
    */
   sendDataPoint(dataRowID: number, value: number, relativeTime: number): boolean {
     if (this.admin != null) {
+      let sessionID: number = this.getSessionID();
       let dataSetID: number = this.admin.getCurrentDataSetID();
-      return this.explorerConnector.sendDataPoint(this.getSessionID(), dataSetID, dataRowID, value, relativeTime);
+      return this.explorerConnector.sendDataPoint(sessionID, dataSetID, dataRowID, value, relativeTime);
     }
     return false;
   }
@@ -104,7 +107,7 @@ class Facade {
    *          die Projekt ID existiert und der Admin dafür angemeldet ist
    */
   loadProject(projectID: number): boolean {
-    if (this.admin != null) {
+    if (this.admin != null && !this.admin.existProject(projectID)) {
       let adminEmail: string = this.admin.getEmail();
       return this.admin.loadProject(this.explorerConnector.loadProject(adminEmail, projectID));
     }
@@ -115,7 +118,7 @@ class Facade {
    * Lädt vom aktuell angemeldeten Admin von seinen Projekten den Namen und die die Projekt ID
    * @returns Von allen Projekten des Admins Projekt ID und Projektname
    */
-  getProjectMetas(): { projectID: number, projectName: string; }[] {
+  getProjectMetas(): { projectID: number, projectName: string, AIModelExist: boolean; }[] {
     return this.explorerConnector.getProjectMetas(this.getAdminEmail());
   }
 
@@ -181,8 +184,11 @@ class Facade {
    * @returns true, falls die Sprache erfolgreich geladen wurde
    */
   setLanguage(languageCode: string): boolean {
-    let language: string[] = this.explorerConnector.loadLanguage(languageCode);
-    return this.language.setLanguage(language);
+    if (languageCode != this.language.getLanguageCode()) {
+      let language: string[] = this.explorerConnector.loadLanguage(languageCode);
+      return this.language.setLanguage(language);
+    }
+    return true;
   }
 
   /**
@@ -209,11 +215,10 @@ class Facade {
    */
   deleteDataSet(dataSetID: number): boolean {
     if (this.admin != null) {
-      let dataSetExist: boolean = this.admin.deleteDataSet(dataSetID);
-      if (dataSetExist) {
-        let projectID: number = this.admin.getCurrentProjectID();
-        let dataSetID: number = this.admin.getCurrentDataSetID();
-        this.explorerConnector.deleteDataSet(this.getAdminEmail(), projectID, dataSetID);
+      let projectID: number = this.admin.deleteDataSet(dataSetID);
+      if (projectID >= 0) {
+        let adminEmail: string = this.getAdminEmail();
+        this.explorerConnector.deleteDataSet(adminEmail, projectID, dataSetID);
         return true;
       }
     }

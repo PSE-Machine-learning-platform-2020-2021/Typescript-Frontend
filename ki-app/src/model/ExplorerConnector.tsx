@@ -15,7 +15,7 @@ class ExplorerConnector {
   createProject(adminEmail: string, projectName: string): object { }
 
   //Erzeugt einen Datensatz mit übergebenen Parametern
-  createDataSet(sessionID: number, sensorTypes: string[], dataminerName: string, dataSetName: string): number { }
+  createDataSet(sessionID: number, sensorTypeID: number[], dataminerName: string, dataSetName: string): number { }
 
   //Sendet den Datenpunkt mit den übergebenen Parametern
   sendDataPoint(sessionID: number, datSetID: number, dataRowID: number, value: number, relativeTime: number): boolean { }
@@ -34,7 +34,7 @@ class ExplorerConnector {
   } { }
 
   //Gibt von allen Projekten des angemeldeten Ad-mins, mit der Email adminEmail, die Projekt ID und den Projekt Namen zurück
-  getProjectMetas(adminEmail: string): { projectID: number, projectName: string; }[] { }
+  getProjectMetas(adminEmail: string): { projectID: number, projectName: string, AIModelExist: boolean; }[] { }
 
   //Löscht den Datensatz im Projekt welcher die angegebene ID besitzt. Der Datensatz wird im Programm und auf der Explorer-Datenbank gelöscht.
   deleteDataSet(email: string, projectID: number, dataSetID: number): boolean { }
