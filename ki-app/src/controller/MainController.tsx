@@ -23,7 +23,7 @@ export class MainController implements MainControllerInterface {
    * @returns MainController
    */
   static getInstance() {
-    if (this.mainController == undefined) {
+    if (this.mainController === undefined) {
       this.mainController = new MainController();
       return this.mainController;
     }

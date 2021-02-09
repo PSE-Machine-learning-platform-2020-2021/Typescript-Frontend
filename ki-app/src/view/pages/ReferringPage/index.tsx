@@ -17,11 +17,20 @@ export class ReferringPage extends React.Component<Props, State> implements Page
     observer: PageController[] = [];
     state: State = new State();
 
+    bttn: HTMLElement;
+
+
+
     constructor(props: Props) {
         super(props);
         this.render();
-    }
 
+        this.bttn = document.getElementById("new")!;
+        console.log(this.bttn);
+        this.bttn.onclick = function () {
+            console.log("test");
+        };
+    }
 
     render() {
         ReactDOM.render(<div>
