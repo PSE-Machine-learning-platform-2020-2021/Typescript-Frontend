@@ -51,7 +51,6 @@ class Facade {
   constructor(languageCode: string) {
     this.explorerConnector = new ExplorerConnector();
     this.language = new Language(this.explorerConnector.loadLanguage(languageCode));
-
   }
 
   /**
@@ -93,7 +92,7 @@ class Facade {
    * Liest für den aktuellen Datensatz den Sensor aus von der Datenreihe mit der übergebenen ID
    * @param dataRowID die DatenreihenID
    */
-  readDataPoint(dataRowID: number): { dataPoint?: { value: number, relativeTime: number; } {
+  readDataPoint(dataRowID: number): { dataPoint?: { value: number, relativeTime: number; }; } {
     if (this.admin != null) {
       return this.admin.readDataPoint(dataRowID);
     }
@@ -225,28 +224,92 @@ class Facade {
     return false;
   }
 
-  registerAdmin(adminName: string, email: string, password: string): boolean { }
+  registerAdmin(adminName: string, email: string, password: string): boolean {
+    let IDs: { adminID: number, deviceID: number; } = this.explorerConnector.registerAdmin(adminName, email, password);
+    if (IDs.adminID >= 0) {
+      this.admin = new Admin(IDs.adminID, IDs.deviceID, adminName, email);
+      return true;
+    }
+    return false;
+  }
 
-  registerDataminer(dataminerName: string, sessionID: number): boolean { }
+  registerDataminer(dataminerName: string, sessionID: number): boolean {
+    let dataminer: {
+      dataminerID: number, deviceID: number, project:
+      { projectID: number, projectName: string, sessionID: number; };
+    } = this.explorerConnector.registerDataminer(dataminerName, sessionID);
+    if (dataminer.dataminerID >= 0 && dataminer.deviceID >= 0) {
+      this.admin = new Admin(-1, -1, "", "");
+      this.admin.loadProject(dataminer.project);
+      this.user = new Dataminer(dataminer.dataminerID, dataminer.deviceID, dataminerName);
+      return true;
+    }
+    return false;
+  }
 
-  registerAIModelUser(aiModelUserName: string): boolean { }
+  loginAdmin(email: string, password: string): boolean {
+    if (this.admin == null) {
+      let adminData: {
+        admin?: {
+          adminID: number, deviceID: number, adminName: string, email: string,
+          device: { MACADRESS: string, deviceName: string, firmware: string, generation: string, deviceType: string; };
+        };
+      } = this.explorerConnector.loginAdmin(email, password);
+      if (adminData.admin != null) {
+        //Nur umbenennen von adminData.admin zu admin
+        let admin: { adminID: number, deviceID: number, adminName: string, email: string, device: { MACADRESS: string, deviceName: string, firmware: string, generation: string, deviceType: string; }; } = adminData.admin;
 
-  loginAdmin(email: string, password: string): boolean { }
+        this.admin = new Admin(admin.adminID, admin.deviceID, admin.adminName, admin.email, admin.device);
+        return true;
+      }
+    }
+    return false;
+  }
 
-  logoutAdmin(): boolean { }
+  logoutAdmin(): boolean {
+    if (this.admin != null) {
+      let logout = this.explorerConnector.logoutAdmin(this.getAdminEmail());
+      if (logout) {
+        delete this.admin;
+      } else {
+        return false;
+      }
+    }
+    return true;
+  }
 
-  createProject(projectName: string): boolean { }
+  createProject(projectName: string): boolean {
+    if (this.admin != null) {
+      let project: { projectID: number, sessionID: number; } = this.explorerConnector.createProject(this.getAdminEmail(), projectName);
+      return this.admin.createProject(project.projectID, project.sessionID, projectName);
+    }
+    return false;
+  }
 
-  setLabel(labelID: number, start: number, end: number): boolean { }
+  setLabel(labelID: number, span: { start: number, end: number; }, labelName?: string): boolean {
+    if (this.admin != null) {
+      return this.admin.setLabel(labelID, span, labelName);
+    }
+    return false;
+  }
 
-  getLabels(): object[] { }
-
-  checkLogin(): boolean { }
+  getLabels(): { labels?: { name: string, id: number, start: number, end: number; }[]; } {
+    if (this.admin != null) {
+      return this.admin.getLabels();
+    }
+    return {};
+  }
 
   classify(aiId: number, dataSetId: number, callBack: Function): void { }
 
-  getAIModel(format: DeliveryFormat): object { }
+  getAIModel(format: DeliveryFormat): {} { return {}; }
 
   applyModel(modeldata: object): void { }
 
 } export { Facade };
+
+
+
+  // wird aktuell nicht benutzt
+  // registerAIModelUser(aiModelUserName: string): boolean { }
+  // checkLogin(): boolean { }

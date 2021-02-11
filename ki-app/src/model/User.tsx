@@ -100,18 +100,24 @@ class Admin extends User {
    * @returns false, falls die Projekt ID schon existiert
    */
   loadProject(project: {
-    projectID: number, sessionID: number, projectName: string, aiModelID: number[],
-    dataSet: {
-      dataRowSensors: Sensor[], dataSetID: number, dataSetName: string, generateDate: number,
-      dataRows: {
-        dataRowID: number, recordingStart: number,
-        dataRow: { value: number, relativeTime: number; }[];
-      }[],
-      label: { name: string, labelID: number, start: number, end: number; }[];
-    }[];
+    projectID: number, sessionID: number, projectName: string, projectData?: {
+      aiModelID: number[],
+      dataSet: {
+        dataRowSensors: Sensor[], dataSetID: number, dataSetName: string, generateDate: number,
+        dataRows: {
+          dataRowID: number, recordingStart: number,
+          dataRow: { value: number, relativeTime: number; }[];
+        }[],
+        label: { name: string, labelID: number, start: number, end: number; }[];
+      }[];
+    };
   }): boolean {
     if (!this.existProject(project.projectID)) {
-      this.project.push(new Project(project.projectID, project.sessionID, project.projectName, this, project.aiModelID, project.dataSet));
+      if (project.projectData != null) {
+        this.project.push(new Project(project.projectID, project.sessionID, project.projectName, this, project.projectData.aiModelID, project.projectData.dataSet));
+      } else {
+        this.project.push(new Project(project.projectID, project.sessionID, project.projectName, this));
+      }
       return true;
     } else {
       return false;
@@ -266,6 +272,19 @@ class Admin extends User {
     } else {
       return false;
     }
+  }
+
+  /**
+   * Setzt beim aktuellen Datensatz dem Label mit der LabelID die neu übergebenen Daten
+   * @param labelID 
+   * @param start startzeit des Labels in Millisekunden
+   * @param end endzeit des Labels in Millisekunden
+   */
+  setLabel(labelID: number, span: { start: number, end: number; }, labelName?: string): boolean {
+    if (this.currentProject != null) {
+      return this.currentProject.setLabel(labelID, span, labelName);
+    }
+    return false;
   }
 
   /**

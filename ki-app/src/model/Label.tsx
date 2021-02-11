@@ -27,12 +27,15 @@ class Label {
    * @param end Ist die neue Endzeit des Labels.
    * @param name Ist bei angabe der neue Name des Labels.
    */
-  public setLabel(start: number, end: number, name?: string): void {
+  public setLabel(span?: { start: number, end: number; }, name?: string): void {
     if (name != null) {
       this.name = name;
     }
-    this.timeSpan.setStart(start);
-    this.timeSpan.setEnd(end);
+    if (span != null) {
+      this.timeSpan.setStart(span.start);
+      this.timeSpan.setEnd(span.end);
+    }
+
   }
 
   /**

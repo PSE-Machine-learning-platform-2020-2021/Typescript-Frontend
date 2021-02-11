@@ -117,16 +117,15 @@ class DataSet {
 
   /**
    * Setzt dem Label mit der übergebenen ID neue Werte.
-   * @param start Ist die neue Startzeit des Labels.
-   * @param end Ist die neue Endzeit des Labels.
+   * @param span ist die Start- und Endzeit in Millisekunden.
    * @param labelID Die Label ID, welche überarbeitet werden soll.
    * @param labelName Ist bei Angabe der neue Name des Labels.
    * @returns falls das Label nicht existiert wird false zurück gegeben
    */
-  public setLabel(start: number, end: number, labelID: number, labelName?: string): boolean {
+  public setLabel(labelID: number, span?: { start: number, end: number; }, labelName?: string): boolean {
     for (let i = 0; i < this.label.length; i++) {
       if (this.label[i].getID() == labelID) {
-        this.label[i].setLabel(start, end, labelName);
+        this.label[i].setLabel(span, labelName);
         return true;
       }
     }

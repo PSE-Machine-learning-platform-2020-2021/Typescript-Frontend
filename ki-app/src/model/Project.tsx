@@ -193,7 +193,14 @@ class Project {
    */
   createLabel(start: number, end: number, labelID: number, labelName?: string): boolean {
     if (this.currentDataSet != null) {
-      return this.currentDataSet.setLabel(start, end, labelID, labelName);
+      return this.currentDataSet.setLabel(labelID, { start, end }, labelName);
+    }
+    return false;
+  }
+
+  setLabel(labelID: number, span: { start: number, end: number; }, labelName?: string): boolean {
+    if (this.currentDataSet != null) {
+      return this.currentDataSet.setLabel(labelID, span, labelName);
     }
     return false;
   }
