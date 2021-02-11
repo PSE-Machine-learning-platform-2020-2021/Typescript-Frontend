@@ -1,15 +1,20 @@
+
+import { DataCollectionPage } from "../view/pages/DataCollectionPage/index";
+import { Page } from "../view/pages/PageInterface";
+import { IState, States } from "../view/pages/State";
+
 import { PageController } from "./PageController";
 import { SensorManager } from "./SensorManager";
 import { MainController } from "./MainController";
 import { FinishController } from "./FinishController";
-import { STATUS_CODES } from "http";
 export class DataCollectionController implements PageController {
 
     private sensorManager: SensorManager;
-    private page = new view.DataCollection();
+    private page: Page = new DataCollectionPage();
     private waitTime = 10;
     private readTime = 10;
     private readonly SECOND = 1000;
+    private state: IState;
 
     /**
      * Konstruktor des Seitenverwalters. Registriert sich als Beobachter auf seiner Seite und setzt den start Status.
@@ -18,28 +23,29 @@ export class DataCollectionController implements PageController {
     constructor(sensorManager: SensorManager) {
         this.sensorManager = sensorManager;
         this.page.attach(this);
+        this.state = this.page.getState();
     }
 
     /**
      * Die Update Methode des Seitenverwalters.
      */
     update() {
-        let state: State = this.page.getState();
+        let state = this.page.getState();
         switch (state.currentState) {
-            case States.start:
-                this.startDataRead();
+            case States.StartDataRead:
+                this.sensorManager.readData(this.page);
                 break;
-            case States.finishPage:
-                this.changePageToFinishPage();
+            case States.ChangeToFinish:
+                MainController.getInstance().changeTo(new FinishController());
                 break;
-            case States.needMessage:
-                let ids = this.page.getIds();
-                this.page.setMessages(MainController.getInstance().getMessage(ids));
+            case States.NeedMessage:
+                this.page.setState(MainController.getInstance().getMessage(this.state.messages));
                 break;
             default:
                 break;
         }
     }
+
     /**
      * Startet die Datenaufnahme. zuerst werden die Wart- und Aufnahmezeit aus dem Sensormanager bezogen. Darauf wird
      * für die Wartezeit gewartet. Danach erfolgt die Aufnahme bis die Aufnahmezeit erreicht wurde.
@@ -70,13 +76,4 @@ export class DataCollectionController implements PageController {
 
         this.page.setState(States.finishDataRead);
     }
-
-    /**
-     * Wechselt die Seite zur Fertigungsseite.
-     */
-    private changePageToFinishPage() {
-        let finishController = new FinishController();
-        MainController.getInstance().changeTo(finishController);
-    }
-
 }

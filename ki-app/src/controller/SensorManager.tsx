@@ -1,5 +1,6 @@
 import { MainController } from "./MainController";
-export class SensorManager {  
+import { Page } from "../view/pages/PageInterface";
+export class SensorManager {
 
     private currentSensors = [""];
     private facade = MainController.getInstance().getFacade();
@@ -11,7 +12,7 @@ export class SensorManager {
     * @param sensorTypes Die Angabe der zu benutzenden Sensoren. Die position im Array bestimmt die DataRow ID jedes Sensors.
     * @returns Gibt true für ein erfolgreiches Erstellen eines Dataensatzes zurück, gibt sonst false zurück.
     */
-    setUpDataRead(sensorTypes:string[], dataSetName:string, waitTime: number, readTime: number) {
+    setUpDataRead(sensorTypes: string[], dataSetName: string, waitTime: number, readTime: number) {
         this.currentSensors = sensorTypes;
         this.waitTime = waitTime;
         this.readTime = readTime;
@@ -23,7 +24,7 @@ export class SensorManager {
     * @returns Gibt ein Array mit den aufgenommenen Daten zurück. Dabei enthält es jeweils Objekte mit Wert und relativer Zeit 
     * die jeder Sensor erfasst hat.
     */
-    readData() {
+    readData(page: Page) {
         let data = [];
         for (let index = 0; index < this.currentSensors.length; index++) {
             data.push(this.facade.readDataPoint(index));

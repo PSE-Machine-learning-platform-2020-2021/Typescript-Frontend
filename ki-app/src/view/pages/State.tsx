@@ -8,7 +8,7 @@ export interface IState {
   //modelData?:
   adminData?: { name: string, email: string, password: string; };
   //minerData?:
-  //aiUserData?:
+  aiUserData?: { name: string, result: };
   labels?: { labelID: number, start: number, end: number; }[];
   sessionID?: string;
   //aiParameter?: 
@@ -16,6 +16,7 @@ export interface IState {
   dataRows?: { dataSetID: number, data: number[][][]; };
   dataSets?: { sensorTypes: string[], dataSetName: string; }[];
   qr?: QRCode;
+  recordingSettings?: { newDataSetName: string, usedSensorTypes: string[], readTime: number, waitTime: number; };
 }
 
 export enum States {
@@ -23,14 +24,22 @@ export enum States {
   /**
    * Wechsel zur Startseite
    */
-  ChangetoStart,
+  ChangeToStart,
+  ChangeToFinish,
   NeedQR,
   SetLanguage,
   LoadError,
   Login,
   NewProjekt,
   LoadModel,
-  LoginFail
+  LoginFail,
+  StartDataRead,
+  ChangeToRefferring,
+  ClassifyResult,
+  NeedDataRows,
+  ChangeLabel,
+  DeleteDataLabel,
+  NewLabel
 }
 
 /**  BEISPIEL

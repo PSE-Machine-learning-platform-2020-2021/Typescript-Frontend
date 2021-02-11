@@ -2,6 +2,8 @@ import { PageController } from "./PageController";
 import { StartController } from "./StartController";
 import { RefferingController } from "./ReferringController";
 import { MainControllerInterface } from "./MainControllerInterface";
+import { IState, States } from "../view/pages/State";
+
 export class MainController implements MainControllerInterface {
   private facade: view.Facade;
 
@@ -83,8 +85,16 @@ export class MainController implements MainControllerInterface {
    * @param ids Alle ids, zu denen man die Texte möchte.
    * @returns Gibt alle texte zu den übergebenen ids zurück.
    */
-  getMessage(ids: number[]) {
-    return MainController.getInstance().getFacade().getMessage(ids);
+  getMessage(messages: { text: string, id: number; }[]) {
+    let messageIDs: number[] = [];
+    for (let index = 0; index < messages.length; index++) {
+      messageIDs.push(messages[index].id);
+    }
+    let texts: string[] = this.getFacade().getMessage(messageIDs);
+    for (let index = 0; index < messages.length; index++) {
+      messages[index].text = texts[index];
+      return messages;
+    }
   }
 
   /**
@@ -92,7 +102,13 @@ export class MainController implements MainControllerInterface {
    * @returns Gibt true zurück falls der wechsel erfolgt ist, sonst false.
    */
   setLanguage(languageCode: string) {
-    let changed = this.facade.setLanguage(languageCode);
-    return changed;
+    let nextState: States;
+    let success = this.getFacade().setLanguage(languageCode);
+    if (success) {
+      nextState = States.NeedMessage;
+    } else {
+      nextState = States.LoadError;
+    }
+    return nextState;
   }
 }

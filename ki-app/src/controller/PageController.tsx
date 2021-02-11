@@ -1,3 +1,3 @@
 export interface PageController {
-    update(): void
+    update(): void;
 }

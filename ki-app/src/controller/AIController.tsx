@@ -27,8 +27,8 @@ export class AIController implements PageController {
      * Die Update Methode des Seitenverwalters.
      */
     update() {
-        this.state = this.page.getState();
-        switch (this.state.currentState) {
+        let currentState = this.page.getState().currentState;
+        switch (currentState) {
             case States.StartDataRead:
                 this.startDataRead();
                 break;
