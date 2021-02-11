@@ -1,23 +1,61 @@
+import { Page } from "../view/pages/PageInterface";
+import { AIPage } from "../view/pages/AIPage/index";
+import { IState, States } from "../view/pages/State";
+
+
 import { PageController } from "./PageController";
 import { SensorManager } from "./SensorManager";
+import { MainController } from "./MainController";
+import { RefferingController } from "./ReferringController";
+
 export class AIController implements PageController {
     sensorManager: SensorManager;
-    aiModel: object;
-    dataSetId: number;
-    sensorManager: SensorManager;
-    setDataReadWaitingTime(waitingTime: number) {
+    private page: Page = new AIPage();
+    private state: IState;
+    private urlParams: URLSearchParams;
 
+    constructor() {
+        const queryString = window.location.search;
+        this.urlParams = new URLSearchParams(queryString);
+        this.sensorManager = new SensorManager();
+        this.page.attach(this);
+        this.state = this.page.getState();
+        MainController.getInstance().getFacade().registerAIModelUser(); //TODO
+    }
+
+    /**
+     * Die Update Methode des Seitenverwalters.
+     */
+    update() {
+        this.state = this.page.getState();
+        switch (this.state.currentState) {
+            case States.StartDataRead:
+                this.startDataRead();
+                break;
+            case States.ChangeToRefferring:
+                MainController.getInstance().changeTo(new RefferingController());
+                break;
+            case States.NeedMessage:
+                this.page.setState(MainController.getInstance().getMessage(this.state.messages));
+                break;
+            default:
+                break;
+        }
     }
 
     startDataRead() {
-
+        let sensorTypes: string[] = this.urlParams.get("sensorTypes")!.split(",");
+        let dataSetName: string = "TODO";
+        let waitTime = this.state.recordingSettings!.waitTime;
+        let readTime = this.state.recordingSettings!.readTime;
+        this.sensorManager.setUpDataRead(sensorTypes, dataSetName, waitTime, readTime);
+        this.sensorManager.readData(this.page);
+        MainController.getInstance().getFacade().classify(this.urlParams.get("aiID"), sensorTypes, this.callback);
     }
 
-    callback(prediction: any) {
-
-    }
-
-    update() {
-
+    public callback(prediction: any) {
+        this.state.aiUserData!.result = prediction;
+        this.state.currentState = States.ClassifyResult;
+        this.page.setState(this.state);
     }
 }
