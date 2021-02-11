@@ -1,10 +1,14 @@
-import { timeStamp } from "console";
+import { Page } from "../view/pages/PageInterface";
+import { AIPage } from "../view/pages/AIPage/index";
+import { IState, States } from "../view/pages/State";
+
 import { PageController } from "./PageController";
 import { MainController } from "./MainController";
 
 export class FinishController implements PageController {
 
-    private page;
+    private page: Page;
+    private state: IState;
 
     /**
      * Konstruktor des Seitenverwalters. Registriert sich als Beobachter auf seiner Seite und setzt den start Status. 
@@ -12,28 +16,29 @@ export class FinishController implements PageController {
     constructor() {
         this.page = new FinishPage({});
         this.page.attach(this);
+        this.state = this.page.getState();
     }
 
     /**
      * Die Update Methode des Seitenverwalters.
      */
     update() {
-        let state: State = this.page.getState();
-        switch (state) {
-            case States.needDataRows:
+        let currentState: States = this.page.getState().currenState;
+        switch (currentState) {
+            case States.NeedDataRows:
                 this.getDataRows();
                 break;
-            case States.needMessage:
+            case States.NeedMessage:
                 let ids = this.page.getIds();
                 this.page.setMessages(MainController.getInstance().getMessage(ids));
                 break;
-            case States.changeDataLabel:
+            case States.ChangeLabel:
                 this.changeDataLabel();
                 break;
-            case States.newDataLabel:
+            case States.NewLabel:
                 this.newDataLabel();
                 break;
-            case States.deleteDataLabel:
+            case States.DeleteDataLabel:
                 this.deleteDataLabel();
                 break;
             default:
