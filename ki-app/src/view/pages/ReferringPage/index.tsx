@@ -15,37 +15,17 @@ type Props = {
 export class ReferringPage extends React.Component<Props, State> implements Page {
 
     observers: PageController[] = [];
-    bttn: HTMLElement;
-
-
-
     constructor(props: Props) {
         super(props);
-        ReactDOM.render(<div>
-            <ConstantsText />
-            <NewProjectButton />
-            <LoginButton />
-            <LoadModelButton />
-        </div>, document.getElementById('root'));
-
-        this.bttn = document.getElementById("new")!;
-        console.log(this.bttn);
-        this.bttn.onclick = function () {
-            console.log("test");
-        };
-
-
-    }
-
-    render() {
-        return (
+        const VDOM = (
             <div>
                 <ConstantsText />
                 <NewProjectButton />
                 <LoginButton />
                 <LoadModelButton />
             </div>
-        );
+        )
+        ReactDOM.render(VDOM, document.getElementById('root'));
     }
 
     attach(observer: PageController) {
@@ -58,7 +38,6 @@ export class ReferringPage extends React.Component<Props, State> implements Page
             this.observers.splice(index, 1);
         }
     }
-
 
     notify() {
         for (let index = 0; index < this.observers.length; index++) {
