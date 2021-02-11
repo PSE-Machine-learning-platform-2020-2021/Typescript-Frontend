@@ -1,3 +1,4 @@
+import { isExternalModuleReference } from 'typescript'
 import {DeliveryFormat} from './DeliveryFormat'
 
 /**
@@ -5,14 +6,16 @@ import {DeliveryFormat} from './DeliveryFormat'
  */
 export class AIDistributor {
     private format: DeliveryFormat
+    private id: number
 
     /**
      * Dieser Konstruktor erzeugt das Objekt in Abhängigkeit vom gewählten Auslieferungsformat. 
      * Dieses sorgt an verschiedenen Stellen im Programmablauf für unterschiedliche Vorgehensweisen.
      * @param format Das Auslieferungsformat.
      */
-    constructor(format: DeliveryFormat) {
+    constructor(id: number, format: DeliveryFormat) {
         this.format = format
+        this.id = id
     }
     
     /**
@@ -29,7 +32,7 @@ export class AIDistributor {
      * KI-Modell (Scaler und Classifier) eine gebrauchsfertige Anwendung zu erstellen.
      */
     private buildExecutable(): boolean {
-        return false
+        throw new Error("Not Implemented")
     }
 
     /**

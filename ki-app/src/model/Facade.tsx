@@ -220,28 +220,52 @@ class Facade {
     return false;
   }
 
-  registerAdmin(adminName: string, email: string, password: string): boolean { }
+  registerAdmin(adminName: string, email: string, password: string): boolean { 
+    throw new Error("Not implemented")
+  }
 
-  registerDataminer(dataminerName: string, sessionID: number): boolean { }
+  registerDataminer(dataminerName: string, sessionID: number): boolean {
+    throw new Error("Not implemented")
+  }
 
-  registerAIModelUser(aiModelUserName: string): boolean { }
+  registerAIModelUser(aiModelUserName: string): boolean {
+    throw new Error("Not implemented")
+  }
 
-  loginAdmin(email: string, password: string): boolean { }
+  loginAdmin(email: string, password: string): boolean {
+    throw new Error("Not implemented")
+  }
 
-  logoutAdmin(): boolean { }
+  logoutAdmin(): boolean {
+    throw new Error("Not implemented")
+  }
 
-  createProject(projectName: string): boolean { }
+  createProject(projectName: string): boolean {
+    throw new Error("Not implemented")
+  }
 
-  setLabel(labelID: number, start: number, end: number): boolean { }
+  setLabel(labelID: number, start: number, end: number): boolean {
+    throw new Error("Not implemented")
+  }
 
-  getLabels(): object[] { }
+  getLabels(): object[] {
+    throw new Error("Not implemented")
+  }
 
-  checkLogin(): boolean { }
+  checkLogin(): boolean {
+    throw new Error("Not implemented")
+  }
 
-  classify(aiId: number, dataSetId: number, callBack: Function): void { }
+  classify(aiId: number, dataSetId: number, callBack: Function): void {
+    throw new Error("Not implemented")
+  }
 
-  getAIModel(format: DeliveryFormat): object { }
+  getAIModel(id: number, format: DeliveryFormat): object {
+    throw new Error("Not implemented")
+  }
 
-  applyModel(modeldata: object): void { }
+  applyModel(modeldata: object): void {
+    throw new Error("Not implemented")
+  }
 
 } export { Facade };
