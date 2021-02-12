@@ -3,7 +3,7 @@ import { Admin, User } from "./User";
 /**
  * Diese Klasse Speichert die Session informationen
  */
-class Session {
+export class Session {
   private id: number; //Die eindeutige ID der Session
   private admin: Admin; //Der Admin dem das Projekt der Session gehört
   private connectedUser: User[] = new Array(); //Die User die mit der Projekt der Session interagieren
@@ -57,4 +57,4 @@ class Session {
   getId(): number {
     return this.id;
   }
-} export { Session };
+}

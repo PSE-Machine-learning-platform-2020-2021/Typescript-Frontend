@@ -1,7 +1,7 @@
 /**
  * In dieser Klasse wird die aktuell geladene Sprache sowie alle Nachrichten auf dieser Sprache gespeichert.
  */
-class Language {
+export class Language {
   private language: string[]; //Alle Nachrichten auf der geladenen Sprache
 
   /**
@@ -52,4 +52,4 @@ class Language {
     }
 
   }
-} export { Language };
+}

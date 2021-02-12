@@ -5,7 +5,7 @@ import { Sensor } from "./Sensor";
 /**
  * Die Klasse fasst Datenreihen, welche Sensorwerte und deren relative Zeit besitzen, zu einem Datensatz zusammen.
  */
-class DataSet {
+export class DataSet {
   private generateDate: number; //Dies ist die Erstellungszeit dieses Datensatzes in Millisekunden.
   private id: number; //Dies ist die Datensatz ID.
   private name: string; //Dies ist der Name des Datensatzes.
@@ -156,4 +156,4 @@ class DataSet {
     }
     return labelList;
   }
-} export { DataSet };
+}

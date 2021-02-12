@@ -2,7 +2,7 @@
  * Diese Klasse repräsentiert ein Zeitfenster.
  * Mit start als Anfang und end als Ende des Zeitfensters.
  */
-class TimeSpan {
+export class TimeSpan {
   private start: number; //Startpunkt des Zeitfensters in Millisekunden.
   private end: number; //Enpunkt des Zeitfensters in Millisekunden.
 
@@ -53,4 +53,4 @@ class TimeSpan {
   public getEnd(): number {
     return this.end;
   }
-} export { TimeSpan };
+}

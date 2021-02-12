@@ -5,7 +5,7 @@ import { Sensor } from "./Sensor";
 /**
  * Die Vorlage für alle existierenden Benutzer
  */
-abstract class User {
+export abstract class User {
   protected id: number; //Die eindeutige User ID
   protected name: string; //Der Name des Users
   protected abstract device?: Device; //Das Benutzergerät des Benutzers
@@ -56,12 +56,12 @@ abstract class User {
   getID(): number {
     return this.id;
   }
-} export { User };
+}
 
 /**
  * Die Klasse Admin dient für einen Benutzer mit einem Account
  */
-class Admin extends User {
+export class Admin extends User {
   protected device: Device; //Das Benutzergeräts des Admins
   private email: string; //Die eindeutige Admin Email
   private project: Project[] = new Array(); //Alle Projekte, die zu dem Admin gehören
@@ -319,12 +319,12 @@ class Admin extends User {
     }
     return false;
   }
-} export { Admin };
+}
 
 /**
  * Dataminer ist die Klasse, um Datensammler mit ihren Geräte Sensoren zu spreichern
  */
-class Dataminer extends User {
+export class Dataminer extends User {
   protected device: Device; //Das Gerät des Datensammlers
 
   /**
@@ -357,12 +357,12 @@ class Dataminer extends User {
   getAvailableSensors(): number[] {
     return this.device.getAvailableSensors();
   }
-} export { Dataminer };
+}
 
 /**
  * AIModelUser ist die Klasse, um KI-Modell Benutzer zu speichern
  */
-class AIModelUser extends User {
+export class AIModelUser extends User {
   protected device?: Device; //Das Gerät des KI-Modell Benutzers falls es gespeichert wird
 
   /**
@@ -380,4 +380,4 @@ class AIModelUser extends User {
       }
     }
   }
-} export { AIModelUser };
+}

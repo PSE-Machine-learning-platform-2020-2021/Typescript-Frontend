@@ -1,7 +1,7 @@
 /**
  * Diese Klasse repräsentiert einen Messwert verknüpft mit einem Zeitpunkt. Der DataPoint ist das atomare Element jeglicher DataSet-Objekte.
  */
-class DataPoint {
+export class DataPoint {
   private value: number; //Dies ist der Sensormesswert.
   private relativeTime: number; //Dies ist die relative Zeit zum Start der Aufnahme in Millisekunden.
 
@@ -28,4 +28,4 @@ class DataPoint {
   public getRelativeTime(): number {
     return this.relativeTime;
   }
-} export { DataPoint };
+}
