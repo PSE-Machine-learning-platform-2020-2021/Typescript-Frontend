@@ -42,18 +42,10 @@ export class RefferingController implements PageController {
                 this.loadModel();
                 break;
             case States.SetLanguage:
-                this.setLanguage();
+                this.page.setState(MainController.getInstance().setLanguage(this.state.languageCode));
                 break;
             case States.NeedMessage:
-                let messageIDs: number[] = [];
-                for (let index = 0; index < this.state.messages.length; index++) {
-                    messageIDs.push(this.state.messages[index].id);
-                }
-                let messages: string[] = [];
-                messages = MainController.getInstance().getMessage(messageIDs);
-                for (let index = 0; index < messages.length; index++) {
-                    this.state.messages[index].text = messages[index];
-                }
+                this.page.setState(MainController.getInstance().getMessage(this.state.messages));
                 break;
             default:
                 break;
