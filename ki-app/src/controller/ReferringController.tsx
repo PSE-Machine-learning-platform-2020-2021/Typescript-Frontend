@@ -1,5 +1,5 @@
 import { Page } from "../view/pages/PageInterface";
-import { FinishPage } from "../view/pages/FinishPage/index";
+
 import { State, States } from "../view/pages/FinishPage/State";
 import { PageController } from "./PageController";
 import { MainController } from "./MainController";
@@ -7,6 +7,11 @@ import { MainController } from "./MainController";
 //import { AIController } from "./AIController";
 import { QRCode, ErrorCorrectLevel, QRNumber, QRAlphaNum, QR8BitByte, QRKanji } from 'qrcode-generator-ts/js';
 import { QRData } from "qrcode-generator-ts/js/qrcode/QRData";
+import { ReferringPage } from "../view/pages/ReferringPage";
+import { VisualizationPage } from "../view/pages/VisualizationPage"
+import { FinishPage } from "../view/pages/FinishPage/index";
+import { DeliveryPage } from "../view/pages/DeliveryPage";
+import ModelCreationPage from "../view/pages/ModelCreationPage";
 
 export class RefferingController implements PageController {
     private page: Page;
@@ -15,7 +20,12 @@ export class RefferingController implements PageController {
      * Konstruktor des Seitenverwalters. Registriert sich als Beobachter auf seiner Seite und setzt den start Status. 
      */
     constructor() {
-        this.page = new FinishPage({});
+        this.page = new ReferringPage({});
+        //fuer test page
+        //this.page = new FinishPage({});
+        //this.page = new VisualizationPage({});
+        //this.page = new DeliveryPage({})
+        //this.page = new ModelCreationPage({})
         this.page.attach(this);
     }
 
