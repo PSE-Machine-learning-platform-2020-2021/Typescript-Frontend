@@ -4,11 +4,11 @@ export interface IState {
   currentState: States;
   languageCode: string;
   messages: { text: string, id: number; }[];
-  projectData?: { projectID: number; projectName: string; aiIds: number[]; };
-  //modelData?:
+  projectData?: { projectID: number, projectName: string, AIModelExist: boolean; }[];
+  currentProject?: { projectID: number, projectName: string, AIModels: string[]; };
   adminData?: { name: string, email: string, password: string; };
   //minerData?:
-  aiUserData?: { name: string, result: };
+  aiUserData?: { name: string, result: string; };
   labels?: { labelID: number, start: number, end: number; }[];
   sessionID?: string;
   //aiParameter?: 
