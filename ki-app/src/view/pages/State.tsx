@@ -4,7 +4,9 @@ export interface IState {
   currentState: States;
   languageCode: string;
   messages: { text: string, id: number; }[];
+  //Anzeige aller Projekte eines nutzers
   projectData?: { projectID: number, projectName: string, AIModelExist: boolean; }[];
+  // Das Projekt welches in der view ausgewählt wurde
   currentProject?: { projectID: number, projectName: string, AIModels: string[]; };
   adminData?: { name: string, email: string, password: string; };
   //minerData?:
