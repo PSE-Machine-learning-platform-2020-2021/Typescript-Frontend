@@ -1,9 +1,3 @@
-export enum Status {
-  NeedData,
-  GotData,
-  ChangePage
-}
-
 export class State {
   currentState: States = States.NeedMessage;
   languageCode: string = "de";

@@ -1,71 +1,53 @@
 import React, { Component } from 'react';
 import Title from '../../components/StartComponents/Title';
 import Input from '../../components/StartComponents/Input';
-import { Status } from "../StartPage/Status";
 import { Page } from "../PageInterface";
-import Observer from '../Observer';
+import { PageController } from "../../../controller/PageController";
+import { State } from "./State";
+import { MainController } from '../../../controller/MainController';
+import ReactDOM from 'react-dom';
 
-export default class StartPage extends Component implements Page {
-    state = {
-        Observer: new Observer(),
-        Status: Status.NeedData, //NeedData means need diagram and text with the chosen language
-        AvailableSensors: ['', '', '', ''],
-        ChosenSensors: ['', '', '', '']
-    };
+type Props = {
+};
 
-    attach(observer: Observer) {
-        this.setState(state => ({
-            Observer: observer
-        }));
-    }
+export class StartPage extends React.Component<Props, State> implements Page {
 
-    detach() {
-        this.setState(state => ({
-            Observer: null
-        }));
-    }
-
-    notify() {
-        this.state.Observer.notify();
-    }
-
-    getStatus() {
-        return this.state.Status;
-    }
-
-    setStatus(status: Status) {
-        this.setState(state => ({
-            Status: status
-        }));
-    }
-
-    getAvailableSensors() {
-        return this.state.AvailableSensors;
-    }
-
-    setAvailableSensors(availableSensors: string[]) {
-        this.setState(state => ({
-            AvailableSensors: availableSensors
-        }));
-    }
-
-    getChosenSensors() {
-        return this.state.ChosenSensors;
-    }
-
-    setChosenSensors(chosenSensors: string[]) {
-        this.setState(state => ({
-            AvailableSensors: chosenSensors
-        }));
-    }
-
-
-    render() {
-        return (
+    observers: PageController[] = [];
+    constructor(props: Props) {
+        super(props);
+        const VDOM = (
             <div>
                 <Title />
                 <Input />
             </div>
         );
+        ReactDOM.render(VDOM, document.getElementById('root'));
+    }
+
+    attach(observer: PageController) {
+        this.observers.push(observer);
+    }
+
+    detach(observer: PageController) {
+        const index = this.observers.indexOf(observer, 0);
+        if (index > -1) {
+            this.observers.splice(index, 1);
+        }
+    }
+
+    notify() {
+        for (let index = 0; index < this.observers.length; index++) {
+            const element = this.observers[index];
+            element.update();
+        }
+    }
+
+    getState() {
+        return this.state;
+    }
+
+    setState(state: State) {
+        this.state = state;
+        this.notify();
     }
 }

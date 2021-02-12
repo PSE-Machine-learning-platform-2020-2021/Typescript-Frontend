@@ -2,72 +2,66 @@ import React, { Component } from "react";
 import Title from "../../components/FinishComponents/Title";
 import Body from "../../components/FinishComponents/Body";
 import Input from "../../components/FinishComponents/Input";
-import { Status } from "../FinishPage/Status";
 import { Page } from "../PageInterface";
-import Observer from '../Observer';
+import { PageController } from "../../../controller/PageController";
+import { State } from "./State";
+import { MainController } from '../../../controller/MainController';
+import ReactDOM from 'react-dom';
 import AddLabelButton from '../../components/FinishComponents/Input/AddLabelButton';
 import LabelList from '../../components/FinishComponents/Input/LabelList';
 
+type Props = {
+};
 
+export class FinishPage extends React.Component<Props, State> implements Page {
 
-export default class FinishPage extends Component implements Page {
-  state = {
-    Observer: new Observer(),
-    Status: Status.NeedData, //NeedData means need diagram and text with the chosen language
-    Diagram: Document, //the diagram is saved here
-    Labels: [{ id: '0', name: 'example-label', chosen: false, start: '0', end: '0' }]
-  };
-
-  attach(observer: Observer) {
-    this.setState(state => ({
-      Observer: observer
-    }));
+  observers: PageController[] = [];
+  constructor(props: Props) {
+    super(props);
+    const VDOM = (
+      <div>
+        <Title />
+        <Body />
+        <div className="labelList-wrap">
+          <LabelList labels={this.state.labels} deleteLabel={this.deleteLabel} />
+          <AddLabelButton addLabel={this.addLabel} deleteLabel={this.deleteLabel} />
+        </div>
+        <Input />
+      </div>
+    );
+    ReactDOM.render(VDOM, document.getElementById('root'));
   }
 
-  detach() {
-    this.setState(state => ({
-      Observer: null
-    }));
+  attach(observer: PageController) {
+    this.observers.push(observer);
+  }
+
+  detach(observer: PageController) {
+    const index = this.observers.indexOf(observer, 0);
+    if (index > -1) {
+      this.observers.splice(index, 1);
+    }
   }
 
   notify() {
-    this.state.Observer.notify();
+    for (let index = 0; index < this.observers.length; index++) {
+      const element = this.observers[index];
+      element.update();
+    }
   }
 
-  getStatus() {
-    return this.state.Status;
+  getState() {
+    return this.state;
   }
 
-  setStatus(status: Status) {
-    this.setState(state => ({
-      Status: status
-    }));
+  updateState(state: State) {
+    this.setState(state);
+    this.notify();
   }
 
-  getDiagram() {
-    return this.state.Diagram;
-  }
+  addLabel = (labelObj: { id: number, name: string, chosen: false, start: number, end: number; }) => {
 
-  setDiagram(diagram: Document) {
-    this.setState(state => ({
-      Diagram: diagram
-    }));
-  }
-
-  getLabels() {
-    return this.state.Labels;
-  }
-
-  setLabels(newLabels) {
-    this.setState(state => ({
-      Labels: newLabels
-    }));
-  }
-
-
-  addLabel = (labelObj) => {
-
-    const labels = this.state.Labels;
+    const labels = this.state.labels;
 
     const newLabels = [labelObj, ...labels];
 
@@ -75,9 +69,9 @@ export default class FinishPage extends Component implements Page {
   };
 
 
-  deleteLabel = (id) => {
+  deleteLabel = (id: number) => {
 
-    const labels = this.state.Labels;
+    const labels = this.state.labels;
 
     const newLabels = labels.filter((labelObj) => {
       return labelObj.id !== id;
@@ -88,7 +82,7 @@ export default class FinishPage extends Component implements Page {
 
 
   render() {
-    const labels = this.state.Labels;
+    const labels = this.state.labels;
     return (
       <div>
         <Title />

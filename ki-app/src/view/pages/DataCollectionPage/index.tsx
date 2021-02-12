@@ -1,57 +1,60 @@
 import React, { Component } from 'react';
 import Title from '../../components/DataCollectionComponents/Title';
 import Countdown from '../../components/DataCollectionComponents/Countdown';
-import { Status } from "../DataCollectionPage/Status";
 import { Page } from "../PageInterface";
-import Observer from '../Observer';
+import { PageController } from "../../../controller/PageController";
+import { State } from "./State";
+import { MainController } from '../../../controller/MainController';
+import ReactDOM from 'react-dom';
 
+type Props = {
+};
 
-export default class DataCollectionPage extends Component implements Page {
+export class DataCollectionPage extends React.Component<Props, State> implements Page {
 
-    state = { Observer: new Observer(), Status: Status.NeedDiagram, Diagram: Document };
+    observers: PageController[] = [];
 
-    attach(observer: Observer) {
-        this.setState(state => ({
-            Observer: observer
-        }));
-    }
-
-    detach() {
-        this.setState(state => ({
-            Observer: null
-        }));
-    }
-
-    notify() {
-        this.state.Observer.notify();
-    }
-
-    getStatus() {
-        return this.state.Status;
-    }
-
-    setStatus(status: Status) {
-        this.setState(state => ({
-            Status: status
-        }));
-    }
-
-    getDiagram() {
-        return this.state.Diagram;
-    }
-
-    setDiagram(diagram: Document) {
-        this.setState(state => ({
-            Diagram: diagram
-        }));
-    }
-
-    render() {
-        return (
+    constructor(props: Props) {
+        super(props);
+        const VDOM = (
             <div>
                 <Title />
                 <Countdown />
             </div>
         );
+        ReactDOM.render(VDOM, document.getElementById('root'));
     }
+
+    attach(observer: PageController) {
+        this.observers.push(observer);
+    }
+
+    detach(observer: PageController) {
+        const index = this.observers.indexOf(observer, 0);
+        if (index > -1) {
+            this.observers.splice(index, 1);
+        }
+    }
+
+    notify() {
+        for (let index = 0; index < this.observers.length; index++) {
+            const element = this.observers[index];
+            element.update();
+        }
+    }
+
+    getState() {
+        return this.state;
+    }
+
+    setState(state: State) {
+        this.state = state;
+        this.notify();
+    }
+
+    setCounter() {
+
+    }
+
+
 }

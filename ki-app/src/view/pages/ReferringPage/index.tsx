@@ -24,7 +24,7 @@ export class ReferringPage extends React.Component<Props, State> implements Page
                 <LoginButton />
                 <LoadModelButton />
             </div>
-        )
+        );
         ReactDOM.render(VDOM, document.getElementById('root'));
     }
 

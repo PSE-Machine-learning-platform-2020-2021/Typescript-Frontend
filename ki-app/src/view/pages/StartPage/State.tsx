@@ -2,15 +2,14 @@ export class State {
   currentState: States = States.NeedMessage;
   messageIDs: number[] = [];
   messages: string[] = [];
-  countdownNumber: number = 0;
-  diagramSvg: any = "todo";
+  availableSensors: string[] = [];
+  chosenSensors: string[] = [];
 }
 
 
 export enum States {
   NeedMessage,
-  NeedCounter,
-  CountFinish,
-  NeedDiagram,
-  ChangePage
+  NeedData, //available sensors
+  GotData,
+
 }
