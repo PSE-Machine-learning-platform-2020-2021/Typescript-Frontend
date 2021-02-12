@@ -1,6 +1,8 @@
+import { PageController } from "./PageController";
+import { Facade } from "../model/Facade";
 export interface MainControllerInterface {
     checkConnection(): boolean;
     checkLoginStatus(): boolean;
-    changeTo(destinationPage: view.Page): void;
-    getFacade(): model.Facade;
+    changeTo(destinationPage: PageController): void;
+    getFacade(): Facade;
 }

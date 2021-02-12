@@ -1,11 +1,15 @@
 import { PageController } from "./PageController";
-import { StartController } from "./StartController";
+//import { StartController } from "./StartController";
 import { RefferingController } from "./ReferringController";
 import { MainControllerInterface } from "./MainControllerInterface";
+<<<<<<< HEAD
 import { IState, States } from "../view/pages/State";
+=======
+import { Facade } from "../model/Facade";
+>>>>>>> origin/MergeTest
 
 export class MainController implements MainControllerInterface {
-  private facade: view.Facade;
+  private facade: Facade;
 
   private static mainController: MainController;
 
@@ -14,8 +18,8 @@ export class MainController implements MainControllerInterface {
   /**
    * Konstruktor des MainControllers. Holt sich die Fassade.
    */
-  MainController() {
-    this.facade = new DataView.Facade();
+  constructor() {
+    this.facade = new Facade();
   }
 
   /**
@@ -23,7 +27,7 @@ export class MainController implements MainControllerInterface {
    * @returns MainController
    */
   static getInstance() {
-    if (this.mainController == undefined) {
+    if (this.mainController === undefined) {
       this.mainController = new MainController();
       return this.mainController;
     }
@@ -43,7 +47,7 @@ export class MainController implements MainControllerInterface {
    * @returns Gibt true zurück falls der Benutzer angemeldet ist, sonst wird false zurück gegeben.
    */
   checkLoginStatus() {
-    return this.facade.checkLogin();
+    return false;//this.facade.checkLogin();
   }
 
   // static getSession() {
@@ -61,18 +65,11 @@ export class MainController implements MainControllerInterface {
   /**
    * Andwendungstart für einen Desktop
    */
-  startDesktop() {
+  startApp() {
     let refferingController: RefferingController = new RefferingController();
     this.changeTo(refferingController);
   }
 
-  /**
-   * Andwendungstart für ein Smartphone
-   */
-  startSmartphone() {
-    let startController: StartController = new StartController();
-    this.changeTo(startController);
-  }
 
   /**
    * @returns Gibt die Fassade zurück
@@ -85,6 +82,7 @@ export class MainController implements MainControllerInterface {
    * @param ids Alle ids, zu denen man die Texte möchte.
    * @returns Gibt alle texte zu den übergebenen ids zurück.
    */
+<<<<<<< HEAD
   getMessage(messages: { text: string, id: number; }[]) {
     let messageIDs: number[] = [];
     for (let index = 0; index < messages.length; index++) {
@@ -95,6 +93,10 @@ export class MainController implements MainControllerInterface {
       messages[index].text = texts[index];
       return messages;
     }
+=======
+  getMessage(ids: number[]) {
+    return [];//MainController.getInstance().getFacade().getMessage(ids);
+>>>>>>> origin/MergeTest
   }
 
   /**
@@ -102,6 +104,7 @@ export class MainController implements MainControllerInterface {
    * @returns Gibt true zurück falls der wechsel erfolgt ist, sonst false.
    */
   setLanguage(languageCode: string) {
+<<<<<<< HEAD
     let nextState: States;
     let success = this.getFacade().setLanguage(languageCode);
     if (success) {
@@ -110,5 +113,9 @@ export class MainController implements MainControllerInterface {
       nextState = States.LoadError;
     }
     return nextState;
+=======
+    let changed = true;//this.facade.setLanguage(languageCode);
+    return changed;
+>>>>>>> origin/MergeTest
   }
 }

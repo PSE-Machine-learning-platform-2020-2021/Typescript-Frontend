@@ -1,3 +1,4 @@
+<<<<<<< HEAD
 import { DeliveryFormat } from "./DeliveryFormat";
 import { ExplorerConnector } from "./ExplorerConnector";
 import { Language } from "./Language";
@@ -33,11 +34,15 @@ interface FacadeInterface {
   getAIModel(format: DeliveryFormat): object;
   applyModel(modeldata: object): void;
 } export type { FacadeInterface };
+=======
+
+>>>>>>> origin/MergeTest
 
 /**
  * Die Facade stellt alle interaktionen mit dem Model zur Verfügung
  */
 class Facade {
+<<<<<<< HEAD
   private language: Language; //Alle Nachrichten, in der geladenen Sprache
   private explorerConnector: ExplorerConnector; //Die Verbindung zur Datenbank
   private admin?: Admin; //Falls ein Admin angemeldet ist der Admin, oder die Daten von einem Admin für den Datenerfasser
@@ -313,3 +318,8 @@ class Facade {
   // wird aktuell nicht benutzt
   // registerAIModelUser(aiModelUserName: string): boolean { }
   // checkLogin(): boolean { }
+=======
+
+
+} export { Facade };
+>>>>>>> origin/MergeTest
