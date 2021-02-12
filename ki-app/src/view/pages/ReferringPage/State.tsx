@@ -1,26 +1,22 @@
-export class State {
+import { IState } from "../State";
+import { States } from "../State";
+import { QRCode, ErrorCorrectLevel, QRNumber, QRAlphaNum, QR8BitByte, QRKanji } from 'qrcode-generator-ts/js';
+
+export class State implements IState {
   currentState: States = States.NeedMessage;
   languageCode: string = "de";
-  messageIDs: number[] = [];
-  messages: string[] = [];
-  loginData: string[] = [];
-  projectMeta: string[] = [];
-  qrSvg: any = "todo";
-  NewProjectName: string = "";
-  toLoadProjectID: number = 0;
-}
-
-
-export enum States {
-  NeedMessage,
-  NeedData,
-  GotData,
-  ChangePage,
-  NeedQR,
-  Login,
-  NewProjekt,
-  LoadProject,
-  LoadModel,
-  SetLanguage,
-  ShowQR
+  messages: { text: string, id: number; }[] = [];
+  projectData?: { projectID: number, projectName: string, AIModelExist: boolean; }[];
+  currentProject?: { projectID: number, projectName: string, AIModels: string[]; };
+  adminData?: { name: string, email: string, password: string; };
+  //minerData?:
+  aiUserData?: { name: string, result: string; };
+  labels?: { labelID: number, start: number, end: number; }[];
+  sessionID?: string;
+  //aiParameter?: 
+  dataPoints?: { dataRowID: number, value: number; }[];
+  dataRows?: { dataSetID: number, data: number[][][]; };
+  dataSets?: { sensorTypes: string[], dataSetName: string; }[];
+  qr?: QRCode;
+  recordingSettings?: { newDataSetName: string, usedSensorTypes: string[], readTime: number, waitTime: number; };
 }

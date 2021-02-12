@@ -4,7 +4,6 @@ import { IState, States } from "../view/pages/State";
 
 import { PageController } from "./PageController";
 import { MainController } from "./MainController";
-import { VisualizationController } from "./VisualizationController";
 import { AIController } from "./AIController";
 
 import { QRCode, ErrorCorrectLevel, QRNumber, QRAlphaNum, QR8BitByte, QRKanji } from 'qrcode-generator-ts/js';
