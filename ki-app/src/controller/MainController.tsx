@@ -2,11 +2,7 @@ import { PageController } from "./PageController";
 //import { StartController } from "./StartController";
 import { RefferingController } from "./ReferringController";
 import { MainControllerInterface } from "./MainControllerInterface";
-<<<<<<< HEAD
 import { IState, States } from "../view/pages/State";
-=======
-import { Facade } from "../model/Facade";
->>>>>>> origin/MergeTest
 
 export class MainController implements MainControllerInterface {
   private facade: Facade;
