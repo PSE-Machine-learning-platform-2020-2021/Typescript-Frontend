@@ -1,24 +1,65 @@
 import React, { Component } from 'react'
 import DatasetList from '../../components/ModelCreationComponents/DatasetList'
 import AddDatasetButton from '../../components/ModelCreationComponents/AddDatasetButton'
-import { DatasetType } from './DatasetType'
 import ImputationList from '../../components/ModelCreationComponents/ImputationList'
 import NormalizationList from '../../components/ModelCreationComponents/NormalizationList'
 import FeatureList from '../../components/ModelCreationComponents/FeatureList'
 import ModelTypeList from '../../components/ModelCreationComponents/ModelTypeList'
 import TrainButton from '../../components/ModelCreationComponents/TrainButton'
+import { Page } from "../PageInterface";
+import { PageController } from "../../../controller/PageController";
+import { State } from "./State";
+import ReactDOM from 'react-dom';
 import './ModelCreationPage.css'
 
-export default class ModelCreationPage extends Component {
-	//init state
-	state = {
-		datasets: [
-			{ id: 'ex', name: 'example-dataset(delete with button)', chosen: false },
-		]
+type Props = {
+};
+
+
+export default class ModelCreationPage extends React.Component<Props, State> implements Page {
+	state = new State();
+	observers: PageController[] = [];
+	constructor(props: Props) {
+		super(props);
+		const VDOM = (
+			<div className="modelcreationpage">
+				<div className="checklist">
+					<h3>Datasets</h3>
+					<DatasetList datasets={this.state.datasets} updateDataset={this.updateDataset} deleteDataset={this.deleteDataset} />
+					<AddDatasetButton datasets={this.state.datasets} addDataset={this.addDataset} deleteDataset={this.deleteDataset} />
+				</div>
+				<div className="checklist"><ImputationList /><NormalizationList /></div>
+				<div className="checklist"><FeatureList /><ModelTypeList /></div>
+				<TrainButton />
+			</div>
+		);
+		ReactDOM.render(VDOM, document.getElementById('root'));
+	}
+
+	attach(observer: PageController) {
+		this.observers.push(observer);
+	}
+
+	detach(observer: PageController) {
+		const index = this.observers.indexOf(observer, 0);
+		if (index > -1) {
+			this.observers.splice(index, 1);
+		}
+	}
+
+	notify() {
+		for (let index = 0; index < this.observers.length; index++) {
+			const element = this.observers[index];
+			element.update();
+		}
+	}
+
+	getState() {
+		return this.state;
 	}
 
 	//addDataset for add new Dataset
-	addDataset = (datasetObj: DatasetType) => {
+	addDataset = (datasetObj: { id: string, name: string, chosen: boolean }) => {
 		//get orignal datasetList
 		const { datasets } = this.state
 		//add new one
@@ -51,20 +92,4 @@ export default class ModelCreationPage extends Component {
 		this.setState({ datasets: newDatasets })
 	}
 
-
-	render() {
-		const { datasets } = this.state
-		return (
-			<div className="modelcreationpage">
-				<div className="checklist">
-					<h3>Datasets</h3>
-					<DatasetList datasets={datasets} updateDataset={this.updateDataset} deleteDataset={this.deleteDataset} />
-					<AddDatasetButton datasets={datasets} addDataset={this.addDataset} deleteDataset={this.deleteDataset} />
-				</div>
-				<div className="checklist"><ImputationList /><NormalizationList /></div>
-				<div className="checklist"><FeatureList /><ModelTypeList /></div>
-				<TrainButton />
-			</div>
-		)
-	}
 }

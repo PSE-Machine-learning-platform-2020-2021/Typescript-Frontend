@@ -28,17 +28,6 @@ export class ReferringPage extends React.Component<Props, State> implements Page
         ReactDOM.render(VDOM, document.getElementById('root'));
     }
 
-    render() {
-        return (
-            <div>
-                <ConstantsText />
-                <NewProjectButton />
-                <LoginButton />
-                <LoadModelButton />
-            </div>
-        );
-    }
-
     attach(observer: PageController) {
         this.observers.push(observer);
     }
@@ -61,8 +50,4 @@ export class ReferringPage extends React.Component<Props, State> implements Page
         return this.state;
     }
 
-    setState(state: State) {
-        this.state = state;
-        this.notify();
-    }
 }
