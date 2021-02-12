@@ -19,7 +19,21 @@ export class FinishPage extends React.Component<Props, State> implements Page {
   state = new State;
   constructor(props: Props) {
     super(props);
-    const VDOM = (
+
+    ReactDOM.render(
+      <div>
+        <Title />
+        <Body />
+        <div className="labelList-wrap">
+          <LabelList labels={this.state.labels} deleteLabel={this.deleteLabel} />
+          <AddLabelButton addLabel={this.addLabel} deleteLabel={this.deleteLabel} />
+        </div>
+        <Input />
+      </div>, document.getElementById('root'));
+  }
+
+  render() {
+    return (
       <div>
         <Title />
         <Body />
@@ -30,7 +44,6 @@ export class FinishPage extends React.Component<Props, State> implements Page {
         <Input />
       </div>
     );
-    ReactDOM.render(VDOM, document.getElementById('root'));
   }
 
   attach(observer: PageController) {
@@ -79,21 +92,4 @@ export class FinishPage extends React.Component<Props, State> implements Page {
     });
     this.setState({ labels: newLabels });
   };
-
-
-
-  render() {
-    const labels = this.state.labels;
-    return (
-      <div>
-        <Title />
-        <Body />
-        <div className="labelList-wrap">
-          <LabelList labels={labels} deleteLabel={this.deleteLabel} />
-          <AddLabelButton addLabel={this.addLabel} deleteLabel={this.deleteLabel} />
-        </div>
-        <Input />
-      </div>
-    );
-  }
 }
