@@ -1,5 +1,5 @@
 import { DataPoint } from "./DataPoint";
-import { Sensor } from "./Sensor";
+import { SensorData } from "./Sensor";
 
 /**
  * Die Klasse DataRow beschreibt eine Reihe aufgenommener Daten eines Sensors.
@@ -8,14 +8,14 @@ export class DataRow {
   private id: number; //Dies ist die DataRow ID, diese ist eindeutig für Datensätze.
   private recordingStart: number; //Dies ist der Aufnahmestartpunkt der Datenreihe.
   private datapoint: DataPoint[] = new Array; //Dies ist Datenreihe, eine Reihe von Datenpunkten.
-  private sensor: Sensor; //Dies ist der Sensor von dem die Daten gelesen wurden.
+  private sensor: SensorData; //Dies ist der Sensor von dem die Daten gelesen wurden.
 
   /**
    * Eine neue Datenreihe erstellen.
    * @param sensor Sensor, von dem die Daten gelesen werden.
    * @param dataRowID Eine eindeutige Datenreihen ID.
    */
-  constructor(sensor: Sensor, dataRowID: number);
+  constructor(sensor: SensorData, dataRowID: number);
 
   /**
    * Eine bereits existierende Datenreihe kann wie folgt in das Model geladen werden.
@@ -26,8 +26,8 @@ export class DataRow {
    * @param dataRow.value der Sensor Messwert
    * @param dataRow.relativeTime die relative Zeit zum Aufnahmestart
    */
-  constructor(sensor: Sensor, dataRowID: number, recordingStart: number, dataRow: { value: number, relativeTime: number; }[]);
-  constructor(sensor: Sensor, dataRowID: number, recordingStart?: number, dataRow?: { value: number, relativeTime: number; }[]) {
+  constructor(sensor: SensorData, dataRowID: number, recordingStart: number, dataRow: { value: number, relativeTime: number; }[]);
+  constructor(sensor: SensorData, dataRowID: number, recordingStart?: number, dataRow?: { value: number, relativeTime: number; }[]) {
     this.sensor = sensor;
     this.id = dataRowID;
     if (recordingStart != null) {

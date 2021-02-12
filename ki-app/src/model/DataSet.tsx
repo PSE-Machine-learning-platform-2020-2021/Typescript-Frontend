@@ -1,6 +1,6 @@
 import { DataRow } from "./DataRow";
 import { Label } from "./Label";
-import { Sensor } from "./Sensor";
+import { SensorData } from "./Sensor";
 
 /**
  * Die Klasse fasst Datenreihen, welche Sensorwerte und deren relative Zeit besitzen, zu einem Datensatz zusammen.
@@ -20,7 +20,7 @@ export class DataSet {
    * @param dataSetName der Datensatznamen
    * @param generateDate die Erstellungszeit von dem Datensatz
    */
-  constructor(dataRowSensors: Sensor[], dataSetID: number, dataSetName: string, generateDate?: number);
+  constructor(dataRowSensors: SensorData[], dataSetID: number, dataSetName: string, generateDate?: number);
 
   /**
    * Eine bereits existierende Datensatz kann wie folgt in das Model geladen werden.
@@ -32,8 +32,8 @@ export class DataSet {
    * @param dataRows die schon existierenden Datenreihen
    * @param label die schon existierenden Labels
    */
-  constructor(dataRowSensors: Sensor[], dataSetID: number, dataSetName: string, generateDate: number, dataRows: { dataRowID: number, recordingStart: number, dataRow: { value: number, relativeTime: number; }[]; }[], label: { name: string, labelID: number, start: number, end: number; }[]);
-  constructor(dataRowSensors: Sensor[], dataSetID: number, dataSetName: string, generateDate?: number, dataRows?: { dataRowID: number, recordingStart: number, dataRow: { value: number, relativeTime: number; }[]; }[], label?: { name: string, labelID: number, start: number, end: number; }[]) {
+  constructor(dataRowSensors: SensorData[], dataSetID: number, dataSetName: string, generateDate: number, dataRows: { dataRowID: number, recordingStart: number, dataRow: { value: number, relativeTime: number; }[]; }[], label: { name: string, labelID: number, start: number, end: number; }[]);
+  constructor(dataRowSensors: SensorData[], dataSetID: number, dataSetName: string, generateDate?: number, dataRows?: { dataRowID: number, recordingStart: number, dataRow: { value: number, relativeTime: number; }[]; }[], label?: { name: string, labelID: number, start: number, end: number; }[]) {
     if (dataRows != null) {
       for (let i = 0; i < dataRows.length && i < dataRowSensors.length; i++) {
         this.dataRow.push(new DataRow(dataRowSensors[i], dataRows[i].dataRowID, dataRows[i].recordingStart, dataRows[i].dataRow));
