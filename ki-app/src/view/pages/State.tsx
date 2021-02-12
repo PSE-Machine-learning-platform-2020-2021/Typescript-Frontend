@@ -30,8 +30,15 @@ export enum States {
   ChangeToFinish,
   NeedQR,
   SetLanguage,
+  /**
+   * Fehler für alle zu ladenen sachen
+   */
   LoadError,
   Login,
+  /**
+     * Update aller Daten welche auf der Seite angezeigt werden, zum Beispiel Projekt Daten für die Projekt liste.
+     */
+  updateData,
   NewProjekt,
   LoadModel,
   LoginFail,
