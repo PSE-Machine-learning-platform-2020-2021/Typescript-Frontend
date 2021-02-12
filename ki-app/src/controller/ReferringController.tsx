@@ -102,6 +102,7 @@ export class RefferingController implements PageController {
             this.state.currentState = States.NeedQR;
         } else {
             this.state.currentState = States.LoadError;
+
         }
         this.page.setState(this.state);
     }
