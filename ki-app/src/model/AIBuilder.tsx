@@ -21,6 +21,26 @@ export class AIBuilder {
     /**
      * Ruft die Python-Schnittstelle auf dem Server auf, um ein KI-Modell zu erstellen und zu trainieren.
      * @param modelData Sämtliche relevanten Daten, um das gewünschte KI-Modell erstellen zu können.
+     * Diese müssen das folgende Format haben, wenn zu JSON gepackt:
+     * ```
+     * {
+     *     "sensors": [
+     *         "sensorname#i"
+     *     ],
+     *     "dataSets": [
+     *         42
+     *     ],
+     *     "classifier": "Classifier",
+     *     "scaler": "Scaler",
+     *     "features": [
+     *         "featurename#13"
+     *     ],
+     *     "trainingDataPercentage": 0.8, // optional
+     *     "slidingWindowSize": 128,      // optional
+     *     "slidingWindowStep": 64        // optional
+     * }
+     * ```
+     * Die Reihenfolge ist unwichtig.
      */
     applyModel(modelData: object): void {
         this.sendRequest(JSON.stringify(modelData), AIBuilder.url + AIBuilder.buildModel, console.log)
