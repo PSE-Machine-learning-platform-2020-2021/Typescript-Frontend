@@ -1,4 +1,4 @@
-import { Device, Smartphone } from "./Device";
+import { Device } from "./Device";
 import { Project } from "./Project";
 import { SensorData } from "./Sensor";
 
@@ -64,7 +64,7 @@ export abstract class User {
 export class Admin extends User {
   protected device: Device; //Das Benutzergeräts des Admins
   private email: string; //Die eindeutige Admin Email
-  private project: Project[] = new Array(); //Alle Projekte, die zu dem Admin gehören
+  private project: Project[] = []; //Alle Projekte, die zu dem Admin gehören
   private currentProject?: Project;
 
   /**
@@ -313,7 +313,7 @@ export class Admin extends User {
 
   existProject(projectID: number): boolean {
     for (let i = 0; i < this.project.length; i++) {
-      if (this.project[i].getID() == projectID) {
+      if (this.project[i].getID() === projectID) {
         return true;
       }
     }
@@ -375,7 +375,7 @@ export class AIModelUser extends User {
     super(id, name);
     if (deviceID != null) {
       this.device = Device.loadDevice(deviceID);
-      if (name == "") {
+      if (name === "") {
         this.name = this.device.getName();
       }
     }

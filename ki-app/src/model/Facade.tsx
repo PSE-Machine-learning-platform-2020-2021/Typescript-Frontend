@@ -64,7 +64,7 @@ export class Facade {
       let dataminerName: string = this.user.getName();
       let sessionID: number = this.getSessionID();
       let dataRowSensors: SensorData[] = this.user.getDeviceSensors(sensorTypeID);
-      if (dataRowSensors.length > 0 && dataRowSensors.length == sensorTypeID.length) {
+      if (dataRowSensors.length > 0 && dataRowSensors.length === sensorTypeID.length) {
         let dataSetID: number = this.explorerConnector.createDataSet(sessionID, sensorTypeID, dataminerName, dataSetName);
         return this.admin.createDataSet(dataRowSensors, dataSetID, dataSetName);
       }
@@ -167,7 +167,7 @@ export class Facade {
    */
   getAvailableSensors(): { sensorTypID: number, sensorType: string; }[] {
     if (this.user instanceof Dataminer) {
-      var sensors: { sensorTypID: number, sensorType: string; }[] = new Array();
+      var sensors: { sensorTypID: number, sensorType: string; }[] = [];
       let message: { messageID: number, message: string; }[] = this.language.getMessage(this.user.getAvailableSensors());
       for (let i = 0; i < message.length; i++) {
         sensors.push({ sensorTypID: message[i].messageID, sensorType: message[i].message });
@@ -183,7 +183,7 @@ export class Facade {
    * @returns true, falls die Sprache erfolgreich geladen wurde
    */
   setLanguage(languageCode: string): boolean {
-    if (languageCode != this.language.getLanguageCode()) {
+    if (languageCode !== this.language.getLanguageCode()) {
       let language: string[] = this.explorerConnector.loadLanguage(languageCode);
       return this.language.setLanguage(language);
     }

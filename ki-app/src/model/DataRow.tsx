@@ -7,7 +7,7 @@ import { SensorData } from "./Sensor";
 export class DataRow {
   private id: number; //Dies ist die DataRow ID, diese ist eindeutig für Datensätze.
   private recordingStart: number; //Dies ist der Aufnahmestartpunkt der Datenreihe.
-  private datapoint: DataPoint[] = new Array; //Dies ist Datenreihe, eine Reihe von Datenpunkten.
+  private datapoint: DataPoint[] = []; //Dies ist Datenreihe, eine Reihe von Datenpunkten.
   private sensor: SensorData; //Dies ist der Sensor von dem die Daten gelesen wurden.
 
   /**
@@ -54,7 +54,7 @@ export class DataRow {
    * @returns value ist der neu gelesene Messwert und relativeTime die relative Zeit in Millisekunden zum Aufnahmestart.
    */
   public createCurrentDataPoint(): { value: number, relativeTime: number; } {
-    if (this.recordingStart == -1) {
+    if (this.recordingStart === -1) {
       this.recordingStart = new Date().getTime();
     }
     var relativeTime: number = new Date().getTime() - this.recordingStart;
@@ -67,7 +67,7 @@ export class DataRow {
    * @returns value ist der Messwert und relativeTime die relative Zeit in Millisekunden zum Aufnahmestart.
    */
   public getDataRow(): { value: number, relativeTime: number; }[] {
-    var dataRow: { value: number, relativeTime: number; }[] = new Array();
+    var dataRow: { value: number, relativeTime: number; }[] = [];
     for (let i = 0; i < this.datapoint.length; i++) {
       dataRow[i] = { value: this.datapoint[i].getValue(), relativeTime: this.datapoint[i].getRelativeTime() };
     }

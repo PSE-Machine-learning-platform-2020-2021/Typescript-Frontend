@@ -1,7 +1,6 @@
 import { AIModel } from "./AIModel";
-import { DataRow } from "./DataRow";
 import { DataSet } from "./DataSet";
-import { AccelerometerData, SensorData } from "./Sensor";
+import { SensorData } from "./Sensor";
 import { Session } from "./Session";
 import { Admin } from "./User";
 
@@ -13,8 +12,8 @@ export class Project {
   private id: number; //Die eindeutige Projekt ID
   private name: string; //Der Name des Projektes
   private session: Session; //Die Session in dem das Projekt arbeitet
-  private aiModel: AIModel[] = new Array(); //Das AIModel von dem Projekt
-  private dataSet: DataSet[] = new Array(); //Die Datensätze, die zu dem Projekt gehören
+  private aiModel: AIModel[] = []; //Das AIModel von dem Projekt
+  private dataSet: DataSet[] = []; //Die Datensätze, die zu dem Projekt gehören
   private currentDataSet?: DataSet; //Aktueller Datensatz
 
 
@@ -83,9 +82,9 @@ export class Project {
    */
   deleteDataSet(dataSetID: number): boolean {
     for (let i = 0; i < this.dataSet.length; i++) {
-      if (this.dataSet[i].getID() == dataSetID) {
+      if (this.dataSet[i].getID() === dataSetID) {
         delete this.dataSet[i];
-        if (this.currentDataSet != null && this.currentDataSet.getID() == dataSetID) {
+        if (this.currentDataSet != null && this.currentDataSet.getID() === dataSetID) {
           delete this.currentDataSet;
         }
         return true;
@@ -143,7 +142,7 @@ export class Project {
    * @returns dataSetID ist die DatensatzID und dataSetName ist der Datensatzname
    */
   getDataSetMetas(): { dataSetID: number, dataSetName: string; }[] {
-    var dataSetMetas: { dataSetID: number, dataSetName: string; }[] = new Array();
+    var dataSetMetas: { dataSetID: number, dataSetName: string; }[] = [];
     for (let i = 0; i < this.dataSet.length; i++) {
       dataSetMetas.push({ dataSetID: this.dataSet[i].getID(), dataSetName: this.dataSet[i].getName() });
     }
@@ -157,7 +156,7 @@ export class Project {
    */
   getDataRows(dataSetID: number): { dataRows?: { value: number, relativeTime: number; }[][]; } {
     for (let i = 0; i < this.dataSet.length; i++) {
-      if (this.dataSet[i].getID() == dataSetID) {
+      if (this.dataSet[i].getID() === dataSetID) {
         this.currentDataSet = this.dataSet[i];
         return { dataRows: this.dataSet[i].getDataRows() };
       }
