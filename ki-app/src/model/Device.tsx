@@ -1,4 +1,4 @@
-abstract class Device {
+export abstract class Device {
   private id: number;
   private const sensorTypeID: number;
   private const MACADDRESS: string;
@@ -31,18 +31,18 @@ abstract class Device {
 
   protected abstract searchSensor(): void;
 
-} export { Device };
+}
 
-class Smartphone extends Device {
+export class Smartphone extends Device {
   protected constructor(deviceID: number) {
     super(deviceID);
   }
   protected searchSensor(): void { }
-} export { Smartphone };
+}
 
-class Desktop extends Device {
+export class Desktop extends Device {
   protected constructor(deviceID: number) {
     super(deviceID);
   }
   protected searchSensor(): void { }
-} export { Desktop };
+}

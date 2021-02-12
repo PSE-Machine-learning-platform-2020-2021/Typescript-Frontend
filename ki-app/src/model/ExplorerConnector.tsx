@@ -1,5 +1,5 @@
 //Diese Klasse ist die Schnittstelle zu “Explorer”.
-class ExplorerConnector {
+export class ExplorerConnector {
   /*Hier wird in die Datenbank ein neues Gerät hinzugefügt, hierfür wird die Firmware, die Generation sowie die unterstützten Sensoren in einer Liste.
    *Zurückgegeben wird die eindeutige Device ID aus der Datenbank.
    */
@@ -65,7 +65,7 @@ class ExplorerConnector {
 
   //Sendet das Label label an die Datenbank mit den Parametern. 
   sendLabel(sessionID: number, datasetID: number, label: object): boolean { }
-} export { ExplorerConnector };
+}
 
 
 ////////////////////IDs als Parameter immer auf >= 0 prüfen, da -1 eine Fehlermeldung ist. Sowie Admin Email auf inhalt prüfen, "" ist nicht angemeldet

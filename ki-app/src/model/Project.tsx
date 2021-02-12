@@ -9,7 +9,7 @@ import { Admin } from "./User";
  * Diese Klasse speichert alle Informationen zu einem Projekt.
  * Ein Projekt beinhaltet aufgezeichnete Datensätze (DataSet) sowie Informationen zu den Datensätzen.
  */
-class Project {
+export class Project {
   private id: number; //Die eindeutige Projekt ID
   private name: string; //Der Name des Projektes
   private session: Session; //Die Session in dem das Projekt arbeitet
@@ -223,4 +223,4 @@ class Project {
     }
     return {};
   }
-} export { Project };
+}

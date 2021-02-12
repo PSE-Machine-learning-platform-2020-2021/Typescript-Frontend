@@ -3,7 +3,7 @@ import { TimeSpan } from "./TimeSpan";
 /**
  * Diese Klasse ist fürs labeln zuständig, sie besitzt ein Zeitfenster und dazu einen Namen.
  */
-class Label {
+export class Label {
   private name: string; //Der Name des Labels.
   private labelID: number; //Die ID des Labels.
   private timeSpan: TimeSpan; //Das Zeitfenster des Labels mit Start- und Endzeit.
@@ -27,7 +27,7 @@ class Label {
    * @param end Ist die neue Endzeit des Labels.
    * @param name Ist bei angabe der neue Name des Labels.
    */
-  public setLabel(span?: { start: number, end: number; }, name?: string): void {
+  setLabel(span?: { start: number, end: number; }, name?: string): void {
     if (name != null) {
       this.name = name;
     }
@@ -42,7 +42,7 @@ class Label {
    * Gibt das Label als Objekt zurück.
    * In diesem Objekt werden die Start- und Endzeit als "start" und "end", der Label Name als "name" sowie die Label ID als "id" übergeben.
    */
-  public getLabel(): { name: string, id: number, start: number, end: number; } {
+  getLabel(): { name: string, id: number, start: number, end: number; } {
     var label = {
       name: this.name,
       id: this.labelID,
@@ -58,4 +58,4 @@ class Label {
   getID(): number {
     return this.labelID;
   }
-} export { Label };
+}

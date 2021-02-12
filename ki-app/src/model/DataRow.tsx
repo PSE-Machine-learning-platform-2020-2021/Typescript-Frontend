@@ -4,7 +4,7 @@ import { Sensor } from "./Sensor";
 /**
  * Die Klasse DataRow beschreibt eine Reihe aufgenommener Daten eines Sensors.
  */
-class DataRow {
+export class DataRow {
   private id: number; //Dies ist die DataRow ID, diese ist eindeutig für Datensätze.
   private recordingStart: number; //Dies ist der Aufnahmestartpunkt der Datenreihe.
   private datapoint: DataPoint[] = new Array; //Dies ist Datenreihe, eine Reihe von Datenpunkten.
@@ -80,4 +80,4 @@ class DataRow {
   public getRecordingStart(): number {
     return this.recordingStart;
   }
-} export { DataRow };
+}

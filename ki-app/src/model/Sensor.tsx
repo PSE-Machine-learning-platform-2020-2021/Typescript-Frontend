@@ -1,7 +1,7 @@
 import { Device } from "./Device";
 
 //Die abstrakte Klasse Sensor liefert den Bauplan und die gemeinsame Funktionalität aller Sensoren.
-abstract class SensorData {
+export abstract class SensorData {
   id: number; //Dieses Feld enthält die laufende Nummer des Sensors, diese ist in Device eindeutig und ist Konstant.
   abstract SensorTypeID: number; //Dies ist die global eindeutige ID für die Sensorart
   MACADDRESS: string; //Ist die MAC-adresse des Gerätes um es später wieder zuweisen zu können

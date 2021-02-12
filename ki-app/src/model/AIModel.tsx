@@ -1,7 +1,7 @@
 /**
  * Diese Klasse beinhaltet nur die ID des AI Models, die auf das Model in der Datenbank verweist.
  */
-class AIModel {
+export class AIModel {
     private id: number; //Die AI Model ID.
 
     /**
@@ -18,4 +18,4 @@ class AIModel {
     getID(): number {
         return this.id;
     }
-} export { AIModel };
+}
