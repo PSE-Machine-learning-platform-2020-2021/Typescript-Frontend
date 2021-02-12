@@ -3,6 +3,7 @@ import { PageController } from "./PageController";
 import { RefferingController } from "./ReferringController";
 import { MainControllerInterface } from "./MainControllerInterface";
 import { IState, States } from "../view/pages/State";
+import { Facade } from "../model/Facade";
 
 export class MainController implements MainControllerInterface {
   private facade: Facade;
@@ -15,7 +16,7 @@ export class MainController implements MainControllerInterface {
    * Konstruktor des MainControllers. Holt sich die Fassade.
    */
   constructor() {
-    this.facade = new Facade();
+    this.facade = new Facade("de");
   }
 
   /**
@@ -78,21 +79,16 @@ export class MainController implements MainControllerInterface {
    * @param ids Alle ids, zu denen man die Texte möchte.
    * @returns Gibt alle texte zu den übergebenen ids zurück.
    */
-<<<<<<< HEAD
   getMessage(messages: { text: string, id: number; }[]) {
     let messageIDs: number[] = [];
     for (let index = 0; index < messages.length; index++) {
       messageIDs.push(messages[index].id);
     }
-    let texts: string[] = this.getFacade().getMessage(messageIDs);
+    let texts: string[] = [];
     for (let index = 0; index < messages.length; index++) {
       messages[index].text = texts[index];
       return messages;
     }
-=======
-  getMessage(ids: number[]) {
-    return [];//MainController.getInstance().getFacade().getMessage(ids);
->>>>>>> origin/MergeTest
   }
 
   /**
@@ -100,7 +96,6 @@ export class MainController implements MainControllerInterface {
    * @returns Gibt true zurück falls der wechsel erfolgt ist, sonst false.
    */
   setLanguage(languageCode: string) {
-<<<<<<< HEAD
     let nextState: States;
     let success = this.getFacade().setLanguage(languageCode);
     if (success) {
@@ -109,9 +104,5 @@ export class MainController implements MainControllerInterface {
       nextState = States.LoadError;
     }
     return nextState;
-=======
-    let changed = true;//this.facade.setLanguage(languageCode);
-    return changed;
->>>>>>> origin/MergeTest
   }
 }
