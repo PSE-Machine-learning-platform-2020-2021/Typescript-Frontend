@@ -1,7 +1,7 @@
 import { DeliveryFormat } from "./DeliveryFormat";
 import { ExplorerConnector } from "./ExplorerConnector";
 import { Language } from "./Language";
-import { Sensor } from "./Sensor";
+import { SensorData } from "./Sensor";
 import { Admin, Dataminer, User } from "./User";
 
 interface FacadeInterface {
@@ -63,7 +63,7 @@ export class Facade {
     if (this.user != null && this.user instanceof Dataminer && this.admin != null) {
       let dataminerName: string = this.user.getName();
       let sessionID: number = this.getSessionID();
-      let dataRowSensors: Sensor[] = this.user.getDeviceSensors(sensorTypeID);
+      let dataRowSensors: SensorData[] = this.user.getDeviceSensors(sensorTypeID);
       if (dataRowSensors.length > 0 && dataRowSensors.length == sensorTypeID.length) {
         let dataSetID: number = this.explorerConnector.createDataSet(sessionID, sensorTypeID, dataminerName, dataSetName);
         return this.admin.createDataSet(dataRowSensors, dataSetID, dataSetName);
