@@ -67,8 +67,7 @@ export class RefferingController implements PageController {
         let adminData: { name: string, email: string, password: string; } = this.state.adminData!;
         let loginSucess: boolean = MainController.getInstance().getFacade().loginAdmin(adminData.email, adminData.password);
         if (loginSucess) {
-            let projectMeta: { projectID: number; projectName: string; }[] = MainController.getInstance().getFacade().getProjectMetas();
-            this.state.projectData = projectMeta;
+            this.state.projectData! = MainController.getInstance().getFacade().getProjectMetas();
         } else {
             this.state.currentState = States.LoginFail;
 
@@ -99,17 +98,17 @@ export class RefferingController implements PageController {
     }
 
     createNewProject() {
-        let sucess: boolean = MainController.getInstance().getFacade().createProject(this.state.projectData?.projectName!);
+        let sucess: boolean = MainController.getInstance().getFacade().createProject(this.state.currentProject!.projectID!);
         if (sucess) {
             this.state.currentState = States.NeedQR;
         } else {
-            this.state.currentState = States.ProjectError;
+            this.state.currentState = States.LoadError;
         }
         this.page.setState(this.state);
     }
 
     loadProject() {
-        let projectId: number = this.state.toLoadProjectID;
+        let projectId: number = this.state.currentProject!.projectID!;
         let sucess: boolean = MainController.getInstance().getFacade().loadProject(projectId);
         if (sucess) {
             this.state.currentState = States.NeedQR;
@@ -120,7 +119,7 @@ export class RefferingController implements PageController {
     }
 
     loadModel() {
-        let projectId: number = this.state.toLoadProjectID;
+        let projectId: number = this.state.currentProject!.projectID;
         let sucess: boolean = MainController.getInstance().getFacade().loadProject(projectId);
         if (sucess) {
             //let aiController: AIController = new AIController();
@@ -129,10 +128,5 @@ export class RefferingController implements PageController {
             this.state.currentState = States.LoadError;
             this.page.setState(this.state);
         }
-    }
-
-    changeToVisualization() {
-        //let visualizationController: VisualizationController = new VisualizationController();
-        //MainController.getInstance().changeTo(visualizationController);
     }
 }
