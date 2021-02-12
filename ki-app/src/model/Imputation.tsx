@@ -1,3 +1,7 @@
-enum Imputation {
-    MEAN, LINEAR, SPLINE, FORWARD, MOVING
-  } export {Imputation}
+export enum Imputation {
+    MEAN,
+    LINEAR,
+    SPLINE,
+    FORWARD,
+    MOVING
+}

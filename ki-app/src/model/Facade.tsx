@@ -1,4 +1,3 @@
-<<<<<<< HEAD
 import { DeliveryFormat } from "./DeliveryFormat";
 import { ExplorerConnector } from "./ExplorerConnector";
 import { Language } from "./Language";
@@ -34,9 +33,6 @@ interface FacadeInterface {
   getAIModel(format: DeliveryFormat): object;
   applyModel(modeldata: object): void;
 } export type { FacadeInterface };
-=======
-
->>>>>>> origin/MergeTest
 
 /**
  * Die Facade stellt alle interaktionen mit dem Model zur Verfügung
@@ -229,6 +225,7 @@ class Facade {
     return false;
   }
 
+<<<<<<< HEAD
   registerAdmin(adminName: string, email: string, password: string): boolean {
     let IDs: { adminID: number, deviceID: number; } = this.explorerConnector.registerAdmin(adminName, email, password);
     if (IDs.adminID >= 0) {
@@ -303,13 +300,59 @@ class Facade {
       return this.admin.getLabels();
     }
     return {};
+=======
+  registerAdmin(adminName: string, email: string, password: string): boolean {
+    throw new Error("Not implemented")
   }
 
-  classify(aiId: number, dataSetId: number, callBack: Function): void { }
+  registerDataminer(dataminerName: string, sessionID: number): boolean {
+    throw new Error("Not implemented")
+  }
 
+  registerAIModelUser(aiModelUserName: string): boolean {
+    throw new Error("Not implemented")
+  }
+
+  loginAdmin(email: string, password: string): boolean {
+    throw new Error("Not implemented")
+  }
+
+  logoutAdmin(): boolean {
+    throw new Error("Not implemented")
+  }
+
+  createProject(projectName: string): boolean {
+    throw new Error("Not implemented")
+  }
+
+  setLabel(labelID: number, start: number, end: number): boolean {
+    throw new Error("Not implemented")
+  }
+
+  getLabels(): object[] {
+    throw new Error("Not implemented")
+  }
+
+  checkLogin(): boolean {
+    throw new Error("Not implemented")
+>>>>>>> origin/Model-Structure
+  }
+
+  classify(aiId: number, dataSetId: number, callBack: Function): void {
+    throw new Error("Not implemented");
+  }
+
+<<<<<<< HEAD
   getAIModel(format: DeliveryFormat): {} { return {}; }
+=======
+  getAIModel(id: number, format: DeliveryFormat): object {
+    throw new Error("Not implemented")
+  }
+>>>>>>> origin/Model-Structure
 
-  applyModel(modeldata: object): void { }
+  applyModel(modeldata: object): void {
+    throw new Error("Not implemented");
+  }
 
 } export { Facade };
 

@@ -1,4 +1,12 @@
-enum Extraction {
-    MIN, MAX, VARIANCE, ENERGY, MEAN, AUTOREGRESSIVE, 
-    IQR, PEARSON_CORRELATION, SKEWNESS, KURTOSIS, FOURIER_TRANSFORM
-  } export {Extraction}
+export enum Extraction {
+    MIN,
+    MAX,
+    VARIANCE,
+    ENERGY,
+    MEAN,
+    AUTOREGRESSIVE,
+    IQR,
+    SKEWNESS,
+    KURTOSIS,
+    FOURIER_TRANSFORM
+}
