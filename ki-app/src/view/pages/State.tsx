@@ -17,38 +17,100 @@ export interface IState {
   dataPoints?: { dataRowID: number, value: number; }[];
   dataRows?: { dataSetID: number, data: number[][][]; };
   dataSets?: { sensorTypes: string[], dataSetName: string; }[];
-  qr?: QRCode;
+  //
+  qr?: string;
   recordingSettings?: { newDataSetName: string, usedSensorTypes: string[], readTime: number, waitTime: number; };
 }
 
 export enum States {
+  /**
+   * Seite benötigt texte
+   */
   NeedMessage,
   /**
-   * Wechsel zur Startseite
+   * Seite kann nun aus dem status die texte laden
    */
-  ChangeToStart,
-  ChangeToFinish,
-  NeedQR,
+  SetMessage,
+  /**
+   * Seite benötigt ein QRC
+   */
+  NeedQRC,
+  /**
+   * QRC kann angezeigt werden
+   */
+  SetQRC,
+  /**
+   * Seite benötigt ProjektDaten
+   */
+  NeedProject,
+  /**
+   * Projektdaten können benutzt werden
+   */
+  SetProjects,
+  /**
+   * Sprache der Anwendung soll geändert werden
+   */
   SetLanguage,
   /**
    * Fehler für alle zu ladenen sachen
    */
   LoadError,
+  /**
+   * Ein Login Versuch soll durchgeführt werden
+   */
   Login,
   /**
      * Update aller Daten welche auf der Seite angezeigt werden, zum Beispiel Projekt Daten für die Projekt liste.
      */
   updateData,
+  /**
+   * Ein neues Projekt soll erstellt werden
+   */
   NewProjekt,
+  /**
+   * Model eines Projekts soll geladen werden
+   */
   LoadModel,
+  /**
+   * Login ist gescheitert
+   */
   LoginFail,
+  /**
+   * Beginne Datenerfassung
+   */
   StartDataRead,
-  ChangeToRefferring,
+  /**
+   * Klassifiziere Daten
+   */
   ClassifyResult,
+  /**
+   * Die Seite benötigt die neusten Datenreihen
+   */
   NeedDataRows,
+  /**
+   * Ein Label soll geändert werden
+   */
   ChangeLabel,
+  /**
+   * Ein Label soll gelöscht werden
+   */
   DeleteDataLabel,
-  NewLabel
+  /**
+   * Ein neues Label los erstellt werden
+   */
+  NewLabel,
+  /**
+   * Wechsel zur Startseite
+   */
+  ChangeToStart,
+  /**
+   * Wechsel zur Fertigungsseite
+   */
+  ChangeToFinish,
+  /**
+   * Wechsel zur Verweisseite
+   */
+  ChangeToRefferring,
 }
 
 /**  BEISPIEL
