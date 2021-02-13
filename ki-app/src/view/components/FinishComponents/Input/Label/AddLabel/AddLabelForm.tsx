@@ -25,12 +25,21 @@ export const AddLabelForm: React.FC<AddLabelFormProps> = ({ addLabel }) => {
         e.preventDefault();
         addLabel(newLabel, +newStart, +newEnd);
         setNewLabel('');
+        setNewStart('');
+        setNewEnd('');
     };
     return (
         <form onSubmit={handleSubmit}>
-            <input type="text" value={newLabel} onChange={handleChangeLabel} />
+            Start:
             <input type="text" value={newStart} onChange={handleChangeStart} />
+
+            End:
             <input type="text" value={newEnd} onChange={handleChangeEnd} />
+
+            Label:
+            <input type="text" value={newLabel} onChange={handleChangeLabel} />
+            <br />
+
             <button type="submit">Add Label</button>
         </form>
     );

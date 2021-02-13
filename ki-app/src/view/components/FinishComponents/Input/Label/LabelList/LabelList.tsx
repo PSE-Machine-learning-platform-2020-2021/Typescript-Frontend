@@ -1,17 +1,17 @@
 import React from 'react';
 import { LabelItem } from '../LabelItem/LabelItem';
-import { Label, ToggleLabel } from '../LabelItem/types';
+import { Label } from '../LabelItem/types';
 
 interface LabelListProps {
     labels: Label[],
-    toggleLabel: ToggleLabel;
 };
 
-export const LabelList: React.FC<LabelListProps> = ({ labels, toggleLabel }) => {
+export const LabelList: React.FC<LabelListProps> = ({ labels }) => {
+
     return (
         <ul>
             {labels.map(label => {
-                return <LabelItem key={label.name} label={label} toggleLabel={toggleLabel} />;
+                return <LabelItem key={label.name} label={label} />;
             })}
         </ul>
     );

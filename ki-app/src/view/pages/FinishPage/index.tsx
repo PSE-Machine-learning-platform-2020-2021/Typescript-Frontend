@@ -14,10 +14,10 @@ type Props = {
 export class FinishPage extends React.Component<Props, State> implements Page {
 
   observers: PageController[] = [];
-  state = new State;
+
   constructor(props: Props) {
     super(props);
-
+    this.state = new State;
     ReactDOM.render(
       <div>
         <Title />

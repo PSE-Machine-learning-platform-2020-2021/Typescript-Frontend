@@ -1,5 +1,5 @@
 import React, { useState } from 'react';
-import { Label, ToggleLabel, AddLabel } from './LabelItem/types';
+import { Label, AddLabel } from './LabelItem/types';
 import { LabelList } from './LabelList/LabelList';
 import { AddLabelForm } from './AddLabel/AddLabelForm';
 
@@ -9,18 +9,6 @@ const initialLabels: Label[] = [
 
 const Labelling: React.FC = () => {
     const [labels, setLabels] = useState(initialLabels);
-    const toggleLabel: ToggleLabel = selectedLabel => {
-        const newLabels = labels.map(label => {
-            if (label === selectedLabel) {
-                return {
-                    ...label,
-                    complete: !label.chosen
-                };
-            }
-            return label;
-        });
-        setLabels(newLabels);
-    };
     const addLabel: AddLabel = (newLabel: string, newStart: number, newEnd: number) => {
         if (newLabel.trim() === '')  // 空值，则跳过
             return;
@@ -28,7 +16,6 @@ const Labelling: React.FC = () => {
             ...labels,
             {
                 name: newLabel,
-                chosen: false,
                 start: newStart,
                 end: newEnd
             }
@@ -36,7 +23,7 @@ const Labelling: React.FC = () => {
     };
     return (
         <div>
-            <LabelList labels={labels} toggleLabel={toggleLabel} />
+            <LabelList labels={labels} />
             <AddLabelForm addLabel={addLabel} />
         </div>
     );
