@@ -79,10 +79,6 @@ export class MainController implements MainControllerInterface {
    * @param ids Alle ids, zu denen man die Texte möchte.
    * @returns Gibt alle texte zu den übergebenen ids zurück.
    */
-<<<<<<< HEAD
-  getMessage(ids: number[]) {
-    return [];//MainController.getInstance().getFacade().getMessage(ids);
-=======
   getMessage(messages: { text: string, id: number; }[]) {
     let messageIDs: number[] = [];
     for (let index = 0; index < messages.length; index++) {
@@ -93,7 +89,6 @@ export class MainController implements MainControllerInterface {
       messages[index].text = texts[index];
       return messages;
     }
->>>>>>> 90d98927a215002b6c7db0280fc1c74c9ee1ff3f
   }
 
   /**
@@ -101,10 +96,6 @@ export class MainController implements MainControllerInterface {
    * @returns Gibt true zurück falls der wechsel erfolgt ist, sonst false.
    */
   setLanguage(languageCode: string) {
-<<<<<<< HEAD
-    let changed = true;//this.facade.setLanguage(languageCode);
-    return changed;
-=======
     let nextState: States;
     let success = this.getFacade().setLanguage(languageCode);
     if (success) {
@@ -113,6 +104,5 @@ export class MainController implements MainControllerInterface {
       nextState = States.LoadError;
     }
     return nextState;
->>>>>>> 90d98927a215002b6c7db0280fc1c74c9ee1ff3f
   }
 }
