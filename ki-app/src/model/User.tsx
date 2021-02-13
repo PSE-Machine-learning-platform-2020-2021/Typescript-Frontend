@@ -1,6 +1,6 @@
 import { Device, Smartphone } from "./Device";
 import { Project } from "./Project";
-import { Sensor } from "./Sensor";
+import { SensorData } from "./Sensor";
 
 /**
  * Die Vorlage für alle existierenden Benutzer
@@ -103,7 +103,7 @@ export class Admin extends User {
     projectID: number, sessionID: number, projectName: string, projectData?: {
       aiModelID: number[],
       dataSet: {
-        dataRowSensors: Sensor[], dataSetID: number, dataSetName: string, generateDate: number,
+        dataRowSensors: SensorData[], dataSetID: number, dataSetName: string, generateDate: number,
         dataRows: {
           dataRowID: number, recordingStart: number,
           dataRow: { value: number, relativeTime: number; }[];
@@ -235,7 +235,7 @@ export class Admin extends User {
      * @param generateDate die Erstellungszeit von dem Datensatz
      * @returns false, falls kein aktuelles Prokekt existiert
      */
-  createDataSet(dataRowSensors: Sensor[], dataSetID: number, dataSetName: string, generateDate?: number): boolean {
+  createDataSet(dataRowSensors: SensorData[], dataSetID: number, dataSetName: string, generateDate?: number): boolean {
     if (this.currentProject != null) {
       this.currentProject.createDataSet(dataRowSensors, dataSetID, dataSetName, generateDate);
       return true;
@@ -347,7 +347,7 @@ export class Dataminer extends User {
   /**
    * Gibt alle Sensoren aus, die das Benutzergerät und das Programm unterstützt
    */
-  getDeviceSensors(sensorTypeID: number[]): Sensor[] {
+  getDeviceSensors(sensorTypeID: number[]): SensorData[] {
     return this.device.getSensors(sensorTypeID);
   }
 

@@ -84,12 +84,12 @@ export class RefferingController implements PageController {
     }
 
     createQR() {
-        let link: string = MainController.getInstance().getFacade().getDataMinerLink();
+        //let link: string = MainController.getInstance().getFacade().getDataMinerLink();
 
         var qr = new QRCode();
         qr.setTypeNumber(5);
         qr.setErrorCorrectLevel(ErrorCorrectLevel.L);
-        qr.addData(link);
+        qr.addData("link");
         qr.make();
         this.state.qr = qr;
         this.state.currentState = States.NeedQR;
@@ -97,11 +97,12 @@ export class RefferingController implements PageController {
     }
 
     createNewProject() {
-        let sucess: boolean = MainController.getInstance().getFacade().createProject(this.state.currentProject!.projectID!);
+        let sucess: boolean = MainController.getInstance().getFacade().createProject(this.state.currentProject!.projectName);
         if (sucess) {
             this.state.currentState = States.NeedQR;
         } else {
             this.state.currentState = States.LoadError;
+
         }
         this.page.setState(this.state);
     }

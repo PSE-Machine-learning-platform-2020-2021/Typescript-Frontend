@@ -2,7 +2,7 @@ import { MainController } from "./MainController";
 import { Page } from "../view/pages/PageInterface";
 export class SensorManager {
 
-    private currentSensors = [""];
+    private currentSensors: number[] = [];
     private facade = MainController.getInstance().getFacade();
     private waitTime = 5;
     private readTime = 10;
@@ -12,7 +12,7 @@ export class SensorManager {
     * @param sensorTypes Die Angabe der zu benutzenden Sensoren. Die position im Array bestimmt die DataRow ID jedes Sensors.
     * @returns Gibt true für ein erfolgreiches Erstellen eines Dataensatzes zurück, gibt sonst false zurück.
     */
-    setUpDataRead(sensorTypes: string[], dataSetName: string, waitTime: number, readTime: number) {
+    setUpDataRead(sensorTypes: number[], dataSetName: string, waitTime: number, readTime: number) {
         this.currentSensors = sensorTypes;
         this.waitTime = waitTime;
         this.readTime = readTime;
@@ -30,7 +30,7 @@ export class SensorManager {
             data.push(this.facade.readDataPoint(index));
         }
         for (let index = 0; index < this.currentSensors.length; index++) {
-            this.facade.sendDataPoint(index, data[index]);
+            this.facade.sendDataPoint(index, data[index].dataPoint!.value, data[index].dataPoint!.value);
         }
         return data;
     }

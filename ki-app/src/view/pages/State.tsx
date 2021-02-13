@@ -4,7 +4,9 @@ export interface IState {
   currentState: States;
   languageCode: string;
   messages: { text: string, id: number; }[];
+  //Anzeige aller Projekte eines nutzers
   projectData?: { projectID: number, projectName: string, AIModelExist: boolean; }[];
+  // Das Projekt welches in der view ausgewählt wurde
   currentProject?: { projectID: number, projectName: string, AIModels: string[]; };
   adminData?: { name: string, email: string, password: string; };
   //minerData?:
@@ -28,8 +30,15 @@ export enum States {
   ChangeToFinish,
   NeedQR,
   SetLanguage,
+  /**
+   * Fehler für alle zu ladenen sachen
+   */
   LoadError,
   Login,
+  /**
+     * Update aller Daten welche auf der Seite angezeigt werden, zum Beispiel Projekt Daten für die Projekt liste.
+     */
+  updateData,
   NewProjekt,
   LoadModel,
   LoginFail,

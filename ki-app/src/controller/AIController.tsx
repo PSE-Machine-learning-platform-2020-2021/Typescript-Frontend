@@ -1,5 +1,5 @@
 import { Page } from "../view/pages/PageInterface";
-import { AIPage } from "../view/pages/AIPage/index";
+import { StartPage } from "../view/pages/StartPage";
 import { IState, States } from "../view/pages/State";
 
 
@@ -10,7 +10,7 @@ import { RefferingController } from "./ReferringController";
 
 export class AIController implements PageController {
     sensorManager: SensorManager;
-    private page: Page = new AIPage();
+    private page: Page = new StartPage({});
     private state: IState;
     private urlParams: URLSearchParams;
 
@@ -20,7 +20,7 @@ export class AIController implements PageController {
         this.sensorManager = new SensorManager();
         this.page.attach(this);
         this.state = this.page.getState();
-        MainController.getInstance().getFacade().registerAIModelUser(); //TODO
+        //MainController.getInstance().getFacade().registerAIModelUser(); //TODO
     }
 
     /**
@@ -44,13 +44,13 @@ export class AIController implements PageController {
     }
 
     startDataRead() {
-        let sensorTypes: string[] = this.urlParams.get("sensorTypes")!.split(",");
+        let sensorTypes: number[] = this.urlParams.get("sensorTypes")!.split(",").map(x => +x);
         let dataSetName: string = "TODO";
         let waitTime = this.state.recordingSettings!.waitTime;
         let readTime = this.state.recordingSettings!.readTime;
         this.sensorManager.setUpDataRead(sensorTypes, dataSetName, waitTime, readTime);
         this.sensorManager.readData(this.page);
-        MainController.getInstance().getFacade().classify(this.urlParams.get("aiID"), sensorTypes, this.callback);
+        //MainController.getInstance().getFacade().classify(this.urlParams.get("aiID"), sensorTypes, this.callback);
     }
 
     public callback(prediction: any) {

@@ -8,11 +8,17 @@ import { PageController } from "../../../controller/PageController";
 import { State } from "./State";
 import { MainController } from '../../../controller/MainController';
 import ReactDOM from 'react-dom';
+import { States } from '../State';
 
 type Props = {
 };
 
 export class ReferringPage extends React.Component<Props, State> implements Page {
+
+    //change status
+    //state: State;
+    //this.state = new State();
+    //this.state.currentState = States.NewProjekt;
 
     observers: PageController[] = [];
     constructor(props: Props) {

@@ -21,6 +21,11 @@ export abstract class SensorData {
   getSensorData(): { id: number, SensorTypeID: number, MACADDRESS: string, deviceName: string, sensor: Sensor; } {
     return { id: this.id, SensorTypeID: this.SensorTypeID, MACADDRESS: this.MACADDRESS, deviceName: this.deviceName, sensor: this.sensor };
   }
+
+  //nur anti error!
+  getCurrentValue(): number {
+    return -1;
+  }
 }
 
 //Diese Klasse ist eine Unterklasse von der abstrakten Klasse SensorData und ist für die Sensoren der Kategorie Beschleunigungssensor bestimmt
@@ -38,10 +43,8 @@ export class AccelerometerData extends SensorData {
     navigator.permissions.query({ name: "accelerometer" }).then(({ state }) => {
       switch (state) {
         case "granted":
-          showLocalNewsWithGeolocation();
           break;
         case "prompt":
-          showButtonToEnableLocalNews();
           break;
         default:
           // Don’t do anything if the permission was denied.
@@ -74,7 +77,7 @@ export class MagnetometerData extends SensorData {
 
   }
 }
-
+/*
 export class Microphone extends SensorData {
   option: { audio: boolean, video: boolean; } = { audio: true, video: false };
 
@@ -149,7 +152,7 @@ export class Microphone extends SensorData {
   }
 }
 
-
+*/
 //ToDo microphone + permisssion + Licences
 
 //https://www.youtube.com/watch?v=K6L38xk2rkk video für microphone/ erklärung für getUserMedia und MediaRecorder (damit kann man mikrofon und Kamera aufnehmen)

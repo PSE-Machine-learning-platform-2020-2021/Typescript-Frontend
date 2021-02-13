@@ -1,7 +1,7 @@
 import { AIModel } from "./AIModel";
 import { DataRow } from "./DataRow";
 import { DataSet } from "./DataSet";
-import { Accelerometer, Sensor } from "./Sensor";
+import { AccelerometerData, SensorData } from "./Sensor";
 import { Session } from "./Session";
 import { Admin } from "./User";
 
@@ -38,7 +38,7 @@ export class Project {
    */
   constructor(projectID: number, sessionID: number, projectName: string, admin: Admin, aiModelID: number[],
     dataSet: {
-      dataRowSensors: Sensor[], dataSetID: number, dataSetName: string, generateDate: number,
+      dataRowSensors: SensorData[], dataSetID: number, dataSetName: string, generateDate: number,
       dataRows: {
         dataRowID: number, recordingStart: number,
         dataRow: { value: number, relativeTime: number; }[];
@@ -48,7 +48,7 @@ export class Project {
 
   constructor(projectID: number, sessionID: number, projectName: string, admin: Admin, aiModelID?: number[],
     dataSet?: {
-      dataRowSensors: Sensor[], dataSetID: number, dataSetName: string, generateDate: number,
+      dataRowSensors: SensorData[], dataSetID: number, dataSetName: string, generateDate: number,
       dataRows: {
         dataRowID: number, recordingStart: number,
         dataRow: { value: number, relativeTime: number; }[];
@@ -109,7 +109,7 @@ export class Project {
    * @param dataSetName der Datensatznamen
    * @param generateDate die Erstellungszeit von dem Datensatz
    */
-  createDataSet(dataRowSensors: Sensor[], dataSetID: number, dataSetName: string, generateDate?: number): void {
+  createDataSet(dataRowSensors: SensorData[], dataSetID: number, dataSetName: string, generateDate?: number): void {
     var dataSet: DataSet = new DataSet(dataRowSensors, dataSetID, dataSetName, generateDate);
     this.dataSet.push(dataSet);
     this.currentDataSet = dataSet;

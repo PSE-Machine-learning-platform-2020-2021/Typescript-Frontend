@@ -10,7 +10,7 @@ import { FinishController } from "./FinishController";
 export class DataCollectionController implements PageController {
 
     private sensorManager: SensorManager;
-    private page: Page = new DataCollectionPage();
+    private page: Page = new DataCollectionPage({});
     private waitTime = 10;
     private readTime = 10;
     private readonly SECOND = 1000;
@@ -53,27 +53,27 @@ export class DataCollectionController implements PageController {
     private startDataRead() {
         this.waitTime = this.sensorManager.getWaitTime() * this.SECOND;
         this.readTime = this.sensorManager.getReadTime() * this.SECOND;
-        this.page.setState(States.wait);
-        this.page.setWaitTime(this.waitTime);
+        //this.page.setState(States.wait);
+        //this.page.setWaitTime(this.waitTime);
 
         let intervalId1 = setInterval(() => {
-            this.page.setState(state);
+            //this.page.setState(state);
             this.waitTime = this.waitTime - 1;
-            this.page.setWaitTime(this.waitTime);
+            //this.page.setWaitTime(this.waitTime);
             if (this.waitTime === 0) clearInterval(intervalId1);
         }, 1);
 
-        this.page.setState(States.read);
-        this.page.setReadTime(this.readTime);
+        //this.page.setState(States.read);
+        // this.page.setReadTime(this.readTime);
         let intervalId2 = setInterval(() => {
-            this.page.setState(state);
+            //this.page.setState(state);
             this.readTime = this.readTime - 1;
-            let data = this.sensorManager.readData();
-            this.page.addDataPoint(data);
-            this.page.setReadTime(this.readTime);
+            //let data = this.sensorManager.readData();
+            //this.page.addDataPoint(data);
+            //this.page.setReadTime(this.readTime);
             if (this.readTime === 0) clearInterval(intervalId2);
         }, 1);
 
-        this.page.setState(States.finishDataRead);
+        //this.page.setState(States.finishDataRead);
     }
 }
