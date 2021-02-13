@@ -3,7 +3,7 @@ export class State {
   languageCode: string = "de";
   messageIDs: number[] = [];
   messages: string[] = [];
-  emails: { id: string, address: string, chosen: boolean }[] = [];
+  emails: { id: string, address: string, chosen: boolean }[] = [{ id: 'ex', address: 'example', chosen: false }];
 
 }
 

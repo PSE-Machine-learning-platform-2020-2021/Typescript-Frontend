@@ -10,6 +10,7 @@
     "@types/node": "^12.19.15",
     "@types/react": "^16.14.2",
     "@types/react-dom": "^16.9.10",
+    "pubsub-js": "^1.9.2",
     "qrcode-generator-ts": "0.0.4",
     "react": "^17.0.1",
     "react-dom": "^17.0.1",
@@ -41,5 +42,8 @@
       "last 1 firefox version",
       "last 1 safari version"
     ]
+  },
+  "devDependencies": {
+    "@types/pubsub-js": "^1.8.2"
   }
 }

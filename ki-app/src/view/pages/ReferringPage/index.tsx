@@ -1,4 +1,5 @@
 import React, { Component } from 'react';
+import PubSub from 'pubsub-js'
 import ConstantsText from '../../components/ReferringComponents/ConstantsText';
 import NewProjectButton from '../../components/ReferringComponents/NewProjectButton';
 import LoginButton from '../../components/ReferringComponents/LoginButton';
@@ -11,18 +12,21 @@ import ReactDOM from 'react-dom';
 import { States } from '../State';
 
 type Props = {
+
 };
 
 export class ReferringPage extends React.Component<Props, State> implements Page {
 
     //change status
     //state: State;
-    //this.state = new State();
-    //this.state.currentState = States.NewProjekt;
 
+    //this.state.currentState = States.NewProjekt;
+    state = new State();
     observers: PageController[] = [];
     constructor(props: Props) {
         super(props);
+
+        this.needqr()
         const VDOM = (
             <div>
                 <ConstantsText />
@@ -56,4 +60,14 @@ export class ReferringPage extends React.Component<Props, State> implements Page
         return this.state;
     }
 
+    needqr() {
+        PubSub.subscribe('needqr', (msg: any, data: any) => {
+            // console.log(this.state.currentState)
+            this.state.currentState = States.NeedQR
+            //console.log(this.state.currentState)
+            this.notify()
+            //console.log(this.state.currentState)
+        })
+
+    }
 }
