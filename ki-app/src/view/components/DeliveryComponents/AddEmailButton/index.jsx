@@ -2,11 +2,13 @@ import React, { Component } from 'react';
 import PropTypes from 'prop-types';
 import { nanoid } from 'nanoid';
 
+
 export default class AddEmailButton extends Component {
 	//limit props
 	static propTypes = {
 		addEmail: PropTypes.func.isRequired
 	};
+
 	state = { click: false };
 	handleCreate = () => {
 		this.setState({ click: true });

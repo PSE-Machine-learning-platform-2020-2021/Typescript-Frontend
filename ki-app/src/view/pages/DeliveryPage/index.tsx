@@ -18,6 +18,12 @@ export class DeliveryPage extends React.Component<Props, State> implements Page 
 	observers: PageController[] = [];
 	constructor(props: Props) {
 		super(props);
+		//this.addEmail({ id: 'ex', address: 'example', chosen: false })
+		this.addEmail = this.addEmail.bind(this)
+		this.deleteEmail = this.deleteEmail.bind(this)
+		this.updateEmail = this.updateEmail.bind(this)
+		this.chooseAllEmail = this.chooseAllEmail.bind(this)
+		this.clearAllChosen = this.clearAllChosen.bind(this)
 		const VDOM = (
 			<div className="deliverypage">
 				<div className="emailList-wrap">
