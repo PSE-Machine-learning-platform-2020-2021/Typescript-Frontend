@@ -17,8 +17,8 @@ export class RefferingController implements PageController {
      * Konstruktor des Seitenverwalters. Registriert sich als Beobachter auf seiner Seite und setzt den start Status. 
      */
     constructor() {
-        //this.page = new ReferringPage({});
-        this.page = new DeliveryPage({})
+        this.page = new ReferringPage({});
+        //this.page = new DeliveryPage({})
         this.page.attach(this);
         this.state = this.page.getState();
         this.update();
@@ -30,7 +30,7 @@ export class RefferingController implements PageController {
     update() {
         this.state = this.page.getState();
         switch (this.state.currentState) {
-            case States.NeedData:
+            case States.NeedQRC:
                 this.createQR();
                 break;
             case States.Login:
@@ -94,16 +94,16 @@ export class RefferingController implements PageController {
         qr.addData("link");
         qr.make();
         this.state.qr = qr.toDataURL();
-        console.log(qr.toDataURL();)
+        console.log(qr.toDataURL());
         //divElement.innerHTML = state.qr
-        this.state.currentState = States.SetData;
+        this.state.currentState = States.NeedMessage;
         //this.page.setState(this.state);
     }
 
     createNewProject() {
         let sucess: boolean = MainController.getInstance().getFacade().createProject(this.state.currentProject!.projectName);
         if (sucess) {
-            this.state.currentState = States.NeedData;
+            this.state.currentState = States.NeedMessage;
         } else {
             this.state.currentState = States.LoadError;
 
@@ -115,7 +115,7 @@ export class RefferingController implements PageController {
         let projectId: number = this.state.currentProject!.projectID!;
         let sucess: boolean = MainController.getInstance().getFacade().loadProject(projectId);
         if (sucess) {
-            this.state.currentState = States.NeedData;
+            this.state.currentState = States.NeedMessage;
         } else {
             this.state.currentState = States.LoadError;
         }
