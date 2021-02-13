@@ -15,6 +15,7 @@ export class StartPage extends React.Component<Props, State> implements Page {
     observers: PageController[] = [];
     constructor(props: Props) {
         super(props);
+        this.state = new State;
         const VDOM = (
             <div>
                 <Title />

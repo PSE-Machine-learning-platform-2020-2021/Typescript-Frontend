@@ -1,5 +1,5 @@
 import { Page } from "../view/pages/PageInterface";
-import { ReferringPage } from "../view/pages/ReferringPage/index";
+import { StartPage } from "../view/pages/StartPage/index";
 import { IState, States } from "../view/pages/State";
 
 import { PageController } from "./PageController";
@@ -17,8 +17,12 @@ export class RefferingController implements PageController {
      * Konstruktor des Seitenverwalters. Registriert sich als Beobachter auf seiner Seite und setzt den start Status. 
      */
     constructor() {
+<<<<<<< HEAD
         this.page = new ReferringPage({});
         //this.page = new DeliveryPage({})
+=======
+        this.page = new StartPage({});
+>>>>>>> b0ba147165a71c8de876b8f37ebc3be50945e5a0
         this.page.attach(this);
         this.state = this.page.getState();
         this.update();

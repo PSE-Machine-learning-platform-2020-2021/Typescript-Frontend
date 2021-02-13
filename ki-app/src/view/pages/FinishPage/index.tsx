@@ -7,8 +7,6 @@ import { PageController } from "../../../controller/PageController";
 import { State } from "./State";
 import { MainController } from '../../../controller/MainController';
 import ReactDOM from 'react-dom';
-import AddLabelButton from '../../components/FinishComponents/Input/AddLabelButton';
-import LabelList from '../../components/FinishComponents/Input/LabelList';
 
 type Props = {
 };
@@ -16,18 +14,14 @@ type Props = {
 export class FinishPage extends React.Component<Props, State> implements Page {
 
   observers: PageController[] = [];
-  state = new State;
+
   constructor(props: Props) {
     super(props);
-
+    this.state = new State;
     ReactDOM.render(
       <div>
         <Title />
         <Body />
-        <div className="labelList-wrap">
-          <LabelList labels={this.state.labels} deleteLabel={this.deleteLabel} />
-          <AddLabelButton addLabel={this.addLabel} deleteLabel={this.deleteLabel} />
-        </div>
         <Input />
       </div>, document.getElementById('root'));
   }
@@ -37,10 +31,6 @@ export class FinishPage extends React.Component<Props, State> implements Page {
       <div>
         <Title />
         <Body />
-        <div className="labelList-wrap">
-          <LabelList labels={this.state.labels} deleteLabel={this.deleteLabel} />
-          <AddLabelButton addLabel={this.addLabel} deleteLabel={this.deleteLabel} />
-        </div>
         <Input />
       </div>
     );
