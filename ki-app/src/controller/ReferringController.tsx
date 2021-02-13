@@ -92,7 +92,7 @@ export class RefferingController implements PageController {
         qr.addData("link");
         qr.make();
         this.state.qr = qr.toDataURL();
-        console.log(qr.toDataURL();)
+        console.log(qr.toDataURL());
         //divElement.innerHTML = state.qr
         this.state.currentState = States.SetData;
         //this.page.setState(this.state);
