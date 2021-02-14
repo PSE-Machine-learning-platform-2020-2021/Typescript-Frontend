@@ -7,7 +7,7 @@ export interface IState {
   //Anzeige aller Projekte eines nutzers
   projectData?: { projectID: number, projectName: string, aiModelIDs: number[]; }[];
   // Das Projekt welches in der view ausgewählt wurde
-  currentProject?: { projectID: number, choosenAIModelID: number; };
+  currentProject?: { projectID: number, projectName: string, choosenAIModelID: number; };
   adminData?: { name: string, email: string, password: string; };
   //minerData?:
   aiUserData?: { name: string, result: string; };
@@ -45,9 +45,9 @@ export enum States {
    */
   SetQRC,
   /**
-   * Seite benötigt ProjektDaten
+   * Lade Projectdaten
    */
-  NeedProject,
+  LoadProject,
   /**
    * Projektdaten können benutzt werden
    */
@@ -64,6 +64,7 @@ export enum States {
    * Ein Login Versuch soll durchgeführt werden
    */
   Login,
+  Register,
   /**
      * Update aller Daten welche auf der Seite angezeigt werden, zum Beispiel Projekt Daten für die Projekt liste.
      */

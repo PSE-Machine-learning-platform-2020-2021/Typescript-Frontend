@@ -50,20 +50,12 @@ export class RefferingController implements PageController {
             case States.NeedMessage:
                 this.page.setState(MainController.getInstance().getMessage(this.state.messages));
                 break;
+            case States.Register:
+                this.register();
+                break;
             default:
                 break;
         }
-    }
-
-    private setLanguage() {
-        let languageCode = this.state.languageCode;
-        let success = MainController.getInstance().setLanguage(languageCode);
-        if (success) {
-            this.state.currentState = States.NeedMessage;
-        } else {
-            this.state.currentState = States.LoadError;
-        }
-        this.page.setState(this.state);
     }
 
     login() {
