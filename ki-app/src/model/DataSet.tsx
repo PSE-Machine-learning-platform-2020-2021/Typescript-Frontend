@@ -9,8 +9,8 @@ export class DataSet {
   private generateDate: number; //Dies ist die Erstellungszeit dieses Datensatzes in Millisekunden.
   private id: number; //Dies ist die Datensatz ID.
   private name: string; //Dies ist der Name des Datensatzes.
-  private dataRow: DataRow[] = new Array(); //Dies sind die Datenreihen, welche zu dem Datensatz gehören.
-  private label: Label[] = new Array(); //Dies sind die existierenden Labels für den Datensatz.
+  private dataRow: DataRow[] = []; //Dies sind die Datenreihen, welche zu dem Datensatz gehören.
+  private label: Label[] = []; //Dies sind die existierenden Labels für den Datensatz.
 
 
   /**
@@ -78,7 +78,7 @@ export class DataSet {
    */
   public readDataPoint(dataRowID: number): { dataPoint?: { value: number, relativeTime: number; }; } {
     for (let i = 0; i < this.dataRow.length; i++) {
-      if (this.dataRow[i].getID() == dataRowID) {
+      if (this.dataRow[i].getID() === dataRowID) {
         return { dataPoint: this.dataRow[i].createCurrentDataPoint() };
       }
     }
@@ -90,7 +90,7 @@ export class DataSet {
    * @returns Ein zwei Dimensionales Array, die Erste Dimension wählt die Datenreihe und die zweite Dimension den Datenpunkt.
    */
   public getDataRows(): { value: number, relativeTime: number; }[][] {
-    var dataRows: { value: number, relativeTime: number; }[][] = new Array();
+    var dataRows: { value: number, relativeTime: number; }[][] = [];
     for (let i = 0; i < this.dataRow.length; i++) {
       dataRows.push(this.dataRow[i].getDataRow());
     }
@@ -107,7 +107,7 @@ export class DataSet {
    */
   public createLabel(name: string, labelID: number, start: number, end: number): boolean {
     for (let i = 0; i < this.label.length; i++) {
-      if (this.label[i].getID() == labelID) {
+      if (this.label[i].getID() === labelID) {
         return false;
       }
     }
@@ -124,7 +124,7 @@ export class DataSet {
    */
   public setLabel(labelID: number, span?: { start: number, end: number; }, labelName?: string): boolean {
     for (let i = 0; i < this.label.length; i++) {
-      if (this.label[i].getID() == labelID) {
+      if (this.label[i].getID() === labelID) {
         this.label[i].setLabel(span, labelName);
         return true;
       }
@@ -138,7 +138,7 @@ export class DataSet {
    */
   public deleteLabel(labelID: number): boolean {
     for (let i = 0; i < this.label.length; i++) {
-      if (this.label[i].getID() == labelID) {
+      if (this.label[i].getID() === labelID) {
         delete this.label[i];
         return true;
       }
@@ -150,7 +150,7 @@ export class DataSet {
    * Gibt alle Daten von allen Labeln zurück.
    */
   public getLabels(): { name: string, id: number, start: number, end: number; }[] {
-    var labelList: { name: string, id: number, start: number, end: number; }[] = new Array;
+    var labelList: { name: string, id: number, start: number, end: number; }[] = [];
     for (let i = 0; i < this.label.length; i++) {
       labelList.push(this.label[i].getLabel());
     }

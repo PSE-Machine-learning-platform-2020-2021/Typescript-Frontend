@@ -28,7 +28,7 @@ export class Language {
    * @returns id mit der Nachricht in der gleichen Reihenfolge, wie angefordert.
    */
   getMessage(id: number[]): { messageID: number, message: string; }[] {
-    var messages: { messageID: number, message: string; }[] = new Array();
+    var messages: { messageID: number, message: string; }[] = [];
     for (let i = 0; i < id.length; i++) {
       if (this.language.length > id[i]) {
         messages.push({ messageID: id[i], message: this.language[id[i]] });

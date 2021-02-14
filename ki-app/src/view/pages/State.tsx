@@ -79,6 +79,7 @@ export enum States {
    * Login ist gescheitert
    */
   LoginFail,
+  loginSucess,
   /**
    * Beginne Datenerfassung
    */

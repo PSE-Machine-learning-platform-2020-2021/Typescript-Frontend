@@ -62,15 +62,9 @@ export abstract class Device {
 }
 
 export class Smartphone extends Device {
-  constructor(deviceID: number) {
-    super(deviceID);
-  }
   protected searchSensor(): void { }
 }
 
 export class Desktop extends Device {
-  constructor(deviceID: number) {
-    super(deviceID);
-  }
   protected searchSensor(): void { }
 }
