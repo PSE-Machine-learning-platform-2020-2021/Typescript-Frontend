@@ -27,6 +27,7 @@ export interface IState {
   //collectiontime?: number;
 }
 
+
 export enum States {
   /**
    * Seite benötigt texte
@@ -63,6 +64,7 @@ export enum States {
   /**
    * Ein Login Versuch soll durchgeführt werden
    */
+  Register,
   Login,
   Register,
   /**
@@ -76,6 +78,7 @@ export enum States {
   /**
    * Model eines Projekts soll geladen werden
    */
+  LoadProject,
   LoadModel,
   /**
    * Login ist gescheitert
