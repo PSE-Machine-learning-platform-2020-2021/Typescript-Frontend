@@ -17,6 +17,6 @@ export class State implements IState {
   dataPoints?: { dataRowID: number, value: number; }[];
   dataRows?: { dataSetID: number, data: number[][][]; };
   dataSets?: { sensorTypes: string[], dataSetName: string; }[];
-  qr?: QRCode;
+  qr?: string;
   recordingSettings?: { newDataSetName: string, usedSensorTypes: string[], readTime: number, waitTime: number; };
 }

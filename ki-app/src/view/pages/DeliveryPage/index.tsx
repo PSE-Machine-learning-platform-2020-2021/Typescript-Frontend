@@ -18,6 +18,12 @@ export class DeliveryPage extends React.Component<Props, State> implements Page 
 	observers: PageController[] = [];
 	constructor(props: Props) {
 		super(props);
+		//this.addEmail({ id: 'ex', address: 'example', chosen: false })
+		this.addEmail = this.addEmail.bind(this)
+		this.deleteEmail = this.deleteEmail.bind(this)
+		this.updateEmail = this.updateEmail.bind(this)
+		this.chooseAllEmail = this.chooseAllEmail.bind(this)
+		this.clearAllChosen = this.clearAllChosen.bind(this)
 		const VDOM = (
 			<div className="deliverypage">
 				<div className="emailList-wrap">
@@ -57,47 +63,44 @@ export class DeliveryPage extends React.Component<Props, State> implements Page 
 	//addEmail for add new Email
 	addEmail = (emailObj: { id: string, address: string, chosen: boolean }) => {
 		//get orignal emailList
-		const emails = this.state.emails;
+
 		//add new one
-		const newEmails = [emailObj, ...emails];
+		const newEmails = [emailObj, ...this.state.emails];
 		//update emailList
-		this.setState({ emails: newEmails });
+		this.state.emails = newEmails
 	};
 
 	//updateEmail for update EmailList
 	updateEmail = (id: string, chosen: boolean) => {
 		//get orignal EmailList
-		const { emails } = this.state;
 		//compare id
-		const newEmails = emails.map((emailObj) => {
+		const newEmails = this.state.emails.map((emailObj) => {
 			if (emailObj.id === id) return { ...emailObj, chosen };
 			else return emailObj;
 		});
-		this.setState({ emails: newEmails });
+		this.state.emails = newEmails
 	};
 
 	//deleteEmail for delete emailObj
 	deleteEmail = (id: string) => {
 		//get orignal emailList
-		const emails = this.state.emails;
 		//delete emailObj with id
-		const newEmails = emails.filter((emailObj) => {
+		const newEmails = this.state.emails.filter((emailObj) => {
 			return emailObj.id !== id;
 		});
 		//update emailList
-		this.setState({ emails: newEmails });
+		this.state.emails = newEmails
 	};
 
 	//checkAllEmail for all chosen email
 	chooseAllEmail = (chosen: boolean) => {
 		//get orignal emailList
-		const emails = this.state.emails;
 		//traverse emailList
-		const newEmails = emails.map((emailObj) => {
+		const newEmails = this.state.emails.map((emailObj) => {
 			return { ...emailObj, chosen };
 		});
 		//update emailList
-		this.setState({ emails: newEmails });
+		this.state.emails = newEmails
 	};
 
 	//clearAllChosen for delete all emails
@@ -105,11 +108,11 @@ export class DeliveryPage extends React.Component<Props, State> implements Page 
 		//get orignal emailList
 		const { emails } = this.state;
 		//filter datas
-		const newEmails = emails.filter((emailObj) => {
+		const newEmails = this.state.emails.filter((emailObj) => {
 			return !emailObj.chosen;
 		});
 		//update emailLists
-		this.setState({ emails: newEmails });
+		this.state.emails = newEmails
 	};
 
 }

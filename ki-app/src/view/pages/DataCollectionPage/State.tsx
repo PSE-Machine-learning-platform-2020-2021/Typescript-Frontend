@@ -1,16 +1,12 @@
-export class State {
+import { IState } from "../State";
+import { States } from "../State";
+
+export class State implements IState {
   currentState: States = States.NeedMessage;
   messageIDs: number[] = [];
-  messages: string[] = [];
-  countdownNumber: number = 0;
-  diagramSvg: any = "todo";
-}
-
-
-export enum States {
-  NeedMessage,
-  NeedCounter,
-  CountFinish,
-  NeedDiagram,
-  ChangePage
+  messages: { text: string, id: number; }[] = [];
+  languageCode: string = "de";
+  leadTime: number = -1;
+  chosenSensors: string[] = [];
+  diagramSvg: string = "";
 }

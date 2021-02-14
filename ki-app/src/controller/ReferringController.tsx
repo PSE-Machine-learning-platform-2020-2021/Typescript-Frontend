@@ -7,13 +7,14 @@ import { MainController } from "./MainController";
 import { AIController } from "./AIController";
 
 import { QRCode, ErrorCorrectLevel, QRNumber, QRAlphaNum, QR8BitByte, QRKanji } from 'qrcode-generator-ts/js';
+import { DeliveryPage } from "../view/pages/DeliveryPage";
 
 export class RefferingController implements PageController {
     private page: Page;
     private state: IState;
 
     /**
-     * Konstruktor des Seitenverwalters. Registriert sich als Beobachter auf seiner Seite und setzt den start Status. 
+     * Konstruktor des Seitenverwalters. Registriert sich als Beobachter auf seiner Seite und setzt den Start Status. 
      */
     constructor() {
         this.page = new ReferringPage({});
@@ -28,7 +29,7 @@ export class RefferingController implements PageController {
     update() {
         this.state = this.page.getState();
         switch (this.state.currentState) {
-            case States.NeedQR:
+            case States.NeedQRC:
                 this.createQR();
                 break;
             case States.Login:
@@ -91,15 +92,17 @@ export class RefferingController implements PageController {
         qr.setErrorCorrectLevel(ErrorCorrectLevel.L);
         qr.addData("link");
         qr.make();
-        this.state.qr = qr;
-        this.state.currentState = States.NeedQR;
-        this.page.setState(this.state);
+        this.state.qr = qr.toDataURL();
+        console.log(qr.toDataURL());
+        //divElement.innerHTML = state.qr
+        this.state.currentState = States.NeedMessage;
+        //this.page.setState(this.state);
     }
 
     createNewProject() {
         let sucess: boolean = MainController.getInstance().getFacade().createProject(this.state.currentProject!.projectName);
         if (sucess) {
-            this.state.currentState = States.NeedQR;
+            this.state.currentState = States.NeedMessage;
         } else {
             this.state.currentState = States.LoadError;
 
@@ -111,7 +114,7 @@ export class RefferingController implements PageController {
         let projectId: number = this.state.currentProject!.projectID!;
         let sucess: boolean = MainController.getInstance().getFacade().loadProject(projectId);
         if (sucess) {
-            this.state.currentState = States.NeedQR;
+            this.state.currentState = States.NeedMessage;
         } else {
             this.state.currentState = States.LoadError;
         }

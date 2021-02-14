@@ -6,6 +6,8 @@ export default class NewProjectButton extends Component {
   state = { click: false };
   handleCreate = () => {
     this.setState({ click: true });
+    PubSub.publish('needqr',);
+    //console.log('publish')
   };
 
   render() {
