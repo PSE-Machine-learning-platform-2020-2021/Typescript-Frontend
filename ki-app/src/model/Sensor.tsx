@@ -1,5 +1,3 @@
-import { Device } from "./Device";
-
 //Die abstrakte Klasse Sensor liefert den Bauplan und die gemeinsame Funktionalität aller Sensoren.
 export abstract class SensorData {
   id: number; //Dieses Feld enthält die laufende Nummer des Sensors, diese ist in Device eindeutig und ist Konstant.

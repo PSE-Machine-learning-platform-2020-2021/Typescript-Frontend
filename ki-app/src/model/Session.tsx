@@ -6,7 +6,7 @@ import { Admin, User } from "./User";
 export class Session {
   private id: number; //Die eindeutige ID der Session
   private admin: Admin; //Der Admin dem das Projekt der Session gehört
-  private connectedUser: User[] = new Array(); //Die User die mit der Projekt der Session interagieren
+  private connectedUser: User[] = []; //Die User die mit der Projekt der Session interagieren
 
   /**
    * Erstellt eine Session
@@ -32,7 +32,7 @@ export class Session {
    */
   disconnectUser(user: User): boolean {
     for (let i = 0; i < this.connectedUser.length; i++) {
-      if (this.connectedUser[i].getID() == user.getID()) {
+      if (this.connectedUser[i].getID() === user.getID()) {
         delete this.connectedUser[i];
         return true;
       }
@@ -44,7 +44,7 @@ export class Session {
    * Gibt von allen verbundenen Usern die ID und den Namen zurück
    */
   getConnectedUsers(): { userID: number, userName: string; }[] {
-    var users: { userID: number, userName: string; }[] = new Array();
+    var users: { userID: number, userName: string; }[] = [];
     for (let i = 0; i < this.connectedUser.length; i++) {
       users.push({ userID: this.connectedUser[i].getID(), userName: this.connectedUser[i].getName() });
     }

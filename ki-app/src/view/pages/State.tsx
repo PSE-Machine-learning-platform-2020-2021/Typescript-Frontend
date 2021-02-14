@@ -19,7 +19,11 @@ export interface IState {
   dataSets?: { sensorTypes: string[], dataSetName: string; }[];
   //
   qr?: string;
+  diagramSvg?: string;
   recordingSettings?: { newDataSetName: string, usedSensorTypes: string[], readTime: number, waitTime: number; };
+  chosenSensors?: string[];
+  leadtime?: number;
+  collectiontime?: number;
 }
 
 export enum States {
@@ -112,6 +116,10 @@ export enum States {
    * Wechsel zur Verweisseite
    */
   ChangeToRefferring,
+
+  ChangeToDataCollection,
+
+  NeedInstantDiagram
 }
 
 /**  BEISPIEL
