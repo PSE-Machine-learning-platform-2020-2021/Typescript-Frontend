@@ -14,7 +14,7 @@ export interface IState {
   labels?: { labelID: number, start: number, end: number; }[];
   sessionID?: string;
   //aiParameter?: 
-  dataPoints?: { dataRowID: number, value: number; }[];
+  dataPoints?: { dataPoint?: { value: number; relativeTime: number; }; }[];
   dataRows?: { dataSetID: number, data: number[][][]; };
   dataSets?: { sensorTypes: string[], dataSetName: string; }[];
   //
@@ -80,10 +80,6 @@ export enum States {
    */
   LoginFail,
   /**
-  * Login erfolgreich
-  */
-  loginSucess,
-  /**
    * Beginne Datenerfassung
    */
   StartDataRead,
@@ -122,7 +118,16 @@ export enum States {
 
   ChangeToDataCollection,
 
-  NeedInstantDiagram
+  NeedInstantDiagram,
+
+  /**
+   * Zeige neue wartezeit
+   */
+  SetWaitTime,
+  /**
+   * Zeige neue lesezeit
+   */
+  SetReadTime
 }
 
 /**  BEISPIEL
