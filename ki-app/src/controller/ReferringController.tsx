@@ -7,7 +7,7 @@ import { MainController } from "./MainController";
 import { AIController } from "./AIController";
 
 import { QRCode, ErrorCorrectLevel, QRNumber, QRAlphaNum, QR8BitByte, QRKanji } from 'qrcode-generator-ts/js';
-import { DeliveryPage } from "../view/pages/DeliveryPage";
+
 
 export class RefferingController implements PageController {
     private page: Page;

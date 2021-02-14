@@ -1,30 +1,60 @@
 import React, { Component } from "react";
 import Title from "../../components/FinishComponents/Title";
 import Body from "../../components/FinishComponents/Body";
-import Input from "../../components/FinishComponents/Input";
+import LabelList from "../../components/FinishComponents/Input/Label/LabelList/LabelList";
+import AddLabelForm from "../../components/FinishComponents/Input/Label/AddLabel/AddLabelForm";
 import { Page } from "../PageInterface";
 import { PageController } from "../../../controller/PageController";
 import { State } from "./State";
 import ReactDOM from "react-dom";
 import { States } from "../State";
 
-type Props = {};
+interface IProps {
+  addLabel: (label: { id: string, start: number, end: number, name: string; }) => void;
+  deleteLabel: (id: string) => void;
+}
 
-export class FinishPage extends React.Component<Props, State> implements Page {
+export class FinishPage extends React.Component<IProps, State> {
   state = new State();
   observers: PageController[] = [];
 
-  constructor(props: Props) {
+  constructor(props: IProps) {
     super(props);
     const VDOM = (
       <div>
         <Title />
         <Body />
-        <Input />
+        <div className="label-container">
+          <div className="label-wrap">
+            <LabelList labels={this.state.labels} deleteLabel={this.deleteLabel} />
+            <AddLabelForm addLabel={this.addLabel} />
+          </div>
+        </div>
       </div>
     );
     ReactDOM.render(VDOM, document.getElementById("root"));
   }
+
+  addLabel = (label: { id: string, start: number, end: number, name: string; }) => {
+
+    let labels = this.state.labels;
+
+    let newLabels = [label, ...labels];
+
+    this.setState({ labels: newLabels });
+  };
+
+  deleteLabel = (id: string) => {
+
+    let labels = this.state.labels;
+
+    let newLabels = labels.filter((label) => {
+      return label.id !== id;
+    });
+
+    this.setState({ labels: newLabels });
+  };
+
 
   /**
    * Die Methoden für Beobachtermuster
