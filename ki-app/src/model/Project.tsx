@@ -1,7 +1,6 @@
 import { AIModel } from "./AIModel";
-import { DataRow } from "./DataRow";
 import { DataSet } from "./DataSet";
-import { AccelerometerData, SensorData } from "./Sensor";
+import { SensorData } from "./Sensor";
 import { Session } from "./Session";
 import { Admin } from "./User";
 
@@ -13,40 +12,21 @@ export class Project {
   private id: number; //Die eindeutige Projekt ID
   private name: string; //Der Name des Projektes
   private session: Session; //Die Session in dem das Projekt arbeitet
-  private aiModel: AIModel[] = new Array(); //Das AIModel von dem Projekt
-  private dataSet: DataSet[] = new Array(); //Die Datensätze, die zu dem Projekt gehören
+  private aiModel: AIModel[] = []; //Das AIModel von dem Projekt
+  private dataSet: DataSet[] = []; //Die Datensätze, die zu dem Projekt gehören
   private currentDataSet?: DataSet; //Aktueller Datensatz
 
-
   /**
-   * Erstellt ein neues Projekt mit den angegebenen Parametern
-   * @param projectID Die Projekt ID
-   * @param sessionID Die global eindeutige Session ID
-   * @param projectName Der Projektnamen
-   * @param admin Der Admin, dem das Projekt gehört
-   */
-  constructor(projectID: number, sessionID: number, projectName: string, admin: Admin);
-
-  /**
-   * Eine bereits existierendes Projekt kann wie folgt in das Model geladen werden.
-   * @param projectID Die Projekt ID
-   * @param sessionID Die Session ID
-   * @param projectName Der Projektnamen
-   * @param admin Der Besitzer dieses Projekts für die Session
-   * @param aiModelID Die schon existierenden AIModel IDs
-   * @param dataSet Die schon existierenden Datensätze
-   */
-  constructor(projectID: number, sessionID: number, projectName: string, admin: Admin, aiModelID: number[],
-    dataSet: {
-      dataRowSensors: SensorData[], dataSetID: number, dataSetName: string, generateDate: number,
-      dataRows: {
-        dataRowID: number, recordingStart: number,
-        dataRow: { value: number, relativeTime: number; }[];
-      }[],
-      label: { name: string, labelID: number, start: number, end: number; }[];
-    }[]);
-
-  constructor(projectID: number, sessionID: number, projectName: string, admin: Admin, aiModelID?: number[],
+     * Eine bereits existierendes Projekt kann wie folgt in das Model geladen werden.
+     * @param projectID Die Projekt ID
+     * @param sessionID Die Session ID
+     * @param projectName Der Projektnamen
+     * @param admin Der Besitzer dieses Projekts für die Session
+     * @param aiModelID Die schon existierenden AIModel IDs
+     * @param dataSet Die schon existierenden Datensätze
+     */
+  constructor(projectID: number, sessionID: number, projectName: string, projectData?: {
+    aiModelID?: number[],
     dataSet?: {
       dataRowSensors: SensorData[], dataSetID: number, dataSetName: string, generateDate: number,
       dataRows: {
@@ -54,20 +34,24 @@ export class Project {
         dataRow: { value: number, relativeTime: number; }[];
       }[],
       label: { name: string, labelID: number, start: number, end: number; }[];
-    }[]) {
+    }[];
+  }) {
     this.id = projectID;
     this.name = projectName;
-    this.session = new Session(sessionID, admin);
-    if (aiModelID != null) {
-      for (let i = 0; i < aiModelID.length; i++) {
-        this.aiModel.push(new AIModel(aiModelID[i]));
+    this.session = new Session(sessionID);
+    if (projectData != null) {
+      if (projectData.aiModelID != null) {
+        for (let i = 0; i < projectData.aiModelID.length; i++) {
+          this.aiModel.push(new AIModel(projectData.aiModelID[i]));
+        }
+      }
+      if (projectData.dataSet != null) {
+        for (let i = 0; i < projectData.dataSet.length; i++) {
+          this.dataSet.push(new DataSet(projectData.dataSet[i].dataRowSensors, projectData.dataSet[i].dataSetID, projectData.dataSet[i].dataSetName, projectData.dataSet[i].generateDate, projectData.dataSet[i].dataRows, projectData.dataSet[i].label));
+        }
       }
     }
-    if (dataSet != null) {
-      for (let i = 0; i < dataSet.length; i++) {
-        this.dataSet.push(new DataSet(dataSet[i].dataRowSensors, dataSet[i].dataSetID, dataSet[i].dataSetName, dataSet[i].generateDate, dataSet[i].dataRows, dataSet[i].label));
-      }
-    }
+
   }
 
   /**
@@ -83,9 +67,9 @@ export class Project {
    */
   deleteDataSet(dataSetID: number): boolean {
     for (let i = 0; i < this.dataSet.length; i++) {
-      if (this.dataSet[i].getID() == dataSetID) {
+      if (this.dataSet[i].getID() === dataSetID) {
         delete this.dataSet[i];
-        if (this.currentDataSet != null && this.currentDataSet.getID() == dataSetID) {
+        if (this.currentDataSet != null && this.currentDataSet.getID() === dataSetID) {
           delete this.currentDataSet;
         }
         return true;
@@ -143,7 +127,7 @@ export class Project {
    * @returns dataSetID ist die DatensatzID und dataSetName ist der Datensatzname
    */
   getDataSetMetas(): { dataSetID: number, dataSetName: string; }[] {
-    var dataSetMetas: { dataSetID: number, dataSetName: string; }[] = new Array();
+    var dataSetMetas: { dataSetID: number, dataSetName: string; }[] = [];
     for (let i = 0; i < this.dataSet.length; i++) {
       dataSetMetas.push({ dataSetID: this.dataSet[i].getID(), dataSetName: this.dataSet[i].getName() });
     }
@@ -157,7 +141,7 @@ export class Project {
    */
   getDataRows(dataSetID: number): { dataRows?: { value: number, relativeTime: number; }[][]; } {
     for (let i = 0; i < this.dataSet.length; i++) {
-      if (this.dataSet[i].getID() == dataSetID) {
+      if (this.dataSet[i].getID() === dataSetID) {
         this.currentDataSet = this.dataSet[i];
         return { dataRows: this.dataSet[i].getDataRows() };
       }

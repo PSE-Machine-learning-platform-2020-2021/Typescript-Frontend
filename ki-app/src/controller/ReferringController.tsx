@@ -1,5 +1,4 @@
 import { Page } from "../view/pages/PageInterface";
-import { StartPage } from "../view/pages/StartPage/index";
 import { IState, States } from "../view/pages/State";
 
 import { PageController } from "./PageController";
@@ -14,7 +13,7 @@ export class RefferingController implements PageController {
     private state: IState;
 
     /**
-     * Konstruktor des Seitenverwalters. Registriert sich als Beobachter auf seiner Seite und setzt den start Status. 
+     * Konstruktor des Seitenverwalters. Registriert sich als Beobachter auf seiner Seite und setzt den Start Status. 
      */
     constructor() {
         this.page = new ReferringPage({});
@@ -29,7 +28,7 @@ export class RefferingController implements PageController {
     update() {
         this.state = this.page.getState();
         switch (this.state.currentState) {
-            case States.NeedQRC:
+            case States.NeedProject:
                 this.createQR();
                 break;
             case States.Register:
@@ -99,14 +98,15 @@ export class RefferingController implements PageController {
         qr.make();
         this.state.qr = qr.toDataURL();
         //divElement.innerHTML = state.qr
-        this.state.currentState = States.NeedMessage;
+        this.state.currentState = States.SetQRC;
         //this.page.setState(this.state);
     }
 
     createNewProject() {
         let sucess: boolean = MainController.getInstance().getFacade().createProject(this.state.currentProject!.projectName);
         if (sucess) {
-            this.state.currentState = States.NeedMessage;
+            this.state.currentState = States.NeedQRC;
+            //TODO neu projecte laden
         } else {
             this.state.currentState = States.LoadError;
 

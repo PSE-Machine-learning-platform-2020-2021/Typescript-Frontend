@@ -21,7 +21,11 @@ export interface IState {
   dataSets?: { sensorTypes: string[], dataSetName: string; }[];
   //
   qr?: string;
+  diagramSvg?: string;
   recordingSettings?: { newDataSetName: string, usedSensorTypes: string[], readTime: number, waitTime: number; };
+  chosenSensors?: string[];
+  leadtime?: number;
+  collectiontime?: number;
 }
 
 
@@ -80,6 +84,7 @@ export enum States {
    * Login ist gescheitert
    */
   LoginFail,
+  loginSucess,
   /**
    * Beginne Datenerfassung
    */
@@ -117,6 +122,9 @@ export enum States {
    */
   ChangeToRefferring,
 
+  ChangeToDataCollection,
+
+  NeedInstantDiagram
 }
 
 /**  BEISPIEL

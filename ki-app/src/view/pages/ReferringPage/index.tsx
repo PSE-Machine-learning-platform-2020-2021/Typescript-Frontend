@@ -1,4 +1,5 @@
-import React from 'react';
+import React, { Component } from 'react';
+import PubSub from 'pubsub-js';
 import ConstantsText from '../../components/ReferringComponents/ConstantsText';
 import NewProjectButton from '../../components/ReferringComponents/NewProjectButton';
 import LoadModelButton from '../../components/ReferringComponents/LoadModelButton';
@@ -62,9 +63,9 @@ export class ReferringPage extends React.Component<Props, State> implements Page
     needqr() {
         PubSub.subscribe('needqr', (_msg: any) => {
             // console.log(this.state.currentState)
-            this.state.currentState = States.NeedQRC
+            this.state.currentState = States.NeedQRC;
             //console.log(this.state.currentState)
-            this.notify()
+            this.notify();
             //console.log(this.state.currentState)
             //console.log(this.state.qr)
             PubSub.publish('getqr', this.state.qr)
