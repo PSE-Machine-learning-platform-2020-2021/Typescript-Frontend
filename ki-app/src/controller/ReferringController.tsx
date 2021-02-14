@@ -37,9 +37,6 @@ export class RefferingController implements PageController {
             case States.Login:
                 this.login();
                 break;
-            case States.NewProjekt:
-                this.createNewProject();
-                break;
             case States.LoadProject:
                 this.loadProject();
                 break;
@@ -113,15 +110,14 @@ export class RefferingController implements PageController {
         }
         this.page.setState(this.state);
     }
-    //!!hier braucht needProject
 
 
     loadProject() {
         let projectId: number = this.state.currentProject!.projectID!;
         let sucess: boolean = MainController.getInstance().getFacade().loadProject(projectId);
         if (sucess) {
-            this.state.currentState = States.NeedMessage;
-            //!!hier setzen this.state.currentProject.AIModels
+            this.state.currentState = States.NeedQRC;
+            //!!hier setzen this.state.currentProject.AIModels = 
         } else {
             this.state.currentState = States.LoadError;
         }
