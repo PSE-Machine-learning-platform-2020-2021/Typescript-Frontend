@@ -20,13 +20,13 @@ export interface IState {
   //
   qr?: string;
   diagramSvg?: string;
-  recordingSettings?: { newDataSetName: string, usedSensorTypes: number[], availableSensorTypes: number[], readTime: number, waitTime: number; };
+  recordingSettings?: { newDataSetName: string, usedSensorTypes: number[], readTime: number, waitTime: number; };
+  availableSensorTypes?: { sensorTypID: number; sensorType: string; }[];
   //Untere sind schon in recordSettings enthalten
   //chosenSensors?: string[];
   //leadtime?: number;
   //collectiontime?: number;
 }
-
 
 export enum States {
   /**
@@ -46,10 +46,6 @@ export enum States {
    */
   SetQRC,
   /**
-   * Lade Projectdaten
-   */
-  LoadProject,
-  /**
    * Projektdaten können benutzt werden
    */
   SetProjects,
@@ -64,7 +60,6 @@ export enum States {
   /**
    * Ein Login Versuch soll durchgeführt werden
    */
-  Register,
   Login,
   Register,
   /**
