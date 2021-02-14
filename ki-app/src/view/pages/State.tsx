@@ -20,10 +20,8 @@ export interface IState {
   //
   qr?: string;
   diagramSvg?: string;
-  recordingSettings?: { newDataSetName: string, usedSensorTypes: number[], availableSensorTypes: number[], readTime: number, waitTime: number; };
-  chosenSensors?: string[];
-  leadtime?: number;
-  collectiontime?: number;
+  recordingSettings?: { newDataSetName: string, usedSensorTypes: string[], readTime: number, waitTime: number; };
+  availableSensorTypes?: string[];
 }
 
 export enum States {

@@ -3,9 +3,10 @@ import input from "./index.module.css";
 
 export default class Input extends Component {
   state = {
+    name: "",
+    chosenSensors: "",
     leadTime: "",
     collectionTime: "",
-    chosenSensors: ""
   };
 
   changeLeadtime = (e: React.ChangeEvent<HTMLInputElement>) => {
@@ -21,6 +22,11 @@ export default class Input extends Component {
   changeSensors = (e: React.ChangeEvent<HTMLSelectElement>) => {
     this.setState(() => ({
       chosenSensors: e.target.value,
+    }));
+  };
+  changeName = (e: React.ChangeEvent<HTMLInputElement>) => {
+    this.setState(() => ({
+      name: e.target.value,
     }));
   };
 
@@ -59,6 +65,12 @@ export default class Input extends Component {
             onChange={this.changeCollectionTime.bind(this)}
           />
           s<br />
+          Datenname:
+          <input
+            type="datenname"
+            value={this.state.name}
+            onChange={this.changeName.bind(this)}
+          />
           Sensoren...
           <label>
             <select value={this.state.chosenSensors} onChange={this.changeSensors.bind(this)}>

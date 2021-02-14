@@ -13,7 +13,7 @@ type Props = {
 };
 
 export class StartPage extends React.Component<Props, State> implements Page {
-    state = new State;
+    state = new State();
     observers: PageController[] = [];
     constructor(props: Props) {
         super(props);
@@ -32,14 +32,16 @@ export class StartPage extends React.Component<Props, State> implements Page {
      */
     changeSettings() {
         PubSub.subscribe('settingsFinish', (data: {
-            leadTime: number,
-            collectionTime: number,
-            chosenSensors: string[];
+            newDataSetName: string,
+            usedSensorTypes: string[],
+            waitTime: number,
+            readTime: number,
         }) => {
-            this.setState({ leadTime: data.leadTime, collectionTime: data.collectionTime, chosenSensors: data.chosenSensors, currentState: States.ChangeToDataCollection });
+            let a = this.state.recordingSettings;
+            this.setState({ recordingSettings: data });
+            this.state.currentState = States.ChangeToDataCollection;
             this.notify();
-        }
-        );
+        });
     }
 
     /**
