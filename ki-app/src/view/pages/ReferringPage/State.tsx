@@ -6,8 +6,8 @@ export class State implements IState {
   currentState: States = States.NeedMessage;
   languageCode: string = "de";
   messages: { text: string, id: number; }[] = [];
-  projectData?: { projectID: number, projectName: string, AIModelExist: boolean; }[];
-  currentProject?: { projectID: number, projectName: string, AIModels: string[]; };
+  projectData?: { projectID: number; projectName: string; AIModelID: number[]; }[];
+  currentProject?: { projectID: number, projectName: string, choosenAIModelID: number; };
   chosenModel?: string;
   adminData?: { name: string, email: string, password: string; };
   //minerData?:

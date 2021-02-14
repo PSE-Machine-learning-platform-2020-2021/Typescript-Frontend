@@ -5,25 +5,24 @@ export default class ProjectList extends Component {
     state = {
         value: null,
         click: false,
-        //hier Beispiel in componentDidMount will projectData 
+        //hier Beispiel, in componentDidMount will projectData verändern
         projectData: [{
             projectID: 1,
             projectName: 'project1',
-            AIModelExist: true
+            AIModelID: [1, 2]
         }, {
             projectID: 2,
             projectName: 'project2',
-            AIModelExist: false
-
+            AIModelID: []
         }]
     }
 
     componentDidMount() {
-        /** controller noch nicht gegeben
-        PubSub.subscribe('getprojectlist', (_msg: any, data: { projectID: number, projectName: string, AIModelExist: boolean; }[]) => {
+        /** controller noch nicht gegeben*/
+        PubSub.subscribe('getprojectlist', (_msg: any, data: { projectID: number, projectName: string, AIModelID: number[]; }[]) => {
             this.setState({ projectData: data })
         })
-         */
+
     }
 
     handleChange = (e: React.ChangeEvent<HTMLSelectElement>) => {
@@ -38,7 +37,7 @@ export default class ProjectList extends Component {
         } else {
             this.state.projectData.map((projectObj) => {
                 if (this.state.value == projectObj.projectID) {
-                    if (projectObj.AIModelExist) {
+                    if (projectObj.AIModelID.length != 0) {
                         PubSub.publish('loadproject', projectObj)
                         this.setState({ click: true })
                     } else {
@@ -53,9 +52,9 @@ export default class ProjectList extends Component {
     render() {
         return (
             <section>
-                <label>ProjectList</label>
+                <label>ProjektList</label>
                 <select onChange={this.handleChange}>
-                    <option>choose project</option>
+                    <option>Project Wählen</option>
                     {this.state.projectData.map((projectObj) => {
                         return <option value={projectObj.projectID}>{projectObj.projectName}</option>
                     })}

@@ -4,20 +4,29 @@ import LinkText from '../LinkText';
 
 export default class NewProjectButton extends Component {
   state = {
-    click: false
+    click: false,
+    projectName: ''
   };
+
+  changeProjectName = (e: React.ChangeEvent<HTMLInputElement>) => {
+    this.setState({
+      projectName: e.target.value
+    });
+  };
+
   handleCreate = () => {
-    PubSub.publish('needqr',)
     this.setState({ click: true });
+    PubSub.publish('createnewproject', this.state.projectName)
+
   };
 
   render() {
     return (
-      <section>
-
-        <button onClick={() => this.handleCreate()} className="newProject" id="new">Neues Projekt(Mit Doppelklick)</button>
+      <div>
+        <input type="text" value={this.state.projectName} onChange={this.changeProjectName} placeholder='Neues Projektname eingeben' />
+        <button onClick={() => this.handleCreate()} className="newProject" id="new">Neues Projekt</button>
         {this.state.click ? <div> <QRImage /><LinkText /></div> : null}
-      </section>
+      </div>
     );
   }
 }

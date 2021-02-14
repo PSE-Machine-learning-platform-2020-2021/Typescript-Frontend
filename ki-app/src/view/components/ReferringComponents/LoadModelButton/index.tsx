@@ -6,7 +6,6 @@ export default class LoadModelButton extends Component {
   state = { click: false }
   handleCreate = () => {
     this.setState({ click: true })
-    PubSub.publish('needproject',)
   }
 
   render() {

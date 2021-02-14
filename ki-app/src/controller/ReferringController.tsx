@@ -71,7 +71,6 @@ export class RefferingController implements PageController {
         } else {
             this.state.currentState = States.LoginFail;
         }
-        this.page.setState(this.state);
     }
 
     register() {
@@ -80,7 +79,6 @@ export class RefferingController implements PageController {
         if (!loginSucess) {
             this.state.currentState = States.LoginFail;
         }
-        this.page.setState(this.state);
     }
 
     createQR() {
@@ -94,10 +92,11 @@ export class RefferingController implements PageController {
         this.state.qr = qr.toDataURL();
         //divElement.innerHTML = state.qr
         this.state.currentState = States.SetQRC;
-        //this.page.setState(this.state);
+
     }
 
     createNewProject() {
+
         let sucess: boolean = MainController.getInstance().getFacade().createProject(this.state.currentProject!.projectName);
         if (sucess) {
             this.state.currentState = States.NeedQRC;
@@ -105,7 +104,6 @@ export class RefferingController implements PageController {
         } else {
             this.state.currentState = States.LoadError;
         }
-        this.page.setState(this.state);
     }
 
 
@@ -117,11 +115,9 @@ export class RefferingController implements PageController {
         } else {
             this.state.currentState = States.LoadError;
         }
-        this.page.setState(this.state);
     }
 
     loadModel() {
-        //!!hier use chosenModel
         let projectId: number = this.state.currentProject!.projectID;
         let sucess: boolean = MainController.getInstance().getFacade().loadProject(projectId);
         //TODO chossenAImodel an aicontroller übergeben
@@ -130,7 +126,6 @@ export class RefferingController implements PageController {
             //MainController.getInstance().changeTo(aiController);
         } else {
             this.state.currentState = States.LoadError;
-            this.page.setState(this.state);
         }
     }
 }

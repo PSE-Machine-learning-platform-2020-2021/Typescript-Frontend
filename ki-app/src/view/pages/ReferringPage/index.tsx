@@ -20,13 +20,11 @@ export class ReferringPage extends React.Component<Props, State> implements Page
     observers: PageController[] = [];
     constructor(props: Props) {
         super(props);
-        this.needqr()
+        this.createNewProject()
         this.register()
         this.login()
-        this.needprojectlist()
         this.loadproject()
         this.loadmodel()
-        //  this.loadproject
         const VDOM = (
             <div>
                 <ConstantsText />
@@ -60,12 +58,23 @@ export class ReferringPage extends React.Component<Props, State> implements Page
         return this.state;
     }
 
-    needqr() {
-        PubSub.subscribe('needqr', (_msg: any) => {
+    createNewProject() {
+        PubSub.subscribe('createnewproject', (_msg: any, data: string) => {
             // console.log(this.state.currentState)
-            this.state.currentState = States.NeedQRC;
+            this.state.currentState = States.NewProjekt;
+            this.state.currentProject = { projectID: -10000, projectName: data, choosenAIModelID: -10000 }
             //console.log(this.state.currentState)
-            this.notify();
+            //console.log(this.state.currentProject)
+            //console.log(this.state.currentState)
+            // console.log(this.state.qr)
+            //hier notifty for createnewProject
+            this.notify()
+            //console.log(this.state.currentState)
+            //console.log(this.state.qr)
+            //notify for needqr
+            this.notify()
+            //console.log(this.state.currentState)
+            //console.log(this.state.qr)
             //console.log(this.state.currentState)
             //console.log(this.state.qr)
             PubSub.publish('getqr', this.state.qr)
@@ -80,15 +89,26 @@ export class ReferringPage extends React.Component<Props, State> implements Page
             //console.log(this.state.currentState)
             this.notify()
             //console.log(this.state.currentState)
-            let flag: boolean
+            let registerflag: boolean
+            let loginflag: boolean
+            let flag = false
             if (this.state.currentState != States.Register) {
-                flag = false
+                registerflag = false
             } else {
-                flag = true
+                registerflag = true
+                this.state.adminData = data
+                this.state.currentState = States.Login
+                this.notify()
+                if (this.state.currentState != States.Login) {
+                    loginflag = false
+                } else {
+                    loginflag = true
+                }
+                if (registerflag && loginflag) flag = true
             }
+            if (flag) PubSub.publish('getprojectlist', this.state.projectData)
             PubSub.publish('registerstatus', flag)
         })
-
     }
 
     login() {
@@ -104,44 +124,33 @@ export class ReferringPage extends React.Component<Props, State> implements Page
                 flag = false
             } else {
                 flag = true
+                PubSub.publish('getprojectlist', this.state.projectData)
             }
             PubSub.publish('loginstatus', flag)
-        })
 
-    }
-
-    needprojectlist() {
-        PubSub.subscribe('needproject', (_msg: any) => {
-            // console.log(this.state.currentState)
-            this.state.currentState = States.NeedProject
-            //console.log(this.state.currentState)
-            this.notify()
-            //console.log(this.state.currentState)
-            PubSub.publish('getprojectlist', this.state.projectData)
         })
     }
 
     loadproject() {
-        PubSub.subscribe('loadproject', (_msg: any, data: { projectID: number, projectName: string, AIModelExist: boolean; }) => {
+        PubSub.subscribe('loadproject', (_msg: any, data: { projectID: number, projectName: string, AIModelID: number[]; }) => {
             // console.log(this.state.currentState)
             this.state.currentState = States.LoadProject
-            this.state.currentProject = { projectID: data.projectID, projectName: data.projectName, AIModels: [] }
+            this.state.currentProject = { projectID: data.projectID, projectName: data.projectName, choosenAIModelID: -10000 }
             //console.log(this.state.currentState)
             this.notify()
             //console.log(this.state.currentState)
-            PubSub.publish('getmodelist', this.state.currentProject)
+            PubSub.publish('getmodelist', data)
 
         })
     }
     loadmodel() {
-        PubSub.subscribe('loadmodel', (_msg: any, data: { projectID: number, projectName: string, AIModelExist: boolean; }) => {
+        PubSub.subscribe('loadmodel', (_msg: any, data: { projectID: number, projectName: string, choosenAIModelID: number; }) => {
             // console.log(this.state.currentState)
-            this.state.currentState = States.LoadProject
-            this.state.currentProject = { projectID: data.projectID, projectName: data.projectName, AIModels: [] }
+            this.state.currentState = States.LoadModel
+            this.state.currentProject = data
             //console.log(this.state.currentState)
             this.notify()
             //console.log(this.state.currentState)
-            //PubSub.publish('getchosen', this.state.chosenModel)
         })
     }
 }
