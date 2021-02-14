@@ -1,21 +1,23 @@
 import React, { Component } from 'react';
+import PubSub from 'pubsub-js';
 import Title from '../../components/StartComponents/Title';
 import Input from '../../components/StartComponents/Input';
 import { Page } from "../PageInterface";
 import { PageController } from "../../../controller/PageController";
 import { State } from "./State";
-import { MainController } from '../../../controller/MainController';
 import ReactDOM from 'react-dom';
+import { States } from '../State';
 
 type Props = {
+
 };
 
 export class StartPage extends React.Component<Props, State> implements Page {
-
+    state = new State;
     observers: PageController[] = [];
     constructor(props: Props) {
         super(props);
-        this.state = new State;
+        this.changeSettings();
         const VDOM = (
             <div>
                 <Title />
@@ -25,6 +27,25 @@ export class StartPage extends React.Component<Props, State> implements Page {
         ReactDOM.render(VDOM, document.getElementById('root'));
     }
 
+    /**
+     * Prüft ob der Nutzer "Start" druckt und ändert den Zustand.
+     */
+    changeSettings() {
+        PubSub.subscribe('settingsFinish', (data: {
+            leadTime: number,
+            collectionTime: number,
+            chosenSensors: string[];
+        }) => {
+            this.setState({ leadTime: data.leadTime, collectionTime: data.collectionTime, chosenSensors: data.chosenSensors, currentState: States.ChangeToDataCollection });
+            this.notify();
+        }
+        );
+    }
+
+    /**
+     * Die Methoden für Beobachtermuster
+     * @param observer Beobachter,nähmlich Controller
+     */
     attach(observer: PageController) {
         this.observers.push(observer);
     }
@@ -47,8 +68,4 @@ export class StartPage extends React.Component<Props, State> implements Page {
         return this.state;
     }
 
-    setState(state: State) {
-        this.state = state;
-        this.notify();
-    }
 }

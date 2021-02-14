@@ -2,9 +2,12 @@ import React, { Component } from "react";
 import input from "./index.module.css";
 
 export default class Input extends Component {
+
+
   state = {
     leadTime: "",
     collectionTime: "",
+    chosenSensors: ""
   };
 
   changeLeadtime = (e: React.ChangeEvent<HTMLInputElement>) => {
@@ -17,14 +20,22 @@ export default class Input extends Component {
       collectionTime: e.target.value,
     }));
   };
+  changeSensors = (e: React.ChangeEvent<HTMLSelectElement>) => {
+    this.setState(() => ({
+      chosenSensors: e.target.value,
+    }));
+  };
+
 
   submit = () => {
     if (
       parseInt(this.state.leadTime) <= 5 &&
       parseInt(this.state.leadTime) >= 3 &&
       parseInt(this.state.collectionTime) <= 10 &&
-      parseInt(this.state.collectionTime) >= 5
+      parseInt(this.state.collectionTime) >= 5 &&
+      this.state.chosenSensors != ""
     ) {
+      PubSub.publish('settingsFinish', this.state);
     } else {
       alert("Deine Eingabe ist ungültig.");
     }
@@ -52,7 +63,8 @@ export default class Input extends Component {
           s<br />
           Sensoren...
           <label>
-            <select>
+            <select value={this.state.chosenSensors} onChange={this.changeSensors.bind(this)}>
+              <option value="">Wähle Sensoren</option>
               <option value="bs">Beschleunigungssensor</option>
               <option value="rs">Rotationssensor</option>
               <option value="mk">Mikrofon</option>

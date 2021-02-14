@@ -10,12 +10,15 @@ export default class EmailItem extends Component {
 	//choose check
 	handleCheck = (id) => {
 		return (event) => {
+			console.log(this.props)
 			this.props.updateEmail(id, event.target.checked);
+			console.log(this.props)
 		};
 	};
 	//delete email
 	handleDelete = (id) => {
-		if (window.confirm('Are you sure to delete this email address?')) {
+		if (window.confirm('Are you sure to delete this email address?' + this.props)) {
+			console.log(this.props)
 			this.props.deleteEmail(id);
 		}
 	};

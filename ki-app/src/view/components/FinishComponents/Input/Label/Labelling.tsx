@@ -10,9 +10,9 @@ const initialLabels: Label[] = [
 const Labelling: React.FC = () => {
     const [labels, setLabels] = useState(initialLabels);
     const addLabel: AddLabel = (newLabel: string, newStart: number, newEnd: number) => {
-        if (newLabel.trim() === '')  // 空值，则跳过
+        if (newLabel.trim() === '')
             return;
-        setLabels([	// 更新labels
+        setLabels([
             ...labels,
             {
                 name: newLabel,
