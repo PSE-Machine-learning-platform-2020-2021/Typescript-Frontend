@@ -29,11 +29,7 @@ export class RefferingController implements PageController {
     update() {
         this.state = this.page.getState();
         switch (this.state.currentState) {
-<<<<<<< HEAD
             case States.NeedProject:
-=======
-            case States.NeedQRC:
->>>>>>> 893e1125b5a4d06924d773b29b31fccc9573681c
                 this.createQR();
                 break;
             case States.Login:
@@ -97,26 +93,16 @@ export class RefferingController implements PageController {
         qr.addData("link");
         qr.make();
         this.state.qr = qr.toDataURL();
-<<<<<<< HEAD
         //divElement.innerHTML = state.qr
         this.state.currentState = States.SetQRC;
-=======
-        console.log(qr.toDataURL());
-        //divElement.innerHTML = state.qr
-        this.state.currentState = States.NeedMessage;
->>>>>>> 893e1125b5a4d06924d773b29b31fccc9573681c
         //this.page.setState(this.state);
     }
 
     createNewProject() {
         let sucess: boolean = MainController.getInstance().getFacade().createProject(this.state.currentProject!.projectName);
         if (sucess) {
-<<<<<<< HEAD
             this.state.currentState = States.NeedQRC;
             //TODO neu projecte laden
-=======
-            this.state.currentState = States.NeedMessage;
->>>>>>> 893e1125b5a4d06924d773b29b31fccc9573681c
         } else {
             this.state.currentState = States.LoadError;
 
@@ -128,11 +114,7 @@ export class RefferingController implements PageController {
         let projectId: number = this.state.currentProject!.projectID!;
         let sucess: boolean = MainController.getInstance().getFacade().loadProject(projectId);
         if (sucess) {
-<<<<<<< HEAD
             this.state.currentState = States.NeedQRC;
-=======
-            this.state.currentState = States.NeedMessage;
->>>>>>> 893e1125b5a4d06924d773b29b31fccc9573681c
         } else {
             this.state.currentState = States.LoadError;
         }
