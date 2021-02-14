@@ -4,7 +4,7 @@ export class State {
   messageIDs: number[] = [];
   messages: string[] = [];
   qrSvg: any = "todo";
-  labels: { id: number, name: string, chosen: false, start: number, end: number; }[] = [];
+  labels: { id: string, start: number, end: number, name: string; }[] = [];
 }
 
 export enum States {
