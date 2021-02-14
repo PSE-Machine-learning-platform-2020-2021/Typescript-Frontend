@@ -20,7 +20,7 @@ export interface IState {
   //
   qr?: string;
   diagramSvg?: string;
-  recordingSettings?: { newDataSetName: string, usedSensorTypes: string[], readTime: number, waitTime: number; };
+  recordingSettings?: { newDataSetName: string, usedSensorTypes: number[], availableSensorTypes: number[], readTime: number, waitTime: number; };
   chosenSensors?: string[];
   leadtime?: number;
   collectiontime?: number;
@@ -79,6 +79,9 @@ export enum States {
    * Login ist gescheitert
    */
   LoginFail,
+  /**
+  * Login erfolgreich
+  */
   loginSucess,
   /**
    * Beginne Datenerfassung
