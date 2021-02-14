@@ -37,6 +37,9 @@ export class RefferingController implements PageController {
             case States.Login:
                 this.login();
                 break;
+            case States.NewProjekt:
+                this.createNewProject();
+                break;
             case States.LoadProject:
                 this.loadProject();
                 break;

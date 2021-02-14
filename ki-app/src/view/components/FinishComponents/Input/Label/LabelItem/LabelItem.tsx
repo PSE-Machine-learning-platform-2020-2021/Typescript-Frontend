@@ -1,17 +1,28 @@
-import React, { useState, ChangeEvent } from 'react';
-import { Label } from './types';
+import React, { Component } from 'react';
+import { Label, DeleteLabel } from './types';
 
-interface LabelItemProps {
-    label: Label;
+interface IProps {
+    deleteLabel: (id: string) => void;
 }
 
-export const LabelItem: React.FC<LabelItemProps> = ({ label }) => {
+export default class LabelItem extends React.Component<IProps> {
+    constructor(props: IProps) {
+        super(props);
+    }
 
-    return (
-        <li>
-            <label>
-                {label.name}{label.start}{label.end}
-            </label>
-        </li>
-    );
-};
+    state = {
+        label: { id: "", start: null, end: null, name: "" },
+    };
+
+    render() {
+        return (
+            <li>
+                <label>
+                    Von {this.state.label.start}s bis {this.state.label.end}s:  {this.state.label.name}
+                    <button onClick={() => this.props.deleteLabel(this.state.label.id)}>Löschen</button>
+                </label>
+            </li>
+        );
+    }
+}
+
