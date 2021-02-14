@@ -80,10 +80,6 @@ export enum States {
    */
   LoginFail,
   /**
-  * Login erfolgreich
-  */
-  loginSucess,
-  /**
    * Beginne Datenerfassung
    */
   StartDataRead,
