@@ -7,7 +7,7 @@ import { MainController } from "./MainController";
 import { AIController } from "./AIController";
 
 import { QRCode, ErrorCorrectLevel, QRNumber, QRAlphaNum, QR8BitByte, QRKanji } from 'qrcode-generator-ts/js';
-import { DeliveryPage } from "../view/pages/DeliveryPage";
+import { ReferringPage } from "../view/pages/ReferringPage";
 
 export class RefferingController implements PageController {
     private page: Page;
@@ -17,12 +17,7 @@ export class RefferingController implements PageController {
      * Konstruktor des Seitenverwalters. Registriert sich als Beobachter auf seiner Seite und setzt den start Status. 
      */
     constructor() {
-<<<<<<< HEAD
         this.page = new ReferringPage({});
-        //this.page = new DeliveryPage({})
-=======
-        this.page = new StartPage({});
->>>>>>> b0ba147165a71c8de876b8f37ebc3be50945e5a0
         this.page.attach(this);
         this.state = this.page.getState();
         this.update();
@@ -37,11 +32,17 @@ export class RefferingController implements PageController {
             case States.NeedQRC:
                 this.createQR();
                 break;
+            case States.Register:
+                this.register();
+                break;
             case States.Login:
                 this.login();
                 break;
             case States.NewProjekt:
                 this.createNewProject();
+                break;
+            case States.LoadProject:
+                this.loadProject();
                 break;
             case States.LoadModel:
                 this.loadModel();
@@ -75,7 +76,6 @@ export class RefferingController implements PageController {
             this.state.projectData! = MainController.getInstance().getFacade().getProjectMetas();
         } else {
             this.state.currentState = States.LoginFail;
-
         }
         this.page.setState(this.state);
     }
@@ -98,7 +98,6 @@ export class RefferingController implements PageController {
         qr.addData("link");
         qr.make();
         this.state.qr = qr.toDataURL();
-        console.log(qr.toDataURL());
         //divElement.innerHTML = state.qr
         this.state.currentState = States.NeedMessage;
         //this.page.setState(this.state);
@@ -114,12 +113,15 @@ export class RefferingController implements PageController {
         }
         this.page.setState(this.state);
     }
+    //!!hier braucht needProject
+
 
     loadProject() {
         let projectId: number = this.state.currentProject!.projectID!;
         let sucess: boolean = MainController.getInstance().getFacade().loadProject(projectId);
         if (sucess) {
             this.state.currentState = States.NeedMessage;
+            //!!hier setzen this.state.currentProject.AIModels
         } else {
             this.state.currentState = States.LoadError;
         }
@@ -127,6 +129,7 @@ export class RefferingController implements PageController {
     }
 
     loadModel() {
+        //!!hier use chosenModel
         let projectId: number = this.state.currentProject!.projectID;
         let sucess: boolean = MainController.getInstance().getFacade().loadProject(projectId);
         if (sucess) {

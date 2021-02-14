@@ -8,6 +8,8 @@ export interface IState {
   projectData?: { projectID: number, projectName: string, AIModelExist: boolean; }[];
   // Das Projekt welches in der view ausgewählt wurde
   currentProject?: { projectID: number, projectName: string, AIModels: string[]; };
+  //chosen Model in currentProject
+  chosenModel?: string;
   adminData?: { name: string, email: string, password: string; };
   //minerData?:
   aiUserData?: { name: string, result: string; };
@@ -21,6 +23,7 @@ export interface IState {
   qr?: string;
   recordingSettings?: { newDataSetName: string, usedSensorTypes: string[], readTime: number, waitTime: number; };
 }
+
 
 export enum States {
   /**
@@ -58,6 +61,7 @@ export enum States {
   /**
    * Ein Login Versuch soll durchgeführt werden
    */
+  Register,
   Login,
   /**
      * Update aller Daten welche auf der Seite angezeigt werden, zum Beispiel Projekt Daten für die Projekt liste.
@@ -70,6 +74,7 @@ export enum States {
   /**
    * Model eines Projekts soll geladen werden
    */
+  LoadProject,
   LoadModel,
   /**
    * Login ist gescheitert
@@ -111,6 +116,7 @@ export enum States {
    * Wechsel zur Verweisseite
    */
   ChangeToRefferring,
+
 }
 
 /**  BEISPIEL
