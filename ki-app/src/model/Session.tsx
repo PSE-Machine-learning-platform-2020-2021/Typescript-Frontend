@@ -5,7 +5,6 @@ import { Admin, User } from "./User";
  */
 export class Session {
   private id: number; //Die eindeutige ID der Session
-  private admin: Admin; //Der Admin dem das Projekt der Session gehört
   private connectedUser: User[] = []; //Die User die mit der Projekt der Session interagieren
 
   /**
@@ -13,9 +12,8 @@ export class Session {
    * @param id Diese ID muss global eindeutig sein
    * @param admin Der Admin, dem diese Session gehört
    */
-  constructor(id: number, admin: Admin) {
+  constructor(id: number) {
     this.id = id;
-    this.admin = admin;
   }
 
   /**
