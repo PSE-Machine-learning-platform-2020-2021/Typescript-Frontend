@@ -68,6 +68,7 @@ export class RefferingController implements PageController {
         let loginSucess: boolean = MainController.getInstance().getFacade().loginAdmin(adminData.email, adminData.password);
         if (loginSucess) {
             this.state.projectData! = MainController.getInstance().getFacade().getProjectMetas();
+            this.state.currentState = States.loginSucess;
         } else {
             this.state.currentState = States.LoginFail;
 
@@ -93,16 +94,14 @@ export class RefferingController implements PageController {
         qr.addData("link");
         qr.make();
         this.state.qr = qr.toDataURL();
-        //divElement.innerHTML = state.qr
         this.state.currentState = States.SetQRC;
-        //this.page.setState(this.state);
+        this.page.setState(this.state);
     }
 
     createNewProject() {
         let sucess: boolean = MainController.getInstance().getFacade().createProject(this.state.currentProject!.projectName);
         if (sucess) {
             this.state.currentState = States.NeedQRC;
-            //TODO neu projecte laden
         } else {
             this.state.currentState = States.LoadError;
 
@@ -125,8 +124,8 @@ export class RefferingController implements PageController {
         let projectId: number = this.state.currentProject!.projectID;
         let sucess: boolean = MainController.getInstance().getFacade().loadProject(projectId);
         if (sucess) {
-            //let aiController: AIController = new AIController();
-            //MainController.getInstance().changeTo(aiController);
+            let aiController: AIController = new AIController();
+            MainController.getInstance().changeTo(aiController);
         } else {
             this.state.currentState = States.LoadError;
             this.page.setState(this.state);

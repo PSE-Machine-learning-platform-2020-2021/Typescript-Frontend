@@ -1,12 +1,14 @@
 import { Page } from "../view/pages/PageInterface";
 import { StartPage } from "../view/pages/StartPage";
+import { DataCollectionPage } from "../view/pages/DataCollectionPage/index";
+import { FinishPage } from "../view/pages/FinishPage/index";
 import { IState, States } from "../view/pages/State";
-
 
 import { PageController } from "./PageController";
 import { SensorManager } from "./SensorManager";
 import { MainController } from "./MainController";
 import { RefferingController } from "./ReferringController";
+
 
 export class AIController implements PageController {
     sensorManager: SensorManager;
