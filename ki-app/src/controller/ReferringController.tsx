@@ -1,5 +1,4 @@
 import { Page } from "../view/pages/PageInterface";
-import { ReferringPage } from "../view/pages/ReferringPage/index";
 import { IState, States } from "../view/pages/State";
 
 import { PageController } from "./PageController";
@@ -7,7 +6,7 @@ import { MainController } from "./MainController";
 import { AIController } from "./AIController";
 
 import { QRCode, ErrorCorrectLevel, QRNumber, QRAlphaNum, QR8BitByte, QRKanji } from 'qrcode-generator-ts/js';
-
+import { ReferringPage } from "../view/pages/ReferringPage";
 
 export class RefferingController implements PageController {
     private page: Page;
@@ -29,14 +28,23 @@ export class RefferingController implements PageController {
     update() {
         this.state = this.page.getState();
         switch (this.state.currentState) {
-            case States.NeedProject:
+            case States.LoadProject:
+                this.loadProject();
+                break;
+            case States.NeedQRC:
                 this.createQR();
+                break;
+            case States.Register:
+                this.register();
                 break;
             case States.Login:
                 this.login();
                 break;
             case States.NewProjekt:
                 this.createNewProject();
+                break;
+            case States.LoadProject:
+                this.loadProject();
                 break;
             case States.LoadModel:
                 this.loadModel();
@@ -47,20 +55,12 @@ export class RefferingController implements PageController {
             case States.NeedMessage:
                 this.page.setState(MainController.getInstance().getMessage(this.state.messages));
                 break;
+            case States.Register:
+                this.register();
+                break;
             default:
                 break;
         }
-    }
-
-    private setLanguage() {
-        let languageCode = this.state.languageCode;
-        let success = MainController.getInstance().setLanguage(languageCode);
-        if (success) {
-            this.state.currentState = States.NeedMessage;
-        } else {
-            this.state.currentState = States.LoadError;
-        }
-        this.page.setState(this.state);
     }
 
     login() {
@@ -68,10 +68,8 @@ export class RefferingController implements PageController {
         let loginSucess: boolean = MainController.getInstance().getFacade().loginAdmin(adminData.email, adminData.password);
         if (loginSucess) {
             this.state.projectData! = MainController.getInstance().getFacade().getProjectMetas();
-            this.state.currentState = States.loginSucess;
         } else {
             this.state.currentState = States.LoginFail;
-
         }
         this.page.setState(this.state);
     }
@@ -94,26 +92,28 @@ export class RefferingController implements PageController {
         qr.addData("link");
         qr.make();
         this.state.qr = qr.toDataURL();
+        //divElement.innerHTML = state.qr
         this.state.currentState = States.SetQRC;
-        this.page.setState(this.state);
+        //this.page.setState(this.state);
     }
 
     createNewProject() {
         let sucess: boolean = MainController.getInstance().getFacade().createProject(this.state.currentProject!.projectName);
         if (sucess) {
             this.state.currentState = States.NeedQRC;
+            //TODO neu projecte laden
         } else {
             this.state.currentState = States.LoadError;
-
         }
         this.page.setState(this.state);
     }
+
 
     loadProject() {
         let projectId: number = this.state.currentProject!.projectID!;
         let sucess: boolean = MainController.getInstance().getFacade().loadProject(projectId);
         if (sucess) {
-            this.state.currentState = States.NeedQRC;
+            this.state.currentState = States.SetProjects;
         } else {
             this.state.currentState = States.LoadError;
         }
@@ -121,11 +121,13 @@ export class RefferingController implements PageController {
     }
 
     loadModel() {
+        //!!hier use chosenModel
         let projectId: number = this.state.currentProject!.projectID;
         let sucess: boolean = MainController.getInstance().getFacade().loadProject(projectId);
+        //TODO chossenAImodel an aicontroller übergeben
         if (sucess) {
-            let aiController: AIController = new AIController();
-            MainController.getInstance().changeTo(aiController);
+            //let aiController: AIController = new AIController();
+            //MainController.getInstance().changeTo(aiController);
         } else {
             this.state.currentState = States.LoadError;
             this.page.setState(this.state);

@@ -117,7 +117,7 @@ export class Facade {
    * Lädt vom aktuell angemeldeten Admin von seinen Projekten den Namen und die die Projekt ID
    * @returns Von allen Projekten des Admins Projekt ID und Projektname
    */
-  getProjectMetas(): { projectID: number, projectName: string, AIModelExist: boolean; }[] {
+  getProjectMetas(): { projectID: number, projectName: string, AIModelID: number[]; }[] {
     return this.explorerConnector.getProjectMetas(this.getAdminEmail());
   }
 

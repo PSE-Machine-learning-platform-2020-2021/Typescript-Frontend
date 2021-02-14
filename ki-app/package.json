@@ -12,6 +12,7 @@
     "@types/react-dom": "^16.9.10",
     "pubsub-js": "^1.9.2",
     "qrcode-generator-ts": "0.0.4",
+    "qrcode-react": "^0.1.16",
     "react": "^17.0.1",
     "react-dom": "^17.0.1",
     "react-new-window": "^0.1.2",

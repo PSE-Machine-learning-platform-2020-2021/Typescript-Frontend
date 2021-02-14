@@ -51,7 +51,7 @@ export class ExplorerConnector {
   }
 
   //Gibt von allen Projekten des angemeldeten Ad-mins, mit der Email adminEmail, die Projekt ID und den Projekt Namen zurück
-  getProjectMetas(adminEmail: string): { projectID: number, projectName: string, AIModelExist: boolean; }[] {
+  getProjectMetas(adminEmail: string): { projectID: number, projectName: string, AIModelID: number[]; }[] {
     return [];
   }
 

@@ -5,9 +5,9 @@ export interface IState {
   languageCode: string;
   messages: { text: string, id: number; }[];
   //Anzeige aller Projekte eines nutzers
-  projectData?: { projectID: number, projectName: string, AIModelExist: boolean; }[];
+  projectData?: { projectID: number, projectName: string, aiModelIDs: number[]; }[];
   // Das Projekt welches in der view ausgewählt wurde
-  currentProject?: { projectID: number, projectName: string, AIModels: string[]; };
+  currentProject?: { projectID: number, projectName: string, choosenAIModelID: number; };
   adminData?: { name: string, email: string, password: string; };
   //minerData?:
   aiUserData?: { name: string, result: string; };
@@ -20,9 +20,18 @@ export interface IState {
   //
   qr?: string;
   diagramSvg?: string;
+<<<<<<< HEAD
   recordingSettings?: { newDataSetName: string, usedSensorTypes: string[], readTime: number, waitTime: number; };
   availableSensorTypes?: string[];
+=======
+  recordingSettings?: { newDataSetName: string, usedSensorTypes: number[], availableSensorTypes: number[], readTime: number, waitTime: number; };
+  //Untere sind schon in recordSettings enthalten
+  //chosenSensors?: string[];
+  //leadtime?: number;
+  //collectiontime?: number;
+>>>>>>> 82548bf7b694e9980047ba43f6d79032951d108a
 }
+
 
 export enum States {
   /**
@@ -42,9 +51,9 @@ export enum States {
    */
   SetQRC,
   /**
-   * Seite benötigt ProjektDaten
+   * Lade Projectdaten
    */
-  NeedProject,
+  LoadProject,
   /**
    * Projektdaten können benutzt werden
    */
@@ -60,7 +69,9 @@ export enum States {
   /**
    * Ein Login Versuch soll durchgeführt werden
    */
+  Register,
   Login,
+  Register,
   /**
      * Update aller Daten welche auf der Seite angezeigt werden, zum Beispiel Projekt Daten für die Projekt liste.
      */
@@ -72,6 +83,7 @@ export enum States {
   /**
    * Model eines Projekts soll geladen werden
    */
+  LoadProject,
   LoadModel,
   /**
    * Login ist gescheitert
