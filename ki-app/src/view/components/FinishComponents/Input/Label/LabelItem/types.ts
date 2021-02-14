@@ -5,3 +5,4 @@ export type Label = {
 };
 
 export type AddLabel = (newLabel: string, newStart: number, newEnd: number) => void;
+export type DeleteLabel = () => void;

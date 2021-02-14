@@ -2,8 +2,6 @@ import React, { Component } from "react";
 import input from "./index.module.css";
 
 export default class Input extends Component {
-
-
   state = {
     leadTime: "",
     collectionTime: "",

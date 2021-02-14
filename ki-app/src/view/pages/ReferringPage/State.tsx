@@ -18,5 +18,5 @@ export class State implements IState {
   dataRows?: { dataSetID: number, data: number[][][]; };
   dataSets?: { sensorTypes: string[], dataSetName: string; }[];
   qr?: string;
-  recordingSettings?: { newDataSetName: string, usedSensorTypes: string[], readTime: number, waitTime: number; };
+  recordingSettings?: { newDataSetName: string, usedSensorTypes: number[], availableSensorTypes: number[], readTime: number, waitTime: number; };
 }

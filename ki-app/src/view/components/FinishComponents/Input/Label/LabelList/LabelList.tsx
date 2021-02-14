@@ -1,18 +1,31 @@
-import React from 'react';
-import { LabelItem } from '../LabelItem/LabelItem';
-import { Label } from '../LabelItem/types';
+import React, { Component } from 'react';
+import PropTypes from 'prop-types';
+import LabelItem from '../LabelItem/LabelItem';
 
-interface LabelListProps {
-    labels: Label[],
-};
+interface IProps {
+    deleteLabel: (id: string) => void;
+    labels: { id: string, start: number, end: number, name: string; }[];
+}
 
-export const LabelList: React.FC<LabelListProps> = ({ labels }) => {
+export default class LabelList extends React.Component<IProps> {
+    constructor(props: IProps) {
+        super(props);
+    }
 
-    return (
-        <ul>
-            {labels.map(label => {
-                return <LabelItem key={label.name} label={label} />;
-            })}
-        </ul>
-    );
+    state = {
+        labels: [{ start: 0, end: 0, name: "" }],
+    };
+
+
+    render() {
+        return (
+            <ul className="todo-main">
+                {
+                    this.props.labels.map((label: { id: string, start: Number, end: Number, name: string; }) => {
+                        return <LabelItem key={label.id} {...label} deleteLabel={this.props.deleteLabel} />;
+                    })
+                }
+            </ul>
+        );
+    }
 };
