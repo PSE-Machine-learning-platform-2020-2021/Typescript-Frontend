@@ -5,9 +5,9 @@ export interface IState {
   languageCode: string;
   messages: { text: string, id: number; }[];
   //Anzeige aller Projekte eines nutzers
-  projectData?: { projectID: number, projectName: string, AIModelExist: boolean; }[];
+  projectData?: { projectID: number, projectName: string, aiModelIDs: number[]; }[];
   // Das Projekt welches in der view ausgewählt wurde
-  currentProject?: { projectID: number, projectName: string, AIModels: string[]; };
+  currentProject?: { projectID: number, choosenAIModelID: number; };
   adminData?: { name: string, email: string, password: string; };
   //minerData?:
   aiUserData?: { name: string, result: string; };
@@ -21,9 +21,10 @@ export interface IState {
   qr?: string;
   diagramSvg?: string;
   recordingSettings?: { newDataSetName: string, usedSensorTypes: number[], availableSensorTypes: number[], readTime: number, waitTime: number; };
-  chosenSensors?: string[];
-  leadtime?: number;
-  collectiontime?: number;
+  //Untere sind schon in recordSettings enthalten
+  //chosenSensors?: string[];
+  //leadtime?: number;
+  //collectiontime?: number;
 }
 
 export enum States {

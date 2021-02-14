@@ -29,7 +29,10 @@ export class RefferingController implements PageController {
     update() {
         this.state = this.page.getState();
         switch (this.state.currentState) {
-            case States.NeedProject:
+            case States.LoadProject:
+                this.loadProject();
+                break;
+            case States.NeedQRC:
                 this.createQR();
                 break;
             case States.Login:
@@ -104,7 +107,6 @@ export class RefferingController implements PageController {
             this.state.currentState = States.NeedQRC;
         } else {
             this.state.currentState = States.LoadError;
-
         }
         this.page.setState(this.state);
     }
@@ -113,7 +115,7 @@ export class RefferingController implements PageController {
         let projectId: number = this.state.currentProject!.projectID!;
         let sucess: boolean = MainController.getInstance().getFacade().loadProject(projectId);
         if (sucess) {
-            this.state.currentState = States.NeedQRC;
+            this.state.currentState = States.SetProjects;
         } else {
             this.state.currentState = States.LoadError;
         }
@@ -123,6 +125,7 @@ export class RefferingController implements PageController {
     loadModel() {
         let projectId: number = this.state.currentProject!.projectID;
         let sucess: boolean = MainController.getInstance().getFacade().loadProject(projectId);
+        //TODO chossenAImodel an aicontroller übergeben
         if (sucess) {
             let aiController: AIController = new AIController();
             MainController.getInstance().changeTo(aiController);
