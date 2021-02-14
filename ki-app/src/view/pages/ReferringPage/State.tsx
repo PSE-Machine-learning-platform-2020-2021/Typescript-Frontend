@@ -15,7 +15,7 @@ export class State implements IState {
   labels?: { labelID: number, start: number, end: number; }[];
   sessionID?: string;
   //aiParameter?: 
-  dataPoints?: { dataRowID: number, value: number; }[];
+  dataPoints?: { dataPoint?: { value: number; relativeTime: number; }; }[];
   dataRows?: { dataSetID: number, data: number[][][]; };
   dataSets?: { sensorTypes: string[], dataSetName: string; }[];
   qr?: string;
