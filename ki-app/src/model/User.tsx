@@ -8,119 +8,21 @@ import { SensorData } from "./Sensor";
 export abstract class User {
   protected id: number; //Die eindeutige User ID
   protected name: string; //Der Name des Users
-  protected abstract device?: Device; //Das Benutzergerät des Benutzers
+  protected device: Device; //Das Benutzergerät des Benutzers
+  protected currentProject?: Project;
 
   /**
    * Erstellt einen Benutzer
    * @param id eindeutige Benutzer ID
    * @param name Name des Benutzer
    */
-  constructor(id: number, name: string) {
+  constructor(id: number, device: Device, name?: string) {
     this.id = id;
-    this.name = name;
-  }
-
-  /**
-   * Setzt einen neuen Benutzernamen
-   * @param name der neue Benutzername
-   */
-  setName(name: string): void {
-    this.name = name;
-  }
-
-  /**
-   * Gibt den Benutzernamen zurück
-   */
-  getName(): string {
-    return this.name;
-  }
-
-  /**
-   * Setzt ein neues Benutzergerät
-   * @param device das Benutzergerät
-   */
-  setDevice(device: Device) {
     this.device = device;
-  }
-
-  /**
-   * Gibt falls ein Benutzergerät verfügbar ist dieses zurück
-   */
-  getDevice(): { device?: Device; } {
-    return { device: this.device };
-  }
-
-  /**
-   * Gibt die Benutzer ID zurück
-   */
-  getID(): number {
-    return this.id;
-  }
-}
-
-/**
- * Die Klasse Admin dient für einen Benutzer mit einem Account
- */
-export class Admin extends User {
-  protected device: Device; //Das Benutzergeräts des Admins
-  private email: string; //Die eindeutige Admin Email
-  private project: Project[] = []; //Alle Projekte, die zu dem Admin gehören
-  private currentProject?: Project;
-
-  /**
-   * Zum erstellen eines Admins
-   * @param adminID die Admin ID
-   * @param deviceID die Geräte ID des Admins
-   * @param adminName der Name des Admins
-   * @param email die Emailadresse des Admins
-   */
-  constructor(adminID: number, deviceID: number, adminName: string, email: string);
-
-  /**
-   * Für die Implementierung eines Bestehenden Admins
-   * @param adminID die Admin ID
-   * @param deviceID die Geräte ID
-   * @param adminName der Admin Name
-   * @param email die Emailadresse des Admins
-   * @param device das Gerät des Admins
-   */
-  constructor(adminID: number, deviceID: number, adminName: string, email: string,
-    device: { MACADRESS: string, deviceName: string, firmware: string, generation: string, deviceType: string; });
-
-  constructor(adminID: number, deviceID: number, adminName: string, email: string,
-    device?: { MACADRESS: string, deviceName: string, firmware: string, generation: string, deviceType: string; }) {
-    super(adminID, adminName);
-    this.email = email;
-    this.device = Device.loadDevice(deviceID, device);
-  }
-
-  /**
-   * Lädt ein bestehendes Projekt in das Model
-   * @param project das Projekt des Admins
-   * @returns false, falls die Projekt ID schon existiert
-   */
-  loadProject(project: {
-    projectID: number, sessionID: number, projectName: string, projectData?: {
-      aiModelID: number[],
-      dataSet: {
-        dataRowSensors: SensorData[], dataSetID: number, dataSetName: string, generateDate: number,
-        dataRows: {
-          dataRowID: number, recordingStart: number,
-          dataRow: { value: number, relativeTime: number; }[];
-        }[],
-        label: { name: string, labelID: number, start: number, end: number; }[];
-      }[];
-    };
-  }): boolean {
-    if (!this.existProject(project.projectID)) {
-      if (project.projectData != null) {
-        this.project.push(new Project(project.projectID, project.sessionID, project.projectName, this, project.projectData.aiModelID, project.projectData.dataSet));
-      } else {
-        this.project.push(new Project(project.projectID, project.sessionID, project.projectName, this));
-      }
-      return true;
+    if (name != null) {
+      this.name = name;
     } else {
-      return false;
+      this.name = this.device.getName();
     }
   }
 
@@ -145,42 +47,13 @@ export class Admin extends User {
   /**
    * Liest vom aktuellen Project und Datensatz die aktuellen Sensordaten von dem Sensor mit der Datenreihen ID
    * @param dataRowID die Datenreihen ID
+   * @returns gibt ein leeres Objekt zurück, wenn der Sensor nicht ausgelesen werden kann oder die Datenreihe nicht existiert
    */
   readDataPoint(dataRowID: number): { dataPoint?: { value: number, relativeTime: number; }; } {
     if (this.currentProject != null) {
       return this.currentProject.readDataPoint(dataRowID);
     }
     return {};
-  }
-
-  /**
-   * Fügt ein neues Projekt mit den übergebenen Parametern hinzu und setzt dieses Projekt als aktuelles Projekt
-   * @param projectID die Projekt ID, diese muss für den Admin eindeutig sein
-   * @param sessionID die Session ID, diese muss global eindeutig sein
-   * @param projectName der Name des Projektes
-   * @returns Bei angabe einer Project ID, die schon existiert wird false zurück gegeben
-   */
-  createProject(projectID: number, sessionID: number, projectName: string): boolean {
-    if (!this.existProject(projectID)) {
-      var newproject: Project = new Project(projectID, sessionID, projectName, this);
-      this.project.push(newproject);
-      this.currentProject = newproject;
-      return true;
-    } else {
-      return false;
-    }
-  }
-
-  /**
-   * Gibt von allen Datensätzen vom aktuellen Projekt Informationen zurück
-   * @returns dataSetID ist die DatensatzID und dataSetName ist der Datensatzname
-   */
-  getDataSetMetas(): { dataSetID: number, dataSetName: string; }[] {
-    if (this.currentProject != null) {
-      return this.currentProject.getDataSetMetas();
-    } else {
-      return [];
-    }
   }
 
   /**
@@ -218,13 +91,6 @@ export class Admin extends User {
     } else {
       return -1;
     }
-  }
-
-  /**
-   * Gibt die Admin Emailadresse zurück
-   */
-  getEmail(): string {
-    return this.email;
   }
 
   /**
@@ -311,38 +177,24 @@ export class Admin extends User {
     return {};
   }
 
-  existProject(projectID: number): boolean {
-    for (let i = 0; i < this.project.length; i++) {
-      if (this.project[i].getID() === projectID) {
-        return true;
-      }
-    }
-    return false;
-  }
-}
-
-/**
- * Dataminer ist die Klasse, um Datensammler mit ihren Geräte Sensoren zu spreichern
- */
-export class Dataminer extends User {
-  protected device: Device; //Das Gerät des Datensammlers
-
   /**
-   * Erstellt einen Datensammler
-   * @param id die Benutzer ID
-   * @param name der Benutzername
-   * @param deviceID die Geräte ID
-   */
-  constructor(id: number, deviceID: number, name?: string) {
-    if (name != null) {
-      super(id, name);
-      this.device = Device.loadDevice(deviceID);
-    } else {
-      let dataDevice = Device.loadDevice(deviceID);
-      super(id, dataDevice.getName());
-      this.device = dataDevice;
-    }
-  }
+  * Lädt ein bestehendes Projekt in das Model
+  * @param project die Projektdaten
+  * @returns false, falls die Projekt ID schon existiert
+  */
+  abstract loadProject(project: {
+    projectID: number, sessionID: number, projectName: string, projectData?: {
+      aiModelID?: number[],
+      dataSet?: {
+        dataRowSensors: SensorData[], dataSetID: number, dataSetName: string, generateDate: number,
+        dataRows: {
+          dataRowID: number, recordingStart: number,
+          dataRow: { value: number, relativeTime: number; }[];
+        }[],
+        label: { name: string, labelID: number, start: number, end: number; }[];
+      }[];
+    };
+  }): boolean;
 
   /**
    * Gibt alle Sensoren aus, die das Benutzergerät und das Programm unterstützt
@@ -357,27 +209,220 @@ export class Dataminer extends User {
   getAvailableSensors(): number[] {
     return this.device.getAvailableSensors();
   }
+
+  /**
+   * Gibt von allen Datensätzen vom aktuellen Projekt Informationen zurück
+   * @returns dataSetID ist die DatensatzID und dataSetName ist der Datensatzname
+   */
+  getDataSetMetas(): { dataSetID: number, dataSetName: string; }[] {
+    if (this.currentProject != null) {
+      return this.currentProject.getDataSetMetas();
+    } else {
+      return [];
+    }
+  }
+
+  /**
+   * Setzt einen neuen Benutzernamen
+   * @param name der neue Benutzername
+   */
+  setName(name: string): void {
+    this.name = name;
+  }
+
+  /**
+   * Gibt den Benutzernamen zurück
+   */
+  getName(): string {
+    return this.name;
+  }
+
+  /**
+   * Setzt ein neues Benutzergerät
+   * @param device das Benutzergerät
+   */
+  setDevice(device: Device) {
+    this.device = device;
+  }
+
+  /**
+   * Gibt falls ein Benutzergerät verfügbar ist dieses zurück
+   */
+  getDevice(): { device?: Device; } {
+    return { device: this.device };
+  }
+
+  /**
+   * Gibt die Benutzer ID zurück
+   */
+  getID(): number {
+    return this.id;
+  }
+}
+
+/**
+ * Die Klasse Admin dient für einen Benutzer mit einem Account
+ */
+export class Admin extends User {
+  private email: string; //Die eindeutige Admin Email
+  private project: Project[] = []; //Alle Projekte, die zu dem Admin gehören
+
+  /**
+   * Zum erstellen eines Admins
+   * @param adminID die Admin ID
+   * @param deviceID die Geräte ID des Admins
+   * @param adminName der Name des Admins
+   * @param email die Emailadresse des Admins
+   */
+  constructor(adminID: number, deviceID: number, adminName: string, email: string);
+
+  /**
+   * Für die Implementierung eines Bestehenden Admins
+   * @param adminID die Admin ID
+   * @param deviceID die Geräte ID
+   * @param adminName der Admin Name
+   * @param email die Emailadresse des Admins
+   * @param device das Gerät des Admins
+   */
+  constructor(adminID: number, deviceID: number, adminName: string, email: string,
+    device: { MACADRESS: string, deviceName: string, firmware: string, generation: string, deviceType: string; });
+
+  constructor(adminID: number, deviceID: number, adminName: string, email: string,
+    device?: { MACADRESS: string, deviceName: string, firmware: string, generation: string, deviceType: string; }) {
+    super(adminID, Device.loadDevice(deviceID, device), adminName);
+    this.email = email;
+  }
+
+  /**
+    * Implementiert die abstrakte Methode von User
+    */
+  loadProject(project: {
+    projectID: number, sessionID: number, projectName: string, projectData?: {
+      aiModelID?: number[],
+      dataSet?: {
+        dataRowSensors: SensorData[], dataSetID: number, dataSetName: string, generateDate: number,
+        dataRows: {
+          dataRowID: number, recordingStart: number,
+          dataRow: { value: number, relativeTime: number; }[];
+        }[],
+        label: { name: string, labelID: number, start: number, end: number; }[];
+      }[];
+    };
+  }): boolean {
+    if (!this.existProject(project.projectID)) {
+      this.project.push(new Project(project.projectID, project.sessionID, project.projectName, project.projectData));
+      return true;
+    } else {
+      return false;
+    }
+  }
+
+  /**
+   * Fügt ein neues Projekt mit den übergebenen Parametern hinzu und setzt dieses Projekt als aktuelles Projekt
+   * @param projectID die Projekt ID, diese muss für den Admin eindeutig sein
+   * @param sessionID die Session ID, diese muss global eindeutig sein
+   * @param projectName der Name des Projektes
+   * @returns Bei angabe einer Project ID, die schon existiert wird false zurück gegeben
+   */
+  createProject(projectID: number, sessionID: number, projectName: string): boolean {
+    if (!this.existProject(projectID)) {
+      var newproject: Project = new Project(projectID, sessionID, projectName);
+      this.project.push(newproject);
+      this.currentProject = newproject;
+      return true;
+    } else {
+      return false;
+    }
+  }
+
+  existProject(projectID: number): boolean {
+    for (let i = 0; i < this.project.length; i++) {
+      if (this.project[i].getID() === projectID) {
+        return true;
+      }
+    }
+    return false;
+  }
+
+  /**
+   * Gibt die Admin Emailadresse zurück
+   */
+  getEmail(): string {
+    return this.email;
+  }
+
+  getProjects(): Project[] {
+    return this.project;
+  }
+}
+
+/**
+ * Dataminer ist die Klasse, um Datensammler mit ihren Geräte Sensoren zu spreichern
+ */
+export class Dataminer extends User {
+  /**
+   * Erstellt einen Datensammler
+   * @param id die Benutzer ID
+   * @param name der Benutzername
+   * @param deviceID die Geräte ID
+   */
+  constructor(id: number, deviceID: number, name?: string) {
+    super(id, Device.loadDevice(deviceID), name);
+  }
+
+  /**
+   * Implementiert die abstrakte Methode von User
+   */
+  loadProject(project: {
+    projectID: number, sessionID: number, projectName: string, projectData?: {
+      aiModelID?: number[],
+      dataSet?: {
+        dataRowSensors: SensorData[], dataSetID: number, dataSetName: string, generateDate: number,
+        dataRows: {
+          dataRowID: number, recordingStart: number,
+          dataRow: { value: number, relativeTime: number; }[];
+        }[],
+        label: { name: string, labelID: number, start: number, end: number; }[];
+      }[];
+    };
+  }): boolean {
+
+    this.currentProject = new Project(project.projectID, project.sessionID, project.projectName, project.projectData);
+    return true;
+  }
 }
 
 /**
  * AIModelUser ist die Klasse, um KI-Modell Benutzer zu speichern
  */
 export class AIModelUser extends User {
-  protected device?: Device; //Das Gerät des KI-Modell Benutzers falls es gespeichert wird
-
   /**
    * Erstellt einen KI-Modell Benutzer, wenn Name "" gesetzt ist und eine Geräte ID gesetzt ist wird als Name der Geräte Name gewählt
    * @param id die eindeutige Benutzer ID
    * @param name der Benutzername
    * @param deviceID die Geräte ID
    */
-  constructor(id: number, name: string, deviceID?: number) {
-    super(id, name);
-    if (deviceID != null) {
-      this.device = Device.loadDevice(deviceID);
-      if (name === "") {
-        this.name = this.device.getName();
-      }
-    }
+  constructor(id: number, deviceID: number, name?: string) {
+    super(id, Device.loadDevice(deviceID), name);
+  }
+  /**
+   * Implementiert die abstrakte Methode von User
+   */
+  loadProject(project: {
+    projectID: number, sessionID: number, projectName: string, projectData?: {
+      aiModelID?: number[],
+      dataSet?: {
+        dataRowSensors: SensorData[], dataSetID: number, dataSetName: string, generateDate: number,
+        dataRows: {
+          dataRowID: number, recordingStart: number,
+          dataRow: { value: number, relativeTime: number; }[];
+        }[],
+        label: { name: string, labelID: number, start: number, end: number; }[];
+      }[];
+    };
+  }): boolean {
+
+    this.currentProject = new Project(project.projectID, project.sessionID, project.projectName, project.projectData);
+    return true;
   }
 }

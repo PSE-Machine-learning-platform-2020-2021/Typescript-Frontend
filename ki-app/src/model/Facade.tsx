@@ -2,7 +2,8 @@ import { DeliveryFormat } from "./DeliveryFormat";
 import { ExplorerConnector } from "./ExplorerConnector";
 import { Language } from "./Language";
 import { SensorData } from "./Sensor";
-import { Admin, Dataminer, User } from "./User";
+import { Session } from "./Session";
+import { Admin, Dataminer, AIModelUser, User } from "./User";
 
 interface FacadeInterface {
   createDataSet(sensorTypes: string[], dataSetName: string): boolean;
@@ -40,8 +41,7 @@ interface FacadeInterface {
 export class Facade {
   private language: Language; //Alle Nachrichten, in der geladenen Sprache
   private explorerConnector: ExplorerConnector; //Die Verbindung zur Datenbank
-  private admin?: Admin; //Falls ein Admin angemeldet ist der Admin, oder die Daten von einem Admin für den Datenerfasser
-  private user?: User; //Der Benutzer, entweder Datenerfasser oder AIModelUser
+  private user?: User; //Der Benutzer, entweder Admin, Datenerfasser oder AIModelUser
 
 
   /**
@@ -60,13 +60,13 @@ export class Facade {
    * @returns true, wenn der Datensatz erstellt wurde. Dies ist der Fall, wenn ein Benutzer existiert welcher in einer Session ist und alle Sensortypen existieren.
    */
   createDataSet(sensorTypeID: number[], dataSetName: string): boolean {
-    if (this.user != null && this.user instanceof Dataminer && this.admin != null) {
+    if (this.user != null) {
       let dataminerName: string = this.user.getName();
       let sessionID: number = this.getSessionID();
       let dataRowSensors: SensorData[] = this.user.getDeviceSensors(sensorTypeID);
-      if (dataRowSensors.length > 0 && dataRowSensors.length === sensorTypeID.length) {
+      if (dataRowSensors.length > 0 && dataRowSensors.length === sensorTypeID.length && sessionID >= 0) {
         let dataSetID: number = this.explorerConnector.createDataSet(sessionID, sensorTypeID, dataminerName, dataSetName);
-        return this.admin.createDataSet(dataRowSensors, dataSetID, dataSetName);
+        return this.user.createDataSet(dataRowSensors, dataSetID, dataSetName);
       }
     }
     return false;
@@ -80,9 +80,9 @@ export class Facade {
    * @return true, wenn der Datenpunkt erfolgreich an die Datenbank gesendet wurde
    */
   sendDataPoint(dataRowID: number, value: number, relativeTime: number): boolean {
-    if (this.admin != null) {
+    if (this.user != null) {
       let sessionID: number = this.getSessionID();
-      let dataSetID: number = this.admin.getCurrentDataSetID();
+      let dataSetID: number = this.user.getCurrentDataSetID();
       return this.explorerConnector.sendDataPoint(sessionID, dataSetID, dataRowID, value, relativeTime);
     }
     return false;
@@ -93,8 +93,8 @@ export class Facade {
    * @param dataRowID die DatenreihenID
    */
   readDataPoint(dataRowID: number): { dataPoint?: { value: number, relativeTime: number; }; } {
-    if (this.admin != null) {
-      return this.admin.readDataPoint(dataRowID);
+    if (this.user != null) {
+      return this.user.readDataPoint(dataRowID);
     }
     return {};
   }
@@ -106,9 +106,9 @@ export class Facade {
    *          die Projekt ID existiert und der Admin dafür angemeldet ist
    */
   loadProject(projectID: number): boolean {
-    if (this.admin != null && !this.admin.existProject(projectID)) {
-      let adminEmail: string = this.admin.getEmail();
-      return this.admin.loadProject(this.explorerConnector.loadProject(adminEmail, projectID));
+    if (this.user != null && this.user instanceof Admin && !this.user.existProject(projectID)) {
+      let adminEmail: string = this.user.getEmail();
+      return this.user.loadProject(this.explorerConnector.loadProject(adminEmail, projectID));
     }
     return false;
   }
@@ -125,8 +125,8 @@ export class Facade {
    * Gibt vom aktuellen Projekt von allen Datensätzen die Datensatz ID und der Datensatz Name zurück
    */
   getDataSetMetas(): { dataSetID: number, dataSetName: string; }[] {
-    if (this.admin != null) {
-      return this.admin.getDataSetMetas();
+    if (this.user != null) {
+      return this.user.getDataSetMetas();
     }
     return [];
   }
@@ -135,8 +135,8 @@ export class Facade {
    * Gibt die Session ID des aktuellen Projekts zurück, -1 falls kein aktuelles Projekt existiert
    */
   getSessionID(): number {
-    if (this.admin != null) {
-      return this.admin?.getSessionID();
+    if (this.user != null) {
+      return this.user.getSessionID();
     }
     return -1;
   }
@@ -147,8 +147,8 @@ export class Facade {
    * @returns die Sensordaten von der Datenreihe
    */
   getDataRows(dataSetID: number): { dataRows?: { value: number, relativeTime: number; }[][]; } {
-    if (this.admin != null) {
-      return this.admin.getDataRows(dataSetID);
+    if (this.user != null) {
+      return this.user.getDataRows(dataSetID);
     }
     return {};
   }
@@ -166,7 +166,7 @@ export class Facade {
    * Gibt die auswählbaren Sensoren als ID mit ihrer Art in der Passenden Sprache zurück
    */
   getAvailableSensors(): { sensorTypID: number, sensorType: string; }[] {
-    if (this.user instanceof Dataminer) {
+    if (this.user != null) {
       var sensors: { sensorTypID: number, sensorType: string; }[] = [];
       let message: { messageID: number, message: string; }[] = this.language.getMessage(this.user.getAvailableSensors());
       for (let i = 0; i < message.length; i++) {
@@ -201,8 +201,8 @@ export class Facade {
    * Gibt die Email vom Admin zurück, diese kann leer sein falls kein Admin angemeldet ist
    */
   getAdminEmail(): string {
-    if (this.admin != null) {
-      return this.admin.getEmail();
+    if (this.user instanceof Admin) {
+      return this.user.getEmail();
     }
     return "";
   }
@@ -213,8 +213,8 @@ export class Facade {
    * @returns true, wenn das löschen erfolgreich ist
    */
   deleteDataSet(dataSetID: number): boolean {
-    if (this.admin != null) {
-      let projectID: number = this.admin.deleteDataSet(dataSetID);
+    if (this.user != null) {
+      let projectID: number = this.user.deleteDataSet(dataSetID);
       if (projectID >= 0) {
         let adminEmail: string = this.getAdminEmail();
         this.explorerConnector.deleteDataSet(adminEmail, projectID, dataSetID);
@@ -227,7 +227,7 @@ export class Facade {
   registerAdmin(adminName: string, email: string, password: string): boolean {
     let IDs: { adminID: number, deviceID: number; } = this.explorerConnector.registerAdmin(adminName, email, password);
     if (IDs.adminID >= 0) {
-      this.admin = new Admin(IDs.adminID, IDs.deviceID, adminName, email);
+      this.user = new Admin(IDs.adminID, IDs.deviceID, adminName, email);
       return true;
     }
     return false;
@@ -239,16 +239,32 @@ export class Facade {
       { projectID: number, projectName: string, sessionID: number; };
     } = this.explorerConnector.registerDataminer(dataminerName, sessionID);
     if (dataminer.dataminerID >= 0 && dataminer.deviceID >= 0) {
-      this.admin = new Admin(-1, -1, "", "");
-      this.admin.loadProject(dataminer.project);
       this.user = new Dataminer(dataminer.dataminerID, dataminer.deviceID, dataminerName);
+      this.user.loadProject(dataminer.project);
+      return true;
+    }
+    return false;
+  }
+
+  /**
+   * 
+   * @param aiModelUserName 
+   */
+  registerAIModelUser(aiModelUserName: string, modelID: number): boolean {
+    let aiModelUser: {
+      aiModelUserID: number, deviceID: number, project:
+      { projectID: number, projectName: string, sessionID: number; };
+    } = this.explorerConnector.registerAIModelUser(aiModelUserName, modelID);
+    if (aiModelUser.aiModelUserID >= 0 && aiModelUser.deviceID >= 0) {
+      this.user = new AIModelUser(aiModelUser.aiModelUserID, aiModelUser.deviceID, aiModelUserName);
+      this.user.loadProject(aiModelUser.project);
       return true;
     }
     return false;
   }
 
   loginAdmin(email: string, password: string): boolean {
-    if (this.admin == null) {
+    if (this.user == null) {
       let adminData: {
         admin?: {
           adminID: number, deviceID: number, adminName: string, email: string,
@@ -259,7 +275,7 @@ export class Facade {
         //Nur umbenennen von adminData.admin zu admin
         let admin: { adminID: number, deviceID: number, adminName: string, email: string, device: { MACADRESS: string, deviceName: string, firmware: string, generation: string, deviceType: string; }; } = adminData.admin;
 
-        this.admin = new Admin(admin.adminID, admin.deviceID, admin.adminName, admin.email, admin.device);
+        this.user = new Admin(admin.adminID, admin.deviceID, admin.adminName, admin.email, admin.device);
         return true;
       }
     }
@@ -267,10 +283,10 @@ export class Facade {
   }
 
   logoutAdmin(): boolean {
-    if (this.admin != null) {
+    if (this.user != null) {
       let logout = this.explorerConnector.logoutAdmin(this.getAdminEmail());
       if (logout) {
-        delete this.admin;
+        delete this.user;
       } else {
         return false;
       }
@@ -279,23 +295,23 @@ export class Facade {
   }
 
   createProject(projectName: string): boolean {
-    if (this.admin != null) {
+    if (this.user instanceof Admin) {
       let project: { projectID: number, sessionID: number; } = this.explorerConnector.createProject(this.getAdminEmail(), projectName);
-      return this.admin.createProject(project.projectID, project.sessionID, projectName);
+      return this.user.createProject(project.projectID, project.sessionID, projectName);
     }
     return false;
   }
 
   setLabel(labelID: number, span: { start: number, end: number; }, labelName?: string): boolean {
-    if (this.admin != null) {
-      return this.admin.setLabel(labelID, span, labelName);
+    if (this.user != null) {
+      return this.user.setLabel(labelID, span, labelName);
     }
     return false;
   }
 
   getLabels(): { labels?: { name: string, id: number, start: number, end: number; }[]; } {
-    if (this.admin != null) {
-      return this.admin.getLabels();
+    if (this.user != null) {
+      return this.user.getLabels();
     }
     return {};
   }
@@ -315,7 +331,8 @@ export class Facade {
 }
 
 
+//AIModelUser läd da sofort das Model?
+
 
   // wird aktuell nicht benutzt
-  // registerAIModelUser(aiModelUserName: string): boolean { }
   // checkLogin(): boolean { }

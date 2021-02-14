@@ -75,8 +75,15 @@ export class ExplorerConnector {
   }
 
   //Registriert und erstellt einen KI-Anwender dabei stellt der Parameter aiModelUserName den Namen des KI-Anwender da.
-  registerAIModelUser(aiModelUserName: string): number[] {
-    return [];
+  //SessionID -1 ???
+  registerAIModelUser(aiModelUserName: string, modelID: number): {
+    aiModelUserID: number, deviceID: number, project:
+    { projectID: number, projectName: string, sessionID: -1; };
+  } {
+    return {
+      aiModelUserID: -1, deviceID: -1, project:
+        { projectID: -1, projectName: "", sessionID: -1 }
+    };
   }
 
   //Meldet den Admin an. 
