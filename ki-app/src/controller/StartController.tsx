@@ -17,9 +17,9 @@ export class StartController implements PageController {
      */
     constructor() {
         this.state = this.page.getState();
-        this.state.recordingSettings!.availableSensorTypes = MainController.getInstance().getFacade().getAvailableSensors();
+        this.state.availableSensorTypes = MainController.getInstance().getFacade().getAvailableSensors();
+        this.page.setState(this.state);
         this.page.attach(this);
-
     }
 
     /**

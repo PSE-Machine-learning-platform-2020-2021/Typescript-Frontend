@@ -1,19 +1,19 @@
 import React, { Component } from 'react'
+import PubSub from 'pubsub-js';
 
 export default class QRImage extends Component {
-    qr!: string;
+    state = {
+        qr: ''
+    }
     getqr() {
-        PubSub.subscribe('getqr', (msg: any, data: string) => {
-            console.log('1' + this.qr)
-            this.qr = data;
-            console.log('2' + this.qr)
+        PubSub.subscribe('getqr', (_msg: any, data: string) => {
+            this.setState({ qr: data });
         })
-        return this.qr
+        return this.state.qr
     }
     render() {
         return (
             <div>
-                {console.log('3' + this.getqr())}
                 <img src={this.getqr()} alt="qrcode" style={{ width: 'auto' }} />
             </div>
         )

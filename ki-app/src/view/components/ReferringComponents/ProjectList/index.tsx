@@ -3,33 +3,66 @@ import ModelList from '../ModelList';
 
 export default class ProjectList extends Component {
     state = {
-            project: '',
-            click : false
-        }
-    handleChange =(e: React.ChangeEvent<HTMLSelectElement>)=> { 
+        value: null,
+        click: false,
+        //hier Beispiel, in componentDidMount will projectData verändern
+        projectData: [{
+            projectID: 1,
+            projectName: 'project1',
+            AIModelID: [1, 2]
+        }, {
+            projectID: 2,
+            projectName: 'project2',
+            AIModelID: []
+        }]
+    }
+
+    componentDidMount() {
+        /** controller noch nicht gegeben*/
+        PubSub.subscribe('getprojectlist', (_msg: any, data: { projectID: number, projectName: string, AIModelID: number[]; }[]) => {
+            this.setState({ projectData: data })
+        })
+
+    }
+
+    handleChange = (e: React.ChangeEvent<HTMLSelectElement>) => {
         this.setState({
-            project: e.target.value
+            value: e.target.value
         })
     }
-    handleChoose () {
+    handleChoose() {
         /* wait to change load model*/
-        console.log(this.state.project)
-        this.setState({click:true})
+        if (this.state.value == null) {
+            alert('no choice')
+        } else {
+            this.state.projectData.map((projectObj) => {
+                if (this.state.value == projectObj.projectID) {
+                    if (projectObj.AIModelID.length != 0) {
+                        PubSub.publish('loadproject', projectObj)
+                        this.setState({ click: true })
+                    } else {
+                        this.setState({ click: false })
+                        alert('Es gibt keine Model in diesem Projekt!')
+                    }
+                }
+            })
+        }
+
     }
-    render () {
+    render() {
         return (
             <section>
-                    <label>ProjectList</label>
-                    <select onChange={this.handleChange}>
-                        <option value="choose project">choose project</option>
-                        <option value="project1">project1</option>
-                        <option value="project2">project2</option>
-                        <option value="project3">project3</option>
-                        <option value="project4">project4</option>
-                    </select>
-                    <button onClick={()=> this.handleChoose()} className="btn" >Project choose</button>
-                {this.state.click?<div> <ModelList/></div>:null}
+                <label>ProjektList</label>
+                <select onChange={this.handleChange}>
+                    <option>Project Wählen</option>
+                    {this.state.projectData.map((projectObj) => {
+                        return <option value={projectObj.projectID}>{projectObj.projectName}</option>
+                    })}
+                </select>
+                <button onClick={() => this.handleChoose()} className="btn" >Projekt Wählen</button>
+                {this.state.click ? <div> <ModelList /></div> : null}
             </section>
+
         )
     }
 }

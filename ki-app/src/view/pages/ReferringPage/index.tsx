@@ -2,14 +2,13 @@ import React, { Component } from 'react';
 import PubSub from 'pubsub-js';
 import ConstantsText from '../../components/ReferringComponents/ConstantsText';
 import NewProjectButton from '../../components/ReferringComponents/NewProjectButton';
-import LoginButton from '../../components/ReferringComponents/LoginButton';
 import LoadModelButton from '../../components/ReferringComponents/LoadModelButton';
 import { Page } from "../PageInterface";
 import { PageController } from "../../../controller/PageController";
 import { State } from "./State";
-import { MainController } from '../../../controller/MainController';
 import ReactDOM from 'react-dom';
 import { States } from '../State';
+import LoginWindow from '../../components/ReferringComponents/LoginWindow';
 
 type Props = {
 
@@ -17,21 +16,20 @@ type Props = {
 
 export class ReferringPage extends React.Component<Props, State> implements Page {
 
-    //change status
-    //state: State;
-
-    //this.state.currentState = States.NewProjekt;
     state = new State();
     observers: PageController[] = [];
     constructor(props: Props) {
         super(props);
-
-        this.needqr();
+        this.createNewProject()
+        this.register()
+        this.login()
+        this.loadproject()
+        this.loadmodel()
         const VDOM = (
             <div>
                 <ConstantsText />
                 <NewProjectButton />
-                <LoginButton />
+                <LoginWindow />
                 <LoadModelButton />
             </div>
         );
@@ -60,15 +58,99 @@ export class ReferringPage extends React.Component<Props, State> implements Page
         return this.state;
     }
 
-    needqr() {
-        PubSub.subscribe('needqr', (_msg: any) => {
+    createNewProject() {
+        PubSub.subscribe('createnewproject', (_msg: any, data: string) => {
             // console.log(this.state.currentState)
-            this.state.currentState = States.NeedQRC;
+            this.state.currentState = States.NewProjekt;
+            this.state.currentProject = { projectID: -10000, projectName: data, choosenAIModelID: -10000 }
             //console.log(this.state.currentState)
-            this.notify();
+            //console.log(this.state.currentProject)
             //console.log(this.state.currentState)
-            PubSub.publish('getqr', this.state.qr);
-        });
+            // console.log(this.state.qr)
+            //hier notifty for createnewProject
+            this.notify()
+            //console.log(this.state.currentState)
+            //console.log(this.state.qr)
+            //notify for needqr
+            this.notify()
+            //console.log(this.state.currentState)
+            //console.log(this.state.qr)
+            //console.log(this.state.currentState)
+            //console.log(this.state.qr)
+            PubSub.publish('getqr', this.state.qr)
+        })
+    }
 
+    register() {
+        PubSub.subscribe('register', (_msg: any, data: { name: string, email: string, password: string; }) => {
+            // console.log(this.state.currentState)
+            this.state.adminData = data
+            this.state.currentState = States.Register
+            //console.log(this.state.currentState)
+            this.notify()
+            //console.log(this.state.currentState)
+            let registerflag: boolean
+            let loginflag: boolean
+            let flag = false
+            if (this.state.currentState != States.Register) {
+                registerflag = false
+            } else {
+                registerflag = true
+                this.state.adminData = data
+                this.state.currentState = States.Login
+                this.notify()
+                if (this.state.currentState != States.Login) {
+                    loginflag = false
+                } else {
+                    loginflag = true
+                }
+                if (registerflag && loginflag) flag = true
+            }
+            if (flag) PubSub.publish('getprojectlist', this.state.projectData)
+            PubSub.publish('registerstatus', flag)
+        })
+    }
+
+    login() {
+        PubSub.subscribe('login', (_msg: any, data: { name: string, email: string, password: string; }) => {
+            // console.log(this.state.currentState)
+            this.state.adminData = data
+            this.state.currentState = States.Login
+            //console.log(this.state.currentState)
+            this.notify()
+            //console.log(this.state.currentState)
+            let flag: boolean
+            if (this.state.currentState != States.Login) {
+                flag = false
+            } else {
+                flag = true
+                PubSub.publish('getprojectlist', this.state.projectData)
+            }
+            PubSub.publish('loginstatus', flag)
+
+        })
+    }
+
+    loadproject() {
+        PubSub.subscribe('loadproject', (_msg: any, data: { projectID: number, projectName: string, AIModelID: number[]; }) => {
+            // console.log(this.state.currentState)
+            this.state.currentState = States.LoadProject
+            this.state.currentProject = { projectID: data.projectID, projectName: data.projectName, choosenAIModelID: -10000 }
+            //console.log(this.state.currentState)
+            this.notify()
+            //console.log(this.state.currentState)
+            PubSub.publish('getmodelist', data)
+
+        })
+    }
+    loadmodel() {
+        PubSub.subscribe('loadmodel', (_msg: any, data: { projectID: number, projectName: string, choosenAIModelID: number; }) => {
+            // console.log(this.state.currentState)
+            this.state.currentState = States.LoadModel
+            this.state.currentProject = data
+            //console.log(this.state.currentState)
+            this.notify()
+            //console.log(this.state.currentState)
+        })
     }
 }

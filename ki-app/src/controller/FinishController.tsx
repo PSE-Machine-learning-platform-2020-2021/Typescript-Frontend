@@ -29,8 +29,7 @@ export class FinishController implements PageController {
                 this.getDataRows();
                 break;
             case States.NeedMessage:
-                // let ids = this.page.getIds();
-                // this.page.setMessages(MainController.getInstance().getMessage(ids));
+                this.page.setState(MainController.getInstance().getMessage(this.state.messages));
                 break;
             case States.ChangeLabel:
                 this.changeDataLabel();

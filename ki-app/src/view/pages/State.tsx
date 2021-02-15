@@ -5,26 +5,23 @@ export interface IState {
   languageCode: string;
   messages: { text: string, id: number; }[];
   //Anzeige aller Projekte eines nutzers
-  projectData?: { projectID: number, projectName: string, aiModelIDs: number[]; }[];
+  projectData?: { projectID: number; projectName: string; AIModelID: number[]; }[];
   // Das Projekt welches in der view ausgewählt wurde
-  currentProject?: { projectID: number, choosenAIModelID: number; };
+  currentProject?: { projectID: number, projectName: string, choosenAIModelID: number; };
   adminData?: { name: string, email: string, password: string; };
   //minerData?:
   aiUserData?: { name: string, result: string; };
-  labels?: { labelID: number, start: number, end: number; }[];
+  currentLabel?: { labelID: number, start: number, end: number; };
   sessionID?: string;
   //aiParameter?: 
-  dataPoints?: { dataRowID: number, value: number; }[];
+  dataPoints?: { dataPoint?: { value: number; relativeTime: number; }; }[];
   dataRows?: { dataSetID: number, data: number[][][]; };
   dataSets?: { sensorTypes: string[], dataSetName: string; }[];
   //
   qr?: string;
   diagramSvg?: string;
-  recordingSettings?: { newDataSetName: string, usedSensorTypes: number[], availableSensorTypes: number[], readTime: number, waitTime: number; };
-  //Untere sind schon in recordSettings enthalten
-  //chosenSensors?: string[];
-  //leadtime?: number;
-  //collectiontime?: number;
+  recordingSettings?: { newDataSetName: string, usedSensorTypes: number[], readTime: number, waitTime: number; };
+  availableSensorTypes?: { sensorTypID: number; sensorType: string; }[];
 }
 
 export enum States {
@@ -45,10 +42,6 @@ export enum States {
    */
   SetQRC,
   /**
-   * Seite benötigt ProjektDaten
-   */
-  NeedProject,
-  /**
    * Projektdaten können benutzt werden
    */
   SetProjects,
@@ -64,6 +57,7 @@ export enum States {
    * Ein Login Versuch soll durchgeführt werden
    */
   Login,
+  Register,
   /**
      * Update aller Daten welche auf der Seite angezeigt werden, zum Beispiel Projekt Daten für die Projekt liste.
      */
@@ -75,15 +69,12 @@ export enum States {
   /**
    * Model eines Projekts soll geladen werden
    */
+  LoadProject,
   LoadModel,
   /**
    * Login ist gescheitert
    */
   LoginFail,
-  /**
-  * Login erfolgreich
-  */
-  loginSucess,
   /**
    * Beginne Datenerfassung
    */
@@ -123,7 +114,16 @@ export enum States {
 
   ChangeToDataCollection,
 
-  NeedInstantDiagram
+  NeedInstantDiagram,
+
+  /**
+   * Zeige neue wartezeit
+   */
+  SetWaitTime,
+  /**
+   * Zeige neue lesezeit
+   */
+  SetReadTime
 }
 
 /**  BEISPIEL
