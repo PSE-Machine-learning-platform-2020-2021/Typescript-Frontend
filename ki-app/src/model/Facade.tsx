@@ -154,6 +154,18 @@ export class Facade {
   }
 
   /**
+   * Gibt vom aktuellen Projekt die Datenreihen des aktuellen Datensatzes zurück
+   * @param dataSetID die Datensatz ID von der die Datenreihen gelesen werden sollen
+   * @returns die Sensordaten von der Datenreihe
+   */
+  getCurrentDataRows(): { dataRows?: { value: number, relativeTime: number; }[][]; } {
+    if (this.user != null) {
+      return this.user.getCurrentDataRows();
+    }
+    return {};
+  }
+
+  /**
    * Gibt aus der geladenen Sprache die Nachrichten die über die IDs angegeben werden
    * @param messageID alle IDs, von denen die Sprachnachricht geladen werden soll
    * @returns alle Nachrichten, in der gleichen Reihenfolge wie angefordert
