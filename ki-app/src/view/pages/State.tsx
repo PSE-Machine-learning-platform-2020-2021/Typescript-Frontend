@@ -11,7 +11,7 @@ export interface IState {
   adminData?: { name: string, email: string, password: string; };
   //minerData?:
   aiUserData?: { name: string, result: string; };
-  currentLabel?: { labelID: number, start: number, end: number; };
+  currentLabel?: { labelID: number, start: number, end: number; name: string};
   sessionID?: string;
   //aiParameter?: 
   dataPoints?: { dataPoint?: { value: number; relativeTime: number; }; }[];

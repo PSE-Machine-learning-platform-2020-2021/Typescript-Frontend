@@ -3,7 +3,7 @@ import { IState, States } from "../view/pages/State";
 
 import { PageController } from "./PageController";
 import { MainController } from "./MainController";
-import { AIController } from "./AIController";
+import { DeliveryController } from "./DeliveryController";
 
 import { QRCode, ErrorCorrectLevel, QRNumber, QRAlphaNum, QR8BitByte, QRKanji } from 'qrcode-generator-ts/js';
 import { ReferringPage } from "../view/pages/ReferringPage";
@@ -126,10 +126,9 @@ export class RefferingController implements PageController {
     loadModel() {
         let projectId: number = this.state.currentProject!.projectID;
         let sucess: boolean = MainController.getInstance().getFacade().loadProject(projectId);
-        //TODO chossenAImodel an aicontroller übergeben
         if (sucess) {
-            //let aiController: AIController = new AIController();
-            //MainController.getInstance().changeTo(aiController);
+            let deliveryConroller: DeliveryController = new DeliveryController()
+            MainController.getInstance().changeTo(deliveryConroller);
         } else {
             this.state.currentState = States.LoadError;
         }
