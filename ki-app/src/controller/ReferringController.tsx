@@ -63,6 +63,9 @@ export class RefferingController implements PageController {
         }
     }
 
+    /**
+     * Logt den Benutzer ein
+     */
     login() {
         let adminData: { name: string, email: string, password: string; } = this.state.adminData!;
         let loginSucess: boolean = MainController.getInstance().getFacade().loginAdmin(adminData.email, adminData.password);
