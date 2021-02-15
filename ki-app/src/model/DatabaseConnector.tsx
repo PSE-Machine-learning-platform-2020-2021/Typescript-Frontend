@@ -1,9 +1,12 @@
-//Diese Klasse ist die Schnittstelle zu “Explorer”.
-export class ExplorerConnector {
-  /*Hier wird in die Datenbank ein neues Gerät hinzugefügt, hierfür wird die Firmware, die Generation sowie die unterstützten Sensoren in einer Liste.
-   *Zurückgegeben wird die eindeutige Device ID aus der Datenbank.
+//Die Schnittstelle zur Datenbank.
+export class DatabaseConnector {
+
+  /**
+   * Hier wird in die Datenbank ein neues Gerät hinzugefügt
+   * @returns Die Eindeutige DeviceID des Gerätes
    */
-  registerDevice(firmware: string, generation: string, sensorNamelist: string[]): number {
+  registerDevice(userID: number, deviceName: string, firmware: string, generation: string, MACADRESS: string, sensorInformation: { sensorName: string, sensorUniqueID: number; }[]): number {
+
     return -1;
   }
 

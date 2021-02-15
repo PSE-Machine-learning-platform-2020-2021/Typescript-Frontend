@@ -1,8 +1,7 @@
 import { DeliveryFormat } from "./DeliveryFormat";
-import { ExplorerConnector } from "./ExplorerConnector";
+import { DatabaseConnector } from "./DatabaseConnector";
 import { Language } from "./Language";
 import { SensorData } from "./Sensor";
-import { Session } from "./Session";
 import { Admin, Dataminer, AIModelUser, User } from "./User";
 
 interface FacadeInterface {
@@ -40,7 +39,7 @@ interface FacadeInterface {
  */
 export class Facade {
   private language: Language; //Alle Nachrichten, in der geladenen Sprache
-  private explorerConnector: ExplorerConnector; //Die Verbindung zur Datenbank
+  private explorerConnector: DatabaseConnector; //Die Verbindung zur Datenbank
   private user?: User; //Der Benutzer, entweder Admin, Datenerfasser oder AIModelUser
 
 
@@ -49,7 +48,7 @@ export class Facade {
    * @param languageCode der Sprachcode von der Sprache, die geladen werden soll
    */
   constructor(languageCode: string) {
-    this.explorerConnector = new ExplorerConnector();
+    this.explorerConnector = new DatabaseConnector();
     this.language = new Language(this.explorerConnector.loadLanguage(languageCode));
   }
 
