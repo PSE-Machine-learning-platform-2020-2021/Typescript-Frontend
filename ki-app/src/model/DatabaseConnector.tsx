@@ -61,7 +61,7 @@ export class DatabaseConnector {
    * @returns dataSetID (dataRowID ist implizit, da es die ID der Position im Array von dataRow ist (beginnend mit 0))
    *          bei fehler, -1
    */
-  async createDataSet(requestData: { sessionID: number, projektID: number, userID: number, dataSetName: string, dataRow: { sensorID: number, datarowName?: string; }[]; }): Promise<number> {
+  async createDataSet(requestData: { sessionID: number, projectID: number, userID: number, dataSetName: string, dataRow: { sensorID: number, datarowName?: string; }[]; }): Promise<number> {
     const data: string = await this.sendRequest("createDataSet", JSON.stringify(requestData));
     try {
       const result: number = JSON.parse(data);
@@ -80,7 +80,7 @@ export class DatabaseConnector {
    * @param dataRowID 
    * @param datapoint 
    */
-  async sendDataPoint(requestData: { sessionID: number, userID: number, datSetID: number, dataRowID: number, datapoint: { value: number, relativeTime: number; }; }): Promise<boolean> {
+  async sendDataPoint(requestData: { sessionID: number, userID: number, dataSetID: number, dataRowID: number, datapoint: { value: number, relativeTime: number; }; }): Promise<boolean> {
     const data: string = await this.sendRequest("sendDataPoint", JSON.stringify(requestData));
     try {
       const result: boolean = JSON.parse(data);
