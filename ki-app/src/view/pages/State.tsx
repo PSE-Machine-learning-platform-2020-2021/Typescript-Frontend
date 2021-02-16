@@ -20,16 +20,8 @@ export interface IState {
   //
   qr?: string;
   diagramSvg?: string;
-<<<<<<< HEAD
   recordingSettings?: { newDataSetName: string, usedSensorTypes: string[], readTime: number, waitTime: number; };
   availableSensorTypes?: string[];
-=======
-  recordingSettings?: { newDataSetName: string, usedSensorTypes: number[], availableSensorTypes: number[], readTime: number, waitTime: number; };
-  //Untere sind schon in recordSettings enthalten
-  //chosenSensors?: string[];
-  //leadtime?: number;
-  //collectiontime?: number;
->>>>>>> 82548bf7b694e9980047ba43f6d79032951d108a
 }
 
 
@@ -71,7 +63,6 @@ export enum States {
    */
   Register,
   Login,
-  Register,
   /**
      * Update aller Daten welche auf der Seite angezeigt werden, zum Beispiel Projekt Daten für die Projekt liste.
      */
@@ -83,7 +74,6 @@ export enum States {
   /**
    * Model eines Projekts soll geladen werden
    */
-  LoadProject,
   LoadModel,
   /**
    * Login ist gescheitert
@@ -132,7 +122,9 @@ export enum States {
 
   ChangeToDataCollection,
 
-  NeedInstantDiagram
+  NeedInstantDiagram,
+
+  NeedAvailableSensorTypes
 }
 
 /**  BEISPIEL

@@ -70,7 +70,7 @@ export default class Input extends Component {
             type="datenname"
             value={this.state.name}
             onChange={this.changeName.bind(this)}
-          />
+          /><br />
           Sensoren...
           <label>
             <select value={this.state.chosenSensors} onChange={this.changeSensors.bind(this)}>
