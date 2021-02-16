@@ -123,7 +123,7 @@ export class RefferingController implements PageController {
         let projectId: number = this.state.currentProject!.projectID!;
         let sucess: boolean = MainController.getInstance().getFacade().loadProject(projectId);
         if (sucess) {
-            this.state.currentState = States.SetProjects;
+            this.state.currentState = States.NeedQRC;
         } else {
             this.state.currentState = States.LoadError;
         }
