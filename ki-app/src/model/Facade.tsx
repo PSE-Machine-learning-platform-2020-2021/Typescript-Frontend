@@ -38,6 +38,7 @@ interface FacadeInterface {
  * Die Facade stellt alle interaktionen mit dem Model zur Verfügung
  */
 export class Facade {
+  private language: Language; //Alle Nachrichten, in der geladenen Sprache
   private dbCon: DatabaseConnector; //Die Verbindung zur Datenbank
   private user?: User; //Der Benutzer, entweder Admin, Datenerfasser oder AIModelUser
 
@@ -48,7 +49,7 @@ export class Facade {
    */
   constructor(languageCode: string) {
     this.dbCon = new DatabaseConnector();
-    Language.setLanguagePromise(this.dbCon.loadLanguage(languageCode));
+    this.language = new Language(this.dbCon.loadLanguage(languageCode));
   }
 
   /**

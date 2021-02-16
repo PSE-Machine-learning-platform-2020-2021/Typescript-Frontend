@@ -9,15 +9,20 @@ export class Language {
    * 1: SprachName
    * x: SensorTyp von x    |x sind alle SensorTypIDs 
    */
-  private static language: string[]; //Alle Nachrichten auf der geladenen Sprache
+  private languagePromise: Promise<string[]>; //Alle Nachrichten auf der geladenen Sprache
+
+  constructor(languagePromise: Promise<string[]>) {
+    this.languagePromise = languagePromise;
+  }
 
 
   /**
    * Gibt den Sprachen Code zurück
    */
-  static getLanguageCode(): string {
-    if (this.language.length > 0) {
-      return this.language[0];
+  protected async getLanguageCode(): Promise<string> {
+    let language = await this.languagePromise;
+    if (language.length > 0) {
+      return language[0];
     }
     return "";
   }
@@ -27,11 +32,12 @@ export class Language {
    * @param id Array von den IDs, von denen die Nachricht geladen werden soll
    * @returns id mit der Nachricht in der gleichen Reihenfolge, wie angefordert.
    */
-  static getMessage(id: number[]): { messageID: number, message: string; }[] {
+  protected async getMessage(id: number[]): Promise<{ messageID: number, message: string; }[]> {
+    let language = await this.languagePromise;
     var messages: { messageID: number, message: string; }[] = [];
     for (let i = 0; i < id.length; i++) {
-      if (this.language.length > id[i]) {
-        messages.push({ messageID: id[i], message: this.language[id[i]] });
+      if (language.length > id[i]) {
+        messages.push({ messageID: id[i], message: language[id[i]] });
       } else {
         messages.push({ messageID: id[i], message: "" });
       }
@@ -41,26 +47,9 @@ export class Language {
 
   /**
    * Setzt eine neue Sprache
-   * @param language die neue Sprache die geladen werden soll, Stelle 0 ist der Sprachencode und Stelle 1 ist der Sprachenname
+   * @param languagePromise die neue Sprache die geladen werden soll, Stelle 0 ist der Sprachencode und Stelle 1 ist der Sprachenname
    */
-  static setLanguage(language: string[]): boolean {
-    if (language.length >= 2) {
-      this.language = language;
-      return true;
-    } else {
-      return false;
-    }
-
-  }
-
-  static async setLanguagePromise(languagePromise: Promise<string[]>) {
-    var language = await languagePromise;
-    if (language.length >= 2) {
-      this.language = language;
-      return true;
-    } else {
-      return false;
-    }
-
+  protected async setLanguagePromise(languagePromise: Promise<string[]>) {
+    this.languagePromise = languagePromise;
   }
 }

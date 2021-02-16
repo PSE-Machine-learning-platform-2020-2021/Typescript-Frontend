@@ -315,3 +315,5 @@ export class DatabaseConnector {
 
 ////////////////////IDs als Parameter immer auf >= 0 prüfen, da -1 eine Fehlermeldung ist. Sowie Admin Email auf inhalt prüfen, "" ist nicht angemeldet
 ///////////////////Wird Logout Admin benötigt?
+
+///////////////////alle Methoden in model protected?
