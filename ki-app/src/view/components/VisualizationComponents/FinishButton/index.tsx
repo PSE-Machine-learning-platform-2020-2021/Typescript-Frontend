@@ -7,7 +7,7 @@ export default class FinishButton extends Component {
     render() {
         return (
             <div>
-                <button onClick={() => this.handleClick()} className="btn" >Finish!</button>
+                <button onClick={() => this.handleClick()} className="btn" >Wählen!</button>
             </div>
         )
     }

@@ -4,24 +4,28 @@ export interface IState {
   currentState: States;
   languageCode: string;
   messages: { text: string, id: number; }[];
+
   //Anzeige aller Projekte eines nutzers
+  //ReferringPage
   projectData?: { projectID: number; projectName: string; AIModelID: number[]; }[];
   // Das Projekt welches in der view ausgewählt wurde
   currentProject?: { projectID: number, projectName: string, choosenAIModelID: number; };
   adminData?: { name: string, email: string, password: string; };
+  qr?: string;
   //minerData?:
   aiUserData?: { name: string, result: string; };
-  currentLabel?: { labelID: number, start: number, end: number; name: string};
+  currentLabel?: { labelID: number, start: number, end: number; name: string };
   sessionID?: string;
   //aiParameter?: 
   dataPoints?: { dataPoint?: { value: number; relativeTime: number; }; }[];
   dataRows?: { dataSetID: number, data: number[][][]; };
   dataSets?: { sensorTypes: string[], dataSetName: string; }[];
-  //
-  qr?: string;
   diagramSvg?: string;
   recordingSettings?: { newDataSetName: string, usedSensorTypes: number[], readTime: number, waitTime: number; };
   availableSensorTypes?: { sensorTypID: number; sensorType: string; }[];
+  //VisualizationPage
+  currentImg?: string;
+  imageList?: string[];
 }
 
 export enum States {
@@ -129,7 +133,10 @@ export enum States {
   /**
    * Zeige neue lesezeit
    */
-  SetReadTime
+  SetReadTime,
+
+  //Visu
+  NeedImageList
 }
 
 /**  BEISPIEL

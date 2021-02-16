@@ -1,4 +1,5 @@
 import React, { Component } from 'react'
+import PubSub from 'pubsub-js';
 import TrainButton from '../../components/ModelCreationComponents/TrainButton'
 import ImageList from '../../components/VisualizationComponents/ImageList'
 import eximage1 from '../../images/exImage1.svg'
@@ -8,20 +9,23 @@ import { PageController } from "../../../controller/PageController";
 import { State } from "./State";
 import { MainController } from '../../../controller/MainController';
 import ReactDOM from 'react-dom';
+import ShowImage from '../../components/VisualizationComponents/ShowImage';
+import { States } from '../State';
 
 type Props = {
 };
 
 export class VisualizationPage extends React.Component<Props, State> implements Page {
     state = new State()
-
     observers: PageController[] = [];
     constructor(props: Props) {
         super(props);
+        this.getimagelist()
+        this.changetonextpage()
         const VDOM = (
             <div className="visualizationpage">
-                <img src={this.state.imageSrc} alt="2" className="showImage" ></img>
-                <ImageList setImageSrc={this.setImageSrc} />
+                <ShowImage />
+                <ImageList />
                 <TrainButton />
             </div>
         );
@@ -51,10 +55,18 @@ export class VisualizationPage extends React.Component<Props, State> implements 
         return this.state;
     }
 
-
-    setImageSrc = (newSrc: string) => {
-        const newState = { imageSrc: newSrc }
-        this.setState({ imageSrc: newSrc })
+    getimagelist() {
+        this.state.currentState = States.NeedImageList
+        this.notify()
+        PubSub.publish('getimagelist', this.state.imageList)
     }
 
+    changetonextpage() {
+        PubSub.subscribe('changeimg', (_msg: any, data: string) => {
+            this.state.currentImg = data
+            this.state.currentState = States.ChangeToModelCreation
+            this.notify()
+            //console.log(this.state.img)
+        })
+    }
 }

@@ -30,8 +30,8 @@ export class ReferringPage extends React.Component<Props, State> implements Page
         const VDOM = (
             <div>
                 <ConstantsText />
-                <NewProjectButton />
                 <LoginWindow />
+                <NewProjectButton />
                 <LoadModelButton />
             </div>
         );

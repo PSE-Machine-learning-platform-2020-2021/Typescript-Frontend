@@ -8,6 +8,7 @@ import { DeliveryController } from "./DeliveryController";
 import { QRCode, ErrorCorrectLevel, QRNumber, QRAlphaNum, QR8BitByte, QRKanji } from 'qrcode-generator-ts/js';
 import { ReferringPage } from "../view/pages/ReferringPage";
 import { VisualizationController } from "./VisualizationController";
+import { VisualizationPage } from "../view/pages/VisualizationPage";
 
 
 export class RefferingController implements PageController {
@@ -19,6 +20,7 @@ export class RefferingController implements PageController {
      */
     constructor() {
         this.page = new ReferringPage({});
+        this.page = new VisualizationPage({})
         this.page.attach(this);
         this.state = this.page.getState();
         this.update();
@@ -61,7 +63,7 @@ export class RefferingController implements PageController {
                 this.register();
                 break;
             case States.ChangeToVisualization:
-                MainController.getInstance().changeTo(new VisualizationController())
+                //  MainController.getInstance().changeTo(new VisualizationController())
                 break;
             default:
                 break;
@@ -141,8 +143,8 @@ export class RefferingController implements PageController {
         let projectId: number = this.state.currentProject!.projectID;
         let sucess: boolean = MainController.getInstance().getFacade().loadProject(projectId);
         if (sucess) {
-            let deliveryConroller: DeliveryController = new DeliveryController(this.state.currentProject!)
-            MainController.getInstance().changeTo(deliveryConroller);
+            //  let deliveryConroller: DeliveryController = new DeliveryController(this.state.currentProject!)
+            //   MainController.getInstance().changeTo(deliveryConroller);
         } else {
             this.state.currentState = States.LoadError;
         }
