@@ -87,6 +87,9 @@ export class RefferingController implements PageController {
         }
     }
 
+    /**
+     * Erstellt ein QRCode und übergibt in an die Seite
+     */
     createQR() {
         //let link: string = MainController.getInstance().getFacade().getDataMinerLink();
 
@@ -101,18 +104,21 @@ export class RefferingController implements PageController {
 
     }
 
+    /**
+     * Erstelle ein neues Projekt, welches auch als momentanes Projekt gesetzt wird.
+     */
     createNewProject() {
-
         let sucess: boolean = MainController.getInstance().getFacade().createProject(this.state.currentProject!.projectName);
         if (sucess) {
             this.state.currentState = States.NeedQRC;
-            //TODO neu projecte laden
         } else {
             this.state.currentState = States.LoadError;
         }
     }
 
-
+    /**
+     * Setzt ein Projekt als momentanes Projekt
+     */
     loadProject() {
         let projectId: number = this.state.currentProject!.projectID!;
         let sucess: boolean = MainController.getInstance().getFacade().loadProject(projectId);
@@ -123,11 +129,14 @@ export class RefferingController implements PageController {
         }
     }
 
+    /**
+     * Läde ein Modell und wechselt zur delivery Seite
+     */
     loadModel() {
         let projectId: number = this.state.currentProject!.projectID;
         let sucess: boolean = MainController.getInstance().getFacade().loadProject(projectId);
         if (sucess) {
-            let deliveryConroller: DeliveryController = new DeliveryController()
+            let deliveryConroller: DeliveryController = new DeliveryController(this.state.currentProject!)
             MainController.getInstance().changeTo(deliveryConroller);
         } else {
             this.state.currentState = States.LoadError;
