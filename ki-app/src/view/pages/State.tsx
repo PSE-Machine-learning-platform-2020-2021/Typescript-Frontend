@@ -1,5 +1,3 @@
-import { QRCode, ErrorCorrectLevel, QRNumber, QRAlphaNum, QR8BitByte, QRKanji } from 'qrcode-generator-ts/js';
-
 export interface IState {
   currentState: States;
   languageCode: string;
@@ -9,18 +7,25 @@ export interface IState {
   // Das Projekt welches in der view ausgewählt wurde
   currentProject?: { projectID: number, projectName: string, choosenAIModelID: number; };
   adminData?: { name: string, email: string, password: string; };
-  //minerData?:
   aiUserData?: { name: string, result: string; };
   currentLabel?: { labelID: number, start: number, end: number; name: string};
   sessionID?: string;
-  //aiParameter?: 
   dataPoints?: { dataPoint?: { value: number; relativeTime: number; }; }[];
-  dataRows?: { dataSetID: number, data: number[][][]; };
-  dataSets?: { sensorTypes: string[], dataSetName: string; }[];
-  //
+  dataRows?:{value: number; relativeTime: number; }[][];
+  dataSets?: { dataSetID: number; dataSetName: string; }[];
   qr?: string;
   diagramSvg?: string;
   recordingSettings?: { newDataSetName: string, usedSensorTypes: number[], readTime: number, waitTime: number; };
+  trainingParameter?: {
+         sensors: number [],
+         dataSets: number[],
+         classifier: string,
+         scaler: string,
+         features: string[],
+         trainingDataPercentage?: number, // optional
+         slidingWindowSize?: number,      // optional
+         slidingWindowStep?: number        // optional
+     }
   availableSensorTypes?: { sensorTypID: number; sensorType: string; }[];
 }
 
@@ -57,6 +62,9 @@ export enum States {
    * Ein Login Versuch soll durchgeführt werden
    */
   Login,
+  /**
+   * Ein Registrierungsversuch soll durchgeführt werden
+   */
   Register,
   /**
      * Update aller Daten welche auf der Seite angezeigt werden, zum Beispiel Projekt Daten für die Projekt liste.
@@ -67,9 +75,12 @@ export enum States {
    */
   NewProjekt,
   /**
-   * Model eines Projekts soll geladen werden
+   * Projekts soll geladen werden
    */
   LoadProject,
+  /**
+   * Model eines Projekts soll geladen werden
+   */
   LoadModel,
   /**
    * Login ist gescheitert
@@ -112,7 +123,11 @@ export enum States {
    */
   ChangeToRefferring,
 
+  ChangeToVisual,
+
   ChangeToDataCollection,
+
+  ChangeToCreation,
 
   NeedInstantDiagram,
 
@@ -123,15 +138,18 @@ export enum States {
   /**
    * Zeige neue lesezeit
    */
-  SetReadTime
-}
+  SetReadTime,
 
-/**  BEISPIEL
-export class test implements IState {
-  currentState: States = States.ChangePage;
-  languageCode: string = "de";
-  messageIDs: number[] = [0, 1];
-  messages: string[] = [];
-  ...
+  /**
+   * Liefert an die auf der Seite angegebenen Email-Adressen die WebApp für ein Modell
+   */
+  DeliverWeb,
+  /**
+   * Neue Datenreihen sind im Status hinterlegt
+   */
+  SetDataRows,
+  /**
+   * Der Nutzer möchte mit dem KI Training beginnen
+   */
+  NeedKiTraining
 }
-*/

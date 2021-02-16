@@ -1,10 +1,9 @@
 import { Page } from "../view/pages/PageInterface";
 import { IState, States } from "../view/pages/State";
-
 import { PageController } from "./PageController";
 import { MainController } from "./MainController";
 import { DeliveryController } from "./DeliveryController";
-
+import { VisualizationController } from "./VisualizationController"
 import { QRCode, ErrorCorrectLevel, QRNumber, QRAlphaNum, QR8BitByte, QRKanji } from 'qrcode-generator-ts/js';
 import { ReferringPage } from "../view/pages/ReferringPage";
 
@@ -58,6 +57,9 @@ export class RefferingController implements PageController {
             case States.Register:
                 this.register();
                 break;
+            case States.ChangeToVisual:
+                MainController.getInstance().changeTo(new VisualizationController(this.state.currentProject!))
+                break;
             default:
                 break;
         }
@@ -91,17 +93,14 @@ export class RefferingController implements PageController {
      * Erstellt ein QRCode und übergibt in an die Seite
      */
     createQR() {
-        //let link: string = MainController.getInstance().getFacade().getDataMinerLink();
-
+        let link: string = MainController.getInstance().getFacade().getDataMinerLink();
         var qr = new QRCode();
         qr.setTypeNumber(5);
         qr.setErrorCorrectLevel(ErrorCorrectLevel.L);
-        qr.addData("link");
+        qr.addData(link);
         qr.make();
         this.state.qr = qr.toDataURL();
-        //divElement.innerHTML = state.qr
         this.state.currentState = States.SetQRC;
-
     }
 
     /**

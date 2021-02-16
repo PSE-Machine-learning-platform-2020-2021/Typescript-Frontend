@@ -17,7 +17,7 @@ export class FinishController implements PageController {
         this.page = new FinishPage({});
         this.page.attach(this);
         this.state = this.page.getState();
-        this.state.dataRows! = MainController.getInstance().getFacade().getCurrentDataRows()
+        this.state.dataRows! = MainController.getInstance().getFacade().getCurrentDataRows()!.dataRows!
         this.page.setState(this.state)
     }
 
@@ -57,17 +57,15 @@ export class FinishController implements PageController {
      * Modell geleitet. Die ID des neuen Labels wird darauf an die momentane Seite übergeben.
      */
     private newDataLabel() {
-        //let start = this.page.getNewLabelStart();
-        // let end = this.page.getNewLabelEnd();
-        //let id = MainController.getInstance().getFacade().createLabel(start, end);
-        //this.page.setNewLabelID(id);
+        let label = this.state.currentLabel!
+        label.labelID = MainController.getInstance().getFacade().creatLabel(label.start, label.end);
+        this.state.currentLabel! = label
     }
 
     /**
      * Löscht das Label welches gemäß der Methode getDeleteLabelID von der momentanen Seite angegeben wurde.
      */
     private deleteDataLabel() {
-        //let id = this.page.getDeleteLabelID();
-        //MainController.getInstance().getFacade().deleteLabel(id);
+        MainController.getInstance().getFacade().deleteLabel(this.state.currentLabel!.labelID);
     }
 }
