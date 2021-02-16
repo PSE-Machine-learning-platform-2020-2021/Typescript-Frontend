@@ -1,9 +1,9 @@
 import { PageController } from "./PageController";
-//import { StartController } from "./StartController";
 import { RefferingController } from "./ReferringController";
 import { MainControllerInterface } from "./MainControllerInterface";
 import { IState, States } from "../view/pages/State";
 import { Facade } from "../model/Facade";
+import { StartController } from "./StartController";
 
 export class MainController implements MainControllerInterface {
   private facade: Facade;
@@ -16,7 +16,7 @@ export class MainController implements MainControllerInterface {
    * Konstruktor des MainControllers. Holt sich die Fassade.
    */
   constructor() {
-    this.facade = new Facade("de");
+    this.facade = new Facade("de-de");
   }
 
   /**
@@ -66,7 +66,6 @@ export class MainController implements MainControllerInterface {
     let refferingController: RefferingController = new RefferingController();
     this.changeTo(refferingController);
   }
-
 
   /**
    * @returns Gibt die Fassade zurück
