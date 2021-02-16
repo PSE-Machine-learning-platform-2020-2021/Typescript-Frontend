@@ -17,20 +17,18 @@ export class FinishController implements PageController {
         this.page = new FinishPage({});
         this.page.attach(this);
         this.state = this.page.getState();
+        this.state.dataRows! = MainController.getInstance().getFacade().getCurrentDataRows()
+        this.page.setState(this.state)
     }
 
     /**
      * Die Update Methode des Seitenverwalters.
      */
     update() {
-        let currentState: States = this.page.getState().currenState;
-        switch (currentState) {
-            case States.NeedDataRows:
-                this.getDataRows();
-                break;
+        this.state = this.page.getState().currenState;
+        switch (this.state.currentState) {
             case States.NeedMessage:
-                // let ids = this.page.getIds();
-                // this.page.setMessages(MainController.getInstance().getMessage(ids));
+                this.page.setState(MainController.getInstance().getMessage(this.state.messages));
                 break;
             case States.ChangeLabel:
                 this.changeDataLabel();
@@ -47,19 +45,11 @@ export class FinishController implements PageController {
     }
 
     /**
-     * Holt die Datenreihen aus dem Modell und übergibt sie an die momentane Seite.
-     */
-    private getDataRows() {
-        //let rows = MainController.getInstance().getFacade().getCurrentDataRows();
-        // this.page.setDataRows(rows);
-    }
-
-    /**
      * Ändert die Einstellungen eines DatenLabels gemäß den Änderungen aus der momentanen Seite.
      */
     private changeDataLabel() {
-        //let label = this.page.getChangedLabel();
-        //MainController.getInstance().getFacade().setDataLabel(label.id, label.start, label.end);
+        let label = this.state.currentLabel!
+        MainController.getInstance().getFacade().setLabel(label.labelID, {start: label.start, end: label.end}, label.name);
     }
 
     /**

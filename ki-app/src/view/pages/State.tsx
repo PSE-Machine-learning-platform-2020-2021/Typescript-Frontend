@@ -11,7 +11,7 @@ export interface IState {
   adminData?: { name: string, email: string, password: string; };
   //minerData?:
   aiUserData?: { name: string, result: string; };
-  labels?: { labelID: number, start: number, end: number; }[];
+  currentLabel?: { labelID: number, start: number, end: number; name: string};
   sessionID?: string;
   //aiParameter?: 
   dataPoints?: { dataPoint?: { value: number; relativeTime: number; }; }[];
@@ -22,10 +22,6 @@ export interface IState {
   diagramSvg?: string;
   recordingSettings?: { newDataSetName: string, usedSensorTypes: number[], readTime: number, waitTime: number; };
   availableSensorTypes?: { sensorTypID: number; sensorType: string; }[];
-  //Untere sind schon in recordSettings enthalten
-  //chosenSensors?: string[];
-  //leadtime?: number;
-  //collectiontime?: number;
 }
 
 export enum States {

@@ -3,12 +3,12 @@ import { IState, States } from "../view/pages/State";
 
 import { PageController } from "./PageController";
 import { MainController } from "./MainController";
-import { AIController } from "./AIController";
+import { DeliveryController } from "./DeliveryController";
 
 import { QRCode, ErrorCorrectLevel, QRNumber, QRAlphaNum, QR8BitByte, QRKanji } from 'qrcode-generator-ts/js';
 import { ReferringPage } from "../view/pages/ReferringPage";
 import { VisualizationController } from "./VisualizationController";
-import { DeliveryController } from "./DeliveryController";
+
 
 export class RefferingController implements PageController {
     private page: Page;
@@ -68,6 +68,9 @@ export class RefferingController implements PageController {
         }
     }
 
+    /**
+     * Logt den Benutzer ein
+     */
     login() {
         let adminData: { name: string, email: string, password: string; } = this.state.adminData!;
         let loginSucess: boolean = MainController.getInstance().getFacade().loginAdmin(adminData.email, adminData.password);
@@ -78,6 +81,9 @@ export class RefferingController implements PageController {
         }
     }
 
+    /**
+     * Registriert den Benutzer
+     */
     register() {
         let adminData: { name: string, email: string, password: string; } = this.state.adminData!;
         let loginSucess: boolean = MainController.getInstance().getFacade().registerAdmin(adminData.name, adminData.email, adminData.password);
@@ -86,6 +92,9 @@ export class RefferingController implements PageController {
         }
     }
 
+    /**
+     * Erstellt ein QRCode und übergibt in an die Seite
+     */
     createQR() {
         //let link: string = MainController.getInstance().getFacade().getDataMinerLink();
 
@@ -100,35 +109,40 @@ export class RefferingController implements PageController {
 
     }
 
+    /**
+     * Erstelle ein neues Projekt, welches auch als momentanes Projekt gesetzt wird.
+     */
     createNewProject() {
-
         let sucess: boolean = MainController.getInstance().getFacade().createProject(this.state.currentProject!.projectName);
-        // if (sucess) {
-        this.state.currentState = States.NeedQRC;
-        //TODO neu projecte laden
-        //} else {
-        //    this.state.currentState = States.LoadError;
-        // }
-    }
-
-
-    loadProject() {
-        let projectId: number = this.state.currentProject!.projectID!;
-        let sucess: boolean = MainController.getInstance().getFacade().loadProject(projectId);
         if (sucess) {
-            this.state.currentState = States.SetProjects;
+            this.state.currentState = States.NeedQRC;
         } else {
             this.state.currentState = States.LoadError;
         }
     }
 
+    /**
+     * Setzt ein Projekt als momentanes Projekt
+     */
+    loadProject() {
+        let projectId: number = this.state.currentProject!.projectID!;
+        let sucess: boolean = MainController.getInstance().getFacade().loadProject(projectId);
+        if (sucess) {
+            this.state.currentState = States.NeedQRC;
+        } else {
+            this.state.currentState = States.LoadError;
+        }
+    }
+
+    /**
+     * Läde ein Modell und wechselt zur delivery Seite
+     */
     loadModel() {
         let projectId: number = this.state.currentProject!.projectID;
         let sucess: boolean = MainController.getInstance().getFacade().loadProject(projectId);
-        //TODO chossenAImodel an aicontroller übergeben
         if (sucess) {
-            //let aiController: AIController = new AIController();
-            //MainController.getInstance().changeTo(aiController);
+            let deliveryConroller: DeliveryController = new DeliveryController(this.state.currentProject!)
+            MainController.getInstance().changeTo(deliveryConroller);
         } else {
             this.state.currentState = States.LoadError;
         }
