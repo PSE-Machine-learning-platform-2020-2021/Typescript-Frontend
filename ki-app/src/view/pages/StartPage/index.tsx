@@ -17,6 +17,7 @@ export class StartPage extends React.Component<Props, State> implements Page {
     observers: PageController[] = [];
     constructor(props: Props) {
         super(props);
+        this.setAvailableSensors();
         this.changeSettings();
         const VDOM = (
             <div>
@@ -27,17 +28,22 @@ export class StartPage extends React.Component<Props, State> implements Page {
         ReactDOM.render(VDOM, document.getElementById('root'));
     }
 
+    setAvailableSensors() {
+        PubSub.publish('setAvailableSensors', (
+            this.state.recordingSettings.availableSensorTypes));
+    }
+
     /**
      * Prüft ob der Nutzer "Start" druckt und ändert den Zustand.
      */
     changeSettings() {
         PubSub.subscribe('settingsFinish', (data: {
             newDataSetName: string,
-            usedSensorTypes: string[],
+            usedSensorTypes: number[],
             waitTime: number,
             readTime: number,
+            availableSensorTypes: { sensorTypID: number, sensorType: string, chosen: boolean; }[];
         }) => {
-            let a = this.state.recordingSettings;
             this.setState({ recordingSettings: data });
             this.state.currentState = States.ChangeToDataCollection;
             this.notify();

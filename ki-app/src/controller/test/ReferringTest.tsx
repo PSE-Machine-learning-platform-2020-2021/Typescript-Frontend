@@ -1,6 +1,9 @@
-import {RefferingController} from "../ReferringController"
+import { RefferingController } from "../ReferringController";
+/**
+ *
 
-test("Test Test", () =>{
-    let con = new RefferingController()
+test("Test Test", () => {
+    let con = new RefferingController();
     con.
 });
+*/

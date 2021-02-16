@@ -3,9 +3,9 @@ import { IState, States } from "../view/pages/State";
 import { PageController } from "./PageController";
 import { MainController } from "./MainController";
 import { DeliveryController } from "./DeliveryController";
-import { VisualizationController } from "./VisualizationController"
+import { VisualizationController } from "./VisualizationController";
 import { QRCode, ErrorCorrectLevel, QRNumber, QRAlphaNum, QR8BitByte, QRKanji } from 'qrcode-generator-ts/js';
-import { DataCollectionPage } from "../view/pages/DataCollectionPage";
+import { StartPage } from "../view/pages/StartPage";
 
 
 export class RefferingController implements PageController {
@@ -13,10 +13,10 @@ export class RefferingController implements PageController {
     private state: IState;
 
     /**
-     * Konstruktor des Seitenverwalters. Registriert sich als Beobachter auf seiner Seite und setzt den DataCollection Status. 
+     * Konstruktor des Seitenverwalters. Registriert sich als Beobachter auf seiner Seite und setzt den Start Status. 
      */
     constructor() {
-        this.page = new DataCollectionPage({});
+        this.page = new StartPage({});
         this.page.attach(this);
         this.state = this.page.getState();
         this.update();
@@ -59,7 +59,7 @@ export class RefferingController implements PageController {
                 this.register();
                 break;
             case States.ChangeToVisual:
-                MainController.getInstance().changeTo(new VisualizationController(this.state.currentProject!))
+                MainController.getInstance().changeTo(new VisualizationController(this.state.currentProject!));
                 break;
             default:
                 break;
@@ -136,7 +136,7 @@ export class RefferingController implements PageController {
         let projectId: number = this.state.currentProject!.projectID;
         let sucess: boolean = MainController.getInstance().getFacade().loadProject(projectId);
         if (sucess) {
-            let deliveryConroller: DeliveryController = new DeliveryController(this.state.currentProject!)
+            let deliveryConroller: DeliveryController = new DeliveryController(this.state.currentProject!);
             MainController.getInstance().changeTo(deliveryConroller);
         } else {
             this.state.currentState = States.LoadError;

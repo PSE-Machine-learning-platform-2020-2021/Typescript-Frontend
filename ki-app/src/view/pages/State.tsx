@@ -15,7 +15,7 @@ export interface IState {
   dataSets?: { dataSetID: number; dataSetName: string; }[];
   qr?: string;
   diagramSvg?: string;
-  recordingSettings?: { newDataSetName: string, usedSensorTypes: number[], readTime: number, waitTime: number; };
+  recordingSettings?: { newDataSetName: string, usedSensorTypes: number[], readTime: number, waitTime: number, availableSensorTypes: { sensorTypID: number; sensorType: string; chosen: boolean; }[]; };
   trainingParameter?: {
     sensors: number[],
     dataSets: number[],
@@ -26,7 +26,6 @@ export interface IState {
     slidingWindowSize?: number,      // optional
     slidingWindowStep?: number;        // optional
   };
-  availableSensorTypes?: { sensorTypID: number; sensorType: string; }[];
 }
 
 export enum States {

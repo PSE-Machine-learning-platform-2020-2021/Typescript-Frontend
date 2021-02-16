@@ -22,7 +22,7 @@ export default class LabelList extends React.Component<IProps> {
             <ul className="todo-main">
                 {
                     this.props.labels.map((label: { id: string, start: Number, end: Number, name: string; }) => {
-                        return <LabelItem key={label.id} {...label} deleteLabel={this.props.deleteLabel} />;
+                        <LabelItem key={label.id} {...label} deleteLabel={this.props.deleteLabel} />;
                     })
                 }
             </ul>

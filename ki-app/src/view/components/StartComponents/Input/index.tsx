@@ -4,10 +4,19 @@ import input from "./index.module.css";
 export default class Input extends Component {
   state = {
     name: "",
-    chosenSensors: "",
+    usedSensorTypes: [] as number[],
     leadTime: "",
     collectionTime: "",
+    availableSensorTypes: [] as { sensorTypID: number, sensorType: string, chosen: boolean; }[]
   };
+
+  setAvailableSensors() {
+    PubSub.subscribe('setAvailableSensors', (
+      data: { sensorTypID: number, sensorType: string, chosen: boolean; }[]
+    ) => {
+      this.setState({ availableSensorTypes: data });
+    });
+  }
 
   changeLeadtime = (e: React.ChangeEvent<HTMLInputElement>) => {
     this.setState(() => ({
@@ -30,15 +39,33 @@ export default class Input extends Component {
     }));
   };
 
+  handleCheckBoxChange = (e: React.ChangeEvent<HTMLInputElement>) => {
+    let newAvailableSensorTypes = this.state.availableSensorTypes;
+    for (var i = 0; i < newAvailableSensorTypes.length; i++) {
+      if (newAvailableSensorTypes[i].sensorTypID == +e.target.value) {
+        newAvailableSensorTypes[i].chosen = !newAvailableSensorTypes[i].chosen;
+        this.setState({ availableSensorTypes: newAvailableSensorTypes, });
+        return;
+      }
+    }
+  };
+
 
   submit = () => {
     if (
       parseInt(this.state.leadTime) <= 5 &&
       parseInt(this.state.leadTime) >= 3 &&
       parseInt(this.state.collectionTime) <= 10 &&
-      parseInt(this.state.collectionTime) >= 5 &&
-      this.state.chosenSensors != ""
+      parseInt(this.state.collectionTime) >= 5
     ) {
+      let availableSensorTypes = this.state.availableSensorTypes;
+      var usedSensorTypes: number[] = [];
+      for (var i = 0; i < availableSensorTypes.length; i++) {
+        if (availableSensorTypes[i].chosen == true) {
+          usedSensorTypes.push(availableSensorTypes[i].sensorTypID);
+        }
+      }
+      this.setState({ usedSensorTypes: usedSensorTypes });
       PubSub.publish('settingsFinish', this.state);
     } else {
       alert("Deine Eingabe ist ungültig.");
@@ -46,6 +73,7 @@ export default class Input extends Component {
   };
 
   render() {
+    this.setAvailableSensors();
     return (
       <div className="input">
         <form>
@@ -72,15 +100,17 @@ export default class Input extends Component {
             onChange={this.changeName.bind(this)}
           /><br />
           Sensoren...
-          <label>
-            <select value={this.state.chosenSensors} onChange={this.changeSensors.bind(this)}>
-              <option value="">Wähle Sensoren</option>
-              <option value="bs">Beschleunigungssensor</option>
-              <option value="rs">Rotationssensor</option>
-              <option value="mk">Mikrofon</option>
-              <option value="ns">Neigungssensor</option>
-            </select>
-          </label>
+          <ul className="todo-main">
+            {
+              this.state.availableSensorTypes.map((type: { sensorTypID: number, sensorType: string, chosen: boolean; }) => {
+                return (<li key={type.sensorTypID}>
+                  <input
+                    type="checkbox" value={type.sensorTypID} checked={type.chosen} onChange={(e) => this.handleCheckBoxChange(e)} />
+                  {type.sensorType}
+                </li>);
+              })
+            }
+          </ul>
           <br />
           <button type="button" onClick={this.submit}>
             Start
@@ -89,4 +119,4 @@ export default class Input extends Component {
       </div>
     );
   }
-}
+};
