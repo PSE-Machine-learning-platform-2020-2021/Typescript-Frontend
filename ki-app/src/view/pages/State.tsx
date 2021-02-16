@@ -8,25 +8,24 @@ export interface IState {
   currentProject?: { projectID: number, projectName: string, choosenAIModelID: number; };
   adminData?: { name: string, email: string, password: string; };
   aiUserData?: { name: string, result: string; };
-  currentLabel?: { labelID: number, start: number, end: number; name: string};
+  currentLabel?: { labelID: number, start: number, end: number; name: string; };
   sessionID?: string;
   dataPoints?: { dataPoint?: { value: number; relativeTime: number; }; }[];
-  dataRows?:{value: number; relativeTime: number; }[][];
+  dataRows?: { value: number; relativeTime: number; }[][];
   dataSets?: { dataSetID: number; dataSetName: string; }[];
   qr?: string;
   diagramSvg?: string;
-  recordingSettings?: { newDataSetName: string, usedSensorTypes: number[], readTime: number, waitTime: number; };
+  recordingSettings?: { newDataSetName: string, usedSensorTypes: number[], readTime: number, waitTime: number, availableSensorTypes: { sensorTypID: number; sensorType: string; chosen: boolean; }[]; };
   trainingParameter?: {
-         sensors: number [],
-         dataSets: number[],
-         classifier: string,
-         scaler: string,
-         features: string[],
-         trainingDataPercentage?: number, // optional
-         slidingWindowSize?: number,      // optional
-         slidingWindowStep?: number        // optional
-     }
-  availableSensorTypes?: { sensorTypID: number; sensorType: string; }[];
+    sensors: number[],
+    dataSets: number[],
+    classifier: string,
+    scaler: string,
+    features: string[],
+    trainingDataPercentage?: number, // optional
+    slidingWindowSize?: number,      // optional
+    slidingWindowStep?: number;        // optional
+  };
 }
 
 export enum States {
