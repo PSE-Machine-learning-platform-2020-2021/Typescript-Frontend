@@ -143,7 +143,7 @@ export class ReferringPage extends React.Component<Props, State> implements Page
     }
     changetovisu() {
         PubSub.subscribe('changetovisu', (_msg: any) => {
-            this.state.currentState = States.ChangeToVisualization
+            this.state.currentState = States.ChangeToVisual
             this.notify()
         })
     }

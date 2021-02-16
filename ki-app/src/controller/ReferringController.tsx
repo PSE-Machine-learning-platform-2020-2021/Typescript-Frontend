@@ -94,7 +94,9 @@ export class RefferingController implements PageController {
      * Erstellt ein QRCode und übergibt in an die Seite
      */
     createQR() {
-        let link: string = MainController.getInstance().getFacade().getDataMinerLink();
+        const url = new URL(document.URL);
+        url.searchParams.append("SessionID", MainController.getInstance().getFacade().getSessionID().toString());
+        let link: string = url.toString()
         var qr = new QRCode();
         qr.setTypeNumber(5);
         qr.setErrorCorrectLevel(ErrorCorrectLevel.L);

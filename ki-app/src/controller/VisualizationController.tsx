@@ -4,6 +4,7 @@ import { MainController } from "./MainController";
 import { ModelCreationController } from "./ModelCreationController";
 import { Page } from "../view/pages/PageInterface";
 import { IState, States } from "../view/pages/State";
+import { State } from "../view/pages/DeliveryPage/State";
 
 export class VisualizationController implements PageController {
     private page: Page;
@@ -48,12 +49,11 @@ export class VisualizationController implements PageController {
     }
 
     SetDataRows() {
-        let data = MainController.getInstance().getFacade().getMinerData();
+        let data = [this.state.dataSets!]//MainController.getInstance().getFacade().getMinerData();
         for (let index = 0; index < data.length; index++) {
             this.state.dataSets! = data[index];
             this.state.currentState = States.SetDataRows
             this.page.setState(this.state)
-            
         }
     }
 
@@ -76,7 +76,7 @@ export class VisualizationController implements PageController {
      */
     private newDataLabel() {
         let label = this.state.currentLabel!
-        label.labelID = MainController.getInstance().getFacade().creatLabel(label.start, label.end);
+        //label.labelID = MainController.getInstance().getFacade().creatLabel(label.start, label.end);
         this.state.currentLabel! = label
     }
 
@@ -84,6 +84,6 @@ export class VisualizationController implements PageController {
      * Löscht das Label welches gemäß der Methode getDeleteLabelID von der momentanen Seite angegeben wurde.
      */
     private deleteDataLabel() {
-        MainController.getInstance().getFacade().deleteLabel(this.state.currentLabel!.labelID);
+        //MainController.getInstance().getFacade().deleteLabel(this.state.currentLabel!.labelID);
     }
 }
