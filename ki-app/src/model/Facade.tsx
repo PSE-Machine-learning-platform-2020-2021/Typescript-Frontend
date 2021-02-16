@@ -1,8 +1,7 @@
 import { DeliveryFormat } from "./DeliveryFormat";
-import { ExplorerConnector } from "./ExplorerConnector";
+import { DatabaseConnector } from "./DatabaseConnector";
 import { Language } from "./Language";
 import { SensorData } from "./Sensor";
-import { Session } from "./Session";
 import { Admin, Dataminer, AIModelUser, User } from "./User";
 
 interface FacadeInterface {
@@ -40,7 +39,7 @@ interface FacadeInterface {
  */
 export class Facade {
   private language: Language; //Alle Nachrichten, in der geladenen Sprache
-  private explorerConnector: ExplorerConnector; //Die Verbindung zur Datenbank
+  private dbCon: DatabaseConnector; //Die Verbindung zur Datenbank
   private user?: User; //Der Benutzer, entweder Admin, Datenerfasser oder AIModelUser
 
 
@@ -49,8 +48,8 @@ export class Facade {
    * @param languageCode der Sprachcode von der Sprache, die geladen werden soll
    */
   constructor(languageCode: string) {
-    this.explorerConnector = new ExplorerConnector();
-    this.language = new Language(this.explorerConnector.loadLanguage(languageCode));
+    this.dbCon = new DatabaseConnector();
+    this.language = new Language(this.dbCon.loadLanguage(languageCode));
   }
 
   /**
@@ -59,14 +58,26 @@ export class Facade {
    * @param dataSetName Name des Datensatzes
    * @returns true, wenn der Datensatz erstellt wurde. Dies ist der Fall, wenn ein Benutzer existiert welcher in einer Session ist und alle Sensortypen existieren.
    */
-  createDataSet(sensorTypeID: number[], dataSetName: string): boolean {
+  async createDataSet(sensorTypeID: number[], dataSetName: string, datarowNames?: string[]): Promise<boolean> {
     if (this.user != null) {
-      let dataminerName: string = this.user.getName();
       let sessionID: number = this.getSessionID();
       let dataRowSensors: SensorData[] = this.user.getDeviceSensors(sensorTypeID);
       if (dataRowSensors.length > 0 && dataRowSensors.length === sensorTypeID.length && sessionID >= 0) {
-        let dataSetID: number = this.explorerConnector.createDataSet(sessionID, sensorTypeID, dataminerName, dataSetName);
-        return this.user.createDataSet(dataRowSensors, dataSetID, dataSetName);
+        let projectID: number = this.user.getCurrentProjectID();
+        let userID: number = this.user.getID();
+        let dataRow: { sensorID: number, datarowName?: string; }[] = [];
+        for (let i = 0; i < dataRowSensors.length; i++) {
+          let sensordata = dataRowSensors[i].getSensorData();
+          if (datarowNames != null && datarowNames.length >= i) {
+            dataRow.push({ sensorID: sensordata.id, datarowName: datarowNames[i] });
+          } else {
+            dataRow.push({ sensorID: sensordata.id });
+          }
+        }
+        let dataSetID: number = await this.dbCon.createDataSet({ sessionID, projectID, userID, dataSetName, dataRow });
+        if (dataSetID > 0) {
+          return this.user.createDataSet(dataRowSensors, dataSetID, dataSetName);
+        }
       }
     }
     return false;
@@ -79,11 +90,12 @@ export class Facade {
    * @param relativeTime die relative Zeit zum Aufnahmestart in Millisekunden
    * @return true, wenn der Datenpunkt erfolgreich an die Datenbank gesendet wurde
    */
-  sendDataPoint(dataRowID: number, value: number, relativeTime: number): boolean {
+  async sendDataPoint(dataRowID: number, value: number, relativeTime: number): Promise<boolean> {
     if (this.user != null) {
       let sessionID: number = this.getSessionID();
+      let userID: number = this.user.getID();
       let dataSetID: number = this.user.getCurrentDataSetID();
-      return this.explorerConnector.sendDataPoint(sessionID, dataSetID, dataRowID, value, relativeTime);
+      return this.dbCon.sendDataPoint({ sessionID, userID, dataSetID, dataRowID, datapoint: { value, relativeTime } });
     }
     return false;
   }
@@ -105,10 +117,11 @@ export class Facade {
    * @returns true, wenn das Projekt erfolgreich geladen wurde dies tritt nur ein, wenn eine Verbindung zur Datenbank besteht,
    *          die Projekt ID existiert und der Admin dafür angemeldet ist
    */
-  loadProject(projectID: number): boolean {
+  async loadProject(projectID: number): Promise<boolean> {
     if (this.user != null && this.user instanceof Admin && !this.user.existProject(projectID)) {
       let adminEmail: string = this.user.getEmail();
-      return this.user.loadProject(this.explorerConnector.loadProject(adminEmail, projectID));
+      let userID: number = this.user.getID();
+      return this.user.loadProject(await this.dbCon.loadProject({ userID, adminEmail, projectID }));
     }
     return false;
   }
@@ -117,8 +130,12 @@ export class Facade {
    * Lädt vom aktuell angemeldeten Admin von seinen Projekten den Namen und die die Projekt ID
    * @returns Von allen Projekten des Admins Projekt ID und Projektname
    */
-  getProjectMetas(): { projectID: number, projectName: string, AIModelID: number[]; }[] {
-    return this.explorerConnector.getProjectMetas(this.getAdminEmail());
+  async getProjectMetas(): Promise<{ projectID: number, projectName: string, AIModelID: number[]; }[]> {
+    if (this.user != null) {
+      let userID: number = this.user.getID();
+      return await this.dbCon.getProjectMetas({ userID, adminEmail: this.getAdminEmail() });
+    }
+    return [];
   }
 
   /**
@@ -170,17 +187,17 @@ export class Facade {
    * @param messageID alle IDs, von denen die Sprachnachricht geladen werden soll
    * @returns alle Nachrichten, in der gleichen Reihenfolge wie angefordert
    */
-  getMessage(messageID: number[]): { messageID: number, message: string; }[] {
+  getMessage(messageID: number[]): Promise<{ messageID: number, message: string; }[]> {
     return this.language.getMessage(messageID);
   }
 
   /**
    * Gibt die auswählbaren Sensoren als ID mit ihrer Art in der Passenden Sprache zurück
    */
-  getAvailableSensors(): { sensorTypID: number, sensorType: string; }[] {
+  async getAvailableSensors(): Promise<{ sensorTypID: number, sensorType: string; }[]> {
     if (this.user != null) {
       var sensors: { sensorTypID: number, sensorType: string; }[] = [];
-      let message: { messageID: number, message: string; }[] = this.language.getMessage(this.user.getAvailableSensors());
+      let message: { messageID: number, message: string; }[] = await this.language.getMessage(this.user.getAvailableSensors());
       for (let i = 0; i < message.length; i++) {
         sensors.push({ sensorTypID: message[i].messageID, sensorType: message[i].message });
       }
@@ -194,10 +211,9 @@ export class Facade {
    * @param languageCode Sprachcode
    * @returns true, falls die Sprache erfolgreich geladen wurde
    */
-  setLanguage(languageCode: string): boolean {
-    if (languageCode !== this.language.getLanguageCode()) {
-      let language: string[] = this.explorerConnector.loadLanguage(languageCode);
-      return this.language.setLanguage(language);
+  async setLanguage(languageCode: string): Promise<boolean> {
+    if (languageCode !== await this.language.getLanguageCode()) {
+      return this.language.setLanguagePromise(this.dbCon.loadLanguage(languageCode));
     }
     return true;
   }
@@ -205,9 +221,9 @@ export class Facade {
   /**
    * Gibt von allen in der Datenbank verfügbaren Sprachen den Sprachcode sowie den Sprachennamen zurück
    */
-  getLanguageMetas(): { languageCode: number, languageName: string; }[] {
-    return this.explorerConnector.getLanguageMetas();
-  }
+  getLanguageMetas(): Promise<{ languageCode: number, languageName: string; }[]> {
+    return this.dbCon.getLanguageMetas();
+  };
 
   /**
    * Gibt die Email vom Admin zurück, diese kann leer sein falls kein Admin angemeldet ist
@@ -224,34 +240,37 @@ export class Facade {
    * @param dataSetID die Datensatz ID
    * @returns true, wenn das löschen erfolgreich ist
    */
-  deleteDataSet(dataSetID: number): boolean {
+  async deleteDataSet(dataSetID: number): Promise<boolean> {
     if (this.user != null) {
       let projectID: number = this.user.deleteDataSet(dataSetID);
       if (projectID >= 0) {
         let adminEmail: string = this.getAdminEmail();
-        this.explorerConnector.deleteDataSet(adminEmail, projectID, dataSetID);
-        return true;
+        let userID = this.user.getID();
+        return this.dbCon.deleteDataSet({ userID, adminEmail, projectID, dataSetID });
       }
     }
     return false;
   }
 
-  registerAdmin(adminName: string, email: string, password: string): boolean {
-    let IDs: { adminID: number, deviceID: number; } = this.explorerConnector.registerAdmin(adminName, email, password);
+
+  //wann Device erstellen ??? + constructor in User anpassen mit neuem Device parameter 
+  async registerAdmin(adminName: string, adminEmail: string, password: string): Promise<boolean> {
+    //TODO
+    let device: { deviceID?: number, deviceName: string, deviceType: string, firmware: string, generation: string, MACADRESS: string, sensorInformation: { sensorTypeID: number, sensorName: string, sensorUniqueID: number; }[]; } = { deviceID: -1, deviceName: "", deviceType: "", firmware: "", generation: "", MACADRESS: "", sensorInformation: [] };
+    let IDs: { adminID: number, device: { deviceID: number, sensorID: number[]; }; } = await this.dbCon.registerAdmin({ adminName, adminEmail, password, device });
     if (IDs.adminID >= 0) {
-      this.user = new Admin(IDs.adminID, IDs.deviceID, adminName, email);
+      this.user = new Admin(IDs.adminID, IDs.device.deviceID, adminName, adminEmail);
       return true;
     }
     return false;
   }
 
-  registerDataminer(dataminerName: string, sessionID: number): boolean {
-    let dataminer: {
-      dataminerID: number, deviceID: number, project:
-      { projectID: number, projectName: string, sessionID: number; };
-    } = this.explorerConnector.registerDataminer(dataminerName, sessionID);
-    if (dataminer.dataminerID >= 0 && dataminer.deviceID >= 0) {
-      this.user = new Dataminer(dataminer.dataminerID, dataminer.deviceID, dataminerName);
+  async registerDataminer(dataminerName: string, sessionID: number): Promise<boolean> {
+    //TODO
+    let device: { deviceID?: number, deviceName: string, deviceType: string, firmware: string, generation: string, MACADRESS: string, sensorInformation: { sensorTypeID: number, sensorName: string, sensorUniqueID: number; }[]; } = { deviceID: -1, deviceName: "", deviceType: "", firmware: "", generation: "", MACADRESS: "", sensorInformation: [] };
+    let dataminer: { dataminerID: number, device: { deviceID: number, sensorID: number[]; }, project: { projectID: number, projectName: string, sessionID: number; }; } = await this.dbCon.registerDataminer({ dataminerName, sessionID, device });
+    if (dataminer.dataminerID >= 0 && dataminer.device.deviceID >= 0) {
+      this.user = new Dataminer(dataminer.dataminerID, dataminer.device.deviceID, dataminerName);
       this.user.loadProject(dataminer.project);
       return true;
     }
@@ -262,31 +281,23 @@ export class Facade {
    * 
    * @param aiModelUserName 
    */
-  registerAIModelUser(aiModelUserName: string, modelID: number): boolean {
-    let aiModelUser: {
-      aiModelUserID: number, deviceID: number, project:
-      { projectID: number, projectName: string, sessionID: number; };
-    } = this.explorerConnector.registerAIModelUser(aiModelUserName, modelID);
-    if (aiModelUser.aiModelUserID >= 0 && aiModelUser.deviceID >= 0) {
-      this.user = new AIModelUser(aiModelUser.aiModelUserID, aiModelUser.deviceID, aiModelUserName);
+  async registerAIModelUser(aiModelUserName: string, modelID: number): Promise<boolean> {
+    //TODO
+    let device: { deviceID?: number, deviceName: string, deviceType: string, firmware: string, generation: string, MACADRESS: string, sensorInformation: { sensorTypeID: number, sensorName: string, sensorUniqueID: number; }[]; } = { deviceID: -1, deviceName: "", deviceType: "", firmware: "", generation: "", MACADRESS: "", sensorInformation: [] };
+    let aiModelUser: { aiModelUserID: number, device: { deviceID: number, sensorID: number[]; }, project: { projectID: number, projectName: string, sessionID: -1; }; } = await this.dbCon.registerAIModelUser({ aiModelUserName, modelID, device });
+    if (aiModelUser.aiModelUserID >= 0 && aiModelUser.device.deviceID >= 0) {
+      this.user = new AIModelUser(aiModelUser.aiModelUserID, aiModelUser.device.deviceID, aiModelUserName);
       this.user.loadProject(aiModelUser.project);
       return true;
     }
     return false;
   }
 
-  loginAdmin(email: string, password: string): boolean {
+  async loginAdmin(adminEmail: string, password: string): Promise<boolean> {
     if (this.user == null) {
-      let adminData: {
-        admin?: {
-          adminID: number, deviceID: number, adminName: string, email: string,
-          device: { MACADRESS: string, deviceName: string, firmware: string, generation: string, deviceType: string; };
-        };
-      } = this.explorerConnector.loginAdmin(email, password);
+      let adminData: { admin: { adminID: number, deviceID: number, adminName: string, email: string, device: { deviceID?: number, deviceName: string, deviceType: string, firmware: string, generation: string, MACADRESS: string, sensorInformation: { sensorTypeID: number, sensorName: string, sensorUniqueID: number; }[]; }; }; } = await this.dbCon.loginAdmin({ adminEmail, password });
       if (adminData.admin != null) {
-        //Nur umbenennen von adminData.admin zu admin
-        let admin: { adminID: number, deviceID: number, adminName: string, email: string, device: { MACADRESS: string, deviceName: string, firmware: string, generation: string, deviceType: string; }; } = adminData.admin;
-
+        let admin = adminData.admin;
         this.user = new Admin(admin.adminID, admin.deviceID, admin.adminName, admin.email, admin.device);
         return true;
       }
@@ -294,32 +305,72 @@ export class Facade {
     return false;
   }
 
-  logoutAdmin(): boolean {
-    if (this.user != null) {
-      let logout = this.explorerConnector.logoutAdmin(this.getAdminEmail());
-      if (logout) {
-        delete this.user;
-      } else {
-        return false;
+  /* eventuell implementieren
+    logoutAdmin(): boolean {
+      if (this.user != null) {
+        let logout = this.dbCon.logoutAdmin(this.getAdminEmail());
+        if (logout) {
+          delete this.user;
+        } else {
+          return false;
+        }
       }
+      return true;
     }
-    return true;
-  }
+    */
 
-  createProject(projectName: string): boolean {
+  async createProject(projectName: string): Promise<boolean> {
     if (this.user instanceof Admin) {
-      let project: { projectID: number, sessionID: number; } = this.explorerConnector.createProject(this.getAdminEmail(), projectName);
+      let userID = this.user.getID();
+      let adminEmail = this.getAdminEmail();
+      let project: { projectID: number, sessionID: number; } = await this.dbCon.createProject({ userID, adminEmail, projectName });
       return this.user.createProject(project.projectID, project.sessionID, projectName);
     }
     return false;
   }
 
-  setLabel(labelID: number, span: { start: number, end: number; }, labelName?: string): boolean {
+  async createLabel(span: { start: number, end: number; }, labelName: string): Promise<number> {
     if (this.user != null) {
-      return this.user.setLabel(labelID, span, labelName);
+      let sessionID: number = this.getSessionID();
+      let userID: number = this.user.getID();
+      let datasetID: number = this.user.getCurrentDataSetID();
+      let labelID: number = await this.dbCon.createLabel({ sessionID, userID, datasetID, label: { span, labelName } });
+      if (labelID >= 0) {
+        let created: boolean = this.user.createLabel(labelID, span, labelName);
+        if (created) {
+          return labelID;
+        }
+      }
+    }
+    return -1;
+  }
+
+  async setLabel(labelID: number, span: { start: number, end: number; }, labelName?: string): Promise<boolean> {
+    if (this.user != null) {
+      let setted: boolean = this.user.setLabel(labelID, span, labelName);
+      if (setted) {
+        let sessionID: number = this.getSessionID();
+        let userID: number = this.user.getID();
+        let datasetID: number = this.user.getCurrentDataSetID();
+        return this.dbCon.setLabel({ sessionID, userID, datasetID, label: { labelID, span, labelName } });
+      }
     }
     return false;
   }
+
+  async deleteLabel(labelID: number): Promise<boolean> {
+    if (this.user != null) {
+      let deleted: boolean = this.user.deleteLabel(labelID);
+      if (deleted) {
+        let sessionID: number = this.getSessionID();
+        let userID: number = this.user.getID();
+        let datasetID: number = this.user.getCurrentDataSetID();
+        return this.dbCon.deleteLabel({ sessionID, userID, datasetID, labelID });
+      }
+    }
+    return false;
+  }
+
 
   getLabels(): { labels?: { name: string, id: number, start: number, end: number; }[]; } {
     if (this.user != null) {
@@ -330,7 +381,7 @@ export class Facade {
 
   classify(aiId: number, dataSetId: number, callBack: Function): void {
     throw new Error("Not implemented");
-  }
+  };
 
   getAIModel(id: number, format: DeliveryFormat): object {
     throw new Error("Not implemented");
@@ -344,7 +395,5 @@ export class Facade {
 
 
 //AIModelUser läd da sofort das Model?
-
-
-  // wird aktuell nicht benutzt
-  // checkLogin(): boolean { }
+// wird aktuell nicht benutzt
+// checkLogin(): boolean { }
