@@ -19,7 +19,7 @@ export class Language {
   /**
    * Gibt den Sprachen Code zurück
    */
-  protected async getLanguageCode(): Promise<string> {
+  async getLanguageCode(): Promise<string> {
     let language = await this.languagePromise;
     if (language.length > 0) {
       return language[0];
@@ -32,7 +32,7 @@ export class Language {
    * @param id Array von den IDs, von denen die Nachricht geladen werden soll
    * @returns id mit der Nachricht in der gleichen Reihenfolge, wie angefordert.
    */
-  protected async getMessage(id: number[]): Promise<{ messageID: number, message: string; }[]> {
+  async getMessage(id: number[]): Promise<{ messageID: number, message: string; }[]> {
     let language = await this.languagePromise;
     var messages: { messageID: number, message: string; }[] = [];
     for (let i = 0; i < id.length; i++) {
@@ -49,7 +49,11 @@ export class Language {
    * Setzt eine neue Sprache
    * @param languagePromise die neue Sprache die geladen werden soll, Stelle 0 ist der Sprachencode und Stelle 1 ist der Sprachenname
    */
-  protected async setLanguagePromise(languagePromise: Promise<string[]>) {
-    this.languagePromise = languagePromise;
+  async setLanguagePromise(languagePromise: Promise<string[]>): Promise<boolean> {
+    if ((await languagePromise).length > 2) {
+      this.languagePromise = languagePromise;
+      return true;
+    }
+    return false;
   }
 }

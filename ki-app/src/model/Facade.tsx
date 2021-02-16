@@ -193,10 +193,10 @@ export class Facade {
    * @param languageCode Sprachcode
    * @returns true, falls die Sprache erfolgreich geladen wurde
    */
-  setLanguage(languageCode: string): boolean {
-    if (languageCode !== this.language.getLanguageCode()) {
-      let language: string[] = this.dbCon.loadLanguage(languageCode);
-      return this.language.setLanguage(language);
+  async setLanguage(languageCode: string): Promise<boolean> {
+    if (languageCode !== await this.language.getLanguageCode()) {
+      let language: string[] = await ;
+      return this.language.setLanguagePromise(this.dbCon.loadLanguage(languageCode));
     }
     return true;
   }
@@ -204,7 +204,7 @@ export class Facade {
   /**
    * Gibt von allen in der Datenbank verfügbaren Sprachen den Sprachcode sowie den Sprachennamen zurück
    */
-  getLanguageMetas(): { languageCode: number, languageName: string; }[] {
+  getLanguageMetas(): Promise<{ languageCode: number, languageName: string; }[]> {
     return this.dbCon.getLanguageMetas();
   }
 
