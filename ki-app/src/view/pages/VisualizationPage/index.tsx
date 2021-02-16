@@ -64,7 +64,7 @@ export class VisualizationPage extends React.Component<Props, State> implements 
     changetonextpage() {
         PubSub.subscribe('changeimg', (_msg: any, data: string) => {
             this.state.currentImg = data
-            this.state.currentState = States.ChangeToModelCreation
+            this.state.currentState = States.ChangeToCreation
             this.notify()
             //console.log(this.state.img)
         })

@@ -9,27 +9,10 @@ export interface IState {
   // Das Projekt welches in der view ausgewählt wurde
   currentProject?: { projectID: number, projectName: string, choosenAIModelID: number; };
   adminData?: { name: string, email: string, password: string; };
-<<<<<<< HEAD
-  qr?: string;
-  //minerData?:
-  aiUserData?: { name: string, result: string; };
-  currentLabel?: { labelID: number, start: number, end: number; name: string };
-=======
   aiUserData?: { name: string, result: string; };
   currentLabel?: { labelID: number, start: number, end: number; name: string; };
->>>>>>> 28105f3adae5ff636195e5bddeffbcc865ce6b9b
   sessionID?: string;
   dataPoints?: { dataPoint?: { value: number; relativeTime: number; }; }[];
-<<<<<<< HEAD
-  dataRows?: { dataSetID: number, data: number[][][]; };
-  dataSets?: { sensorTypes: string[], dataSetName: string; }[];
-  diagramSvg?: string;
-  recordingSettings?: { newDataSetName: string, usedSensorTypes: number[], readTime: number, waitTime: number; };
-  availableSensorTypes?: { sensorTypID: number; sensorType: string; }[];
-  //VisualizationPage
-  currentImg?: string;
-  imageList?: string[];
-=======
   dataRows?: { value: number; relativeTime: number; }[][];
   dataSets?: { dataSetID: number; dataSetName: string; }[];
   qr?: string;
@@ -45,7 +28,6 @@ export interface IState {
     slidingWindowSize?: number,      // optional
     slidingWindowStep?: number;        // optional
   };
->>>>>>> 28105f3adae5ff636195e5bddeffbcc865ce6b9b
 }
 
 export enum States {
@@ -158,13 +140,10 @@ export enum States {
    * Zeige neue lesezeit
    */
   SetReadTime,
-<<<<<<< HEAD
 
   //Visu
-  NeedImageList
-}
-=======
->>>>>>> 28105f3adae5ff636195e5bddeffbcc865ce6b9b
+  NeedImageList,
+
 
   /**
    * Liefert an die auf der Seite angegebenen Email-Adressen die WebApp für ein Modell
@@ -178,4 +157,5 @@ export enum States {
    * Der Nutzer möchte mit dem KI Training beginnen
    */
   NeedKiTraining
+
 }
