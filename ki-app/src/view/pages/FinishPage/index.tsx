@@ -9,10 +9,8 @@ import { State } from "./State";
 import ReactDOM from "react-dom";
 import { States } from "../State";
 
-interface IProps {
-  addLabel: (label: { id: string, start: number, end: number, name: string; }) => void;
-  deleteLabel: (id: string) => void;
-}
+type IProps {
+};
 
 export class FinishPage extends React.Component<IProps, State> {
   state = new State();
@@ -26,18 +24,18 @@ export class FinishPage extends React.Component<IProps, State> {
         <Body />
         <div className="label-container">
           <div className="label-wrap">
-            <LabelList labels={this.state.labels} deleteLabel={this.deleteLabel} />
-            <AddLabelForm addLabel={this.addLabel} />
+            <LabelList>
+              <AddLabelForm />
+          </div>
           </div>
         </div>
-      </div>
     );
     ReactDOM.render(VDOM, document.getElementById("root"));
   }
 
   addLabel = (label: { id: string, start: number, end: number, name: string; }) => {
 
-    let labels = this.state.labels;
+          let labels = this.state.labels;
 
     let newLabels = [label, ...labels];
 
@@ -46,7 +44,7 @@ export class FinishPage extends React.Component<IProps, State> {
 
   deleteLabel = (id: string) => {
 
-    let labels = this.state.labels;
+          let labels = this.state.labels;
 
     let newLabels = labels.filter((label) => {
       return label.id !== id;
@@ -61,18 +59,18 @@ export class FinishPage extends React.Component<IProps, State> {
    * @param observer Beobachter,nähmlich Controller
   */
   attach(observer: PageController) {
-    this.observers.push(observer);
+          this.observers.push(observer);
   }
 
   detach(observer: PageController) {
     const index = this.observers.indexOf(observer, 0);
     if (index > -1) {
-      this.observers.splice(index, 1);
+          this.observers.splice(index, 1);
     }
   }
 
   notify() {
-    for (let index = 0; index < this.observers.length; index++) {
+    for (let index = 0; index < this.observers.length; {
       const element = this.observers[index];
       element.update();
     }
