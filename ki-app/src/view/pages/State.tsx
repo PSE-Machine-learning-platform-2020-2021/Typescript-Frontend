@@ -2,7 +2,9 @@ export interface IState {
   currentState: States;
   languageCode: string;
   messages: { text: string, id: number; }[];
+
   //Anzeige aller Projekte eines nutzers
+  //ReferringPage
   projectData?: { projectID: number; projectName: string; AIModelID: number[]; }[];
   // Das Projekt welches in der view ausgewählt wurde
   currentProject?: { projectID: number, projectName: string, choosenAIModelID: number; };
@@ -139,6 +141,10 @@ export enum States {
    */
   SetReadTime,
 
+  //Visu
+  NeedImageList,
+
+
   /**
    * Liefert an die auf der Seite angegebenen Email-Adressen die WebApp für ein Modell
    */
@@ -151,4 +157,5 @@ export enum States {
    * Der Nutzer möchte mit dem KI Training beginnen
    */
   NeedKiTraining
+
 }

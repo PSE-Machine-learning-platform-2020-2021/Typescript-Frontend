@@ -8,16 +8,12 @@ export class State implements IState {
   messages: { text: string, id: number; }[] = [];
   projectData?: { projectID: number; projectName: string; AIModelID: number[]; }[];
   currentProject?: { projectID: number, projectName: string, choosenAIModelID: number; };
-  chosenModel?: string;
+  // chosenModel?: string;
   adminData?: { name: string, email: string, password: string; };
   //minerData?:
   aiUserData?: { name: string, result: string; };
   labels?: { labelID: number, start: number, end: number; }[];
   sessionID?: string;
   //aiParameter?: 
-  dataPoints?: { dataPoint?: { value: number; relativeTime: number; }; }[];
-  dataRows?: { dataSetID: number, data: number[][][]; };
-  dataSets?: { sensorTypes: string[], dataSetName: string; }[];
   qr?: string;
-  recordingSettings?: { newDataSetName: string, usedSensorTypes: number[], availableSensorTypes: number[], readTime: number, waitTime: number; };
 }

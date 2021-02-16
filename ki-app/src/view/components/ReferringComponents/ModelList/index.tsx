@@ -12,11 +12,11 @@ export default class ModelList extends Component {
     }
 
     componentDidMount() {
-        /** controller noch nicht gegeben
+        /** controller noch nicht gegeben*/
         PubSub.subscribe('getmodellist', (_msg: any, data: { projectID: number, projectName: string, AIModelID: number[]; }) => {
-              this.setState({ modelList: data.AIModelID })
+            this.setState({ modelList: data.AIModelID })
             this.setState({ currentProject: { projectID: data.projectID, projectName: data.projectName } })
-        })*/
+        })
 
     }
     handleChange = (e: React.ChangeEvent<HTMLSelectElement>) => {
