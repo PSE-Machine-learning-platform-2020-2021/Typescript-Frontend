@@ -307,6 +307,7 @@ export class DatabaseConnector {
   private async sendRequest(action: string, requestDataJSON?: string): Promise<string> {
     const headers = { 'Content-Type': 'application/json' };
     const response = await fetch(DatabaseConnector.databasePHPURL + "?action=" + action, { headers, body: undefined }); //TODO body: requestDataJSON wirft Fehler
+    const data = await response.json();
     return data;
   }
 }
