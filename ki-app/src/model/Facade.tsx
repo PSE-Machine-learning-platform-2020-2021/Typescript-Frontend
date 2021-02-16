@@ -38,8 +38,7 @@ interface FacadeInterface {
  * Die Facade stellt alle interaktionen mit dem Model zur Verfügung
  */
 export class Facade {
-  private language: Language; //Alle Nachrichten, in der geladenen Sprache
-  private explorerConnector: DatabaseConnector; //Die Verbindung zur Datenbank
+  private dbCon: DatabaseConnector; //Die Verbindung zur Datenbank
   private user?: User; //Der Benutzer, entweder Admin, Datenerfasser oder AIModelUser
 
 
@@ -48,8 +47,8 @@ export class Facade {
    * @param languageCode der Sprachcode von der Sprache, die geladen werden soll
    */
   constructor(languageCode: string) {
-    this.explorerConnector = new DatabaseConnector();
-    this.language = new Language(this.explorerConnector.loadLanguage(languageCode));
+    this.dbCon = new DatabaseConnector();
+    Language.setLanguagePromise(this.dbCon.loadLanguage(languageCode));
   }
 
   /**
@@ -64,7 +63,7 @@ export class Facade {
       let sessionID: number = this.getSessionID();
       let dataRowSensors: SensorData[] = this.user.getDeviceSensors(sensorTypeID);
       if (dataRowSensors.length > 0 && dataRowSensors.length === sensorTypeID.length && sessionID >= 0) {
-        let dataSetID: number = this.explorerConnector.createDataSet(sessionID, sensorTypeID, dataminerName, dataSetName);
+        let dataSetID: number = this.dbCon.createDataSet(sessionID, sensorTypeID, dataminerName, dataSetName);
         return this.user.createDataSet(dataRowSensors, dataSetID, dataSetName);
       }
     }
@@ -82,7 +81,7 @@ export class Facade {
     if (this.user != null) {
       let sessionID: number = this.getSessionID();
       let dataSetID: number = this.user.getCurrentDataSetID();
-      return this.explorerConnector.sendDataPoint(sessionID, dataSetID, dataRowID, value, relativeTime);
+      return this.dbCon.sendDataPoint(sessionID, dataSetID, dataRowID, value, relativeTime);
     }
     return false;
   }
@@ -107,7 +106,7 @@ export class Facade {
   loadProject(projectID: number): boolean {
     if (this.user != null && this.user instanceof Admin && !this.user.existProject(projectID)) {
       let adminEmail: string = this.user.getEmail();
-      return this.user.loadProject(this.explorerConnector.loadProject(adminEmail, projectID));
+      return this.user.loadProject(this.dbCon.loadProject(adminEmail, projectID));
     }
     return false;
   }
@@ -117,7 +116,7 @@ export class Facade {
    * @returns Von allen Projekten des Admins Projekt ID und Projektname
    */
   getProjectMetas(): { projectID: number, projectName: string, AIModelID: number[]; }[] {
-    return this.explorerConnector.getProjectMetas(this.getAdminEmail());
+    return this.dbCon.getProjectMetas(this.getAdminEmail());
   }
 
   /**
@@ -195,7 +194,7 @@ export class Facade {
    */
   setLanguage(languageCode: string): boolean {
     if (languageCode !== this.language.getLanguageCode()) {
-      let language: string[] = this.explorerConnector.loadLanguage(languageCode);
+      let language: string[] = this.dbCon.loadLanguage(languageCode);
       return this.language.setLanguage(language);
     }
     return true;
@@ -205,7 +204,7 @@ export class Facade {
    * Gibt von allen in der Datenbank verfügbaren Sprachen den Sprachcode sowie den Sprachennamen zurück
    */
   getLanguageMetas(): { languageCode: number, languageName: string; }[] {
-    return this.explorerConnector.getLanguageMetas();
+    return this.dbCon.getLanguageMetas();
   }
 
   /**
@@ -228,15 +227,15 @@ export class Facade {
       let projectID: number = this.user.deleteDataSet(dataSetID);
       if (projectID >= 0) {
         let adminEmail: string = this.getAdminEmail();
-        this.explorerConnector.deleteDataSet(adminEmail, projectID, dataSetID);
+        this.dbCon.deleteDataSet(adminEmail, projectID, dataSetID);
         return true;
       }
     }
     return false;
   }
 
-  registerAdmin(adminName: string, email: string, password: string): boolean {
-    let IDs: { adminID: number, deviceID: number; } = this.explorerConnector.registerAdmin(adminName, email, password);
+  async registerAdmin(adminName: string, email: string, password: string): boolean {
+    let IDs: { adminID: number, deviceID: number; } = await this.dbCon.registerAdmin(adminName, email, password);
     if (IDs.adminID >= 0) {
       this.user = new Admin(IDs.adminID, IDs.deviceID, adminName, email);
       return true;
@@ -248,7 +247,7 @@ export class Facade {
     let dataminer: {
       dataminerID: number, deviceID: number, project:
       { projectID: number, projectName: string, sessionID: number; };
-    } = this.explorerConnector.registerDataminer(dataminerName, sessionID);
+    } = this.dbCon.registerDataminer(dataminerName, sessionID);
     if (dataminer.dataminerID >= 0 && dataminer.deviceID >= 0) {
       this.user = new Dataminer(dataminer.dataminerID, dataminer.deviceID, dataminerName);
       this.user.loadProject(dataminer.project);
@@ -265,7 +264,7 @@ export class Facade {
     let aiModelUser: {
       aiModelUserID: number, deviceID: number, project:
       { projectID: number, projectName: string, sessionID: number; };
-    } = this.explorerConnector.registerAIModelUser(aiModelUserName, modelID);
+    } = this.dbCon.registerAIModelUser(aiModelUserName, modelID);
     if (aiModelUser.aiModelUserID >= 0 && aiModelUser.deviceID >= 0) {
       this.user = new AIModelUser(aiModelUser.aiModelUserID, aiModelUser.deviceID, aiModelUserName);
       this.user.loadProject(aiModelUser.project);
@@ -281,7 +280,7 @@ export class Facade {
           adminID: number, deviceID: number, adminName: string, email: string,
           device: { MACADRESS: string, deviceName: string, firmware: string, generation: string, deviceType: string; };
         };
-      } = this.explorerConnector.loginAdmin(email, password);
+      } = this.dbCon.loginAdmin(email, password);
       if (adminData.admin != null) {
         //Nur umbenennen von adminData.admin zu admin
         let admin: { adminID: number, deviceID: number, adminName: string, email: string, device: { MACADRESS: string, deviceName: string, firmware: string, generation: string, deviceType: string; }; } = adminData.admin;
@@ -295,7 +294,7 @@ export class Facade {
 
   logoutAdmin(): boolean {
     if (this.user != null) {
-      let logout = this.explorerConnector.logoutAdmin(this.getAdminEmail());
+      let logout = this.dbCon.logoutAdmin(this.getAdminEmail());
       if (logout) {
         delete this.user;
       } else {
@@ -307,18 +306,33 @@ export class Facade {
 
   createProject(projectName: string): boolean {
     if (this.user instanceof Admin) {
-      let project: { projectID: number, sessionID: number; } = this.explorerConnector.createProject(this.getAdminEmail(), projectName);
+      let project: { projectID: number, sessionID: number; } = this.dbCon.createProject(this.getAdminEmail(), projectName);
       return this.user.createProject(project.projectID, project.sessionID, projectName);
     }
     return false;
   }
 
+  createLabel() {
+
+  }
+
   setLabel(labelID: number, span: { start: number, end: number; }, labelName?: string): boolean {
     if (this.user != null) {
-      return this.user.setLabel(labelID, span, labelName);
+      let setted: boolean = this.user.setLabel(labelID, span, labelName);
+      if (setted) {
+        let sessionID: number = this.getSessionID();
+        let userID: number = this.user.getID();
+        let datasetID: number = this.user.getCurrentDataSetID();
+        return this.dbCon.setLabel(sessionID, userID, datasetID, { labelID, span, labelName });
+      }
     }
     return false;
   }
+
+  deleteLabel() {
+
+  }
+
 
   getLabels(): { labels?: { name: string, id: number, start: number, end: number; }[]; } {
     if (this.user != null) {
@@ -343,7 +357,5 @@ export class Facade {
 
 
 //AIModelUser läd da sofort das Model?
-
-
   // wird aktuell nicht benutzt
   // checkLogin(): boolean { }
