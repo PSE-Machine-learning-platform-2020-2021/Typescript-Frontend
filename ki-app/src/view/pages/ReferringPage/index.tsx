@@ -91,25 +91,14 @@ export class ReferringPage extends React.Component<Props, State> implements Page
             //console.log(this.state.currentState)
             this.notify()
             //console.log(this.state.currentState)
-            let registerflag: boolean
-            let loginflag: boolean
-            let flag = false
+            let flag: boolean
             if (this.state.currentState != States.Register) {
-                registerflag = false
+                flag = false
             } else {
-                registerflag = true
-                this.state.adminData = data
-                this.state.currentState = States.Login
-                this.notify()
-                if (this.state.currentState != States.Login) {
-                    loginflag = false
-                } else {
-                    loginflag = true
-                }
-                if (registerflag && loginflag) flag = true
+                flag = true
             }
-            if (flag) PubSub.publish('getprojectlist', this.state.projectData)
             PubSub.publish('registerstatus', flag)
+
         })
     }
 
