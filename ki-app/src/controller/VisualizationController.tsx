@@ -1,60 +1,73 @@
 import { PageController } from "./PageController";
-import { VisualizationPage } from "../view/pages/VisualizationPage";
+import { VisualizationPage } from "../view/pages/VisualizationPage/index";
 import { MainController } from "./MainController";
 import { ModelCreationController } from "./ModelCreationController";
+import { Page } from "../view/pages/PageInterface";
+import { IState, States } from "../view/pages/State";
 
 export class VisualizationController implements PageController {
-    private page: VisualizationPage = new VisualizationPage();
+    private page: Page;
+    private state: IState;
 
     /**
      * Konstruktor des Seitenverwalters. Registriert sich als Beobachter auf seiner Seite und setzt den start Status.
      * Dieser Seitenverwalter benötigt einen SensorManager, welcher schon initilisiert wurde. 
      */
-    constructor() {
+    constructor(currentProjekt: { projectID: number, projectName: string, choosenAIModelID: number; }) {
+        this.page = new VisualizationPage({});
         this.page.attach(this);
-        this.page.setState("needMessage");
+        this.state = this.page.getState()
+        this.state.currentProject = currentProjekt
+        this.page.setState(this.state)
     }
 
     /**
      * Die Update Methode des Seitenverwalters.
      */
     update() {
-        let state = this.page.getState();
-        switch (state.action) {
-            case "needMessage":
-                let ids = this.page.getIds();
-                this.page.setMessages(MainController.getInstance().getMessage(ids));
+        this.state = this.page.getState();
+        switch (this.state.currentState) {
+            case States.NeedMessage:
+                this.page.setState(MainController.getInstance().getMessage(this.state.messages));
                 break;
-            case "needData":
-                this.needData();
+            case States.ChangeToCreation:
+                MainController.getInstance().changeTo(new ModelCreationController())
                 break;
-            case "changeToModelCreation":
-                this.changeToModelCreation;
+            case States.ChangeLabel:
+                this.changeDataLabel();
+                break;
+            case States.NewLabel:
+                this.newDataLabel();
+                break;
+            case States.DeleteDataLabel:
+                this.deleteDataLabel();
                 break;
             default:
                 break;
         }
     }
 
-    needData() {
-        // let data = MainController.getInstance().getFacade().getMinerData();
+    SetDataRows() {
+        let data = MainController.getInstance().getFacade().getMinerData();
+        for (let index = 0; index < data.length; index++) {
+            this.state.dataSets! = data[index];
+            this.state.currentState = States.SetDataRows
+            this.page.setState(this.state)
+            
+        }
     }
 
     alertConnectionError() {
-
-    }
-
-    changeToModelCreation() {
-        let modelCreationController: ModelCreationController = new ModelCreationController();
-        MainController.getInstance().changeTo(modelCreationController);
+        this.state.currentState = States.LoadError
+        this.page.setState(this.state)
     }
 
     /**
      * Ändert die Einstellungen eines DatenLabels gemäß den Änderungen aus der momentanen Seite.
      */
     private changeDataLabel() {
-        //let label = this.state.currentLabel!
-        //MainController.getInstance().getFacade().setLabel(label.labelID, {start: label.start, end: label.end}, label.name);
+        let label = this.state.currentLabel!
+        MainController.getInstance().getFacade().setLabel(label.labelID, {start: label.start, end: label.end}, label.name);
     }
 
     /**
@@ -62,17 +75,15 @@ export class VisualizationController implements PageController {
      * Modell geleitet. Die ID des neuen Labels wird darauf an die momentane Seite übergeben.
      */
     private newDataLabel() {
-        //let start = this.page.getNewLabelStart();
-        // let end = this.page.getNewLabelEnd();
-        //let id = MainController.getInstance().getFacade().createLabel(start, end);
-        //this.page.setNewLabelID(id);
+        let label = this.state.currentLabel!
+        label.labelID = MainController.getInstance().getFacade().creatLabel(label.start, label.end);
+        this.state.currentLabel! = label
     }
 
     /**
      * Löscht das Label welches gemäß der Methode getDeleteLabelID von der momentanen Seite angegeben wurde.
      */
     private deleteDataLabel() {
-        //let id = this.page.getDeleteLabelID();
-        //MainController.getInstance().getFacade().deleteLabel(id);
+        MainController.getInstance().getFacade().deleteLabel(this.state.currentLabel!.labelID);
     }
 }
