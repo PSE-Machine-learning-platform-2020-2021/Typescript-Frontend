@@ -71,12 +71,18 @@ export class RefferingController implements PageController {
      */
     login() {
         let adminData: { name: string, email: string, password: string; } = this.state.adminData!;
-        let loginSucess: boolean = MainController.getInstance().getFacade().loginAdmin(adminData.email, adminData.password);
-        if (loginSucess) {
-            this.state.projectData! = MainController.getInstance().getFacade().getProjectMetas();
-        } else {
-            this.state.currentState = States.LoginFail;
-        }
+        let loginSucess: Promise<boolean> = MainController.getInstance().getFacade().loginAdmin(adminData.email, adminData.password);
+        loginSucess.then((value: boolean) => {
+            if (value) {
+                let projectData: Promise<{projectID: number; projectName: string; AIModelID: number[];}[]> = MainController.getInstance().getFacade().getProjectMetas();
+                projectData.then((data: {projectID: number; projectName: string; AIModelID: number[];}[]) => {
+                    this.state.projectData! = data
+                })
+                
+            } else {
+                this.state.currentState = States.LoginFail;
+            }
+        })
     }
 
     /**
@@ -84,10 +90,12 @@ export class RefferingController implements PageController {
      */
     register() {
         let adminData: { name: string, email: string, password: string; } = this.state.adminData!;
-        let loginSucess: boolean = MainController.getInstance().getFacade().registerAdmin(adminData.name, adminData.email, adminData.password);
-        if (!loginSucess) {
-            this.state.currentState = States.LoginFail;
-        }
+        let loginSucess: Promise<boolean> = MainController.getInstance().getFacade().registerAdmin(adminData.name, adminData.email, adminData.password);
+        loginSucess.then((value: boolean) => {
+            if (!value) {
+                this.state.currentState = States.LoginFail;
+            }
+        })
     }
 
     /**
@@ -110,12 +118,14 @@ export class RefferingController implements PageController {
      * Erstelle ein neues Projekt, welches auch als momentanes Projekt gesetzt wird.
      */
     createNewProject() {
-        let sucess: boolean = MainController.getInstance().getFacade().createProject(this.state.currentProject!.projectName);
-        if (sucess) {
-            this.state.currentState = States.NeedQRC;
-        } else {
-            this.state.currentState = States.LoadError;
+        let sucess: Promise<boolean> = MainController.getInstance().getFacade().createProject(this.state.currentProject!.projectName);
+        sucess.then((value: boolean) => {
+            if (value) {
+                this.state.currentState = States.NeedQRC;
+            } else {
+                this.state.currentState = States.LoadError;
         }
+        })
     }
 
     /**
@@ -123,12 +133,14 @@ export class RefferingController implements PageController {
      */
     loadProject() {
         let projectId: number = this.state.currentProject!.projectID!;
-        let sucess: boolean = MainController.getInstance().getFacade().loadProject(projectId);
-        if (sucess) {
+        let sucess: Promise<boolean> = MainController.getInstance().getFacade().loadProject(projectId);
+        sucess.then((value: boolean) => {
+        if (value) {
             this.state.currentState = States.NeedQRC;
         } else {
             this.state.currentState = States.LoadError;
         }
+    })
     }
 
     /**
@@ -136,12 +148,14 @@ export class RefferingController implements PageController {
      */
     loadModel() {
         let projectId: number = this.state.currentProject!.projectID;
-        let sucess: boolean = MainController.getInstance().getFacade().loadProject(projectId);
-        if (sucess) {
+        let sucess: Promise<boolean> =  MainController.getInstance().getFacade().loadProject(projectId);
+        sucess.then((value: boolean) => {
+        if (value) {
             let deliveryConroller: DeliveryController = new DeliveryController(this.state.currentProject!);
             MainController.getInstance().changeTo(deliveryConroller);
         } else {
             this.state.currentState = States.LoadError;
         }
+    })
     }
 }

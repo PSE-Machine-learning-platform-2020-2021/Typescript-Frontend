@@ -12,8 +12,7 @@ export class StartController implements PageController {
 
     private page: Page = new StartPage({});
     private sensorManager = new SensorManager();
-    state: IState;
-
+    private state: IState;
     /**
      * Konstruktor des Seitenverwalters. Registriert sich als Beobachter auf seiner Seite und setzt den start Status. 
      */
@@ -21,11 +20,22 @@ export class StartController implements PageController {
         const queryString = window.location.search;
         this.urlParams = new URLSearchParams(queryString);
         this.state = this.page.getState();
-        this.state.availableSensorTypes = MainController.getInstance().getFacade().getAvailableSensors();
-        this.page.setState(this.state);
         this.page.attach(this);
         MainController.getInstance().getFacade().registerDataminer("Miner", +this.urlParams.get("SessionID")!)
+
+        let availableSensor: Promise<{ sensorTypID: number; sensorType: string; }[]> = MainController.getInstance().getFacade().getAvailableSensors();
+        availableSensor.then((sensors) => {
+            for (let index = 0; index < sensors.length; index++) {
+                const sensorTypID: number = sensors[index].sensorTypID;
+                const sensorType: string = sensors[index].sensorType;
+                const chosen: boolean = false;
+                this.state.recordingSettings!.availableSensorTypes.push({sensorTypID, sensorType, chosen})
+            }
+            this.page.setState(this.state)
+        })
     }
+
+
 
     /**
      * Die Update Methode des Seitenverwalters.
@@ -60,4 +70,6 @@ export class StartController implements PageController {
         let dataCollectionController = new DataCollectionController(this.sensorManager);
         MainController.getInstance().changeTo(dataCollectionController);
     }
+
+    
 }
