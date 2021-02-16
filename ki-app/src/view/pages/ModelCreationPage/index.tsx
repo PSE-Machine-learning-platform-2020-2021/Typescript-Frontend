@@ -16,7 +16,7 @@ type Props = {
 };
 
 
-export default class ModelCreationPage extends React.Component<Props, State> implements Page {
+export class ModelCreationPage extends React.Component<Props, State> implements Page {
 	state = new State();
 	observers: PageController[] = [];
 	constructor(props: Props) {

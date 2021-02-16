@@ -1,12 +1,12 @@
 import { Page } from "../view/pages/PageInterface";
 import { IState, States } from "../view/pages/State";
-
 import { PageController } from "./PageController";
 import { MainController } from "./MainController";
-import { AIController } from "./AIController";
-
+import { DeliveryController } from "./DeliveryController";
+import { VisualizationController } from "./VisualizationController"
 import { QRCode, ErrorCorrectLevel, QRNumber, QRAlphaNum, QR8BitByte, QRKanji } from 'qrcode-generator-ts/js';
 import { DataCollectionPage } from "../view/pages/DataCollectionPage";
+
 
 export class RefferingController implements PageController {
     private page: Page;
@@ -58,11 +58,17 @@ export class RefferingController implements PageController {
             case States.Register:
                 this.register();
                 break;
+            case States.ChangeToVisual:
+                MainController.getInstance().changeTo(new VisualizationController(this.state.currentProject!))
+                break;
             default:
                 break;
         }
     }
 
+    /**
+     * Logt den Benutzer ein
+     */
     login() {
         let adminData: { name: string, email: string, password: string; } = this.state.adminData!;
         let loginSucess: boolean = MainController.getInstance().getFacade().loginAdmin(adminData.email, adminData.password);
@@ -71,66 +77,69 @@ export class RefferingController implements PageController {
         } else {
             this.state.currentState = States.LoginFail;
         }
-        this.page.setState(this.state);
     }
 
+    /**
+     * Registriert den Benutzer
+     */
     register() {
         let adminData: { name: string, email: string, password: string; } = this.state.adminData!;
         let loginSucess: boolean = MainController.getInstance().getFacade().registerAdmin(adminData.name, adminData.email, adminData.password);
         if (!loginSucess) {
             this.state.currentState = States.LoginFail;
         }
-        this.page.setState(this.state);
     }
 
+    /**
+     * Erstellt ein QRCode und übergibt in an die Seite
+     */
     createQR() {
-        //let link: string = MainController.getInstance().getFacade().getDataMinerLink();
-
+        let link: string = MainController.getInstance().getFacade().getDataMinerLink();
         var qr = new QRCode();
         qr.setTypeNumber(5);
         qr.setErrorCorrectLevel(ErrorCorrectLevel.L);
-        qr.addData("link");
+        qr.addData(link);
         qr.make();
         this.state.qr = qr.toDataURL();
-        //divElement.innerHTML = state.qr
         this.state.currentState = States.SetQRC;
-        //this.page.setState(this.state);
     }
 
+    /**
+     * Erstelle ein neues Projekt, welches auch als momentanes Projekt gesetzt wird.
+     */
     createNewProject() {
         let sucess: boolean = MainController.getInstance().getFacade().createProject(this.state.currentProject!.projectName);
         if (sucess) {
             this.state.currentState = States.NeedQRC;
-            //TODO neu projecte laden
         } else {
             this.state.currentState = States.LoadError;
         }
-        this.page.setState(this.state);
     }
 
-
+    /**
+     * Setzt ein Projekt als momentanes Projekt
+     */
     loadProject() {
         let projectId: number = this.state.currentProject!.projectID!;
         let sucess: boolean = MainController.getInstance().getFacade().loadProject(projectId);
         if (sucess) {
-            this.state.currentState = States.SetProjects;
+            this.state.currentState = States.NeedQRC;
         } else {
             this.state.currentState = States.LoadError;
         }
-        this.page.setState(this.state);
     }
 
+    /**
+     * Läde ein Modell und wechselt zur delivery Seite
+     */
     loadModel() {
-        //!!hier use chosenModel
         let projectId: number = this.state.currentProject!.projectID;
         let sucess: boolean = MainController.getInstance().getFacade().loadProject(projectId);
-        //TODO chossenAImodel an aicontroller übergeben
         if (sucess) {
-            //let aiController: AIController = new AIController();
-            //MainController.getInstance().changeTo(aiController);
+            let deliveryConroller: DeliveryController = new DeliveryController(this.state.currentProject!)
+            MainController.getInstance().changeTo(deliveryConroller);
         } else {
             this.state.currentState = States.LoadError;
-            this.page.setState(this.state);
         }
     }
 }

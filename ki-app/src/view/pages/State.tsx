@@ -1,29 +1,33 @@
-import { QRCode, ErrorCorrectLevel, QRNumber, QRAlphaNum, QR8BitByte, QRKanji } from 'qrcode-generator-ts/js';
-
 export interface IState {
   currentState: States;
   languageCode: string;
   messages: { text: string, id: number; }[];
   //Anzeige aller Projekte eines nutzers
-  projectData?: { projectID: number, projectName: string, aiModelIDs: number[]; }[];
+  projectData?: { projectID: number; projectName: string; AIModelID: number[]; }[];
   // Das Projekt welches in der view ausgewählt wurde
   currentProject?: { projectID: number, projectName: string, choosenAIModelID: number; };
   adminData?: { name: string, email: string, password: string; };
-  //minerData?:
   aiUserData?: { name: string, result: string; };
-  labels?: { labelID: number, start: number, end: number; }[];
+  currentLabel?: { labelID: number, start: number, end: number; name: string; };
   sessionID?: string;
-  //aiParameter?: 
-  dataPoints?: { dataRowID: number, value: number; }[];
-  dataRows?: { dataSetID: number, data: number[][][]; };
-  dataSets?: { sensorTypes: string[], dataSetName: string; }[];
-  //
+  dataPoints?: { dataPoint?: { value: number; relativeTime: number; }; }[];
+  dataRows?: { value: number; relativeTime: number; }[][];
+  dataSets?: { dataSetID: number; dataSetName: string; }[];
   qr?: string;
   diagramSvg?: string;
-  recordingSettings?: { newDataSetName: string, usedSensorTypes: string[], readTime: number, waitTime: number; };
-  availableSensorTypes?: string[];
+  recordingSettings?: { newDataSetName: string, usedSensorTypes: number[], readTime: number, waitTime: number; };
+  trainingParameter?: {
+    sensors: number[],
+    dataSets: number[],
+    classifier: string,
+    scaler: string,
+    features: string[],
+    trainingDataPercentage?: number, // optional
+    slidingWindowSize?: number,      // optional
+    slidingWindowStep?: number;        // optional
+  };
+  availableSensorTypes?: { sensorTypID: number; sensorType: string; }[];
 }
-
 
 export enum States {
   /**
@@ -43,10 +47,6 @@ export enum States {
    */
   SetQRC,
   /**
-   * Lade Projectdaten
-   */
-  LoadProject,
-  /**
    * Projektdaten können benutzt werden
    */
   SetProjects,
@@ -61,8 +61,11 @@ export enum States {
   /**
    * Ein Login Versuch soll durchgeführt werden
    */
-  Register,
   Login,
+  /**
+   * Ein Registrierungsversuch soll durchgeführt werden
+   */
+  Register,
   /**
      * Update aller Daten welche auf der Seite angezeigt werden, zum Beispiel Projekt Daten für die Projekt liste.
      */
@@ -72,6 +75,10 @@ export enum States {
    */
   NewProjekt,
   /**
+   * Projekts soll geladen werden
+   */
+  LoadProject,
+  /**
    * Model eines Projekts soll geladen werden
    */
   LoadModel,
@@ -79,10 +86,6 @@ export enum States {
    * Login ist gescheitert
    */
   LoginFail,
-  /**
-  * Login erfolgreich
-  */
-  loginSucess,
   /**
    * Beginne Datenerfassung
    */
@@ -118,21 +121,35 @@ export enum States {
   /**
    * Wechsel zur Verweisseite
    */
+  ChangeToDataCollection,
+
   ChangeToRefferring,
 
-  ChangeToDataCollection,
+  ChangeToVisual,
+
+  ChangeToCreation,
 
   NeedInstantDiagram,
 
-  NeedAvailableSensorTypes
-}
+  /**
+   * Zeige neue wartezeit
+   */
+  SetWaitTime,
+  /**
+   * Zeige neue lesezeit
+   */
+  SetReadTime,
 
-/**  BEISPIEL
-export class test implements IState {
-  currentState: States = States.ChangePage;
-  languageCode: string = "de";
-  messageIDs: number[] = [0, 1];
-  messages: string[] = [];
-  ...
+  /**
+   * Liefert an die auf der Seite angegebenen Email-Adressen die WebApp für ein Modell
+   */
+  DeliverWeb,
+  /**
+   * Neue Datenreihen sind im Status hinterlegt
+   */
+  SetDataRows,
+  /**
+   * Der Nutzer möchte mit dem KI Training beginnen
+   */
+  NeedKiTraining
 }
-*/

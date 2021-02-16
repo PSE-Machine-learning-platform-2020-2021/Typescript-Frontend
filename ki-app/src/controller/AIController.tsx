@@ -7,7 +7,6 @@ import { IState, States } from "../view/pages/State";
 import { PageController } from "./PageController";
 import { SensorManager } from "./SensorManager";
 import { MainController } from "./MainController";
-import { RefferingController } from "./ReferringController";
 
 
 export class AIController implements PageController {
@@ -29,30 +28,56 @@ export class AIController implements PageController {
      * Die Update Methode des Seitenverwalters.
      */
     update() {
-        let currentState = this.page.getState().currentState;
-        switch (currentState) {
+        this.state = this.page.getState();
+        switch (this.state.currentState) {
             case States.StartDataRead:
-                this.startDataRead();
+                this.start();
                 break;
-            case States.ChangeToRefferring:
-                MainController.getInstance().changeTo(new RefferingController());
+            case States.SetLanguage:
+                this.page.setState(MainController.getInstance().setLanguage(this.state.languageCode));
                 break;
             case States.NeedMessage:
                 this.page.setState(MainController.getInstance().getMessage(this.state.messages));
+                break;
+            case States.StartDataRead:
+                this.sensorManager.readData(this.page);
+                this.changeToFinish()
+                break;
+            case States.ClassifyResult:
+                this.classifyResult()
                 break;
             default:
                 break;
         }
     }
 
-    startDataRead() {
+    /**
+     * Holt sich alle wichtigen Daten für die Datenaufnahme aus der momentanen Seite. Darauf wird mit dem Sensormanager
+     * die Datenaufnahme initialisiert. Zum Schluss wird der Seitenwechsel zur Erfassungseite durchgeführt. 
+     */
+    private start() {
         let sensorTypes: number[] = this.urlParams.get("sensorTypes")!.split(",").map(x => +x);
-        let dataSetName: string = "TODO";
+        let dataSetName: string = "Undefined";
         let waitTime = this.state.recordingSettings!.waitTime;
         let readTime = this.state.recordingSettings!.readTime;
-        this.sensorManager.setUpDataRead(sensorTypes, dataSetName, waitTime, readTime);
-        this.sensorManager.readData(this.page);
-        //MainController.getInstance().getFacade().classify(this.urlParams.get("aiID"), sensorTypes, this.callback);
+        this.sensorManager.setUpDataRead(sensorTypes, dataSetName, waitTime, readTime, false);
+        this.page = new DataCollectionPage({})
+        this.page.attach(this)
+        this.state = this.page.getState()
+    }
+
+    changeToFinish() {
+        this.page = new DataCollectionPage({})
+        this.page.attach(this)
+        this.state = this.page.getState()
+        this.state.dataRows! = MainController.getInstance().getFacade().getCurrentDataRows()!.dataRows!
+        this.page.setState(this.state)
+
+    }
+
+    classifyResult() {
+        let id:number = MainController.getInstance().getFacade().getDataSetMetas()[0].dataSetID
+        MainController.getInstance().getFacade().classify( +this.urlParams.get("aiID")!, id, this.callback)
     }
 
     public callback(prediction: any) {

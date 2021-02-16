@@ -1,23 +1,23 @@
+import { PageController } from "./PageController";
+import { VisualizationPage } from "../view/pages/VisualizationPage/index";
+import { MainController } from "./MainController";
+import { ModelCreationController } from "./ModelCreationController";
 import { Page } from "../view/pages/PageInterface";
 import { IState, States } from "../view/pages/State";
-import { FinishPage } from "../view/pages/FinishPage/index";
 
-import { PageController } from "./PageController";
-import { MainController } from "./MainController";
-
-export class FinishController implements PageController {
-
+export class VisualizationController implements PageController {
     private page: Page;
     private state: IState;
 
     /**
-     * Konstruktor des Seitenverwalters. Registriert sich als Beobachter auf seiner Seite und setzt den start Status. 
+     * Konstruktor des Seitenverwalters. Registriert sich als Beobachter auf seiner Seite und setzt den start Status.
+     * Dieser Seitenverwalter benötigt einen SensorManager, welcher schon initilisiert wurde. 
      */
-    constructor() {
-        this.page = new FinishPage({});
+    constructor(currentProjekt: { projectID: number, projectName: string, choosenAIModelID: number; }) {
+        this.page = new VisualizationPage({});
         this.page.attach(this);
-        this.state = this.page.getState();
-        this.state.dataRows! = MainController.getInstance().getFacade().getCurrentDataRows()!.dataRows!
+        this.state = this.page.getState()
+        this.state.currentProject = currentProjekt
         this.page.setState(this.state)
     }
 
@@ -25,10 +25,13 @@ export class FinishController implements PageController {
      * Die Update Methode des Seitenverwalters.
      */
     update() {
-        this.state = this.page.getState().currenState;
+        this.state = this.page.getState();
         switch (this.state.currentState) {
             case States.NeedMessage:
                 this.page.setState(MainController.getInstance().getMessage(this.state.messages));
+                break;
+            case States.ChangeToCreation:
+                MainController.getInstance().changeTo(new ModelCreationController())
                 break;
             case States.ChangeLabel:
                 this.changeDataLabel();
@@ -42,6 +45,21 @@ export class FinishController implements PageController {
             default:
                 break;
         }
+    }
+
+    SetDataRows() {
+        let data = MainController.getInstance().getFacade().getMinerData();
+        for (let index = 0; index < data.length; index++) {
+            this.state.dataSets! = data[index];
+            this.state.currentState = States.SetDataRows
+            this.page.setState(this.state)
+            
+        }
+    }
+
+    alertConnectionError() {
+        this.state.currentState = States.LoadError
+        this.page.setState(this.state)
     }
 
     /**

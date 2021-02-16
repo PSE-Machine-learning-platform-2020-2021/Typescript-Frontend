@@ -36,9 +36,14 @@ export default class LoginWindow extends Component {
     PubSub.publish('register', { name: this.state.username, email: this.state.email, password: this.state.password })
     PubSub.subscribe('registerstatus', (data: boolean) => {
       if (data) {
-        alert('registersuccess')
+        PubSub.publish('login', { name: this.state.username, email: this.state.email, password: this.state.password })
+        PubSub.subscribe('loginstatus', (_msg: any, data: boolean) => {
+          if (data) {
+            alert('Register und Einloggen Erfolg!')
+          }
+        })
       } else {
-        alert('registerfail')
+        alert('Register Mißerfolg!')
       }
     })
   }
@@ -49,9 +54,9 @@ export default class LoginWindow extends Component {
     PubSub.publish('login', { name: this.state.username, email: this.state.email, password: this.state.password })
     PubSub.subscribe('loginstatus', (_msg: any, data: boolean) => {
       if (data) {
-        alert('loginsuccess')
+        alert('Einloggen Erfolg!')
       } else {
-        alert('loginfail')
+        alert('Einloggen Mißrfolg!')
       }
     })
   };
