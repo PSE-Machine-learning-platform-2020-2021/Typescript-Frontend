@@ -114,9 +114,15 @@ export enum States {
   /**
    * Wechsel zur Verweisseite
    */
+  ChangeToDataCollection,
+
   ChangeToRefferring,
 
-  ChangeToDataCollection,
+  ChangeToVisualization,
+
+  ChangeToModelCreation,
+
+  ChangeToDelivery,
 
   NeedInstantDiagram,
 

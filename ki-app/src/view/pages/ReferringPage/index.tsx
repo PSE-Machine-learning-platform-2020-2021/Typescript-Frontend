@@ -23,7 +23,9 @@ export class ReferringPage extends React.Component<Props, State> implements Page
         this.createNewProject()
         this.register()
         this.login()
+        this.getmodellist()
         this.loadproject()
+        this.changetovisu()
         this.loadmodel()
         const VDOM = (
             <div>
@@ -130,27 +132,38 @@ export class ReferringPage extends React.Component<Props, State> implements Page
 
         })
     }
-
-    loadproject() {
-        PubSub.subscribe('loadproject', (_msg: any, data: { projectID: number, projectName: string, AIModelID: number[]; }) => {
+    getmodellist() {
+        PubSub.subscribe('needmodellist', (_msg: any, data: { projectID: number, projectName: string, AIModelID: number[]; }) => {
             // console.log(this.state.currentState)
             this.state.currentState = States.LoadProject
             this.state.currentProject = { projectID: data.projectID, projectName: data.projectName, choosenAIModelID: -10000 }
             //console.log(this.state.currentState)
             this.notify()
             //console.log(this.state.currentState)
-            PubSub.publish('getmodelist', data)
+            PubSub.publish('getmodellist', this.state.projectData)
 
         })
     }
+    loadproject() {
+        PubSub.subscribe('loadproject', (_msg: any, data: { projectID: number, projectName: string, choosenAIModelID: number; }) => {
+            this.state.currentProject = { projectID: data.projectID, projectName: data.projectName, choosenAIModelID: -10000 }
+            this.state.currentState = States.NeedQRC
+            this.notify()
+            PubSub.publish('getqr', this.state.qr)
+        })
+    }
+    changetovisu() {
+        PubSub.subscribe('changetovisu', (_msg: any) => {
+            this.state.currentState = States.ChangeToVisualization
+            this.notify()
+        })
+    }
+
     loadmodel() {
         PubSub.subscribe('loadmodel', (_msg: any, data: { projectID: number, projectName: string, choosenAIModelID: number; }) => {
-            // console.log(this.state.currentState)
-            this.state.currentState = States.LoadModel
             this.state.currentProject = data
-            //console.log(this.state.currentState)
+            this.state.currentState = States.LoadModel
             this.notify()
-            //console.log(this.state.currentState)
         })
     }
 }

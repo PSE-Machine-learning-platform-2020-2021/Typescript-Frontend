@@ -7,6 +7,8 @@ import { AIController } from "./AIController";
 
 import { QRCode, ErrorCorrectLevel, QRNumber, QRAlphaNum, QR8BitByte, QRKanji } from 'qrcode-generator-ts/js';
 import { ReferringPage } from "../view/pages/ReferringPage";
+import { VisualizationController } from "./VisualizationController";
+import { DeliveryController } from "./DeliveryController";
 
 export class RefferingController implements PageController {
     private page: Page;
@@ -58,6 +60,9 @@ export class RefferingController implements PageController {
             case States.Register:
                 this.register();
                 break;
+            case States.ChangeToVisualization:
+                MainController.getInstance().changeTo(new VisualizationController())
+                break;
             default:
                 break;
         }
@@ -98,12 +103,12 @@ export class RefferingController implements PageController {
     createNewProject() {
 
         let sucess: boolean = MainController.getInstance().getFacade().createProject(this.state.currentProject!.projectName);
-        if (sucess) {
-            this.state.currentState = States.NeedQRC;
-            //TODO neu projecte laden
-        } else {
-            this.state.currentState = States.LoadError;
-        }
+        // if (sucess) {
+        this.state.currentState = States.NeedQRC;
+        //TODO neu projecte laden
+        //} else {
+        //    this.state.currentState = States.LoadError;
+        // }
     }
 
 

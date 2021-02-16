@@ -1,5 +1,5 @@
 import { PageController } from "./PageController";
-import { VisualizationPage } from "./VisualizationPage";
+import { VisualizationPage } from "../view/pages/VisualizationPage";
 import { MainController } from "./MainController";
 import { ModelCreationController } from "./ModelCreationController";
 
@@ -37,7 +37,7 @@ export class VisualizationController implements PageController {
     }
 
     needData() {
-        let data = MainController.getInstance().getFacade().getMinerData();
+        // let data = MainController.getInstance().getFacade().getMinerData();
     }
 
     alertConnectionError() {

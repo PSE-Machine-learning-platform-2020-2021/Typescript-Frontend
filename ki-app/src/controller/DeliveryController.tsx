@@ -1,8 +1,8 @@
 import { PageController } from "./PageController";
 import { MainController } from "./MainController";
-import { DeliveryPage } from "../view/src/pages/DeliveryPage/index";
+import { DeliveryPage } from "../view/pages/DeliveryPage";
 
-class DeliveryController implements PageController {
+export class DeliveryController implements PageController {
 
     private page = new DeliveryPage();
 
