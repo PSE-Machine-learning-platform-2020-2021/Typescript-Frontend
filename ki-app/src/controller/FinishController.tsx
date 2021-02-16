@@ -2,6 +2,8 @@ import { Page } from "../view/pages/PageInterface";
 import { IState, States } from "../view/pages/State";
 import { FinishPage } from "../view/pages/FinishPage/index";
 
+import { ReferringPage } from "../view/pages/ReferringPage/index"
+
 import { PageController } from "./PageController";
 import { MainController } from "./MainController";
 
@@ -14,10 +16,10 @@ export class FinishController implements PageController {
      * Konstruktor des Seitenverwalters. Registriert sich als Beobachter auf seiner Seite und setzt den start Status. 
      */
     constructor() {
-        this.page = new FinishPage({});
+        this.page = new ReferringPage({});
         this.page.attach(this);
         this.state = this.page.getState();
-        this.state.dataRows! = MainController.getInstance().getFacade().getCurrentDataRows()
+        this.state.dataRows! = MainController.getInstance().getFacade().getCurrentDataRows()!.dataRows!
         this.page.setState(this.state)
     }
 
@@ -57,17 +59,15 @@ export class FinishController implements PageController {
      * Modell geleitet. Die ID des neuen Labels wird darauf an die momentane Seite übergeben.
      */
     private newDataLabel() {
-        //let start = this.page.getNewLabelStart();
-        // let end = this.page.getNewLabelEnd();
-        //let id = MainController.getInstance().getFacade().createLabel(start, end);
-        //this.page.setNewLabelID(id);
+        let label = this.state.currentLabel!
+        //label.labelID = MainController.getInstance().getFacade().creatLabel(label.start, label.end);
+        this.state.currentLabel! = label
     }
 
     /**
      * Löscht das Label welches gemäß der Methode getDeleteLabelID von der momentanen Seite angegeben wurde.
      */
     private deleteDataLabel() {
-        //let id = this.page.getDeleteLabelID();
-        //MainController.getInstance().getFacade().deleteLabel(id);
+        //MainController.getInstance().getFacade().deleteLabel(this.state.currentLabel!.labelID);
     }
 }

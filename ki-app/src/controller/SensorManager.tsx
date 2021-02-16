@@ -8,6 +8,7 @@ export class SensorManager {
     private facade = MainController.getInstance().getFacade();
     private waitTime = 5;
     private readTime = 10;
+    private saving = true
 
     private readonly TO_SECOND = 1000;
 
@@ -16,10 +17,11 @@ export class SensorManager {
     * @param sensorTypes Die Angabe der zu benutzenden Sensoren. Die position im Array bestimmt die DataRow ID jedes Sensors.
     * @returns Gibt true für ein erfolgreiches Erstellen eines Dataensatzes zurück, gibt sonst false zurück.
     */
-    setUpDataRead(sensorTypes: number[], dataSetName: string, waitTime: number, readTime: number) {
+    setUpDataRead(sensorTypes: number[], dataSetName: string, waitTime: number, readTime: number, saving: boolean) {
         this.currentSensors = sensorTypes;
         this.waitTime = waitTime * this.TO_SECOND;
         this.readTime = readTime * this.TO_SECOND;
+        this.saving = saving
         return (this.facade.createDataSet(sensorTypes, dataSetName));
     }
 
@@ -45,8 +47,10 @@ export class SensorManager {
             for (let index = 0; index < this.currentSensors.length; index++) {
                 data.push(this.facade.readDataPoint(index));
             }
-            for (let index = 0; index < this.currentSensors.length; index++) {
-                this.facade.sendDataPoint(index, data[index].dataPoint!.value, data[index].dataPoint!.value);
+            if(this.saving) {
+                for (let index = 0; index < this.currentSensors.length; index++) {
+                    this.facade.sendDataPoint(index, data[index].dataPoint!.value, data[index].dataPoint!.value);
+                }
             }
             state.dataPoints! = data;
             state.recordingSettings!.readTime = this.readTime;

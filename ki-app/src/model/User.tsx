@@ -132,9 +132,9 @@ export abstract class User {
    * @param end Ist die Endzeit des Labels.
    * @returns false, falls kein aktueller Datensatz existiert oder die LabelID für diesen Datensatz nicht eindeutig ist
    */
-  createLabel(labelID: number, start: number, end: number): boolean {
+  createLabel(labelID: number, span: { start: number, end: number; }, labelName: string): boolean {
     if (this.currentProject != null) {
-      return this.currentProject.createLabel(labelID, start, end);
+      return this.currentProject.createLabel(labelID, span, labelName);
     } else {
       return false;
     }
@@ -285,7 +285,8 @@ export class Admin extends User {
    * @param device das Gerät des Admins
    */
   constructor(adminID: number, deviceID: number, adminName: string, email: string,
-    device: { MACADRESS: string, deviceName: string, firmware: string, generation: string, deviceType: string; });
+    device: { deviceID?: number, deviceName: string, deviceType: string, firmware: string, generation: string, MACADRESS: string, sensorInformation: { sensorTypeID: number, sensorName: string, sensorUniqueID: number; }[]; });
+  ////////////////////////////////////////TODO
 
   constructor(adminID: number, deviceID: number, adminName: string, email: string,
     device?: { MACADRESS: string, deviceName: string, firmware: string, generation: string, deviceType: string; }) {
