@@ -23,6 +23,7 @@ export class DatabaseConnector {
    * @returns die Sprache
    */
   async loadLanguage(requestData: { languageCode: string; }): Promise<string[]> {
+    this.getLanguageMetas();   //////////////////////////////////////////////////////////////////////////////TEST
     const data: string = await this.sendRequest("loadLanguage", requestData);
     try {
       const result: string[] = JSON.parse(data);
