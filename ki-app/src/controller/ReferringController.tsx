@@ -5,7 +5,7 @@ import { MainController } from "./MainController";
 import { DeliveryController } from "./DeliveryController";
 import { VisualizationController } from "./VisualizationController";
 import { QRCode, ErrorCorrectLevel, QRNumber, QRAlphaNum, QR8BitByte, QRKanji } from 'qrcode-generator-ts/js';
-import { StartPage } from "../view/pages/StartPage";
+import { FinishPage } from "../view/pages/FinishPage";
 
 
 export class RefferingController implements PageController {
@@ -13,10 +13,10 @@ export class RefferingController implements PageController {
     private state: IState;
 
     /**
-     * Konstruktor des Seitenverwalters. Registriert sich als Beobachter auf seiner Seite und setzt den Start Status. 
+     * Konstruktor des Seitenverwalters. Registriert sich als Beobachter auf seiner Seite und setzt den Finish Status. 
      */
     constructor() {
-        this.page = new StartPage({});
+        this.page = new FinishPage({});
         this.page.attach(this);
         this.state = this.page.getState();
         this.update();
@@ -96,7 +96,7 @@ export class RefferingController implements PageController {
     createQR() {
         const url = new URL(document.URL);
         url.searchParams.append("SessionID", MainController.getInstance().getFacade().getSessionID().toString());
-        let link: string = url.toString()
+        let link: string = url.toString();
         var qr = new QRCode();
         qr.setTypeNumber(5);
         qr.setErrorCorrectLevel(ErrorCorrectLevel.L);

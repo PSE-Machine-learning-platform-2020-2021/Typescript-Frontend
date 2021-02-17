@@ -1,47 +1,45 @@
-import React, { Component, useState, ChangeEvent, FormEvent } from 'react';
+import React, { Component, useState, ChangeEvent, MouseEvent } from 'react';
+import PubSub from 'pubsub-js';
 import { nanoid } from 'nanoid';
 
-interface IProps {
-    addLabel: (label: { id: string, start: number, end: number, name: string; }) => void;
-}
-
-export default class AddLabelForm extends React.Component<IProps> {
-    constructor(props: IProps) {
-        super(props);
-    }
-
+export default class AddLabelForm extends Component {
     state = {
-        newlabel: { id: "", start: 0, end: 0, name: "" },
+        id: "", start: "", end: "", name: ""
     };
 
     handleChangeLabel = (e: ChangeEvent<HTMLInputElement>) => {
         this.setState({ name: e.target.value });
     };
     handleChangeStart = (e: ChangeEvent<HTMLInputElement>) => {
-        this.setState({ Start: e.target.value });
+        this.setState({ start: e.target.value });
     };
     handleChangeEnd = (e: ChangeEvent<HTMLInputElement>) => {
-        this.setState({ End: e.target.value });
-    };
-    handleSubmit = (e: FormEvent<HTMLFormElement>) => {
-        this.setState({ id: nanoid() });
-        this.props.addLabel(this.state.newlabel);
-        this.setState({ newlabel: { id: "", start: 0, end: 0, name: "" } });
+        this.setState({ end: e.target.value });
     };
 
-    return() {
-        <form onSubmit={this.handleSubmit} >
-            Start:
-                <input type="text" value={String(this.state.newlabel.start)} onChange={this.handleChangeStart} />
+    handleSubmit() {
+        this.setState({ id: nanoid() });
+        console.log("a");
+        console.log(this.state.id);
+        PubSub.publish('addLabel', this.state);
+    };
+
+
+    render() {
+        return (
+            <div>
+                Start:
+                <input type="text" value={this.state.start} onChange={this.handleChangeStart} />
 
             End:
-                <input type="text" value={String(this.state.newlabel.end)} onChange={this.handleChangeEnd} />
+                <input type="text" value={this.state.end} onChange={this.handleChangeEnd} />
 
             Label:
-                <input type="text" value={this.state.newlabel.name} onChange={this.handleChangeLabel} />
-            <br />
+                <input type="text" value={this.state.name} onChange={this.handleChangeLabel} />
+                <br />
 
-            <button type="submit">Add Label</button>
-        </form>;
+                <button type="submit" onSubmit={() => this.handleSubmit}>Add Label</button>
+            </div>
+        );
     }
-};
+}
