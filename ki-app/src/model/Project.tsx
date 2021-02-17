@@ -175,9 +175,9 @@ export class Project {
    * @param labelName Ist bei Angabe der neue Name des Labels.
    * @returns falls das Label nicht existiert oder es kein aktuellen Datensatz gibt wird false zurück gegeben
    */
-  createLabel(start: number, end: number, labelID: number, labelName?: string): boolean {
+  createLabel(labelID: number, span: { start: number, end: number; }, labelName: string): boolean {
     if (this.currentDataSet != null) {
-      return this.currentDataSet.setLabel(labelID, { start, end }, labelName);
+      return this.currentDataSet.setLabel(labelID, span, labelName);
     }
     return false;
   }

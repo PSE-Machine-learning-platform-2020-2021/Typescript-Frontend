@@ -1,17 +1,11 @@
-import eximage1 from '../../images/exImage1.svg'
-export class State {
+import { IState } from "../State";
+import { States } from "../State";
+
+export class State implements IState {
   currentState: States = States.NeedMessage;
   languageCode: string = "de";
-  messageIDs: number[] = [];
-  messages: string[] = [];
-  imageSrc: string = eximage1
-}
+  messages: { text: string, id: number; }[] = [];
 
-
-export enum States {
-  NeedMessage,
-  NeedData,
-  GotData,
-  ChangePage,
-  Finish
+  currentImg?: string;
+  imageList?: string[];
 }
