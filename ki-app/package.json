@@ -1,5 +1,6 @@
 {
   "name": "ki-app",
+  "homepage": "http://129.13.170.59/build/",
   "version": "0.1.0",
   "private": true,
   "dependencies": {
