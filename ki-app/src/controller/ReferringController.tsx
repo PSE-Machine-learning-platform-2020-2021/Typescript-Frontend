@@ -18,11 +18,7 @@ export class RefferingController implements PageController {
      * Konstruktor des Seitenverwalters. Registriert sich als Beobachter auf seiner Seite und setzt den Finish Status. 
      */
     constructor() {
-<<<<<<< HEAD
-        this.page = new FinishPage({});
-=======
         this.page = new ReferringPage({});
->>>>>>> 56ff49ea7e0b9917e372f971a165db7ea02cf74a
         this.page.attach(this);
         this.state = this.page.getState();
         this.update();
@@ -82,13 +78,13 @@ export class RefferingController implements PageController {
             if (value) {
                 let projectData: Promise<{ projectID: number; projectName: string; AIModelID: number[]; }[]> = MainController.getInstance().getFacade().getProjectMetas();
                 projectData.then((data: { projectID: number; projectName: string; AIModelID: number[]; }[]) => {
-                    this.state.projectData! = data
-                })
+                    this.state.projectData! = data;
+                });
 
             } else {
                 this.state.currentState = States.LoginFail;
             }
-        })
+        });
     }
 
     /**
@@ -101,7 +97,7 @@ export class RefferingController implements PageController {
             if (!value) {
                 this.state.currentState = States.LoginFail;
             }
-        })
+        });
     }
 
     /**
@@ -131,7 +127,7 @@ export class RefferingController implements PageController {
             } else {
                 this.state.currentState = States.LoadError;
             }
-        })
+        });
     }
 
     /**
@@ -146,7 +142,7 @@ export class RefferingController implements PageController {
             } else {
                 this.state.currentState = States.LoadError;
             }
-        })
+        });
     }
 
     /**
@@ -162,6 +158,6 @@ export class RefferingController implements PageController {
             } else {
                 this.state.currentState = States.LoadError;
             }
-        })
+        });
     }
 }
