@@ -9,6 +9,7 @@ export class DatabaseConnector {
     const data: string = await this.sendRequest("get_language_metas");
     try {
       const result: { languageCode: number, languageName: string; }[] = JSON.parse(data);
+      console.log("LanguageCode " + result[0].languageCode + " und Name: " + result[0].languageName); //TEST
       return result;
     } catch (e) {
       console.log(e);
