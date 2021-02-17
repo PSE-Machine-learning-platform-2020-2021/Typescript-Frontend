@@ -1,6 +1,6 @@
 //Die Schnittstelle zur Datenbank.
 export class DatabaseConnector {
-  private static readonly databasePHPURL: string = "database";
+  private static readonly databasePHPURL: string = "http://129.13.170.59/src/database/index.php";
 
   /**
    * Gibt Name und Code jeder verfügbaren Sprache zurück
