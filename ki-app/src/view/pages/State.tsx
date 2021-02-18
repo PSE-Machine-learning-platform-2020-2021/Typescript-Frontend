@@ -156,6 +156,10 @@ export enum States {
   /**
    * Der Nutzer möchte mit dem KI Training beginnen
    */
-  NeedKiTraining
+  NeedKiTraining,
+  /**
+   * Eine Veränderung des Labels war erfolgreich
+   */
+  setLabel
 
 }

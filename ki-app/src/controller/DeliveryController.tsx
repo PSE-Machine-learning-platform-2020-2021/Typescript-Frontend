@@ -43,7 +43,7 @@ export class DeliveryController implements PageController {
     * Der Inhalt der Email gibt zugriff auf das Modell zur klassifizierung.
     */
     deliverAsWebApp() {
-        //let emails: string[] = this.page.getEMails();
+        //let emails: string[] = this.state.currentMail;
         let emails: string[] = ["Darius.Seiter@outlook.com"]
         //let text: string = MainController.getInstance().getFacade().getDeliverText();
         let text: string = "TEST"
