@@ -49,7 +49,7 @@ export class Facade {
    */
   constructor(languageCode: string) {
     this.dbCon = new DatabaseConnector();
-    this.language = new Language(this.dbCon.loadLanguage(languageCode));
+    this.language = new Language(this.dbCon.loadLanguage({ languageCode }));
   }
 
   /**
@@ -213,7 +213,7 @@ export class Facade {
    */
   async setLanguage(languageCode: string): Promise<boolean> {
     if (languageCode !== await this.language.getLanguageCode()) {
-      return this.language.setLanguagePromise(this.dbCon.loadLanguage(languageCode));
+      return this.language.setLanguagePromise(this.dbCon.loadLanguage({ languageCode }));
     }
     return true;
   }
