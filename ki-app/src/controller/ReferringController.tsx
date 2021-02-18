@@ -5,9 +5,8 @@ import { MainController } from "./MainController";
 import { DeliveryController } from "./DeliveryController";
 import { VisualizationController } from "./VisualizationController";
 import { VisualizationPage } from "../view/pages/VisualizationPage";
-import { ReferringPage } from "../view/pages/ReferringPage";
+import { FinishPage } from "../view/pages/FinishPage";
 import { QRCode, ErrorCorrectLevel, QRNumber, QRAlphaNum, QR8BitByte, QRKanji } from 'qrcode-generator-ts/js';
-import { StartPage } from "../view/pages/StartPage";
 
 
 export class RefferingController implements PageController {
@@ -18,7 +17,7 @@ export class RefferingController implements PageController {
      * Konstruktor des Seitenverwalters. Registriert sich als Beobachter auf seiner Seite und setzt den Start Status. 
      */
     constructor() {
-        this.page = new ReferringPage({});
+        this.page = new FinishPage({});
         this.page.attach(this);
         this.state = this.page.getState();
         this.update();
@@ -78,13 +77,13 @@ export class RefferingController implements PageController {
             if (value) {
                 let projectData: Promise<{ projectID: number; projectName: string; AIModelID: number[]; }[]> = MainController.getInstance().getFacade().getProjectMetas();
                 projectData.then((data: { projectID: number; projectName: string; AIModelID: number[]; }[]) => {
-                    this.state.projectData! = data
-                })
+                    this.state.projectData! = data;
+                });
 
             } else {
                 this.state.currentState = States.LoginFail;
             }
-        })
+        });
     }
 
     /**
@@ -97,7 +96,7 @@ export class RefferingController implements PageController {
             if (!value) {
                 this.state.currentState = States.LoginFail;
             }
-        })
+        });
     }
 
     /**
@@ -106,7 +105,7 @@ export class RefferingController implements PageController {
     createQR() {
         const url = new URL(document.URL);
         url.searchParams.append("SessionID", MainController.getInstance().getFacade().getSessionID().toString());
-        let link: string = url.toString()
+        let link: string = url.toString();
         var qr = new QRCode();
         qr.setTypeNumber(5);
         qr.setErrorCorrectLevel(ErrorCorrectLevel.L);
@@ -127,7 +126,7 @@ export class RefferingController implements PageController {
             } else {
                 this.state.currentState = States.LoadError;
             }
-        })
+        });
     }
 
     /**
@@ -142,7 +141,7 @@ export class RefferingController implements PageController {
             } else {
                 this.state.currentState = States.LoadError;
             }
-        })
+        });
     }
 
     /**
@@ -158,6 +157,6 @@ export class RefferingController implements PageController {
             } else {
                 this.state.currentState = States.LoadError;
             }
-        })
+        });
     }
 }

@@ -28,6 +28,7 @@ export interface IState {
     slidingWindowSize?: number,      // optional
     slidingWindowStep?: number;        // optional
   };
+  chosenEmails?: string[];
 }
 
 export enum States {
@@ -144,11 +145,14 @@ export enum States {
   //Visu
   NeedImageList,
 
-
+  //Delivery
   /**
    * Liefert an die auf der Seite angegebenen Email-Adressen die WebApp für ein Modell
    */
   DeliverWeb,
+  //Download
+  NeedDownload,
+
   /**
    * Neue Datenreihen sind im Status hinterlegt
    */

@@ -1,1 +1,1 @@
-import {RefferingController} from "../ReferringController"
+import { RefferingController } from "../ReferringController";
