@@ -12,11 +12,11 @@ export default class ModelList extends Component {
     }
 
     componentDidMount() {
-        /** controller noch nicht gegeben*/
+        /** controller noch nicht gegeben
         PubSub.subscribe('getmodellist', (_msg: any, data: { projectID: number, projectName: string, AIModelID: number[]; }) => {
             this.setState({ modelList: data.AIModelID })
             this.setState({ currentProject: { projectID: data.projectID, projectName: data.projectName } })
-        })
+        })*/
 
     }
     handleChange = (e: React.ChangeEvent<HTMLSelectElement>) => {
@@ -46,7 +46,7 @@ export default class ModelList extends Component {
                         return <option value={modelObj}>Modell{modelObj}</option>
                     })}
                 </select>
-                <button onClick={() => this.handleChoose()} className="btn" >Laden das gewählte Modell(zu Modellerstellungsseite)</button>
+                <button onClick={() => this.handleChoose()} className="btn" >Laden das gewählte Modell(zu Auslieferungsseite)</button>
             </section>
         )
     }

@@ -1,6 +1,5 @@
 import React, { Component } from 'react'
 import PubSub from 'pubsub-js';
-import TrainButton from '../../components/ModelCreationComponents/TrainButton'
 import ImageList from '../../components/VisualizationComponents/ImageList'
 import eximage1 from '../../images/exImage1.svg'
 import './VisualizationPage.css'
@@ -11,6 +10,7 @@ import { MainController } from '../../../controller/MainController';
 import ReactDOM from 'react-dom';
 import ShowImage from '../../components/VisualizationComponents/ShowImage';
 import { States } from '../State';
+import FinishButton from '../../components/VisualizationComponents/FinishButton';
 
 type Props = {
 };
@@ -21,12 +21,13 @@ export class VisualizationPage extends React.Component<Props, State> implements 
     constructor(props: Props) {
         super(props);
         this.getimagelist()
+        this.changeimg()
         this.changetonextpage()
         const VDOM = (
             <div className="visualizationpage">
                 <ShowImage />
                 <ImageList />
-                <TrainButton />
+                <FinishButton />
             </div>
         );
         ReactDOM.render(VDOM, document.getElementById('root'));
@@ -60,13 +61,17 @@ export class VisualizationPage extends React.Component<Props, State> implements 
         this.notify()
         PubSub.publish('getimagelist', this.state.imageList)
     }
-
-    changetonextpage() {
+    changeimg() {
         PubSub.subscribe('changeimg', (_msg: any, data: string) => {
             this.state.currentImg = data
+            //console.log(this.state.currentImg)
+        })
+    }
+    changetonextpage() {
+        PubSub.subscribe('changepage', (_msg: any) => {
             this.state.currentState = States.ChangeToCreation
             this.notify()
-            //console.log(this.state.img)
+
         })
     }
 }

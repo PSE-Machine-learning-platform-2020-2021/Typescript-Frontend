@@ -1,18 +1,10 @@
-export class State {
+import { IState } from "../State";
+import { States } from "../State";
+
+export class State implements IState {
   currentState: States = States.NeedMessage;
   languageCode: string = "de";
-  messageIDs: number[] = [];
-  messages: string[] = [];
-  emails: { id: string, address: string, chosen: boolean }[] = [{ id: 'ex', address: 'example', chosen: false }];
+  messages: { text: string, id: number; }[] = [];
 
-}
-
-
-export enum States {
-  NeedMessage,
-  NeedData,
-  GotData,
-  ChangePage,
-  Download,
-  Send
+  chosenEmails?: string[];
 }

@@ -1,20 +1,18 @@
 import React, { Component } from "react";
+import PubSub from 'pubsub-js';
 import Title from "../../components/FinishComponents/Title";
 import Body from "../../components/FinishComponents/Body";
-import LabelList from "../../components/FinishComponents/Input/Label/LabelList/LabelList";
-import AddLabelForm from "../../components/FinishComponents/Input/Label/AddLabel/AddLabelForm";
+import Labelling from "../../components/FinishComponents/Input/Labelling";
 import { Page } from "../PageInterface";
 import { PageController } from "../../../controller/PageController";
 import { State } from "./State";
 import ReactDOM from "react-dom";
 import { States } from "../State";
 
-interface IProps {
-  addLabel: (label: { id: string, start: number, end: number, name: string; }) => void;
-  deleteLabel: (id: string) => void;
-}
+type IProps = {
+};
 
-export class FinishPage extends React.Component<IProps, State> {
+export class FinishPage extends React.Component<IProps, State> implements Page {
   state = new State();
   observers: PageController[] = [];
 
@@ -25,35 +23,12 @@ export class FinishPage extends React.Component<IProps, State> {
         <Title />
         <Body />
         <div className="label-container">
-          <div className="label-wrap">
-            <LabelList labels={this.state.labels} deleteLabel={this.deleteLabel} />
-            <AddLabelForm addLabel={this.addLabel} />
-          </div>
+          <Labelling />
         </div>
       </div>
     );
     ReactDOM.render(VDOM, document.getElementById("root"));
   }
-
-  addLabel = (label: { id: string, start: number, end: number, name: string; }) => {
-
-    let labels = this.state.labels;
-
-    let newLabels = [label, ...labels];
-
-    this.setState({ labels: newLabels });
-  };
-
-  deleteLabel = (id: string) => {
-
-    let labels = this.state.labels;
-
-    let newLabels = labels.filter((label) => {
-      return label.id !== id;
-    });
-
-    this.setState({ labels: newLabels });
-  };
 
 
   /**
