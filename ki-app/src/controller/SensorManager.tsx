@@ -35,7 +35,7 @@ export class SensorManager {
         let intervalId1 = setInterval(() => {
             this.waitTime = this.waitTime - 1;
             state.recordingSettings!.waitTime = this.waitTime;
-            state.currentState = States.SetReadTime;
+            state.currentState = States.SetWaitTime;
             page.setState(state);
             if (this.waitTime === 0) clearInterval(intervalId1);
         }, 1);
@@ -43,19 +43,20 @@ export class SensorManager {
         //Nimm Daten auf verteile sie an die Seite und das Modell. Erneuere dabei die aufnahmezeit auf der Seite
         let intervalId2 = setInterval(() => {
             this.readTime = this.readTime - 1;
-            let data: { dataPoint?: { value: number; relativeTime: number; }; }[] = [];
+            let data: { value: number; relativeTime: number; } = {  value: 0, relativeTime: 0};
             for (let index = 0; index < this.currentSensors.length; index++) {
-                data.push(this.facade.readDataPoint(index));
+                data = this.facade.readDataPoint(index)!.dataPoint!;
+                state.dataPoint! = data;
+                state.recordingSettings!.readTime = this.readTime;
+                state.currentState = States.SetReadTime;
+                page.setState(state);
             }
             if(this.saving) {
                 for (let index = 0; index < this.currentSensors.length; index++) {
-                    this.facade.sendDataPoint(index, data[index].dataPoint!.value, data[index].dataPoint!.value);
+                    this.facade.sendDataPoint(index, data.value, data.relativeTime);
                 }
             }
-            state.dataPoints! = data;
-            state.recordingSettings!.readTime = this.readTime;
-            state.currentState = States.SetWaitTime;
-            page.setState(state);
+            
             if (this.readTime === 0) clearInterval(intervalId2);
         }, 1);
     }

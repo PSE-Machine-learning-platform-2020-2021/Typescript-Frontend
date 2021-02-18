@@ -12,7 +12,7 @@ export interface IState {
   aiUserData?: { name: string, result: string; };
   currentLabel?: { labelID: number, start: number, end: number; name: string; };
   sessionID?: string;
-  dataPoints?: { dataPoint?: { value: number; relativeTime: number; }; }[];
+  dataPoint?: { value: number; relativeTime: number; };
   dataRows?: { value: number; relativeTime: number; }[][];
   dataSets?: { dataSetID: number; dataSetName: string; }[];
   qr?: string;

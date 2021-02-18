@@ -21,7 +21,7 @@ export class AIController implements PageController {
         this.sensorManager = new SensorManager();
         this.page.attach(this);
         this.state = this.page.getState();
-        //MainController.getInstance().getFacade().registerAIModelUser(); //TODO
+        MainController.getInstance().getFacade().registerAIModelUser("Gustav", +this.urlParams.get("aiID")!);
     }
 
     /**
