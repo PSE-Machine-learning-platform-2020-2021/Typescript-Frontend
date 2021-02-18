@@ -6,15 +6,8 @@ export class DatabaseConnector {
    * Gibt Name und Code jeder verfügbaren Sprache zurück
    */
   async getLanguageMetas(): Promise<{ languageCode: number, languageName: string; }[]> {
-    const response = await this.sendRequest("get_language_metas");
-    try {
-      const result: { languageCode: number, languageName: string; }[] = JSON.parse(response.json());
-      console.log("LanguageCode " + result[0].languageCode + " und Name: " + result[0].languageName); //TEST
-      return result;
-    } catch (e) {
-      console.log(e);
-    }
-    return [];
+    const result: { languageCode: number, languageName: string; }[] = await this.sendRequest("get_language_metas");
+    return result;
   }
 
   /**
@@ -24,14 +17,15 @@ export class DatabaseConnector {
    */
   async loadLanguage(requestData: { languageCode: string; }): Promise<string[]> {
     this.getLanguageMetas();   //////////////////////////////////////////////////////////////////////////////TEST
-    const response = await this.sendRequest("loadLanguage", requestData);
+    return [];
+    /*const response = await this.sendRequest("loadLanguage", requestData);
     try {
-      const result: string[] = JSON.parse(response.json());
+      const result: string[] = response.json();
       return result;
     } catch (e) {
       console.log(e);
       return [];
-    }
+    }*/
   }
 
   //Erzeugt ein neues Projekt und setzt dieses als das momentan benutzte Projekt. Der Parameter projectName beinhaltet den Namen des neuen Projektes.
@@ -308,11 +302,9 @@ export class DatabaseConnector {
 
   private async sendRequest(action: string, requestData?: object): Promise<any> {
     const headers = { 'Content-Type': 'application/json' };
-    try {
-      return fetch(DatabaseConnector.databasePHPURL + "?action=" + action, { headers, body: JSON.stringify(requestData) }); //TODO body: requestDataJSON wirft Fehler
-    } catch (e) {
-      return "";
-    }
+    var obj;
+    await fetch(DatabaseConnector.databasePHPURL + "?action=" + action, { method: 'POST', headers, body: JSON.stringify(requestData) }).then(response => response.json()).then(data => { obj = data; });
+    return obj;
   }
 }
 
