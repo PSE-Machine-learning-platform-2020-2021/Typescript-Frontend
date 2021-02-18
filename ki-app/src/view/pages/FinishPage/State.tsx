@@ -3,7 +3,7 @@ export class State {
   languageCode: string = "de";
   messageIDs: number[] = [];
   messages: string[] = [];
-  qrSvg: any = "todo";
+  diagramSvg: string = "";
   labels: { id: string, start: number, end: number, name: string; }[] = [];
 }
 

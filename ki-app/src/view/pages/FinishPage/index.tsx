@@ -18,6 +18,7 @@ export class FinishPage extends React.Component<IProps, State> implements Page {
 
   constructor(props: IProps) {
     super(props);
+    this.giveDiagram();
     const VDOM = (
       <div>
         <Title />
@@ -28,6 +29,10 @@ export class FinishPage extends React.Component<IProps, State> implements Page {
       </div>
     );
     ReactDOM.render(VDOM, document.getElementById("root"));
+  }
+
+  giveDiagram() {
+    PubSub.publish("giveDiagram", this.state.diagramSvg);
   }
 
 
