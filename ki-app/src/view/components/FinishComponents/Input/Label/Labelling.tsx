@@ -1,15 +1,15 @@
 import React, { Component, ChangeEvent } from 'react';
-import PubSub from 'pubsub-js';
 import { nanoid } from 'nanoid';
 
 export default class Labelling extends Component {
     state = {
-        labels: [{ id: '1', start: '1', end: '1', name: '1' }] as { id: string, start: string, end: string, name: string; }[],
-        newName: "", newStart: "", newEnd: '', newId: ""
+        labels: [] as { id: string, start: string, end: string, name: string; }[],
+        newId: "", newStart: "", newEnd: '', newName: ""
     };
 
     handleChangeLabel = (e: ChangeEvent<HTMLInputElement>) => {
         this.setState({ newName: e.target.value });
+        this.setState({ id: nanoid() });
     };
     handleChangeStart = (e: ChangeEvent<HTMLInputElement>) => {
         this.setState({ newStart: e.target.value });
@@ -17,18 +17,16 @@ export default class Labelling extends Component {
     handleChangeEnd = (e: ChangeEvent<HTMLInputElement>) => {
         this.setState({ newEnd: e.target.value });
     };
+    handleClick() {
+        const { newId, newStart, newEnd, newName } = this.state;
+        const labelObj = { id: newId, start: newStart, end: newEnd, name: newName };
+        this.addLabel(labelObj);
+        this.setState({ newId: "", newStart: "", newEnd: '', newName: "" });
+    }
 
-    addLabel = (e: React.MouseEvent<HTMLButtonElement>) => {
-        this.setState({ newId: nanoid() });
-        let labels = this.state.labels;
-        let newId = this.state.newId;
-        let newStart = this.state.newStart;
-        let newEnd = this.state.newEnd;
-        let newName = this.state.newName;
+    addLabel = (labelObj: { id: string, start: string, end: string, name: string; }) => {
 
-        const newLabel = { newId, newStart, newEnd, newName };
-
-        let newLabels = [newLabel, ...labels];
+        const newLabels = [labelObj, ...this.state.labels];
 
         this.setState({ labels: newLabels });
     };
@@ -69,7 +67,7 @@ export default class Labelling extends Component {
                         <input type="text" value={this.state.newName} onChange={this.handleChangeLabel} />
                     <br />
 
-                    <button type="submit" onSubmit={() => this.addLabel}>Add Label</button>
+                    <button type="button" onClick={() => this.handleClick()}>Add Label</button>
                 </div>
 
             </div>
