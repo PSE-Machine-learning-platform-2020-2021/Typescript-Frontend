@@ -1,6 +1,6 @@
 import React, { Component } from "react";
 import input from "./index.module.css";
-import Labelling from "./Label/Labelling";
+import Labelling from "./Labelling";
 
 export default class Input extends Component {
     state = {

@@ -2,7 +2,7 @@ import React, { Component } from "react";
 import PubSub from 'pubsub-js';
 import Title from "../../components/FinishComponents/Title";
 import Body from "../../components/FinishComponents/Body";
-import Labelling from "../../components/FinishComponents/Input/Label/Labelling";
+import Labelling from "../../components/FinishComponents/Input/Labelling";
 import { Page } from "../PageInterface";
 import { PageController } from "../../../controller/PageController";
 import { State } from "./State";

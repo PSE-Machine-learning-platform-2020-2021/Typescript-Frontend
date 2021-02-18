@@ -33,19 +33,25 @@ export default class LoginWindow extends Component {
   register = () => {
     this.setState({ openNewWindow: false });
     /** mit controller weiter veraendern*/
-    PubSub.publish('register', { name: this.state.username, email: this.state.email, password: this.state.password })
-    PubSub.subscribe('registerstatus', (data: boolean) => {
-      if (data) {
-        PubSub.publish('login', { name: this.state.username, email: this.state.email, password: this.state.password })
-        PubSub.subscribe('loginstatus', (_msg: any, data: boolean) => {
-          if (data) {
-            alert('Register und Einloggen Erfolg!')
-          }
-        })
-      } else {
-        alert('Register Mißerfolg!')
-      }
-    })
+    var pattern = /^([A-Za-z0-9_\-\.])+\@([A-Za-z0-9_\-\.])+\.([A-Za-z])+$/
+    if (!pattern.test(this.state.email)) {
+      alert('Sie müssen eine Emailadresse eingeben!');
+      return
+    } else {
+      PubSub.publish('register', { name: this.state.username, email: this.state.email, password: this.state.password })
+      PubSub.subscribe('registerstatus', (data: boolean) => {
+        if (data) {
+          PubSub.publish('login', { name: this.state.username, email: this.state.email, password: this.state.password })
+          PubSub.subscribe('loginstatus', (_msg: any, data: boolean) => {
+            if (data) {
+              alert('Register und Einloggen Erfolg!')
+            }
+          })
+        } else {
+          alert('Register Mißerfolg!')
+        }
+      })
+    }
   }
   login = () => {
     /** nach submit newFenster schliessen */

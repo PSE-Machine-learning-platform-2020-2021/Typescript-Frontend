@@ -9,7 +9,7 @@ export default class Labelling extends Component {
 
     handleChangeLabel = (e: ChangeEvent<HTMLInputElement>) => {
         this.setState({ newName: e.target.value });
-        this.setState({ id: nanoid() });
+        this.setState({ newId: nanoid() });
     };
     handleChangeStart = (e: ChangeEvent<HTMLInputElement>) => {
         this.setState({ newStart: e.target.value });
@@ -17,24 +17,24 @@ export default class Labelling extends Component {
     handleChangeEnd = (e: ChangeEvent<HTMLInputElement>) => {
         this.setState({ newEnd: e.target.value });
     };
-    handleClick() {
+    handleClick = () => {
         const { newId, newStart, newEnd, newName } = this.state;
+
         const labelObj = { id: newId, start: newStart, end: newEnd, name: newName };
         this.addLabel(labelObj);
         this.setState({ newId: "", newStart: "", newEnd: '', newName: "" });
     }
 
     addLabel = (labelObj: { id: string, start: string, end: string, name: string; }) => {
-
-        const newLabels = [labelObj, ...this.state.labels];
-
+        const { labels } = this.state
+        const newLabels = [labelObj, ...labels]
         this.setState({ labels: newLabels });
     };
 
 
     deleteLabel = (e: React.MouseEvent<HTMLButtonElement>, id: string) => {
 
-        let labels = this.state.labels;
+        const { labels } = this.state;
 
         let newLabels = labels.filter((label) => {
             return label.id !== id;
@@ -48,9 +48,9 @@ export default class Labelling extends Component {
         return (
             <div className="label-wrap">
                 {
-                    this.state.labels.map((label: { id: string, start: string, end: string, name: string; }) => {
+                    this.state.labels.map((label) => {
                         return (
-                            <li key={label.id}>
+                            <li >
                                 Von {label.start}s bis {label.end}s:  {label.name}
                                 <button onClick={(e) => this.deleteLabel(e, label.id)}>Löschen</button>
                             </li>
