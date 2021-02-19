@@ -1,4 +1,5 @@
 import React, { Component } from 'react'
+import { Imputation } from '../../../../model/Imputation'
 
 export default class FeatureList extends Component {
     state = {
@@ -9,10 +10,10 @@ export default class FeatureList extends Component {
             { name: "Energie", checked: false },
             { name: "Fourier-T", checked: false },
             { name: "Mittelwert", checked: false },
-            { name: "Pearson-K.", checked: false },
+            { name: "Autoregressiv", checked: false },
             { name: "Abweichung", checked: false },
             { name: "Wölbung", checked: false },
-            { name: "Entropie", checked: false }
+            { name: "IQR", checked: false }
         ]
     }
     handleCheck = (index: number) => {
