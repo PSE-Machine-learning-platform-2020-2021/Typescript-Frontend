@@ -4,6 +4,7 @@
 // learn more: https://github.com/testing-library/jest-dom
 import '@testing-library/jest-dom';
 import React from 'react'
+import { DataPoint } from "../src/model/DataPoint"
 
 class Test extends React.Component {
     render() {
