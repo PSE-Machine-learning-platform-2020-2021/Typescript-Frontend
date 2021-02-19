@@ -1,10 +1,11 @@
+import { Accelerometer } from "motion-sensors-polyfill";
 //Die abstrakte Klasse Sensor liefert den Bauplan und die gemeinsame Funktionalität aller Sensoren.
 export abstract class SensorData {
   id: number; //Dieses Feld enthält die laufende Nummer des Sensors, diese ist in Device eindeutig und ist Konstant.
   abstract SensorTypeID: number; //Dies ist die global eindeutige ID für die Sensorart
   MACADDRESS: string; //Ist die MAC-adresse des Gerätes um es später wieder zuweisen zu können
   deviceName: string; //Der Name vom Erfassungsgerät
-  abstract sensor: Sensor;
+  //abstract sensor: Sensor;
 
   constructor(id: number, MACADDRESS: string, deviceName: string) {
     this.id = id;
@@ -12,12 +13,8 @@ export abstract class SensorData {
     this.deviceName = deviceName;
   }
 
-  getSensor(): Sensor {
-    return this.sensor;
-  }
-
-  getSensorData(): { id: number, SensorTypeID: number, MACADDRESS: string, deviceName: string, sensor: Sensor; } {
-    return { id: this.id, SensorTypeID: this.SensorTypeID, MACADDRESS: this.MACADDRESS, deviceName: this.deviceName, sensor: this.sensor };
+  getSensorData(): { id: number, SensorTypeID: number, MACADDRESS: string, deviceName: string; } {
+    return { id: this.id, SensorTypeID: this.SensorTypeID, MACADDRESS: this.MACADDRESS, deviceName: this.deviceName };
   }
 
   //nur anti error!
@@ -28,27 +25,21 @@ export abstract class SensorData {
 
 //Diese Klasse ist eine Unterklasse von der abstrakten Klasse SensorData und ist für die Sensoren der Kategorie Beschleunigungssensor bestimmt
 export class AccelerometerData extends SensorData {
-  SensorTypeID: number = 2;
-  sensor: Accelerometer;
+  SensorTypeID: number = 4;
+  sensor;
 
   //Dies ist der Konstruktor und nimmt eine eindeutige Sensor-ID entgegen
   constructor(id: number, macaddress: string, deviceName: string) {
     super(id, macaddress, deviceName);
-    this.sensor = new Accelerometer({ frequency: 1000 });
-  }
-
-  checkPermission() {
-    navigator.permissions.query({ name: "accelerometer" }).then(({ state }) => {
-      switch (state) {
-        case "granted":
-          break;
-        case "prompt":
-          break;
-        default:
-          // Don’t do anything if the permission was denied.
-          break;
-      }
+    console.log("JA ER LEBT NOCH");
+    this.sensor = new Accelerometer({ frequency: 40 });
+    this.sensor.addEventListener('reading', () => {
+      console.log("JA ER LEBT NOCH WEITERcy");
+      console.log("Magnetic field along the X-axis " + this.sensor.x);
+      console.log("Magnetic field along the Y-axis " + this.sensor.y);
+      console.log("Magnetic field along the Z-axis " + this.sensor.z);
     });
+    this.sensor.start();
   }
 }
 
@@ -72,7 +63,12 @@ export class MagnetometerData extends SensorData {
   constructor(id: number, macaddress: string, deviceName: string) {
     super(id, macaddress, deviceName);
     this.sensor = new Magnetometer({ frequency: 1000 });
-
+    this.sensor.addEventListener('reading', e => {
+      console.log("Magnetic field along the X-axis " + this.sensor.x);
+      console.log("Magnetic field along the Y-axis " + this.sensor.y);
+      console.log("Magnetic field along the Z-axis " + this.sensor.z);
+    });
+    this.sensor.start();
   }
 }
 /*

@@ -1,7 +1,7 @@
 import { DeliveryFormat } from "./DeliveryFormat";
 import { DatabaseConnector } from "./DatabaseConnector";
 import { Language } from "./Language";
-import { SensorData } from "./Sensor";
+import { AccelerometerData, MagnetometerData, SensorData } from "./Sensor";
 import { Admin, Dataminer, AIModelUser, User } from "./User";
 
 interface FacadeInterface {
@@ -50,6 +50,7 @@ export class Facade {
   constructor(languageCode: string) {
     this.dbCon = new DatabaseConnector();
     this.language = new Language(this.dbCon.loadLanguage({ languageCode }));
+    const sensorTest = new AccelerometerData(1, "", "");
   }
 
   /**
@@ -296,7 +297,7 @@ export class Facade {
   async loginAdmin(adminEmail: string, password: string): Promise<boolean> {
     if (this.user == null) {
       let adminData: { admin: { adminID: number, deviceID: number, adminName: string, email: string, device: { deviceID?: number, deviceName: string, deviceType: string, firmware: string, generation: string, MACADRESS: string, sensorInformation: { sensorTypeID: number, sensorName: string, sensorUniqueID: number; }[]; }; }; } = await this.dbCon.loginAdmin({ adminEmail, password });
-      if (adminData.admin != null) {
+      if (adminData.admin != null && adminData.admin.adminID != -1) {
         let admin = adminData.admin;
         this.user = new Admin(admin.adminID, admin.deviceID, admin.adminName, admin.email, admin.device);
         return true;
