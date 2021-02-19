@@ -1,5 +1,3 @@
-import { Language } from "./Language";
-
 //Die Schnittstelle zur Datenbank.
 export class DatabaseConnector {
   private static readonly databasePHPURL: string = "/src/database/index.php";

@@ -69,7 +69,7 @@ export class AIBuilder {
         xhr.onreadystatechange = () => {
             if (xhr.readyState == 4) {
                 if (xhr.status == 200) {
-                    let responseJSON: object;
+                    var responseJSON: object | null;
                     try {
                         responseJSON = JSON.parse(xhr.responseText);
                     }
