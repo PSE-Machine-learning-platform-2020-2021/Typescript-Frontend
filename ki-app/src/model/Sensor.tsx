@@ -31,10 +31,8 @@ export class AccelerometerData extends SensorData {
   //Dies ist der Konstruktor und nimmt eine eindeutige Sensor-ID entgegen
   constructor(id: number, macaddress: string, deviceName: string) {
     super(id, macaddress, deviceName);
-    console.log("JA ER LEBT NOCH");
     this.sensor = new Accelerometer({ frequency: 40 });
     this.sensor.addEventListener('reading', () => {
-      console.log("JA ER LEBT NOCH WEITERcy");
       console.log("Magnetic field along the X-axis " + this.sensor.x);
       console.log("Magnetic field along the Y-axis " + this.sensor.y);
       console.log("Magnetic field along the Z-axis " + this.sensor.z);
