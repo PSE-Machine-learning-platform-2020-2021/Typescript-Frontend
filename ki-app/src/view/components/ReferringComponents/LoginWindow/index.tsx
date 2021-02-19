@@ -42,8 +42,8 @@ export default class LoginWindow extends Component {
       PubSub.subscribe('registerstatus', (data: boolean) => {
         if (data) {
           PubSub.publish('login', { name: this.state.username, email: this.state.email, password: this.state.password })
-          PubSub.subscribe('loginstatus', (_msg: any, data: boolean) => {
-            if (data) {
+          PubSub.subscribe('loginstatus', (_msg: any, newdata: boolean) => {
+            if (newdata) {
               alert('Register und Einloggen Erfolg!')
             }
           })

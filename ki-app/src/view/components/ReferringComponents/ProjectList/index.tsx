@@ -23,6 +23,7 @@ export default class ProjectList extends Component {
     componentDidMount() {
         /** controller noch nicht gegeben*/
         PubSub.subscribe('getprojectlist', (_msg: any, data: { projectID: number, projectName: string, AIModelID: number[]; }[]) => {
+            console.log('123')
             this.setState({ projectData: data })
         })
 

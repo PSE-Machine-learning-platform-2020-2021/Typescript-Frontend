@@ -28,6 +28,8 @@ export interface IState {
     slidingWindowSize?: number,      // optional
     slidingWindowStep?: number;        // optional
   };
+
+
   chosenEmails?: string[];
 }
 
@@ -152,6 +154,9 @@ export enum States {
   DeliverWeb,
   //Download
   NeedDownload,
+
+  //Modelcreation
+  NeedDatabaseList,
 
   /**
    * Neue Datenreihen sind im Status hinterlegt
