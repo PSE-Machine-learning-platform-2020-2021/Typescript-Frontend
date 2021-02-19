@@ -1,6 +1,7 @@
 import {DataRow} from "../DataRow"
-import {SensorData, AccelerometerData} from "../Sensor"
+import {AccelerometerData} from "../Sensor"
 
+/** 
 test("creat and getter test", () => {
     let sensorData1 = new AccelerometerData(0, "00-14-22-01-23-45", "Hubert")
     let datarow1 = new DataRow(sensorData1 ,0)
@@ -8,3 +9,4 @@ test("creat and getter test", () => {
     datarow1.createCurrentDataPoint()
     expect(datarow1.getDataRow()[0].value).toBe(-1);
   });
+  */
