@@ -1,9 +1,8 @@
 import { Component } from 'react';
 import PubSub from 'pubsub-js';
-import body from './index.module.css';
-import { Line } from 'react-chartjs';
+import diagram from './index.module.css';
 
-export default class Body extends Component {
+export default class Diagram extends Component {
     state = {
         sensorRow: [],
         datavalue: [],
@@ -56,17 +55,21 @@ export default class Body extends Component {
             pointHitDetectionRadius: 1,
             offsetGridLines: false,
         };
+        PubSub.subscribe("giveLineLabels", (usedSensorNames) => {
+            this.setState({ sensorRow: usedSensorNames });
+        });
         const lineLabels = [];
         for (var i = 0; i < this.state.sensorRow.length; i++) {
             lineLabels.push(<font color={this.state.color[i]}>■{this.state.sensorRow[i]}<br /></font>);
         }
 
+        var LineChart = require("react-chartjs").Line;
 
         return (
             <div>
-                <h2 className={body.title}>Fertig!</h2>
+                <h2 className={diagram.title}>Fertig!</h2>
                 {lineLabels}
-                <Line data={data} options={options} width="425" height="275" />
+                <LineChart data={data} options={options} width="425" height="275" />
             </div>
         );
     }

@@ -3,7 +3,8 @@ export class State {
   languageCode: string = "de";
   messageIDs: number[] = [];
   messages: string[] = [];
-  diagramSvg: string = "";
+  usedSensorNames: string[] = [];
+  dataRows: { value: number; relativeTime: number; }[][] = [];
   labels: { id: string, start: number, end: number, name: string; }[] = [];
 }
 

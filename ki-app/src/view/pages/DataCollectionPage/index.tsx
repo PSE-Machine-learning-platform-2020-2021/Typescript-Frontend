@@ -54,9 +54,11 @@ export class DataCollectionPage extends React.Component<Props, State> implements
      * Diese Methode sollte während Datenerfassung jede Sekunde von Controller aufgerufen werden, um Bild zu updaten.
      * @param countdownNumber Die Countdownzahl zu zeigen
      */
-    showDiagram(dataRows: { value: number; relativeTime: number; }[][]) {
+    showDiagram(dataRows: { value: number; relativeTime: number; }[][], usedSensorNames: string[]) {
         this.setState({ dataRows: dataRows });
+        this.setState({ usedSensorNames: usedSensorNames });
         PubSub.publish('startDiagram', this.state.dataRows);
+        PubSub.publish('giveLineLabels', this.state.usedSensorNames);
     }
 
     /**
