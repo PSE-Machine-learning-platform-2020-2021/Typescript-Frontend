@@ -20,13 +20,7 @@ export class ReferringPage extends React.Component<Props, State> implements Page
     observers: PageController[] = [];
     constructor(props: Props) {
         super(props);
-        this.createNewProject()
-        this.register()
-        this.login()
-        this.getmodellist()
-        this.loadproject()
-        this.changetovisu()
-        this.loadmodel()
+
         const VDOM = (
             <div>
                 <ConstantsText />
@@ -36,6 +30,13 @@ export class ReferringPage extends React.Component<Props, State> implements Page
             </div>
         );
         ReactDOM.render(VDOM, document.getElementById('root'));
+        this.createNewProject()
+        this.register()
+        this.login()
+        this.getmodellist()
+        this.loadproject()
+        this.changetovisu()
+        this.loadmodel()
     }
 
     attach(observer: PageController) {
@@ -65,20 +66,10 @@ export class ReferringPage extends React.Component<Props, State> implements Page
             // console.log(this.state.currentState)
             this.state.currentState = States.NewProjekt;
             this.state.currentProject = { projectID: -10000, projectName: data, choosenAIModelID: -10000 }
-            //console.log(this.state.currentState)
-            //console.log(this.state.currentProject)
-            //console.log(this.state.currentState)
-            // console.log(this.state.qr)
             //hier notifty for createnewProject
             this.notify()
-            //console.log(this.state.currentState)
-            //console.log(this.state.qr)
             //notify for needqr
             this.notify()
-            //console.log(this.state.currentState)
-            //console.log(this.state.qr)
-            //console.log(this.state.currentState)
-            //console.log(this.state.qr)
             PubSub.publish('getqr', this.state.qr)
         })
     }
@@ -88,6 +79,8 @@ export class ReferringPage extends React.Component<Props, State> implements Page
             // console.log(this.state.currentState)
             this.state.adminData = data
             this.state.currentState = States.Register
+            //this.setState({ adminData: data })
+            //this.setState({ currentState: States.Register })
             //console.log(this.state.currentState)
             this.notify()
             //console.log(this.state.currentState)
@@ -95,10 +88,10 @@ export class ReferringPage extends React.Component<Props, State> implements Page
             if (this.state.currentState != States.Register) {
                 flag = false
             } else {
+                PubSub.publish('disabled', false)
                 flag = true
             }
             PubSub.publish('registerstatus', flag)
-
         })
     }
 
@@ -107,20 +100,21 @@ export class ReferringPage extends React.Component<Props, State> implements Page
             // console.log(this.state.currentState)
             this.state.adminData = data
             this.state.currentState = States.Login
-            //console.log(this.state.currentState)
             this.notify()
-            //console.log(this.state.currentState)
             let flag: boolean
-            if (this.state.currentState != States.Login) {
-                flag = false
-            } else {
-                flag = true
-                PubSub.publish('getprojectlist', this.state.projectData)
-            }
-            PubSub.publish('loginstatus', flag)
-
+            this.state.wait!.then(() => {
+                if (this.state.currentState as States === States.LoginFail as States) {
+                    flag = false
+                } else {
+                    flag = true
+                    PubSub.publish('disabled', false)
+                    PubSub.publish('getprojectlist', this.state.projectData)
+                }
+                PubSub.publish('loginstatus', flag)
+            })
         })
     }
+
     getmodellist() {
         PubSub.subscribe('needmodellist', (_msg: any, data: { projectID: number, projectName: string, AIModelID: number[]; }) => {
             // console.log(this.state.currentState)
@@ -133,6 +127,7 @@ export class ReferringPage extends React.Component<Props, State> implements Page
 
         })
     }
+
     loadproject() {
         PubSub.subscribe('loadproject', (_msg: any, data: { projectID: number, projectName: string, choosenAIModelID: number; }) => {
             this.state.currentProject = { projectID: data.projectID, projectName: data.projectName, choosenAIModelID: -10000 }

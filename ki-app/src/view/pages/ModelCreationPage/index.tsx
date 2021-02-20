@@ -1,39 +1,31 @@
 import React, { Component } from 'react'
-import DatasetList from '../../components/ModelCreationComponents/DatasetList'
-import AddDatasetButton from '../../components/ModelCreationComponents/AddDatasetButton'
-import ImputationList from '../../components/ModelCreationComponents/ImputationList'
-import NormalizationList from '../../components/ModelCreationComponents/NormalizationList'
-import FeatureList from '../../components/ModelCreationComponents/FeatureList'
-import ModelTypeList from '../../components/ModelCreationComponents/ModelTypeList'
-import TrainButton from '../../components/ModelCreationComponents/TrainButton'
+import PubSub from 'pubsub-js';
 import { Page } from "../PageInterface";
 import { PageController } from "../../../controller/PageController";
 import { State } from "./State";
 import ReactDOM from 'react-dom';
 import './ModelCreationPage.css'
+import { States } from '../State'
+import Train from '../../components/ModelCreationComponents/Train';
 
 type Props = {
 };
-
 
 export class ModelCreationPage extends React.Component<Props, State> implements Page {
 	state = new State();
 	observers: PageController[] = [];
 	constructor(props: Props) {
 		super(props);
+
 		const VDOM = (
 			<div className="modelcreationpage">
-				<div className="checklist">
-					<h3>Datasets</h3>
-					<DatasetList datasets={this.state.datasets} updateDataset={this.updateDataset} deleteDataset={this.deleteDataset} />
-					<AddDatasetButton datasets={this.state.datasets} addDataset={this.addDataset} deleteDataset={this.deleteDataset} />
-				</div>
-				<div className="checklist"><ImputationList /><NormalizationList /></div>
-				<div className="checklist"><FeatureList /><ModelTypeList /></div>
-				<TrainButton />
+				<Train />
 			</div>
 		);
+
 		ReactDOM.render(VDOM, document.getElementById('root'));
+		this.needDatabaseList()
+		this.train()
 	}
 
 	attach(observer: PageController) {
@@ -58,38 +50,26 @@ export class ModelCreationPage extends React.Component<Props, State> implements 
 		return this.state;
 	}
 
-	//addDataset for add new Dataset
-	addDataset = (datasetObj: { id: string, name: string, chosen: boolean }) => {
-		//get orignal datasetList
-		const { datasets } = this.state
-		//add new one
-		const newDatasets = [datasetObj, ...datasets]
-		//update datasetList
-		this.setState({ datasets: newDatasets })
+	needDatabaseList() {
+		this.state.currentState = States.NeedDatabaseList
+		this.notify()
+		let databaseList = [
+			{ dataSetID: 1, dataSetName: 'dataset1' },
+			{ dataSetID: 2, dataSetName: 'dataset2' },
+			{ dataSetID: 3, dataSetName: 'dataset3' }
+		]
+		PubSub.publish('getlist', databaseList)
+		//PubSub.publish('getlist', this.state.dataSets)
 	}
 
-	//updateDataset for update DatasetList
-	updateDataset = (id: string, chosen: boolean) => {
-		//get orignal DatasetList
-		const { datasets } = this.state
-		//compare id
-		const newDatasets = datasets.map((datasetObj) => {
-			if (datasetObj.id === id) return { ...datasetObj, chosen }
-			else return datasetObj
+	train() {
+		PubSub.subscribe('train', (_msg: any, data: { dataSets: number[], imputations: string[], classifier: string, scaler: string, extractions: string[] }) => {
+			//console.log(data);
+			this.state.currentState = States.NeedKiTraining
+			this.state.trainingParameter = data
+			//console.log(this.state.trainingParameter);
+			this.notify()
 		})
-		this.setState({ datasets: newDatasets })
-	}
-
-	//deleteDataset for delete datasetObj
-	deleteDataset = (id: string) => {
-		//get orignal datasetList
-		const { datasets } = this.state
-		//delete datasetObj with id
-		const newDatasets = datasets.filter((datasetObj) => {
-			return datasetObj.id !== id
-		})
-		//update datasetList
-		this.setState({ datasets: newDatasets })
 	}
 
 }

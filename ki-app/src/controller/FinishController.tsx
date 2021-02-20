@@ -72,6 +72,7 @@ export class FinishController implements PageController {
         let end: number = this.state.currentLabel!.end
         let name: string = this.state.currentLabel!.name
         let promise: Promise<number> = MainController.getInstance().getFacade().createLabel({start , end}, name);
+        this.state.wait! = promise
         promise.then((id: number) => {
             this.state.currentLabel!.labelID = id
             this.state.currentState = States.setLabel

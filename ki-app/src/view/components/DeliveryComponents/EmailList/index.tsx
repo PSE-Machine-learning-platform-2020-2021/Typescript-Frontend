@@ -163,14 +163,13 @@ export default class EmailList extends Component {
 
 				{emails.map(emailObj => {
 					return (
-						<div>
-							<li style={{ backgroundColor: mouse ? '#ddd' : 'white' }} onMouseEnter={this.handleMouse(true)} onMouseLeave={this.handleMouse(false)}>
-								<label>
-									<input type="checkbox" checked={emailObj.chosen} onChange={(e: React.ChangeEvent<HTMLInputElement>): void => this.handleCheck(emailObj.id, e.target.checked)} />
-									<span>{emailObj.address}</span>
-								</label>
-								<button onClick={() => this.handleDelete(emailObj.id)} className="btn-item" style={{ display: mouse ? 'block' : 'none' }}>Löschen</button>
-							</li></div>
+						<li style={{ backgroundColor: mouse ? '#ddd' : 'white' }} onMouseEnter={this.handleMouse(true)} onMouseLeave={this.handleMouse(false)}>
+							<label>
+								<input type="checkbox" checked={emailObj.chosen} onChange={(e: React.ChangeEvent<HTMLInputElement>): void => this.handleCheck(emailObj.id, e.target.checked)} />
+								<span>{emailObj.address}</span>
+							</label>
+							<button onClick={() => this.handleDelete(emailObj.id)} className="btn-item" style={{ display: mouse ? 'block' : 'none' }}>Löschen</button>
+						</li>
 					)
 				})}
 

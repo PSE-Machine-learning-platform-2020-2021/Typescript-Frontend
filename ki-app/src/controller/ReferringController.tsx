@@ -4,9 +4,10 @@ import { PageController } from "./PageController";
 import { MainController } from "./MainController";
 import { DeliveryController } from "./DeliveryController";
 import { VisualizationController } from "./VisualizationController";
-import { VisualizationPage } from "../view/pages/VisualizationPage";
-import { FinishPage } from "../view/pages/FinishPage";
+import { ReferringPage } from "../view/pages/ReferringPage/index"
 import { QRCode, ErrorCorrectLevel, QRNumber, QRAlphaNum, QR8BitByte, QRKanji } from 'qrcode-generator-ts/js';
+import { ModelCreationPage } from "../view/pages/ModelCreationPage";
+import { DeliveryPage } from "../view/pages/DeliveryPage";
 
 
 export class RefferingController implements PageController {
@@ -17,7 +18,9 @@ export class RefferingController implements PageController {
      * Konstruktor des Seitenverwalters. Registriert sich als Beobachter auf seiner Seite und setzt den Start Status. 
      */
     constructor() {
-        this.page = new FinishPage({});
+        this.page = new ReferringPage({});
+        // this.page = new ModelCreationPage({});
+
         this.page.attach(this);
         this.state = this.page.getState();
         this.update();
@@ -73,6 +76,7 @@ export class RefferingController implements PageController {
     login() {
         let adminData: { name: string, email: string, password: string; } = this.state.adminData!;
         let loginSucess: Promise<boolean> = MainController.getInstance().getFacade().loginAdmin(adminData.email, adminData.password);
+        this.state.wait! = loginSucess
         loginSucess.then((value: boolean) => {
             if (value) {
                 let projectData: Promise<{ projectID: number; projectName: string; AIModelID: number[]; }[]> = MainController.getInstance().getFacade().getProjectMetas();
@@ -84,6 +88,9 @@ export class RefferingController implements PageController {
                 this.state.currentState = States.LoginFail;
             }
         });
+        loginSucess.catch((value: boolean) => {
+            console.log(value)
+        })
     }
 
     /**
