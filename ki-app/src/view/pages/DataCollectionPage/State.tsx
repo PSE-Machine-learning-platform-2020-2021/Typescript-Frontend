@@ -8,5 +8,5 @@ export class State implements IState {
   languageCode: string = "de";
   leadTime: number = -1;
   chosenSensors: string[] = [];
-  diagramSvg: string = "";
+  dataRows: { value: number; relativeTime: number; }[][] = [];
 }
