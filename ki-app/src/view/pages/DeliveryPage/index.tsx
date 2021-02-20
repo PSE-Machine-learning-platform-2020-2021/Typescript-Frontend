@@ -16,8 +16,7 @@ export class DeliveryPage extends React.Component<Props, State> implements Page 
 	observers: PageController[] = [];
 	constructor(props: Props) {
 		super(props);
-		this.delivery()
-		this.download()
+
 		const VDOM = (
 			<div className="deliverypage">
 				<EmailList />
@@ -25,6 +24,8 @@ export class DeliveryPage extends React.Component<Props, State> implements Page 
 			</div>
 		);
 		ReactDOM.render(VDOM, document.getElementById('root'));
+		this.delivery()
+		this.download()
 	}
 
 	attach(observer: PageController) {

@@ -20,13 +20,7 @@ export class ReferringPage extends React.Component<Props, State> implements Page
     observers: PageController[] = [];
     constructor(props: Props) {
         super(props);
-        this.createNewProject()
-        this.register()
-        this.login()
-        this.getmodellist()
-        this.loadproject()
-        this.changetovisu()
-        this.loadmodel()
+
         const VDOM = (
             <div>
                 <ConstantsText />
@@ -36,6 +30,13 @@ export class ReferringPage extends React.Component<Props, State> implements Page
             </div>
         );
         ReactDOM.render(VDOM, document.getElementById('root'));
+        this.createNewProject()
+        this.register()
+        this.login()
+        this.getmodellist()
+        this.loadproject()
+        this.changetovisu()
+        this.loadmodel()
     }
 
     attach(observer: PageController) {
@@ -65,20 +66,10 @@ export class ReferringPage extends React.Component<Props, State> implements Page
             // console.log(this.state.currentState)
             this.state.currentState = States.NewProjekt;
             this.state.currentProject = { projectID: -10000, projectName: data, choosenAIModelID: -10000 }
-            //console.log(this.state.currentState)
-            //console.log(this.state.currentProject)
-            //console.log(this.state.currentState)
-            // console.log(this.state.qr)
             //hier notifty for createnewProject
             this.notify()
-            //console.log(this.state.currentState)
-            //console.log(this.state.qr)
             //notify for needqr
             this.notify()
-            //console.log(this.state.currentState)
-            //console.log(this.state.qr)
-            //console.log(this.state.currentState)
-            //console.log(this.state.qr)
             PubSub.publish('getqr', this.state.qr)
         })
     }
@@ -88,6 +79,8 @@ export class ReferringPage extends React.Component<Props, State> implements Page
             // console.log(this.state.currentState)
             this.state.adminData = data
             this.state.currentState = States.Register
+            //this.setState({ adminData: data })
+            //this.setState({ currentState: States.Register })
             //console.log(this.state.currentState)
             this.notify()
             //console.log(this.state.currentState)

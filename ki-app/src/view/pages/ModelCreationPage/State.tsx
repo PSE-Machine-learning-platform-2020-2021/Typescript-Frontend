@@ -7,15 +7,16 @@ export class State implements IState {
   messages: { text: string, id: number; }[] = [];
 
   dataSets?: { dataSetID: number; dataSetName: string; }[];
-  trainingParameter?: {
-    sensors: number[],
+  trainingParameter: {
+    sensors?: number[],
     dataSets: number[],
+    imputations: string[],
     classifier: string,
     scaler: string,
-    features: string[],
+    extractions: string[],
     trainingDataPercentage?: number, // optional
     slidingWindowSize?: number,      // optional
     slidingWindowStep?: number;        // optional
-  };
+  } = { dataSets: [], imputations: [], classifier: '', scaler: '', extractions: [], };
 }
 

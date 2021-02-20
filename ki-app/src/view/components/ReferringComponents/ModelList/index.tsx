@@ -17,7 +17,6 @@ export default class ModelList extends Component {
             this.setState({ modelList: data.AIModelID })
             this.setState({ currentProject: { projectID: data.projectID, projectName: data.projectName } })
         })*/
-
     }
     handleChange = (e: React.ChangeEvent<HTMLSelectElement>) => {
         this.setState({

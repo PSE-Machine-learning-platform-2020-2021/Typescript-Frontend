@@ -19,11 +19,12 @@ export interface IState {
   diagramSvg?: string;
   recordingSettings?: { newDataSetName: string, usedSensorTypes: number[], readTime: number, waitTime: number, availableSensorTypes: { sensorTypID: number; sensorType: string; chosen: boolean; }[]; };
   trainingParameter?: {
-    sensors: number[],
+    sensors?: number[],
     dataSets: number[],
+    imputations: string[],
     classifier: string,
     scaler: string,
-    features: string[],
+    extractions: string[],
     trainingDataPercentage?: number, // optional
     slidingWindowSize?: number,      // optional
     slidingWindowStep?: number;        // optional

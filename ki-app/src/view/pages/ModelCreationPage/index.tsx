@@ -1,17 +1,12 @@
 import React, { Component } from 'react'
 import PubSub from 'pubsub-js';
-import DatasetList from '../../components/ModelCreationComponents/DatasetList'
-import ImputationList from '../../components/ModelCreationComponents/ImputationList'
-import NormalizationList from '../../components/ModelCreationComponents/NormalizationList'
-import FeatureList from '../../components/ModelCreationComponents/FeatureList'
-import ModelTypeList from '../../components/ModelCreationComponents/ModelTypeList'
-import TrainButton from '../../components/ModelCreationComponents/TrainButton'
 import { Page } from "../PageInterface";
 import { PageController } from "../../../controller/PageController";
 import { State } from "./State";
 import ReactDOM from 'react-dom';
 import './ModelCreationPage.css'
 import { States } from '../State'
+import Train from '../../components/ModelCreationComponents/Train';
 
 type Props = {
 };
@@ -24,20 +19,13 @@ export class ModelCreationPage extends React.Component<Props, State> implements 
 
 		const VDOM = (
 			<div className="modelcreationpage">
-				<div className="checklist">
-					<h3>Datasets</h3>
-
-					<DatasetList />
-
-				</div>
-				<div className="checklist"><ImputationList /><NormalizationList /></div>
-				<div className="checklist"><FeatureList /><ModelTypeList /></div>
-				<TrainButton />
+				<Train />
 			</div>
 		);
 
 		ReactDOM.render(VDOM, document.getElementById('root'));
 		this.needDatabaseList()
+		this.train()
 	}
 
 	attach(observer: PageController) {
@@ -72,6 +60,16 @@ export class ModelCreationPage extends React.Component<Props, State> implements 
 		]
 		PubSub.publish('getlist', databaseList)
 		//PubSub.publish('getlist', this.state.dataSets)
+	}
+
+	train() {
+		PubSub.subscribe('train', (_msg: any, data: { dataSets: number[], imputations: string[], classifier: string, scaler: string, extractions: string[] }) => {
+			//console.log(data);
+			this.state.currentState = States.NeedKiTraining
+			this.state.trainingParameter = data
+			//console.log(this.state.trainingParameter);
+			this.notify()
+		})
 	}
 
 }

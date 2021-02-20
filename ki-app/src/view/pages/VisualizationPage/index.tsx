@@ -20,9 +20,7 @@ export class VisualizationPage extends React.Component<Props, State> implements 
     observers: PageController[] = [];
     constructor(props: Props) {
         super(props);
-        this.getimagelist()
-        this.changeimg()
-        this.changetonextpage()
+
         const VDOM = (
             <div className="visualizationpage">
                 <ShowImage />
@@ -31,6 +29,9 @@ export class VisualizationPage extends React.Component<Props, State> implements 
             </div>
         );
         ReactDOM.render(VDOM, document.getElementById('root'));
+        this.getimagelist()
+        this.changeimg()
+        this.changetonextpage()
     }
 
 
