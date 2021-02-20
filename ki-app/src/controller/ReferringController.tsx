@@ -72,6 +72,7 @@ export class RefferingController implements PageController {
     login() {
         let adminData: { name: string, email: string, password: string; } = this.state.adminData!;
         let loginSucess: Promise<boolean> = MainController.getInstance().getFacade().loginAdmin(adminData.email, adminData.password);
+        this.state.wait! = loginSucess
         loginSucess.then((value: boolean) => {
             if (value) {
                 let projectData: Promise<{ projectID: number; projectName: string; AIModelID: number[]; }[]> = MainController.getInstance().getFacade().getProjectMetas();
@@ -83,6 +84,9 @@ export class RefferingController implements PageController {
                 this.state.currentState = States.LoginFail;
             }
         });
+        loginSucess.catch((value: boolean) => {
+            console.log(value)
+        })
     }
 
     /**

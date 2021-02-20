@@ -29,6 +29,7 @@ export interface IState {
     slidingWindowStep?: number;        // optional
   };
   chosenEmails?: string[];
+  wait?: Promise<any>
 }
 
 export enum States {
