@@ -26,18 +26,32 @@ export abstract class SensorData {
 //Diese Klasse ist eine Unterklasse von der abstrakten Klasse SensorData und ist für die Sensoren der Kategorie Beschleunigungssensor bestimmt
 export class AccelerometerData extends SensorData {
   SensorTypeID: number = 4;
-  sensor;
 
   //Dies ist der Konstruktor und nimmt eine eindeutige Sensor-ID entgegen
   constructor(id: number, macaddress: string, deviceName: string) {
     super(id, macaddress, deviceName);
-    this.sensor = new Accelerometer({ frequency: 40 });
+    /*this.sensor = new Accelerometer({ frequency: 40 });
     this.sensor.addEventListener('reading', () => {
       console.log("Magnetic field along the X-axis " + this.sensor.x);
       console.log("Magnetic field along the Y-axis " + this.sensor.y);
       console.log("Magnetic field along the Z-axis " + this.sensor.z);
     });
-    this.sensor.start();
+    this.sensor.start();*/
+    if (typeof (DeviceMotionEvent) !== "undefined" && typeof (DeviceMotionEvent.requestPermission) === "function") {
+      // (optional) Do something before API request prompt.
+      DeviceMotionEvent.requestPermission()
+        .then(response => {
+          // (optional) Do something after API prompt dismissed.
+          if (response == "granted") {
+            window.addEventListener("devicemotion", (e) => {
+              // do something for 'e' here.
+            });
+          }
+        })
+        .catch(console.error);
+    } else {
+      alert("DeviceMotionEvent is not defined");
+    }
   }
 }
 
