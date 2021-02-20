@@ -63,6 +63,8 @@ export class MainController implements MainControllerInterface {
    * Andwendungstart für einen Desktop
    */
   startApp() {
+    const queryString = window.location.search;
+    let urlParams = new URLSearchParams(queryString);
     let refferingController: RefferingController = new RefferingController();
     this.changeTo(refferingController);
   }

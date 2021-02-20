@@ -4,8 +4,7 @@ import { PageController } from "./PageController";
 import { MainController } from "./MainController";
 import { DeliveryController } from "./DeliveryController";
 import { VisualizationController } from "./VisualizationController";
-import { VisualizationPage } from "../view/pages/VisualizationPage";
-import { FinishPage } from "../view/pages/FinishPage";
+import { ReferringPage } from "../view/pages/ReferringPage/index"
 import { QRCode, ErrorCorrectLevel, QRNumber, QRAlphaNum, QR8BitByte, QRKanji } from 'qrcode-generator-ts/js';
 
 
@@ -17,7 +16,7 @@ export class RefferingController implements PageController {
      * Konstruktor des Seitenverwalters. Registriert sich als Beobachter auf seiner Seite und setzt den Start Status. 
      */
     constructor() {
-        this.page = new FinishPage({});
+        this.page = new ReferringPage({});
         this.page.attach(this);
         this.state = this.page.getState();
         this.update();
