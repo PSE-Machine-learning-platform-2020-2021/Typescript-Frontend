@@ -33,6 +33,7 @@ export interface IState {
 }
 
 export enum States {
+  waitForDB,
   /**
    * Seite benötigt texte
    */

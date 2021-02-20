@@ -73,6 +73,8 @@ export class RefferingController implements PageController {
         let adminData: { name: string, email: string, password: string; } = this.state.adminData!;
         let loginSucess: Promise<boolean> = MainController.getInstance().getFacade().loginAdmin(adminData.email, adminData.password);
         this.state.wait! = loginSucess
+        this.state.currentState = States.waitForDB
+        this.page.setState(this.state)
         loginSucess.then((value: boolean) => {
             if (value) {
                 let projectData: Promise<{ projectID: number; projectName: string; AIModelID: number[]; }[]> = MainController.getInstance().getFacade().getProjectMetas();
