@@ -42,7 +42,7 @@ export class AIBuilder {
      * ```
      * Die Reihenfolge ist unwichtig.
      */
-    applyModel(modelData: object): void {
+    applyModel(modelData: { sensors: number[], dataSets: number[], classifier: string, scaler: string, features: string[], trainingDataPercentage?: number, slidingWindowSize?: number, slidingWindowStep?: number;}): void {
         this.sendRequest(JSON.stringify(modelData), AIBuilder.url + AIBuilder.buildModel, console.log);
     }
 
@@ -69,7 +69,7 @@ export class AIBuilder {
         xhr.onreadystatechange = () => {
             if (xhr.readyState == 4) {
                 if (xhr.status == 200) {
-                    let responseJSON: object;
+                    var responseJSON: object | null;
                     try {
                         responseJSON = JSON.parse(xhr.responseText);
                     }

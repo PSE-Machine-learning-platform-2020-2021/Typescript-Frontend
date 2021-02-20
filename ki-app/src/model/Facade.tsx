@@ -1,8 +1,9 @@
 import { DeliveryFormat } from "./DeliveryFormat";
 import { DatabaseConnector } from "./DatabaseConnector";
 import { Language } from "./Language";
-import { SensorData } from "./Sensor";
+import { AccelerometerData, MagnetometerData, SensorData } from "./Sensor";
 import { Admin, Dataminer, AIModelUser, User } from "./User";
+import { AIBuilder } from "./AIBuilder";
 
 interface FacadeInterface {
   createDataSet(sensorTypes: string[], dataSetName: string): boolean;
@@ -50,6 +51,7 @@ export class Facade {
   constructor(languageCode: string) {
     this.dbCon = new DatabaseConnector();
     this.language = new Language(this.dbCon.loadLanguage({ languageCode }));
+    const sensorTest = new AccelerometerData(1, "", "");
   }
 
   /**
@@ -296,7 +298,7 @@ export class Facade {
   async loginAdmin(adminEmail: string, password: string): Promise<boolean> {
     if (this.user == null) {
       let adminData: { admin: { adminID: number, deviceID: number, adminName: string, email: string, device: { deviceID?: number, deviceName: string, deviceType: string, firmware: string, generation: string, MACADRESS: string, sensorInformation: { sensorTypeID: number, sensorName: string, sensorUniqueID: number; }[]; }; }; } = await this.dbCon.loginAdmin({ adminEmail, password });
-      if (adminData.admin != null) {
+      if (adminData.admin != null && adminData.admin.adminID != -1) {
         let admin = adminData.admin;
         this.user = new Admin(admin.adminID, admin.deviceID, admin.adminName, admin.email, admin.device);
         return true;
@@ -379,16 +381,18 @@ export class Facade {
     return {};
   }
 
-  classify(aiId: number, dataSetId: number, callBack: Function): void {
-    throw new Error("Not implemented");
+  classify(aiId: number, dataSetId: number, callBack: <R = unknown>(prediction: string | object) => R): void {
+    let aiBuilder = new AIBuilder(aiId)
+    aiBuilder.classify(dataSetId, callBack)
   };
 
   getAIModel(id: number, format: DeliveryFormat): object {
     throw new Error("Not implemented");
   }
 
-  applyModel(modeldata: object): void {
-    throw new Error("Not implemented");
+  applyModel(trainingParameter: { sensors: number[], dataSets: number[], classifier: string, scaler: string, features: string[], trainingDataPercentage?: number, slidingWindowSize?: number, slidingWindowStep?: number;}): void {
+    let aiBuilder = new AIBuilder(-1)
+    aiBuilder.applyModel(trainingParameter)
   }
 
 }

@@ -88,10 +88,10 @@ export class ReferringPage extends React.Component<Props, State> implements Page
             if (this.state.currentState != States.Register) {
                 flag = false
             } else {
+                PubSub.publish('disabled', false)
                 flag = true
             }
             PubSub.publish('registerstatus', flag)
-
         })
     }
 
@@ -100,9 +100,7 @@ export class ReferringPage extends React.Component<Props, State> implements Page
             // console.log(this.state.currentState)
             this.state.adminData = data
             this.state.currentState = States.Login
-            //console.log(this.state.currentState)
             this.notify()
-            //console.log(this.state.currentState)
             let flag: boolean
             this.state.wait!.then(() => {
                 if (this.state.currentState as States === States.LoginFail as States) {
@@ -116,6 +114,7 @@ export class ReferringPage extends React.Component<Props, State> implements Page
             })
         })
     }
+
     getmodellist() {
         PubSub.subscribe('needmodellist', (_msg: any, data: { projectID: number, projectName: string, AIModelID: number[]; }) => {
             // console.log(this.state.currentState)
@@ -128,6 +127,7 @@ export class ReferringPage extends React.Component<Props, State> implements Page
 
         })
     }
+
     loadproject() {
         PubSub.subscribe('loadproject', (_msg: any, data: { projectID: number, projectName: string, choosenAIModelID: number; }) => {
             this.state.currentProject = { projectID: data.projectID, projectName: data.projectName, choosenAIModelID: -10000 }

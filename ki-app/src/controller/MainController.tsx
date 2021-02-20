@@ -63,8 +63,14 @@ export class MainController implements MainControllerInterface {
    * Andwendungstart für einen Desktop
    */
   startApp() {
-    let refferingController: RefferingController = new RefferingController();
-    this.changeTo(refferingController);
+    const queryString = window.location.search;
+    let urlParams = new URLSearchParams(queryString);
+    if (urlParams.get("isMiner") === "true") {
+      var controller: PageController = new StartController();
+    } else {
+      var controller: PageController = new RefferingController();
+    }
+    this.changeTo(controller);
   }
 
   /**

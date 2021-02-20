@@ -21,7 +21,7 @@ export class AIController implements PageController {
         this.sensorManager = new SensorManager();
         this.page.attach(this);
         this.state = this.page.getState();
-        //MainController.getInstance().getFacade().registerAIModelUser(); //TODO
+        MainController.getInstance().getFacade().registerAIModelUser("Gustav", +this.urlParams.get("aiID")!);
     }
 
     /**
@@ -80,9 +80,11 @@ export class AIController implements PageController {
         MainController.getInstance().getFacade().classify( +this.urlParams.get("aiID")!, id, this.callback)
     }
 
-    public callback(prediction: any) {
+    public callback(prediction: any, ) {
         this.state.aiUserData!.result = prediction;
         this.state.currentState = States.ClassifyResult;
         this.page.setState(this.state);
+        let R: any
+        return R
     }
 }

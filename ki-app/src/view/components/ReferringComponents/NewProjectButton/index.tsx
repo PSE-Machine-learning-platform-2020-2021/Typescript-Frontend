@@ -2,8 +2,11 @@ import React, { Component } from 'react';
 import QRImage from '../QRImage';
 import LinkText from '../LinkText';
 import ChangeToVisuBtn from '../ChangeToVisuBtn';
+import { useState } from 'react';
 
 export default class NewProjectButton extends Component {
+
+
   state = {
     click: false,
     projectName: '',

@@ -4,12 +4,10 @@ import { PageController } from "./PageController";
 import { MainController } from "./MainController";
 import { DeliveryController } from "./DeliveryController";
 import { VisualizationController } from "./VisualizationController";
-import { VisualizationPage } from "../view/pages/VisualizationPage";
-import { ReferringPage } from "../view/pages/ReferringPage";
+import { ReferringPage } from "../view/pages/ReferringPage/index"
 import { QRCode, ErrorCorrectLevel, QRNumber, QRAlphaNum, QR8BitByte, QRKanji } from 'qrcode-generator-ts/js';
 import { ModelCreationPage } from "../view/pages/ModelCreationPage";
 import { DeliveryPage } from "../view/pages/DeliveryPage";
-
 
 
 export class RefferingController implements PageController {
@@ -105,7 +103,7 @@ export class RefferingController implements PageController {
             if (!value) {
                 this.state.currentState = States.LoginFail;
             }
-        })
+        });
     }
 
     /**
@@ -114,7 +112,7 @@ export class RefferingController implements PageController {
     createQR() {
         const url = new URL(document.URL);
         url.searchParams.append("SessionID", MainController.getInstance().getFacade().getSessionID().toString());
-        let link: string = url.toString()
+        let link: string = url.toString();
         var qr = new QRCode();
         qr.setTypeNumber(5);
         qr.setErrorCorrectLevel(ErrorCorrectLevel.L);
@@ -135,7 +133,7 @@ export class RefferingController implements PageController {
             } else {
                 this.state.currentState = States.LoadError;
             }
-        })
+        });
     }
 
     /**
@@ -150,7 +148,7 @@ export class RefferingController implements PageController {
             } else {
                 this.state.currentState = States.LoadError;
             }
-        })
+        });
     }
 
     /**
@@ -166,6 +164,6 @@ export class RefferingController implements PageController {
             } else {
                 this.state.currentState = States.LoadError;
             }
-        })
+        });
     }
 }

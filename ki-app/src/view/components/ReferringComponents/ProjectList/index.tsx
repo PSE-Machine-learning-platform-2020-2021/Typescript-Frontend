@@ -34,6 +34,7 @@ export default class ProjectList extends Component {
             value: e.target.value
         })
     }
+    
     handleChoose() {
         /* wait to change load model*/
         if (this.state.value == null) {
