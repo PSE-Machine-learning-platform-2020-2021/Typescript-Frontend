@@ -35,9 +35,6 @@ export class RefferingController implements PageController {
             case States.LoadProject:
                 this.loadProject();
                 break;
-            case States.NeedQRC:
-                this.createQR();
-                break;
             case States.Register:
                 this.register();
                 break;
@@ -89,11 +86,11 @@ export class RefferingController implements PageController {
             } else {
                 this.state.currentState = States.LoginFail;
             }
+            this.page.setState(this.state)
         });
         loginSucess.catch((value: boolean) => {
             console.log(value)
         })
-        
     }
 
     /**
@@ -138,12 +135,17 @@ export class RefferingController implements PageController {
         this.page.setState(this.state)
         sucess.then((value: boolean) => {
             if (value) {
-                this.state.currentState = States.NeedQRC;
+                this.createQR()
+                let projectData: Promise<{ projectID: number; projectName: string; AIModelID: number[]; }[]> = MainController.getInstance().getFacade().getProjectMetas();
+                projectData.then((data: { projectID: number; projectName: string; AIModelID: number[]; }[]) => {
+                    this.state.projectData! = data;
+                });
             } else {
                 this.state.currentState = States.LoadError;
             }
+            this.page.setState(this.state)
         });
-        this.page.setState(this.state)
+        
     }
 
     /**
@@ -157,7 +159,7 @@ export class RefferingController implements PageController {
         this.page.setState(this.state)
         sucess.then((value: boolean) => {
             if (value) {
-                this.state.currentState = States.NeedQRC;
+                this.createQR()
             } else {
                 this.state.currentState = States.LoadError;
             }
