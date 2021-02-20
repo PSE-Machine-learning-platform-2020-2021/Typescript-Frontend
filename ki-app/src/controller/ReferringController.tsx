@@ -89,6 +89,7 @@ export class RefferingController implements PageController {
         loginSucess.catch((value: boolean) => {
             console.log(value)
         })
+        
     }
 
     /**
