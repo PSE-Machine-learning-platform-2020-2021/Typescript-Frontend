@@ -104,14 +104,16 @@ export class ReferringPage extends React.Component<Props, State> implements Page
             this.notify()
             //console.log(this.state.currentState)
             let flag: boolean
-            if (this.state.currentState != States.Login) {
-                flag = false
-            } else {
-                flag = true
-                PubSub.publish('getprojectlist', this.state.projectData)
-            }
-            PubSub.publish('loginstatus', flag)
-
+            this.state.wait!.then(() => {
+                if (this.state.currentState as States === States.LoginFail as States) {
+                    flag = false
+                } else {
+                    flag = true
+                    PubSub.publish('disabled', false)
+                    PubSub.publish('getprojectlist', this.state.projectData)
+                }
+                PubSub.publish('loginstatus', flag)
+            })
         })
     }
     getmodellist() {

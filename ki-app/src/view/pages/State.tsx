@@ -32,6 +32,7 @@ export interface IState {
 
 
   chosenEmails?: string[];
+  wait?: Promise<any>
 }
 
 export enum States {

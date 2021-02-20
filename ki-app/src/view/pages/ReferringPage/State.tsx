@@ -16,4 +16,5 @@ export class State implements IState {
   sessionID?: string;
   //aiParameter?: 
   qr?: string;
+  wait?: Promise<any>
 }
