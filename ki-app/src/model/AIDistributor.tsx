@@ -1,13 +1,13 @@
-import { isExternalModuleReference } from 'typescript'
-import {DeliveryFormat} from './DeliveryFormat'
+import { isExternalModuleReference } from 'typescript';
+import { DeliveryFormat } from './DeliveryFormat';
 
 /**
  * Diese Klasse verwaltet die Auslieferungsformalitäten für trainierte KI-Modelle.
  */
 export class AIDistributor {
-    private static readonly url: string = "python/deliverance.php"
-    private format: DeliveryFormat
-    private id: number
+    private static readonly url: string = "python/deliverance.php";
+    private format: DeliveryFormat;
+    private id: number;
 
     /**
      * Dieser Konstruktor erzeugt das Objekt in Abhängigkeit vom gewählten Auslieferungsformat. 
@@ -15,40 +15,42 @@ export class AIDistributor {
      * @param format Das Auslieferungsformat.
      */
     constructor(id: number, format: DeliveryFormat) {
-        this.format = format
-        this.id = id
+        this.format = format;
+        this.id = id;
     }
-    
+
     /**
      * Gibt in Abhängigkeit vom Auslieferungsformat entweder das fertige KI-Modell als 
      * ausführbare Datei zurück, oder sämtliche Daten, die nötig sind, um das KI-Modell 
      * später als Web-Anwendung auszuführen.
      */
-    getAIModel(): object  {
-        let xhr = new XMLHttpRequest() // XHR ist kurz für XmlHttpRequest
-        let data = {}
-        xhr.open("POST", AIDistributor.url, true)
+    getAIModel(): object {
+        let xhr = new XMLHttpRequest(); // XHR ist kurz für XmlHttpRequest
+        let data = {};
+        xhr.open("POST", AIDistributor.url, true);
         xhr.onreadystatechange = () => {
             if (xhr.readyState == 4) {
-                if(xhr.status == 200) {
-                    data = JSON.parse(xhr.responseText)
+                if (xhr.status == 200) {
+                    data = JSON.parse(xhr.responseText);
                 }
                 else {
-                    console.log("Connection to server failed. Please try again.")
+                    console.log("Connection to server failed. Please try again.");
                 }
             }
-        }
-        xhr.setRequestHeader("Content-Type", "application/json")
-        xhr.send(JSON.stringify({"id": this.id, "format": this.format}))
+        };
+        xhr.setRequestHeader("Content-Type", "application/json");
+        xhr.send(JSON.stringify({ "id": this.id, "format": this.format }));
 
         switch (this.format) {
             case DeliveryFormat.WEB_APP:
-                return data
+                return data;
             case DeliveryFormat.EXE:
-                location.href = data["exe"]
+                //location.href = data["exe"];//////////////////////erzeugt fehler!!!
+                break;
             default:
-                throw new Error("Illegal delivery format.")
+                throw new Error("Illegal delivery format.");
         }
+        return {};
     }
 
     /**
@@ -58,6 +60,6 @@ export class AIDistributor {
      * Diese Methode ist sinnlos, da eine Datei auf dem Server liegen muss, um heruntergeladen werden zu können.
      */
     private buildExecutable(): boolean {
-        throw new Error("Not Implemented")
+        throw new Error("Not Implemented");
     }
 }

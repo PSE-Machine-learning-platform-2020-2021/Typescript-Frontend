@@ -3,10 +3,12 @@ export enum Extraction {
     MAX,
     VARIANCE,
     ENERGY,
+    FOURIER_TRANSFORM,
     MEAN,
     AUTOREGRESSIVE,
-    IQR,
     SKEWNESS,
     KURTOSIS,
-    FOURIER_TRANSFORM
+    IQR,
+
+
 }

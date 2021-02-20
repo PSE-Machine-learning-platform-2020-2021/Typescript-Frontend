@@ -22,8 +22,10 @@ export class StartController implements PageController {
         this.state = this.page.getState();
         this.page.attach(this);
         MainController.getInstance().getFacade().registerDataminer("Miner", +this.urlParams.get("SessionID")!)
-
         let availableSensor: Promise<{ sensorTypID: number; sensorType: string; }[]> = MainController.getInstance().getFacade().getAvailableSensors();
+        this.state.wait! = availableSensor
+        this.state.currentState = States.waitForDB
+        this.page.setState(this.state)
         availableSensor.then((sensors) => {
             for (let index = 0; index < sensors.length; index++) {
                 const sensorTypID: number = sensors[index].sensorTypID;

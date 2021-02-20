@@ -1,22 +1,22 @@
-export class State {
+import { IState } from "../State";
+import { States } from "../State";
+
+export class State implements IState {
   currentState: States = States.NeedMessage;
   languageCode: string = "de";
-  messageIDs: number[] = [];
-  messages: string[] = [];
-  datasets: { id: string, name: string, chosen: boolean }[] = [];
-  features: { name: string, chosen: boolean }[] = [];
-  imputations: { name: string, chosen: boolean }[] = [];
-  modeltypes: { name: string, chosen: boolean }[] = [];
-  normalizations: { name: string, chosen: boolean }[] = [];
+  messages: { text: string, id: number; }[] = [];
 
+  dataSets?: { dataSetID: number; dataSetName: string; }[];
+  trainingParameter: {
+    sensors?: number[],
+    dataSets: number[],
+    imputations: string[],
+    classifier: string,
+    scaler: string,
+    extractions: string[],
+    trainingDataPercentage?: number, // optional
+    slidingWindowSize?: number,      // optional
+    slidingWindowStep?: number;        // optional
+  } = { dataSets: [], imputations: [], classifier: '', scaler: '', extractions: [], };
 }
 
-
-export enum States {
-  NeedMessage,
-  NeedData,
-  GotData,
-  ChangePage,
-  NeedParameter,
-  StartTrain
-}

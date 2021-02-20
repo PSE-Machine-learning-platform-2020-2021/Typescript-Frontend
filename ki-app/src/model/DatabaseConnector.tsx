@@ -1,6 +1,6 @@
 //Die Schnittstelle zur Datenbank.
 export class DatabaseConnector {
-  private static readonly databasePHPURL: string = "http://129.13.170.59/src/database/index.php";
+  private static readonly databasePHPURL: string = "/src/database/index.php";
 
   /**
    * Gibt Name und Code jeder verfügbaren Sprache zurück
@@ -16,7 +16,7 @@ export class DatabaseConnector {
    * @returns die Sprache
    */
   async loadLanguage(requestData: { languageCode: string; }): Promise<string[]> {
-    const result: string[] = await this.sendRequest("loadLanguage", requestData);
+    const result: string[] = await this.sendRequest("load_language", requestData);
     return result;
   }
 
