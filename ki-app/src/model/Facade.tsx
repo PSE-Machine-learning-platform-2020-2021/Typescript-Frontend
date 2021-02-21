@@ -5,6 +5,7 @@ import { AccelerometerData, MagnetometerData, SensorData } from "./SensorData";
 import { Admin, Dataminer, AIModelUser, User } from "./User";
 import { AIBuilder } from "./AIBuilder";
 import { DeviceData } from "./DeviceData";
+import { AIDistributor } from "./AIDistributor";
 
 interface FacadeInterface {
   createDataSet(sensorTypes: string[], dataSetName: string): boolean;
@@ -97,20 +98,10 @@ export class Facade {
       let sessionID: number = this.getSessionID();
       let userID: number = this.user.getID();
       let dataSetID: number = this.user.getCurrentDataSetID();
+      this.user.addDatapoint(dataRowID, datapoint);
       return this.dbCon.sendDataPoint({ sessionID, userID, dataSetID, dataRowID, datapoint });
     }
     return false;
-  }
-
-  /** //////////////////////////////////////////////////////////////////////////////////////////////////////////////unnötig
-   * Liest für den aktuellen Datensatz den Sensor aus von der Datenreihe mit der übergebenen ID
-   * @param dataRowID die DatenreihenID
-   */
-  readDataPoint(dataRowID: number): { dataPoint?: { value: number, relativeTime: number; }; } {
-    if (this.user != null) {
-      return this.user.readDataPoint(dataRowID);
-    }
-    return {};
   }
 
   /**
@@ -165,7 +156,7 @@ export class Facade {
    * @param dataSetID die Datensatz ID von der die Datenreihen gelesen werden sollen
    * @returns die Sensordaten von der Datenreihe
    */
-  getDataRows(dataSetID: number): { dataRows?: { value: number, relativeTime: number; }[][]; } {
+  getDataRows(dataSetID: number): { dataRows?: { value: number[], relativeTime: number; }[][]; } {
     if (this.user != null) {
       return this.user.getDataRows(dataSetID);
     }
@@ -177,7 +168,7 @@ export class Facade {
    * @param dataSetID die Datensatz ID von der die Datenreihen gelesen werden sollen
    * @returns die Sensordaten von der Datenreihe
    */
-  getCurrentDataRows(): { dataRows?: { value: number, relativeTime: number; }[][]; } {
+  getCurrentDataRows(): { dataRows?: { value: number[], relativeTime: number; }[][]; } {
     if (this.user != null) {
       return this.user.getCurrentDataRows();
     }
@@ -386,8 +377,9 @@ export class Facade {
     aiBuilder.classify(dataSetId, callBack);
   };
 
-  getAIModel(id: number, format: DeliveryFormat): object {
-    throw new Error("Not implemented");
+  getAIModel(id: number, format: DeliveryFormat): {url:string} {
+    let aiDist = new AIDistributor(id, format);
+    return aiDist.getAIModel();
   }
 
   applyModel(trainingParameter: { sensors: number[], dataSets: number[], classifier: string, scaler: string, features: string[], trainingDataPercentage?: number, slidingWindowSize?: number, slidingWindowStep?: number; }): void {
