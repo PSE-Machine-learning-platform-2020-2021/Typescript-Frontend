@@ -1,7 +1,7 @@
 import React, { Component } from "react";
 import PubSub from 'pubsub-js';
 import Title from "../../components/FinishComponents/Title";
-import Body from "../../components/FinishComponents/Body";
+import Body from "../../components/FinishComponents/Diagram";
 import Labelling from "../../components/FinishComponents/Input/Labelling";
 import { Page } from "../PageInterface";
 import { PageController } from "../../../controller/PageController";
@@ -32,7 +32,8 @@ export class FinishPage extends React.Component<IProps, State> implements Page {
   }
 
   giveDiagram() {
-    PubSub.publish("giveDiagram", this.state.diagramSvg);
+    PubSub.publish('startDiagram', this.state.dataRows);
+    PubSub.publish('giveLineLabels', this.state.usedSensorNames);
   }
 
 

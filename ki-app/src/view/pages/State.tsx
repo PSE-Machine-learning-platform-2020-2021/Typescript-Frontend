@@ -18,6 +18,7 @@ export interface IState {
   qr?: string;
   diagramSvg?: string;
   recordingSettings?: { newDataSetName: string, usedSensorTypes: number[], readTime: number, waitTime: number, availableSensorTypes: { sensorTypID: number; sensorType: string; chosen: boolean; }[]; };
+  usedSensorNames?: string[];
   trainingParameter?: {
     sensors?: number[],
     dataSets: number[],
@@ -32,7 +33,7 @@ export interface IState {
 
 
   chosenEmails?: string[];
-  wait?: Promise<any>
+  wait?: Promise<any>;
 }
 
 export enum States {
