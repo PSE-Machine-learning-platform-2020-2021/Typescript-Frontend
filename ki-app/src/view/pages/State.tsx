@@ -12,11 +12,11 @@ export interface IState {
   aiUserData?: { name: string, result: string; };
   currentLabel?: { labelID: number, start: number, end: number; name: string; };
   sessionID?: string;
-  dataPoints?: { rowId: number, sensorType: number, value: number[]; relativeTime: number; }[]
+  dataPoints?: { rowId: number, sensorType: number, value: number[]; relativeTime: number; }[];
   dataRows?: { sensorType: number, value: number[]; relativeTime: number; }[][];
   //DataSet?: {dataSetID: number, rows: {sensorType: number, value: number[]; relativeTime: number; }[] }[]
   dataSetMetas?: { dataSetID: number; dataSetName: string; }[];
-  currentDataSet?: { dataSetID: number, rows: { sensorType: number, value: number[]; relativeTime: number; }[] }
+  currentDataSet?: { dataSetID: number, rows: { sensorType: number, value: number[]; relativeTime: number; }[]; };
   qr?: string;
   diagramSvg?: string;
   recordingSettings?: { newDataSetName: string, usedSensorTypes: number[], readTime: number, waitTime: number, availableSensorTypes: { sensorTypID: number; sensorType: string; chosen: boolean; }[]; };
@@ -27,7 +27,7 @@ export interface IState {
     imputations: string[],
     classifier: string,
     scaler: string,
-    features: string[]
+    features: string[];
     extractions: string[],
     trainingDataPercentage?: number, // optional
     slidingWindowSize?: number,      // optional

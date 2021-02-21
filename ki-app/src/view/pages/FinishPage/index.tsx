@@ -33,7 +33,6 @@ export class FinishPage extends React.Component<IProps, State> implements Page {
 
   giveDiagram() {
     PubSub.publish('startDiagram', this.state.dataRows);
-    PubSub.publish('giveLineLabels', this.state.usedSensorNames);
   }
 
 

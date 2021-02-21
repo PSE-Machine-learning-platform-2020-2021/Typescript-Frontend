@@ -7,8 +7,9 @@ export default class Diagram extends Component {
         sensorRow: [],
         datavalue: [],
         time: [],
-        showDiagram: true,
-        color: ['rgba(46,139,87,1)', 'rgba(68,24,232,1)', 'rgba(238,173,14,1)', 'rgba(178,34,34,1)'],
+        color: ['rgba(46,190,87,1)', 'rgba(68,24,232,1)', 'rgba(238,173,14,1)', 'rgba(178,34,34,1)', 'rgba(238, 130, 238,1)', 'rgba(0, 0, 0,1)',
+            'rgba(106, 90, 205,1)', 'rgba(238, 118, 0,1)', 'rgba(105, 105, 105,1)'],
+        //grün,blau,gelb,rot,rosa,schwarz,lila,orange,grau
     };
 
     render() {
@@ -17,15 +18,31 @@ export default class Diagram extends Component {
                 sensorRow: [],
                 datavalue: [],
                 time: [],
-                showDiagram: true
             });
+
+            const lineLabels = [];
+            for (var i = 0; i < this.state.sensorRow.length * 3; i++) {
+                if (i % 3 == 0) {
+                    lineLabels.push(<font color={this.state.color[i]}>■{this.state.sensorRow[i]}.X<br /></font>);
+                }
+                if (i % 3 == 1) {
+                    lineLabels.push(<font color={this.state.color[i]}>■{this.state.sensorRow[i]}.Y<br /></font>);
+                }
+                if (i % 3 == 2) {
+                    lineLabels.push(<font color={this.state.color[i]}>■{this.state.sensorRow[i]}.Z<br /></font>);
+                }
+            }
+
             //put each value Array in State
             for (var i = 0; i < dataRows.length; i++) {
                 var datavalues = [];
-                for (var j = 0; j < dataRows[i].length; j++) {
-                    datavalues.push(dataRows[i][j].value);
+                var x = 0;
+                for (var dataCoordinate = 0; dataCoordinate < 3; dataCoordinate++) {
+                    for (var j = 0; j < dataRows[i].length; j++) {
+                        datavalues.push(dataRows[i][j].value[dataCoordinate]);
+                    }
+                    this.state.datavalue.push(datavalues);
                 }
-                this.state.datavalue.push(datavalues);
             }
 
             //put time in State
@@ -34,10 +51,10 @@ export default class Diagram extends Component {
             }
         });
         var newDatasets = [];
-        for (var i = 0; i < this.state.sensorRow.length; i++) {
+        for (var i = 0; i < this.state.sensorRow.length * 3; i++) {
             newDatasets.push(
                 {
-                    label: this.state.sensorRow[i],
+                    label: "",
                     strokeColor: this.state.color[i],
                     borderWidth: 1,
                     data: this.state.datavalue[i],
@@ -54,14 +71,10 @@ export default class Diagram extends Component {
             pointDotRadius: 2,
             pointHitDetectionRadius: 1,
             offsetGridLines: false,
+            pointDot: true
         };
-        PubSub.subscribe("giveLineLabels", (usedSensorNames) => {
-            this.setState({ sensorRow: usedSensorNames });
-        });
-        const lineLabels = [];
-        for (var i = 0; i < this.state.sensorRow.length; i++) {
-            lineLabels.push(<font color={this.state.color[i]}>■{this.state.sensorRow[i]}<br /></font>);
-        }
+
+
 
         var LineChart = require("react-chartjs").Line;
 
