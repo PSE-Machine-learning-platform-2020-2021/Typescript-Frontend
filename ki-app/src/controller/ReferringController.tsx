@@ -119,6 +119,7 @@ export class RefferingController implements PageController {
     createQR() {
         const url = new URL(document.URL);
         url.searchParams.append("SessionID", MainController.getInstance().getFacade().getSessionID().toString());
+        url.searchParams.append("isMiner", "true")
         let link: string = url.toString();
         var qr = new QRCode();
         qr.setTypeNumber(5);
