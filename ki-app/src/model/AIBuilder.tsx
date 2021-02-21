@@ -83,6 +83,9 @@ export class AIBuilder {
                         successAction(responseJSON);
                     }
                 }
+                else if (xhr.status == 406) {
+                    throw new Error("Error in request data - not accepted by Server")
+                }
                 else {
                     xhr.send(requestData);
                 }
