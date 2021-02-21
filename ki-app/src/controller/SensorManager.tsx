@@ -117,4 +117,21 @@ export class SensorManager {
     getData(sensor: Magnetometer | Gyroscope | Accelerometer, rowId: number, sensorType: number ) {
         this.dataPoints.push({ rowId , sensorType , value: [sensor.x!, sensor.y!, sensor.z!], relativeTime: this.startTime - this.readTime })
     }
+
+    getAvailableSensors() {
+        let sensors: { sensorTypID: number; sensorType: string; }[] = []
+        try {
+            let sTest = new Accelerometer()
+            sensors.push({ sensorTypID: 2, sensorType: "Accelerometer"})
+        } catch (error) {}
+        try {
+            let sTest = new Gyroscope()
+            sensors.push({ sensorTypID: 3, sensorType: "Gyroscope"})
+        } catch (error) {}
+        try {
+            let sTest = new Magnetometer()
+            sensors.push({ sensorTypID: 4, sensorType: "Magnetometer"})
+        } catch (error) {}
+        return sensors
+    }
 }
