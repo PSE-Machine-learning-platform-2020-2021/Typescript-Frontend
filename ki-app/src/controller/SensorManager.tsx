@@ -3,12 +3,15 @@ import { Page } from "../view/pages/PageInterface";
 import { IState, States } from "../view/pages/State";
 
 export class SensorManager {
-
-    private currentSensors: number[] = [];
+    private currentSensors: Sensor[] = []
+    //private currentSensorIDs: number[] = [];
     private facade = MainController.getInstance().getFacade();
     private waitTime = 5;
     private readTime = 10;
+    private startTime = 10
     private saving = true
+
+    private dataPoints: {rowId: number, sensorType: number, value: number[]; relativeTime: number; }[] = []
 
     private readonly TO_SECOND = 1000;
 
@@ -18,10 +21,47 @@ export class SensorManager {
     * @returns Gibt true für ein erfolgreiches Erstellen eines Dataensatzes zurück, gibt sonst false zurück.
     */
     setUpDataRead(sensorTypes: number[], dataSetName: string, waitTime: number, readTime: number, saving: boolean) {
-        this.currentSensors = sensorTypes;
+        //this.currentSensorIDs = sensorTypes;
         this.waitTime = waitTime * this.TO_SECOND;
         this.readTime = readTime * this.TO_SECOND;
-        this.saving = saving
+        this.startTime = readTime * this.TO_SECOND;
+        this.saving = saving;
+        for (let index = 0; index < sensorTypes.length; index++) {
+            switch(sensorTypes[index]) {
+                case 2:
+                    let accSensor = new Accelerometer({frequency: 60})
+                    this.currentSensors.push(accSensor)
+                    accSensor.addEventListener('reading', e => {
+                        this.getData(accSensor, index, sensorTypes[index])
+                      })
+                      accSensor.addEventListener('error', event => {
+                        console.log(event.error.name, event.error.message);
+                      })
+                    break;
+                case 3:
+                    let gyroSensor = new Gyroscope({frequency: 60})
+                    this.currentSensors.push(gyroSensor)
+                    gyroSensor.addEventListener('reading', e => {
+                        this.getData(gyroSensor, index, sensorTypes[index])
+                      })
+                      gyroSensor.addEventListener('error', event => {
+                        console.log(event.error.name, event.error.message);
+                      })
+                    break;
+                case 4:
+                    let magSensor = new Magnetometer({frequency: 60})
+                    this.currentSensors.push(magSensor)
+                    magSensor.addEventListener('reading', e => {
+                        this.getData(magSensor, index, sensorTypes[index])
+                      })
+                      magSensor.addEventListener('error', event => {
+                        console.log(event.error.name, event.error.message);
+                      })
+                    break;
+                default:
+                    break;
+            }
+        }
         return (this.facade.createDataSet(sensorTypes, dataSetName));
     }
 
@@ -40,25 +80,24 @@ export class SensorManager {
             if (this.waitTime === 0) clearInterval(intervalId1);
         }, 1);
 
+        for (let index = 0; index < this.currentSensors.length; index++) {
+            this.currentSensors[index].start()
+        }
+
         //Nimm Daten auf verteile sie an die Seite und das Modell. Erneuere dabei die aufnahmezeit auf der Seite
         let intervalId2 = setInterval(() => {
             this.readTime = this.readTime - 1;
-            let data: { value: number; relativeTime: number; } = {  value: 0, relativeTime: 0};
-            for (let index = 0; index < this.currentSensors.length; index++) {
-                data = this.facade.readDataPoint(index)!.dataPoint!;
-                state.dataPoint! = data;
-                state.recordingSettings!.readTime = this.readTime;
-                state.currentState = States.SetReadTime;
-                page.setState(state);
-            }
-            if(this.saving) {
-                for (let index = 0; index < this.currentSensors.length; index++) {
-                    this.facade.sendDataPoint(index, data.value, data.relativeTime);
+                while(this.dataPoints.length > 0) {
+                    let newDataPoint = this.dataPoints.shift()!
+                    state.dataPoints!.push(newDataPoint)
+                    MainController.getInstance().getFacade().sendDataPoint(newDataPoint.rowId, {value: newDataPoint.value, relativeTime: newDataPoint.relativeTime})
+                    page.setState(state)
                 }
-            }
-            
-            if (this.readTime === 0) clearInterval(intervalId2);
         }, 1);
+
+        for (let index = 0; index < this.currentSensors.length; index++) {
+            this.currentSensors[index].stop()
+        }
     }
 
     /**
@@ -73,5 +112,9 @@ export class SensorManager {
      */
     getReadTime() {
         return this.readTime;
+    }
+
+    getData(sensor: Magnetometer | Gyroscope | Accelerometer, rowId: number, sensorType: number ) {
+        this.dataPoints.push({ rowId , sensorType , value: [sensor.x!, sensor.y!, sensor.z!], relativeTime: this.startTime - this.readTime })
     }
 }
