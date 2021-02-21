@@ -7,6 +7,5 @@ export class State implements IState {
   messages: { text: string, id: number; }[] = [];
   languageCode: string = "de";
   leadTime: number = -1;
-  usedSensorNames: string[] = [];
-  dataRows: { value: number; relativeTime: number; }[][] = [];
+  dataPoints: { rowId: number, sensorType: number, value: number[]; relativeTime: number; }[] = [];
 }
