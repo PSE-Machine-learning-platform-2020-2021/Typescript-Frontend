@@ -78,9 +78,11 @@ export class RefferingController implements PageController {
         this.page.setState(this.state)
         loginSucess.then((value: boolean) => {
             if (value) {
+                this.state.projectData! = []
                 let projectData: Promise<{ projectID: number; projectName: string; AIModelID: number[]; }[]> = MainController.getInstance().getFacade().getProjectMetas();
                 projectData.then((data: { projectID: number; projectName: string; AIModelID: number[]; }[]) => {
                     this.state.projectData! = data;
+                    this.page.setState(this.state)
                 });
 
             } else {
