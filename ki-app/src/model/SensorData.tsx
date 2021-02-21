@@ -16,11 +16,6 @@ export abstract class SensorData {
     return { id: this.id, SensorTypeID: this.SensorTypeID, MACADDRESS: this.MACADDRESS, deviceName: this.deviceName };
   }
 
-  //nur anti error!
-  getCurrentValue(): number {
-    return -1;
-  }
-
   getSensorTypeID(): number {
     return this.SensorTypeID;
   }
@@ -28,150 +23,28 @@ export abstract class SensorData {
 //Diese Klasse ist eine Unterklasse von der abstrakten Klasse SensorData und ist für die Sensoren der Kategorie Beschleunigungssensor bestimmt
 export class AccelerometerData extends SensorData {
   SensorTypeID: number = 2;
-  sensor: Accelerometer;
 
   //Dies ist der Konstruktor und nimmt eine eindeutige Sensor-ID entgegen
   constructor(id: number, macaddress: string, deviceName: string) {
     super(id, macaddress, deviceName);
-    this.sensor = new Accelerometer({ frequency: 60 });
-    this.sensor.addEventListener('reading', e => {
-      console.log("Magnetic field along the X-axis " + this.sensor.x);
-      console.log("Magnetic field along the Y-axis " + this.sensor.y);
-      console.log("Magnetic field along the Z-axis " + this.sensor.z);
-    });
-    this.sensor.start();
   }
-
-  /*
-    start() {
-      window.addEventListener("devicemotion", this.handleMotionEvent, true);
-  
-    }
-  
-    handleMotionEvent(event: any) {
-      var x = event.accelerationIncludingGravity.x;
-      var y = event.accelerationIncludingGravity.y;
-      var z = event.accelerationIncludingGravity.z;
-      console.log(x, y, z);
-  
-      // Do something awesome.
-    }*/
 }
 
 //Diese Klasse ist eine Unterklasse von der abstrakten Klasse SensorData und ist für die Sensoren der Kategorie Kreiselinstrument bestimmt.
 export class GyroscopeData extends SensorData {
   SensorTypeID: number = 3;
-  sensor: Gyroscope;
 
   //Dies ist der Konstruktor und nimmt eine eindeutige Sensor-ID entgegen
   constructor(id: number, macaddress: string, deviceName: string) {
     super(id, macaddress, deviceName);
-    this.sensor = new Gyroscope({ frequency: 1000 });
   }
 }
 
 export class MagnetometerData extends SensorData {
   SensorTypeID: number = 4;
-  sensor: Magnetometer;
 
   //Dies ist der Konstruktor und nimmt eine eindeutige Sensor-ID entgegen
   constructor(id: number, macaddress: string, deviceName: string) {
     super(id, macaddress, deviceName);
-    this.sensor = new Magnetometer({ frequency: 1000 });
-    this.sensor.addEventListener('reading', e => {
-      console.log("Magnetic field along the X-axis " + this.sensor.x);
-      console.log("Magnetic field along the Y-axis " + this.sensor.y);
-      console.log("Magnetic field along the Z-axis " + this.sensor.z);
-    });
-    this.sensor.start();
   }
 }
-/*
-export class Microphone extends SensorData {
-  option: { audio: boolean, video: boolean; } = { audio: true, video: false };
-
-  start() {
-    if (navigator.mediaDevices === undefined) {
-      navigator.mediaDevices = {};
-      navigator.mediaDevices.getUserMedia = function (constraintObj) {
-        let getUserMedia = navigator.webkitGetUserMedia || navigator.mozGetUserMedia;
-        if (!getUserMedia) {
-          return Promise.reject(new Error('getUserMedia is not implemented in this browser'));
-        }
-        return new Promise(function (resolve, reject) {
-          getUserMedia.call(navigator, constraintObj, resolve, reject);
-        });
-      };
-    } else {
-      navigator.mediaDevices.enumerateDevices()
-        .then(devices => {
-          devices.forEach(device => {
-            console.log(device.kind.toUpperCase(), device.label);
-            //, device.deviceId
-          });
-        })
-        .catch(err => {
-          console.log(err.name, err.message);
-        });
-    }
-    navigator.mediaDevices.getUserMedia(this.option)
-      .then(function (mediaStreamObj) {
-        //connect the media stream to the first video element
-        let video = document.querySelector('video');
-        if ("srcObject" in video) {
-          video.srcObject = mediaStreamObj;
-        } else {
-          //old version
-          video.src = window.URL.createObjectURL(mediaStreamObj);
-        }
-
-        video.onloadedmetadata = function (ev) {
-          //show in the video element what is being captured by the webcam
-          video.play();
-        };
-
-        //add listeners for saving video/audio
-        let start = document.getElementById('btnStart');
-        let stop = document.getElementById('btnStop');
-        let vidSave = document.getElementById('vid2');
-        let mediaRecorder = new MediaRecorder(mediaStreamObj);
-        let chunks = [];
-
-        start.addEventListener('click', (ev) => {
-          mediaRecorder.start();
-          console.log(mediaRecorder.state);
-        });
-        stop.addEventListener('click', (ev) => {
-          mediaRecorder.stop();
-          console.log(mediaRecorder.state);
-        });
-        mediaRecorder.ondataavailable = function (ev) {
-          chunks.push(ev.data);
-        };
-        mediaRecorder.onstop = (ev) => {
-          let blob = new Blob(chunks, { 'type': 'video/mp4;' });
-          chunks = [];
-          let videoURL = window.URL.createObjectURL(blob);
-          vidSave.src = videoURL;
-        };
-      })
-      .catch(function (err) {
-        console.log(err.name, err.message);
-      });
-  }
-}
-
-*/
-//ToDo microphone + permisssion + Licences
-
-//https://www.youtube.com/watch?v=K6L38xk2rkk video für microphone/ erklärung für getUserMedia und MediaRecorder (damit kann man mikrofon und Kamera aufnehmen)
-//https://developer.mozilla.org/en-US/docs/Web/API/MediaStream_Recording_API/Recording_a_media_element
-
-
-/*
-"accelerometer",
-"gyroscope",
-"magnetometer",
-"camera",
-"microphone",
-*/
