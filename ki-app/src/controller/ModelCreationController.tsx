@@ -17,7 +17,7 @@ export class ModelCreationController implements PageController {
         this.page = new ModelCreationPage({});
         this.page.attach(this);
         this.state = this.page.getState()
-        this.state.dataSets! = MainController.getInstance().getFacade().getDataSetMetas()!;
+        this.state.dataSetMetas! = MainController.getInstance().getFacade().getDataSetMetas()!;
     }
 
     update() {

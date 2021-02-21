@@ -13,8 +13,9 @@ export interface IState {
   currentLabel?: { labelID: number, start: number, end: number; name: string; };
   sessionID?: string;
   dataPoints?: {rowId: number, sensorType: number, value: number[]; relativeTime: number; }[]
-  dataRows?: { value: number; relativeTime: number; }[][];
-  dataSets?: { dataSetID: number; dataSetName: string; }[];
+  dataRows?: {sensorType: number, value: number[]; relativeTime: number; }[];
+  DataSet?: {dataSetID: number, rows: {sensorType: number, value: number[]; relativeTime: number; }[] }[]
+  dataSetMetas?: { dataSetID: number; dataSetName: string; }[];
   qr?: string;
   diagramSvg?: string;
   recordingSettings?: { newDataSetName: string, usedSensorTypes: number[], readTime: number, waitTime: number, availableSensorTypes: { sensorTypID: number; sensorType: string; chosen: boolean; }[]; };
