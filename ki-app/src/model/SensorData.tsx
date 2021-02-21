@@ -20,8 +20,11 @@ export abstract class SensorData {
   getCurrentValue(): number {
     return -1;
   }
-}
 
+  getSensorTypeID(): number {
+    return this.SensorTypeID;
+  }
+}
 //Diese Klasse ist eine Unterklasse von der abstrakten Klasse SensorData und ist für die Sensoren der Kategorie Beschleunigungssensor bestimmt
 export class AccelerometerData extends SensorData {
   SensorTypeID: number = 2;

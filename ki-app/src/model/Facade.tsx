@@ -156,7 +156,7 @@ export class Facade {
    * @param dataSetID die Datensatz ID von der die Datenreihen gelesen werden sollen
    * @returns die Sensordaten von der Datenreihe
    */
-  getDataRows(dataSetID: number): { dataRows?: { value: number[], relativeTime: number; }[][]; } {
+  getDataRows(dataSetID: number): { dataRows?: { sensorType: number, value: number[], relativeTime: number; }[][]; } {
     if (this.user != null) {
       return this.user.getDataRows(dataSetID);
     }
@@ -168,7 +168,7 @@ export class Facade {
    * @param dataSetID die Datensatz ID von der die Datenreihen gelesen werden sollen
    * @returns die Sensordaten von der Datenreihe
    */
-  getCurrentDataRows(): { dataRows?: { value: number[], relativeTime: number; }[][]; } {
+  getCurrentDataRows(): { dataRows?: { sensorType: number, value: number[], relativeTime: number; }[][]; } {
     if (this.user != null) {
       return this.user.getCurrentDataRows();
     }
@@ -377,7 +377,7 @@ export class Facade {
     aiBuilder.classify(dataSetId, callBack);
   };
 
-  getAIModel(id: number, format: DeliveryFormat): {url:string} {
+  getAIModel(id: number, format: DeliveryFormat): { url: string; } {
     let aiDist = new AIDistributor(id, format);
     return aiDist.getAIModel();
   }

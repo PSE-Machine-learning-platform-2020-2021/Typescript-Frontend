@@ -25,7 +25,7 @@ export class AIDistributor {
      */
     getAIModel(): object {
         let xhr = new XMLHttpRequest(); // XHR ist kurz für XmlHttpRequest
-        let data: {url: string};
+        let data: { url: string; };
         xhr.open("POST", AIDistributor.url, true);
         xhr.onreadystatechange = () => {
             if (xhr.readyState == 4) {
@@ -34,6 +34,7 @@ export class AIDistributor {
                     switch (this.format) {
                         case DeliveryFormat.EXE:
                             location.href = data.url;
+                            return data;
                         case DeliveryFormat.WEB_APP:
                             return data;
                         default:
@@ -48,7 +49,7 @@ export class AIDistributor {
         xhr.setRequestHeader("Content-Type", "application/json");
         xhr.send(JSON.stringify({ "id": this.id, "format": this.format }));
 
-        
+
         return {};
     }
 

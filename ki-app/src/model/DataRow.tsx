@@ -57,10 +57,10 @@ export class DataRow {
    * Gibt die Datenreihe zurück.
    * @returns value ist der Messwert und relativeTime die relative Zeit in Millisekunden zum Aufnahmestart.
    */
-  public getDataRow(): { value: number[], relativeTime: number; }[] {
-    var dataRow: { value: number[], relativeTime: number; }[] = [];
+  public getDataRow(): { sensorType: number, value: number[], relativeTime: number; }[] {
+    var dataRow: { sensorType: number, value: number[], relativeTime: number; }[] = [];
     for (let i = 0; i < this.datapoint.length; i++) {
-      dataRow[i] = { value: this.datapoint[i].getValue(), relativeTime: this.datapoint[i].getRelativeTime() };
+      dataRow[i] = { sensorType: this.sensor.getSensorTypeID(), value: this.datapoint[i].getValue(), relativeTime: this.datapoint[i].getRelativeTime() };
     }
     return dataRow;
   }
