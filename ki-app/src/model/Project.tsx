@@ -2,7 +2,6 @@ import { AIModel } from "./AIModel";
 import { DataSet } from "./DataSet";
 import { SensorData } from "./SensorData";
 import { Session } from "./Session";
-import { Admin } from "./User";
 
 /**
  * Diese Klasse speichert alle Informationen zu einem Projekt.
@@ -31,7 +30,7 @@ export class Project {
       dataRowSensors: SensorData[], dataSetID: number, dataSetName: string, generateDate: number,
       dataRows: {
         dataRowID: number, recordingStart: number,
-        dataRow: { value: number, relativeTime: number; }[];
+        dataRow: { value: number[], relativeTime: number; }[];
       }[],
       label: { name: string, labelID: number, start: number, end: number; }[];
     }[];
@@ -110,16 +109,11 @@ export class Project {
 
   }
 
-  /**
-   * Liest von dem aktuellen Datensatz neue Sensordaten von der Datenreihe mit der Datenreihen ID
-   * @param dataRowID die Datenreihen ID, von der die Daten ausgelesen werden sollen.
-   * @returns die gelesenen Daten von der Datenreihe. Falls die Datenreihe nicht existiert oder kein aktueller Datensatz existiert, sind die Daten leer.
-   */
-  readDataPoint(dataRowID: number): { dataPoint?: { value: number, relativeTime: number; }; } {
+  addDatapoint(dataRowID: number, datapoint: { value: number[], relativeTime: number; }): boolean {
     if (this.currentDataSet != null) {
-      return this.currentDataSet.readDataPoint(dataRowID);
+      return this.currentDataSet.addDatapoint(dataRowID, datapoint);
     }
-    return {};
+    return false;
   }
 
   /**
@@ -139,7 +133,7 @@ export class Project {
    * @param dataSetID die Datensatz ID von der die Datenreihen gelesen werden sollen
    * @returns die Sensordaten von der Datenreihe
    */
-  getDataRows(dataSetID: number): { dataRows?: { value: number, relativeTime: number; }[][]; } {
+  getDataRows(dataSetID: number): { dataRows?: { value: number[], relativeTime: number; }[][]; } {
     for (let i = 0; i < this.dataSet.length; i++) {
       if (this.dataSet[i].getID() === dataSetID) {
         this.currentDataSet = this.dataSet[i];
@@ -153,7 +147,7 @@ export class Project {
    * Gibt die Datenreihen der aktuellen Datenreihe zurück
    * @returns die Sensordaten von der Datenreihe
    */
-  getCurrentDataRows(): { dataRows?: { value: number, relativeTime: number; }[][]; } {
+  getCurrentDataRows(): { dataRows?: { value: number[], relativeTime: number; }[][]; } {
     if (this.currentDataSet != null) {
       return { dataRows: this.currentDataSet.getDataRows() };
     }

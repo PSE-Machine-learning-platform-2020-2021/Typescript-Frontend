@@ -6,7 +6,6 @@ import { SensorData } from "./SensorData";
  */
 export class DataRow {
   private id: number; //Dies ist die DataRow ID, diese ist eindeutig für Datensätze.
-  private recordingStart: number; //Dies ist der Aufnahmestartpunkt der Datenreihe.
   private datapoint: DataPoint[] = []; //Dies ist Datenreihe, eine Reihe von Datenpunkten.
   private sensor: SensorData; //Dies ist der Sensor von dem die Daten gelesen wurden.
 
@@ -26,15 +25,10 @@ export class DataRow {
    * @param dataRow.value der Sensor Messwert
    * @param dataRow.relativeTime die relative Zeit zum Aufnahmestart
    */
-  constructor(sensor: SensorData, dataRowID: number, recordingStart: number, dataRow: { value: number, relativeTime: number; }[]);
-  constructor(sensor: SensorData, dataRowID: number, recordingStart?: number, dataRow?: { value: number, relativeTime: number; }[]) {
+  constructor(sensor: SensorData, dataRowID: number, dataRow: { value: number[], relativeTime: number; }[]);
+  constructor(sensor: SensorData, dataRowID: number, dataRow?: { value: number[], relativeTime: number; }[]) {
     this.sensor = sensor;
     this.id = dataRowID;
-    if (recordingStart != null) {
-      this.recordingStart = recordingStart;
-    } else {
-      this.recordingStart = -1;
-    }
     if (dataRow != null) {
       for (let i = 0; i < dataRow.length; i++) {
         this.datapoint.push(new DataPoint(dataRow[i].value, dataRow[i].relativeTime));
@@ -50,34 +44,24 @@ export class DataRow {
   }
 
   /**
-   * Erzeugt mit dem aktuellen Messwert einen Datenpunkt und gibt diesen zurück.
-   * @returns value ist der neu gelesene Messwert und relativeTime die relative Zeit in Millisekunden zum Aufnahmestart.
+   * Fügt den Datenpunkt der Datenreihe hinzu
    */
-  public createCurrentDataPoint(): { value: number, relativeTime: number; } {
-    if (this.recordingStart === -1) {
-      this.recordingStart = new Date().getTime();
-    }
-    var relativeTime: number = new Date().getTime() - this.recordingStart;
-    this.datapoint.push(new DataPoint(this.sensor.getCurrentValue(), relativeTime));
-    return { value: this.sensor.getCurrentValue(), relativeTime };
+  public addDatapoint(datapoint: { value: number[], relativeTime: number; }): boolean {
+    this.datapoint.push(new DataPoint(datapoint.value, datapoint.relativeTime));
+    return true;
   }
+
+
 
   /**
    * Gibt die Datenreihe zurück.
    * @returns value ist der Messwert und relativeTime die relative Zeit in Millisekunden zum Aufnahmestart.
    */
-  public getDataRow(): { value: number, relativeTime: number; }[] {
-    var dataRow: { value: number, relativeTime: number; }[] = [];
+  public getDataRow(): { value: number[], relativeTime: number; }[] {
+    var dataRow: { value: number[], relativeTime: number; }[] = [];
     for (let i = 0; i < this.datapoint.length; i++) {
       dataRow[i] = { value: this.datapoint[i].getValue(), relativeTime: this.datapoint[i].getRelativeTime() };
     }
     return dataRow;
-  }
-
-  /**
-   * Gibt den Aufnahmestartpunkt in Millisekunden zurück. Kann "-1" sein, wenn noch keine Aufnahme gestartet wurde.
-   */
-  public getRecordingStart(): number {
-    return this.recordingStart;
   }
 }

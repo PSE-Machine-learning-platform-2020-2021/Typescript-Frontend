@@ -73,8 +73,8 @@ export class DatabaseConnector {
     dataSet: {
       dataRowSensors: Sensor[], dataSetID: number, dataSetName: string, generateDate: number,
       dataRows: {
-        dataRowID: number, recordingStart: number,
-        dataRow: { value: number, relativeTime: number; }[];
+        dataRowID: number,
+        dataRow: { value: number[], relativeTime: number; }[];
       }[],
       label: { name: string, labelID: number, start: number, end: number; }[];
     }[];
@@ -84,8 +84,8 @@ export class DatabaseConnector {
       dataSet: {
         dataRowSensors: Sensor[], dataSetID: number, dataSetName: string, generateDate: number,
         dataRows: {
-          dataRowID: number, recordingStart: number,
-          dataRow: { value: number, relativeTime: number; }[];
+          dataRowID: number,
+          dataRow: { value: number[], relativeTime: number; }[];
         }[],
         label: { name: string, labelID: number, start: number, end: number; }[];
       }[];

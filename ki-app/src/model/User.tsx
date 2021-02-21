@@ -44,16 +44,12 @@ export abstract class User {
     return -1;
   }
 
-  /**
-   * Liest vom aktuellen Project und Datensatz die aktuellen Sensordaten von dem Sensor mit der Datenreihen ID
-   * @param dataRowID die Datenreihen ID
-   * @returns gibt ein leeres Objekt zurück, wenn der Sensor nicht ausgelesen werden kann oder die Datenreihe nicht existiert
-   */
-  readDataPoint(dataRowID: number): { dataPoint?: { value: number, relativeTime: number; }; } {
+  addDatapoint(dataRowID: number, datapoint: { value: number[], relativeTime: number; }): boolean {
     if (this.currentProject != null) {
-      return this.currentProject.readDataPoint(dataRowID);
+      return this.currentProject.addDatapoint(dataRowID, datapoint);
     }
-    return {};
+    return false;
+
   }
 
   /**
@@ -61,7 +57,7 @@ export abstract class User {
    * @param dataSetID die Datensatz ID von der die Datenreihen gelesen werden sollen
    * @returns die Sensordaten von der Datenreihe
    */
-  getDataRows(dataSetID: number): { dataRows?: { value: number, relativeTime: number; }[][]; } {
+  getDataRows(dataSetID: number): { dataRows?: { value: number[], relativeTime: number; }[][]; } {
     if (this.currentProject != null) {
       return this.currentProject.getDataRows(dataSetID);
     } else {
@@ -74,7 +70,7 @@ export abstract class User {
    * @param dataSetID die Datensatz ID von der die Datenreihen gelesen werden sollen
    * @returns die Sensordaten von der Datenreihe
    */
-  getCurrentDataRows(): { dataRows?: { value: number, relativeTime: number; }[][]; } {
+  getCurrentDataRows(): { dataRows?: { value: number[], relativeTime: number; }[][]; } {
     if (this.currentProject != null) {
       return this.currentProject.getCurrentDataRows();
     } else {
@@ -189,7 +185,7 @@ export abstract class User {
         dataRowSensors: SensorData[], dataSetID: number, dataSetName: string, generateDate: number,
         dataRows: {
           dataRowID: number, recordingStart: number,
-          dataRow: { value: number, relativeTime: number; }[];
+          dataRow: { value: number[], relativeTime: number; }[];
         }[],
         label: { name: string, labelID: number, start: number, end: number; }[];
       }[];
@@ -304,7 +300,7 @@ export class Admin extends User {
         dataRowSensors: SensorData[], dataSetID: number, dataSetName: string, generateDate: number,
         dataRows: {
           dataRowID: number, recordingStart: number,
-          dataRow: { value: number, relativeTime: number; }[];
+          dataRow: { value: number[], relativeTime: number; }[];
         }[],
         label: { name: string, labelID: number, start: number, end: number; }[];
       }[];
@@ -381,7 +377,7 @@ export class Dataminer extends User {
         dataRowSensors: SensorData[], dataSetID: number, dataSetName: string, generateDate: number,
         dataRows: {
           dataRowID: number, recordingStart: number,
-          dataRow: { value: number, relativeTime: number; }[];
+          dataRow: { value: number[], relativeTime: number; }[];
         }[],
         label: { name: string, labelID: number, start: number, end: number; }[];
       }[];
@@ -416,7 +412,7 @@ export class AIModelUser extends User {
         dataRowSensors: SensorData[], dataSetID: number, dataSetName: string, generateDate: number,
         dataRows: {
           dataRowID: number, recordingStart: number,
-          dataRow: { value: number, relativeTime: number; }[];
+          dataRow: { value: number[], relativeTime: number; }[];
         }[],
         label: { name: string, labelID: number, start: number, end: number; }[];
       }[];
