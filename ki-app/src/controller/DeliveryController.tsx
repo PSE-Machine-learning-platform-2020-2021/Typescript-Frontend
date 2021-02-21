@@ -3,6 +3,7 @@ import { MainController } from "./MainController";
 import { Page } from "../view/pages/PageInterface";
 import { IState, States } from "../view/pages/State";
 import { DeliveryPage } from "../view/pages/DeliveryPage/index";
+import { DeliveryFormat } from "../model/DeliveryFormat"
 
 export class DeliveryController implements PageController {
 
@@ -44,11 +45,10 @@ export class DeliveryController implements PageController {
     */
     deliverAsWebApp() {
         let emails: string[] = this.state.chosenEmails!;
-        //let text: string = MainController.getInstance().getFacade().getDeliverText();
-        let text: string = "TEST"
         for (let index = 0; index < emails.length; index++) {
             const element: string = emails[index];
-            //MainController.getInstance().getFacade().sendMail(element, this.state.currentProject);
+            let url = MainController.getInstance().getFacade().getAIModel(this.state.currentProject?.choosenAIModelID!, DeliveryFormat.WEB_APP);
+            //Maincontroller.getInstance().getFacade().sendMail(url)
         }
     }
 

@@ -56,7 +56,7 @@ export class DatabaseConnector {
    * @param dataRowID 
    * @param datapoint 
    */
-  async sendDataPoint(requestData: { sessionID: number, userID: number, dataSetID: number, dataRowID: number, datapoint: { value: number, relativeTime: number; }; }): Promise<boolean> {
+  async sendDataPoint(requestData: { sessionID: number, userID: number, dataSetID: number, dataRowID: number, datapoint: { value: number[], relativeTime: number; }; }): Promise<boolean> {
     const result: boolean = await this.sendRequest("send_data_point", requestData);
     return result;
   }
@@ -73,8 +73,8 @@ export class DatabaseConnector {
     dataSet: {
       dataRowSensors: Sensor[], dataSetID: number, dataSetName: string, generateDate: number,
       dataRows: {
-        dataRowID: number, recordingStart: number,
-        dataRow: { value: number, relativeTime: number; }[];
+        dataRowID: number,
+        dataRow: { value: number[], relativeTime: number; }[];
       }[],
       label: { name: string, labelID: number, start: number, end: number; }[];
     }[];
@@ -84,8 +84,8 @@ export class DatabaseConnector {
       dataSet: {
         dataRowSensors: Sensor[], dataSetID: number, dataSetName: string, generateDate: number,
         dataRows: {
-          dataRowID: number, recordingStart: number,
-          dataRow: { value: number, relativeTime: number; }[];
+          dataRowID: number,
+          dataRow: { value: number[], relativeTime: number; }[];
         }[],
         label: { name: string, labelID: number, start: number, end: number; }[];
       }[];

@@ -72,7 +72,6 @@ export class AIController implements PageController {
         this.state = this.page.getState()
         this.state.dataRows! = MainController.getInstance().getFacade().getCurrentDataRows()!.dataRows!
         this.page.setState(this.state)
-
     }
 
     classifyResult() {
