@@ -1,11 +1,10 @@
-import { isExternalModuleReference } from 'typescript';
 import { DeliveryFormat } from './DeliveryFormat';
 
 /**
  * Diese Klasse verwaltet die Auslieferungsformalitäten für trainierte KI-Modelle.
  */
 export class AIDistributor {
-    private static readonly url: string = "python/deliverance.php";
+    private static readonly url: string = "../deliverance/";
     private format: DeliveryFormat;
     private id: number;
 
@@ -26,12 +25,20 @@ export class AIDistributor {
      */
     getAIModel(): object {
         let xhr = new XMLHttpRequest(); // XHR ist kurz für XmlHttpRequest
-        let data = {};
+        let data: {url: string};
         xhr.open("POST", AIDistributor.url, true);
         xhr.onreadystatechange = () => {
             if (xhr.readyState == 4) {
                 if (xhr.status == 200) {
                     data = JSON.parse(xhr.responseText);
+                    switch (this.format) {
+                        case DeliveryFormat.EXE:
+                            location.href = data.url;
+                        case DeliveryFormat.WEB_APP:
+                            return data;
+                        default:
+                            throw new Error("Illegal delivery format.");
+                    }
                 }
                 else {
                     console.log("Connection to server failed. Please try again.");
@@ -41,15 +48,7 @@ export class AIDistributor {
         xhr.setRequestHeader("Content-Type", "application/json");
         xhr.send(JSON.stringify({ "id": this.id, "format": this.format }));
 
-        switch (this.format) {
-            case DeliveryFormat.WEB_APP:
-                return data;
-            case DeliveryFormat.EXE:
-                //location.href = data["exe"];//////////////////////erzeugt fehler!!!
-                break;
-            default:
-                throw new Error("Illegal delivery format.");
-        }
+        
         return {};
     }
 

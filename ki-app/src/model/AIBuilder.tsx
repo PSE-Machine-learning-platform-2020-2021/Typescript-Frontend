@@ -1,14 +1,12 @@
-import { findAllByPlaceholderText } from "@testing-library/react";
-
 /**
  * Diese Klasse verwaltet die Interaktion mit dem Python-Backend und die zugehörige Kommunikation.
  * Sie ist verantwortlich für den Bau von KI-Modellen und für die Ausführung derselben.
  */
 export class AIBuilder {
     private modelId: number;
-    private static readonly url: string = "python/";
-    private static readonly buildModel: string = "buildModel.php";
-    private static readonly classify: string = "classify.php";
+    private static readonly url: string = "../";
+    private static readonly buildModel: string = "buildModel/";
+    private static readonly classify: string = "classify/";
 
     /**
      * Erstellt den AIBuilder und übergibt ihm die ID des zu bearbeitenden Modells.

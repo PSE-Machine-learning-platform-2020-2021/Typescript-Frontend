@@ -5,6 +5,7 @@ import { AccelerometerData, MagnetometerData, SensorData } from "./SensorData";
 import { Admin, Dataminer, AIModelUser, User } from "./User";
 import { AIBuilder } from "./AIBuilder";
 import { DeviceData } from "./DeviceData";
+import { AIDistributor } from "./AIDistributor";
 
 interface FacadeInterface {
   createDataSet(sensorTypes: string[], dataSetName: string): boolean;
@@ -386,8 +387,9 @@ export class Facade {
     aiBuilder.classify(dataSetId, callBack);
   };
 
-  getAIModel(id: number, format: DeliveryFormat): object {
-    throw new Error("Not implemented");
+  getAIModel(id: number, format: DeliveryFormat): {url:string} {
+    let aiDist = new AIDistributor(id, format);
+    return aiDist.getAIModel();
   }
 
   applyModel(trainingParameter: { sensors: number[], dataSets: number[], classifier: string, scaler: string, features: string[], trainingDataPercentage?: number, slidingWindowSize?: number, slidingWindowStep?: number; }): void {
