@@ -66,8 +66,19 @@ export class VisualizationController implements PageController {
      * Ändert die Einstellungen eines DatenLabels gemäß den Änderungen aus der momentanen Seite.
      */
     private changeDataLabel() {
+        //lade Datenset
+        MainController.getInstance().getFacade().getDataRows(this.state.currentDataSet!.dataSetID)
         let label = this.state.currentLabel!
-        MainController.getInstance().getFacade().setLabel(label.labelID, {start: label.start, end: label.end}, label.name);
+        let sucess = MainController.getInstance().getFacade().setLabel(label.labelID, {start: label.start, end: label.end}, label.name);
+        sucess.then((value: boolean) => {
+            if(value) {
+                this.state.currentState = States.setLabel
+                this.page.setState(this.state)
+            } else {
+                this.state.currentState = States.LoadError
+                this.page.setState(this.state)
+            }
+        })
     }
 
     /**
@@ -75,15 +86,35 @@ export class VisualizationController implements PageController {
      * Modell geleitet. Die ID des neuen Labels wird darauf an die momentane Seite übergeben.
      */
     private newDataLabel() {
-        let label = this.state.currentLabel!
-        //label.labelID = MainController.getInstance().getFacade().creatLabel(label.start, label.end);
-        this.state.currentLabel! = label
+        //lade Datenset
+        MainController.getInstance().getFacade().getDataRows(this.state.currentDataSet!.dataSetID)
+        let start: number = this.state.currentLabel!.start
+        let end: number = this.state.currentLabel!.end
+        let name: string = this.state.currentLabel!.name
+        let promise: Promise<number> = MainController.getInstance().getFacade().createLabel({start , end}, name);
+        this.state.wait! = promise
+        promise.then((id: number) => {
+            this.state.currentLabel!.labelID = id
+            this.state.currentState = States.setLabel
+            this.page.setState(this.state)
+        })
     }
 
     /**
      * Löscht das Label welches gemäß der Methode getDeleteLabelID von der momentanen Seite angegeben wurde.
      */
     private deleteDataLabel() {
-        //MainController.getInstance().getFacade().deleteLabel(this.state.currentLabel!.labelID);
+        //lade Datenset
+        MainController.getInstance().getFacade().getDataRows(this.state.currentDataSet!.dataSetID)
+        let sucess = MainController.getInstance().getFacade().deleteLabel(this.state.currentLabel!.labelID);
+        sucess.then((value: boolean) => {
+            if(value) {
+                this.state.currentState = States.setLabel
+                this.page.setState(this.state)
+            } else {
+                this.state.currentState = States.LoadError
+                this.page.setState(this.state)
+            }
+        })
     }
 }
