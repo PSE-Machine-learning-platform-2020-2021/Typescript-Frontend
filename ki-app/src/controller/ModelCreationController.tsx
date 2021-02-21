@@ -35,6 +35,18 @@ export class ModelCreationController implements PageController {
     }
 
     startTraining() {
+        let sensors: number[] = []
+        for (let index = 0; index < this.state.trainingParameter!.dataSets.length; index++) {
+            let rows = MainController.getInstance().getFacade().getDataRows(this.state.trainingParameter!.dataSets[index]).dataRows!
+            for (let index2 = 0; index2 < rows.length; index2++) {
+                for (let index3 = 0; index3 < rows[index2].length; index3++) {
+                    if (sensors.indexOf(rows[index2][index3].sensorType) === -1) {
+                        sensors.push(rows[index2][index3].sensorType)
+                    }
+                }
+            }
+        }
+        this.state.trainingParameter!.sensors = sensors
         MainController.getInstance().getFacade().applyModel(this.state.trainingParameter!)
     }
 }
