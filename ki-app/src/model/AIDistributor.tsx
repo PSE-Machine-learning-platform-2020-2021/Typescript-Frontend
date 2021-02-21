@@ -33,7 +33,7 @@ export class AIDistributor {
                     data = JSON.parse(xhr.responseText);
                     switch (this.format) {
                         case DeliveryFormat.EXE:
-                            location.href = data.url;
+                            //location.href = data.url;
                             return data;
                         case DeliveryFormat.WEB_APP:
                             return data;
