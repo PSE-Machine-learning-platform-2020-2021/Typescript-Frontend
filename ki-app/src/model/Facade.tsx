@@ -248,7 +248,7 @@ export class Facade {
 
   //wann Device erstellen ??? + constructor in User anpassen mit neuem Device parameter 
   async registerAdmin(adminName: string, adminEmail: string, password: string): Promise<boolean> {
-    //TODO
+    //TODO Device
     let device: { deviceID?: number, deviceName: string, deviceType: string, firmware: string, generation: string, MACADRESS: string, sensorInformation: { sensorTypeID: number, sensorName: string, sensorUniqueID: number; }[]; } = { deviceID: -1, deviceName: "", deviceType: "", firmware: "", generation: "", MACADRESS: "", sensorInformation: [] };
     let IDs: { adminID: number, device: { deviceID: number, sensorID: number[]; }; } = await this.dbCon.registerAdmin({ adminName, adminEmail, password, device });
     if (IDs.adminID >= 0) {
@@ -259,7 +259,7 @@ export class Facade {
   }
 
   async registerDataminer(dataminerName: string, sessionID: number): Promise<boolean> {
-    //TODO
+    //TODO Device
     let device: { deviceID?: number, deviceName: string, deviceType: string, firmware: string, generation: string, MACADRESS: string, sensorInformation: { sensorTypeID: number, sensorName: string, sensorUniqueID: number; }[]; } = { deviceID: -1, deviceName: "", deviceType: "", firmware: "", generation: "", MACADRESS: "", sensorInformation: [] };
     let dataminer: { dataminerID: number, device: { deviceID: number, sensorID: number[]; }, project: { projectID: number, projectName: string, sessionID: number; }; } = await this.dbCon.registerDataminer({ dataminerName, sessionID, device });
     if (dataminer.dataminerID >= 0 && dataminer.device.deviceID >= 0) {
@@ -275,7 +275,7 @@ export class Facade {
    * @param aiModelUserName 
    */
   async registerAIModelUser(aiModelUserName: string, modelID: number): Promise<boolean> {
-    //TODO
+    //TODO Device
     let device: { deviceID?: number, deviceName: string, deviceType: string, firmware: string, generation: string, MACADRESS: string, sensorInformation: { sensorTypeID: number, sensorName: string, sensorUniqueID: number; }[]; } = { deviceID: -1, deviceName: "", deviceType: "", firmware: "", generation: "", MACADRESS: "", sensorInformation: [] };
     let aiModelUser: { aiModelUserID: number, device: { deviceID: number, sensorID: number[]; }, project: { projectID: number, projectName: string, sessionID: -1; }; } = await this.dbCon.registerAIModelUser({ aiModelUserName, modelID, device });
     if (aiModelUser.aiModelUserID >= 0 && aiModelUser.device.deviceID >= 0) {
@@ -286,6 +286,7 @@ export class Facade {
     return false;
   }
 
+  //TODO Device
   async loginAdmin(adminEmail: string, password: string): Promise<boolean> {
     if (this.user == null) {
       let adminData: { admin: { adminID: number, deviceID: number, adminName: string, email: string, device: { deviceID?: number, deviceName: string, deviceType: string, firmware: string, generation: string, MACADRESS: string, sensorInformation: { sensorTypeID: number, sensorName: string, sensorUniqueID: number; }[]; }; }; } = await this.dbCon.loginAdmin({ adminEmail, password });
@@ -388,8 +389,3 @@ export class Facade {
   }
 
 }
-
-
-//AIModelUser läd da sofort das Model?
-// wird aktuell nicht benutzt
-// checkLogin(): boolean { }

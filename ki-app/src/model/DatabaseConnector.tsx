@@ -209,15 +209,3 @@ export class DatabaseConnector {
     return obj;
   }
 }
-
-
-////////////////////IDs als Parameter immer auf >= 0 prüfen, da -1 eine Fehlermeldung ist. Sowie Admin Email auf inhalt prüfen, "" ist nicht angemeldet
-
-
-///////////////////Wird Logout Admin benötigt?
-/*
-    //Meldet den momentan angemeldeten Admin ab
-    logoutAdmin(email: string): boolean {
-      return true;
-    }
-  */
