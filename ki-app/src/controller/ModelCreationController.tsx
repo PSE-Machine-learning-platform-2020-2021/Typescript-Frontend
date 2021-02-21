@@ -35,6 +35,6 @@ export class ModelCreationController implements PageController {
     }
 
     startTraining() {
-        MainController.getInstance().getFacade().applyModel(this.state.trainingParameter)
+        MainController.getInstance().getFacade().applyModel(this.state.trainingParameter!)
     }
 }
