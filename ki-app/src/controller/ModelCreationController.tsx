@@ -17,7 +17,7 @@ export class ModelCreationController implements PageController {
         this.page = new ModelCreationPage({});
         this.page.attach(this);
         this.state = this.page.getState()
-        this.state.dataSets! = MainController.getInstance().getFacade().getDataSetMetas()!;
+        this.state.dataSetMetas! = MainController.getInstance().getFacade().getDataSetMetas()!;
     }
 
     update() {
@@ -35,6 +35,6 @@ export class ModelCreationController implements PageController {
     }
 
     startTraining() {
-        //MainController.getInstance().getFacade().applyModel(this.state.trainingParameter)
+        MainController.getInstance().getFacade().applyModel(this.state.trainingParameter!)
     }
 }
