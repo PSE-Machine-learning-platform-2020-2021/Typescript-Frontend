@@ -66,7 +66,7 @@ export class ModelCreationPage extends React.Component<Props, State> implements 
 		PubSub.subscribe('train', (_msg: any, data: { dataSets: number[], imputations: string[], classifier: string, scaler: string, extractions: string[] }) => {
 			//console.log(data);
 			this.state.currentState = States.NeedKiTraining
-			this.state.trainingParameter = data
+			//this.state.trainingParameter = data
 			//console.log(this.state.trainingParameter);
 			this.notify()
 		})
