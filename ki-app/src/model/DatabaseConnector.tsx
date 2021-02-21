@@ -56,7 +56,7 @@ export class DatabaseConnector {
    * @param dataRowID 
    * @param datapoint 
    */
-  async sendDataPoint(requestData: { sessionID: number, userID: number, dataSetID: number, dataRowID: number, datapoint: { value: number, relativeTime: number; }; }): Promise<boolean> {
+  async sendDataPoint(requestData: { sessionID: number, userID: number, dataSetID: number, dataRowID: number, datapoint: { value: number[], relativeTime: number; }; }): Promise<boolean> {
     const result: boolean = await this.sendRequest("send_data_point", requestData);
     return result;
   }
