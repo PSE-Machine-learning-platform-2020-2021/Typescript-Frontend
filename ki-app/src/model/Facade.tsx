@@ -1,9 +1,10 @@
 import { DeliveryFormat } from "./DeliveryFormat";
 import { DatabaseConnector } from "./DatabaseConnector";
 import { Language } from "./Language";
-import { AccelerometerData, MagnetometerData, SensorData } from "./Sensor";
+import { AccelerometerData, MagnetometerData, SensorData } from "./SensorData";
 import { Admin, Dataminer, AIModelUser, User } from "./User";
 import { AIBuilder } from "./AIBuilder";
+import { DeviceData } from "./DeviceData";
 
 interface FacadeInterface {
   createDataSet(sensorTypes: string[], dataSetName: string): boolean;
@@ -51,7 +52,6 @@ export class Facade {
   constructor(languageCode: string) {
     this.dbCon = new DatabaseConnector();
     this.language = new Language(this.dbCon.loadLanguage({ languageCode }));
-    const sensorTest = new AccelerometerData(1, "", "");
   }
 
   /**
@@ -86,23 +86,23 @@ export class Facade {
   }
 
   /**
-   * Sendet den Datenpunkt an die Datenbank
+   * Sendet den Datenpunkt an die Datenbank ////////////////////////////////////////////////////////////////////////////////////////////Daten noch in Model speichern
    * @param dataRowID die ID der aktuellen Datenreihe des eingelesenen Datenpunkts
    * @param value der SensorWert
    * @param relativeTime die relative Zeit zum Aufnahmestart in Millisekunden
    * @return true, wenn der Datenpunkt erfolgreich an die Datenbank gesendet wurde
    */
-  async sendDataPoint(dataRowID: number, value: number, relativeTime: number): Promise<boolean> {
+  async sendDataPoint(dataRowID: number, datapoint: { value: number[], relativeTime: number; }): Promise<boolean> {
     if (this.user != null) {
       let sessionID: number = this.getSessionID();
       let userID: number = this.user.getID();
       let dataSetID: number = this.user.getCurrentDataSetID();
-      return this.dbCon.sendDataPoint({ sessionID, userID, dataSetID, dataRowID, datapoint: { value, relativeTime } });
+      return this.dbCon.sendDataPoint({ sessionID, userID, dataSetID, dataRowID, datapoint });
     }
     return false;
   }
 
-  /**
+  /** //////////////////////////////////////////////////////////////////////////////////////////////////////////////unnötig
    * Liest für den aktuellen Datensatz den Sensor aus von der Datenreihe mit der übergebenen ID
    * @param dataRowID die DatenreihenID
    */
@@ -382,17 +382,17 @@ export class Facade {
   }
 
   classify(aiId: number, dataSetId: number, callBack: <R = unknown>(prediction: string | object) => R): void {
-    let aiBuilder = new AIBuilder(aiId)
-    aiBuilder.classify(dataSetId, callBack)
+    let aiBuilder = new AIBuilder(aiId);
+    aiBuilder.classify(dataSetId, callBack);
   };
 
   getAIModel(id: number, format: DeliveryFormat): object {
     throw new Error("Not implemented");
   }
 
-  applyModel(trainingParameter: { sensors: number[], dataSets: number[], classifier: string, scaler: string, features: string[], trainingDataPercentage?: number, slidingWindowSize?: number, slidingWindowStep?: number;}): void {
-    let aiBuilder = new AIBuilder(-1)
-    aiBuilder.applyModel(trainingParameter)
+  applyModel(trainingParameter: { sensors: number[], dataSets: number[], classifier: string, scaler: string, features: string[], trainingDataPercentage?: number, slidingWindowSize?: number, slidingWindowStep?: number; }): void {
+    let aiBuilder = new AIBuilder(-1);
+    aiBuilder.applyModel(trainingParameter);
   }
 
 }

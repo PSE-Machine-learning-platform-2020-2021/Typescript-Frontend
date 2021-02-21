@@ -44,7 +44,7 @@ export class DatabaseConnector {
    *          bei fehler, -1
    */
   async createDataSet(requestData: { sessionID: number, projectID: number, userID: number, dataSetName: string, dataRow: { sensorID: number, datarowName?: string; }[]; }): Promise<number> {
-    const result: number = await this.sendRequest("createDataSet", requestData);
+    const result: number = await this.sendRequest("create_data_set", requestData);
     return result;
   }
 
@@ -57,7 +57,7 @@ export class DatabaseConnector {
    * @param datapoint 
    */
   async sendDataPoint(requestData: { sessionID: number, userID: number, dataSetID: number, dataRowID: number, datapoint: { value: number, relativeTime: number; }; }): Promise<boolean> {
-    const result: boolean = await this.sendRequest("sendDataPoint", requestData);
+    const result: boolean = await this.sendRequest("send_data_point", requestData);
     return result;
   }
 
@@ -89,7 +89,7 @@ export class DatabaseConnector {
         }[],
         label: { name: string, labelID: number, start: number, end: number; }[];
       }[];
-    } = await this.sendRequest("loadProject", requestData);
+    } = await this.sendRequest("load_project", requestData);
     return result;
   }
 
@@ -100,7 +100,7 @@ export class DatabaseConnector {
    * @param adminEmail zur Sicherheit, muss zur UserID übereinstimmen
    */
   async getProjectMetas(requestData: { userID: number, adminEmail: string; }): Promise<{ projectID: number, projectName: string, AIModelID: number[]; }[]> {
-    const result: { projectID: number, projectName: string, AIModelID: number[]; }[] = await this.sendRequest("getProjectMetas", requestData);
+    const result: { projectID: number, projectName: string, AIModelID: number[]; }[] = await this.sendRequest("get_project_metas", requestData);
     return result;
   }
 
@@ -113,7 +113,7 @@ export class DatabaseConnector {
    * @returns ob der Datenset erfolgreich gelöscht wurde
    */
   async deleteDataSet(requestData: { userID: number, adminEmail: string, projectID: number, dataSetID: number; }): Promise<boolean> {
-    const result: boolean = await this.sendRequest("deleteDataSet", requestData);
+    const result: boolean = await this.sendRequest("delete_data_set", requestData);
     return result;
   }
 
@@ -127,7 +127,7 @@ export class DatabaseConnector {
    * @returns Gibt die Daten zurück, als Fehler werden alle IDs auf -1 gesetzt
    */
   async registerAdmin(requestData: { adminName: string, adminEmail: string, password: string, device: { deviceID?: number, deviceName: string, deviceType: string, firmware: string, generation: string, MACADRESS: string, sensorInformation: { sensorTypeID: number, sensorName: string, sensorUniqueID: number; }[]; }; }): Promise<{ adminID: number, device: { deviceID: number, sensorID: number[]; }; }> {
-    const result: { adminID: number, device: { deviceID: number, sensorID: number[]; }; } = await this.sendRequest("registerAdmin", requestData);
+    const result: { adminID: number, device: { deviceID: number, sensorID: number[]; }; } = await this.sendRequest("register_admin", requestData);
     return result;
   }
 
@@ -139,7 +139,7 @@ export class DatabaseConnector {
    * @returns Gibt die Daten zurück, als Fehler werden alle IDs auf -1 gesetzt
    */
   async registerDataminer(requestData: { dataminerName: string, sessionID: number, device: { deviceID?: number, deviceName: string, deviceType: string, firmware: string, generation: string, MACADRESS: string, sensorInformation: { sensorTypeID: number, sensorName: string, sensorUniqueID: number; }[]; }; }): Promise<{ dataminerID: number, device: { deviceID: number, sensorID: number[]; }, project: { projectID: number, projectName: string, sessionID: number; }; }> {
-    const result: { dataminerID: number, device: { deviceID: number, sensorID: number[]; }, project: { projectID: number, projectName: string, sessionID: number; }; } = await this.sendRequest("registerDataminer", requestData);
+    const result: { dataminerID: number, device: { deviceID: number, sensorID: number[]; }, project: { projectID: number, projectName: string, sessionID: number; }; } = await this.sendRequest("register_dataminer", requestData);
     return result;
   }
 
@@ -151,7 +151,7 @@ export class DatabaseConnector {
    * @returns Gibt die Daten zurück, als Fehler werden alle IDs auf -1 gesetzt
    */
   async registerAIModelUser(requestData: { aiModelUserName: string, modelID: number, device: { deviceID?: number, deviceName: string, deviceType: string, firmware: string, generation: string, MACADRESS: string, sensorInformation: { sensorTypeID: number, sensorName: string, sensorUniqueID: number; }[]; }; }): Promise<{ aiModelUserID: number, device: { deviceID: number, sensorID: number[]; }, project: { projectID: number, projectName: string, sessionID: -1; }; }> {
-    const result: { aiModelUserID: number, device: { deviceID: number, sensorID: number[]; }, project: { projectID: number, projectName: string, sessionID: -1; }; } = await this.sendRequest("registerAIModelUser", requestData);
+    const result: { aiModelUserID: number, device: { deviceID: number, sensorID: number[]; }, project: { projectID: number, projectName: string, sessionID: -1; }; } = await this.sendRequest("register_ai_model_user", requestData);
     return result;
   }
 

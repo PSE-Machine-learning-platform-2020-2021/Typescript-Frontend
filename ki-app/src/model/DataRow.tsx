@@ -1,5 +1,5 @@
 import { DataPoint } from "./DataPoint";
-import { SensorData } from "./Sensor";
+import { SensorData } from "./SensorData";
 
 /**
  * Die Klasse DataRow beschreibt eine Reihe aufgenommener Daten eines Sensors.
