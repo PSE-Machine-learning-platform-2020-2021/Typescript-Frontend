@@ -1,6 +1,6 @@
 import { AIModel } from "./AIModel";
 import { DataSet } from "./DataSet";
-import { SensorData } from "./Sensor";
+import { SensorData } from "./SensorData";
 import { Session } from "./Session";
 import { Admin } from "./User";
 

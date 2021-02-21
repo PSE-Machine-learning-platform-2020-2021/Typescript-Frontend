@@ -1,6 +1,6 @@
 import { DataRow } from "./DataRow";
 import { Label } from "./Label";
-import { SensorData } from "./Sensor";
+import { SensorData } from "./SensorData";
 
 /**
  * Die Klasse fasst Datenreihen, welche Sensorwerte und deren relative Zeit besitzen, zu einem Datensatz zusammen.

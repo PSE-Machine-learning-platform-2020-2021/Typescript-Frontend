@@ -1,5 +1,5 @@
 import {DataRow} from "../DataRow"
-import {AccelerometerData} from "../Sensor"
+import {AccelerometerData} from "../SensorData"
 
 /** 
 test("creat and getter test", () => {

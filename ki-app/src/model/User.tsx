@@ -1,6 +1,6 @@
-import { Device } from "./Device";
+import { DeviceData } from "./DeviceData";
 import { Project } from "./Project";
-import { SensorData } from "./Sensor";
+import { SensorData } from "./SensorData";
 
 /**
  * Die Vorlage für alle existierenden Benutzer
@@ -8,7 +8,7 @@ import { SensorData } from "./Sensor";
 export abstract class User {
   protected id: number; //Die eindeutige User ID
   protected name: string; //Der Name des Users
-  protected device: Device; //Das Benutzergerät des Benutzers
+  protected device: DeviceData; //Das Benutzergerät des Benutzers
   protected currentProject?: Project;
 
   /**
@@ -16,7 +16,7 @@ export abstract class User {
    * @param id eindeutige Benutzer ID
    * @param name Name des Benutzer
    */
-  constructor(id: number, device: Device, name?: string) {
+  constructor(id: number, device: DeviceData, name?: string) {
     this.id = id;
     this.device = device;
     if (name != null) {
@@ -241,14 +241,14 @@ export abstract class User {
    * Setzt ein neues Benutzergerät
    * @param device das Benutzergerät
    */
-  setDevice(device: Device) {
+  setDevice(device: DeviceData) {
     this.device = device;
   }
 
   /**
    * Gibt falls ein Benutzergerät verfügbar ist dieses zurück
    */
-  getDevice(): { device?: Device; } {
+  getDevice(): { device?: DeviceData; } {
     return { device: this.device };
   }
 
@@ -290,7 +290,7 @@ export class Admin extends User {
 
   constructor(adminID: number, deviceID: number, adminName: string, email: string,
     device?: { MACADRESS: string, deviceName: string, firmware: string, generation: string, deviceType: string; }) {
-    super(adminID, Device.loadDevice(deviceID, device), adminName);
+    super(adminID, DeviceData.loadDevice(deviceID, device), adminName);
     this.email = email;
   }
 
@@ -368,7 +368,7 @@ export class Dataminer extends User {
    * @param deviceID die Geräte ID
    */
   constructor(id: number, deviceID: number, name?: string) {
-    super(id, Device.loadDevice(deviceID), name);
+    super(id, DeviceData.loadDevice(deviceID), name);
   }
 
   /**
@@ -404,7 +404,7 @@ export class AIModelUser extends User {
    * @param deviceID die Geräte ID
    */
   constructor(id: number, deviceID: number, name?: string) {
-    super(id, Device.loadDevice(deviceID), name);
+    super(id, DeviceData.loadDevice(deviceID), name);
   }
   /**
    * Implementiert die abstrakte Methode von User
