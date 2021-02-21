@@ -1,9 +1,6 @@
 import { Page } from "../view/pages/PageInterface";
 import { IState, States } from "../view/pages/State";
-import { FinishPage } from "../view/pages/FinishPage/index";
-
 import { ReferringPage } from "../view/pages/ReferringPage/index"
-
 import { PageController } from "./PageController";
 import { MainController } from "./MainController";
 

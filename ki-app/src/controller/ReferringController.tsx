@@ -35,9 +35,6 @@ export class RefferingController implements PageController {
             case States.LoadProject:
                 this.loadProject();
                 break;
-            case States.NeedQRC:
-                this.createQR();
-                break;
             case States.Register:
                 this.register();
                 break;
@@ -77,6 +74,8 @@ export class RefferingController implements PageController {
         let adminData: { name: string, email: string, password: string; } = this.state.adminData!;
         let loginSucess: Promise<boolean> = MainController.getInstance().getFacade().loginAdmin(adminData.email, adminData.password);
         this.state.wait! = loginSucess
+        this.state.currentState = States.waitForDB
+        this.page.setState(this.state)
         loginSucess.then((value: boolean) => {
             if (value) {
                 let projectData: Promise<{ projectID: number; projectName: string; AIModelID: number[]; }[]> = MainController.getInstance().getFacade().getProjectMetas();
@@ -87,10 +86,13 @@ export class RefferingController implements PageController {
             } else {
                 this.state.currentState = States.LoginFail;
             }
+            this.page.setState(this.state)
         });
         loginSucess.catch((value: boolean) => {
             console.log(value)
         })
+        //this.state.projectData! = [{ projectID: 1, projectName: "string", AIModelID: [1,2] }]
+        //this.page.setState(this.state)
     }
 
     /**
@@ -99,6 +101,9 @@ export class RefferingController implements PageController {
     register() {
         let adminData: { name: string, email: string, password: string; } = this.state.adminData!;
         let loginSucess: Promise<boolean> = MainController.getInstance().getFacade().registerAdmin(adminData.name, adminData.email, adminData.password);
+        this.state.wait! = loginSucess
+        this.state.currentState = States.waitForDB
+        this.page.setState(this.state)
         loginSucess.then((value: boolean) => {
             if (!value) {
                 this.state.currentState = States.LoginFail;
@@ -127,13 +132,22 @@ export class RefferingController implements PageController {
      */
     createNewProject() {
         let sucess: Promise<boolean> = MainController.getInstance().getFacade().createProject(this.state.currentProject!.projectName);
+        this.state.wait! = sucess
+        this.state.currentState = States.waitForDB
+        this.page.setState(this.state)
         sucess.then((value: boolean) => {
             if (value) {
-                this.state.currentState = States.NeedQRC;
+                this.createQR()
+                let projectData: Promise<{ projectID: number; projectName: string; AIModelID: number[]; }[]> = MainController.getInstance().getFacade().getProjectMetas();
+                projectData.then((data: { projectID: number; projectName: string; AIModelID: number[]; }[]) => {
+                    this.state.projectData! = data;
+                });
             } else {
                 this.state.currentState = States.LoadError;
             }
+            this.page.setState(this.state)
         });
+        
     }
 
     /**
@@ -142,13 +156,17 @@ export class RefferingController implements PageController {
     loadProject() {
         let projectId: number = this.state.currentProject!.projectID!;
         let sucess: Promise<boolean> = MainController.getInstance().getFacade().loadProject(projectId);
+        this.state.wait! = sucess
+        this.state.currentState = States.waitForDB
+        this.page.setState(this.state)
         sucess.then((value: boolean) => {
             if (value) {
-                this.state.currentState = States.NeedQRC;
+                this.createQR()
             } else {
                 this.state.currentState = States.LoadError;
             }
         });
+        this.page.setState(this.state)
     }
 
     /**
@@ -157,6 +175,9 @@ export class RefferingController implements PageController {
     loadModel() {
         let projectId: number = this.state.currentProject!.projectID;
         let sucess: Promise<boolean> = MainController.getInstance().getFacade().loadProject(projectId);
+        this.state.wait! = sucess
+        this.state.currentState = States.waitForDB
+        this.page.setState(this.state)
         sucess.then((value: boolean) => {
             if (value) {
                 let deliveryConroller: DeliveryController = new DeliveryController(this.state.currentProject!);
@@ -165,5 +186,6 @@ export class RefferingController implements PageController {
                 this.state.currentState = States.LoadError;
             }
         });
+        this.page.setState(this.state)
     }
 }
