@@ -9,8 +9,6 @@ export abstract class DeviceData {
   protected abstract deviceType: string;
   private availableSensors: SensorData[] = [];
 
-
-  //nicht fertig !!!!!
   protected constructor(deviceID: number, MACADRESS: string, deviceName: string, firmware: string, generation: string) {
     this.id = deviceID;
     this.MACADDRESS = MACADRESS;
@@ -62,8 +60,6 @@ export abstract class DeviceData {
    * Prüft das aktuelle Gerät auf
    */
   static loadDevice(deviceID: number, device?: { MACADRESS: string, deviceName: string, firmware: string, generation: string, deviceType: string; }): DeviceData {
-    console.log("Hi bin gestartet");
-
     return new Smartphone(-1, "", "", "", "");
   }
 
@@ -78,6 +74,6 @@ export class Smartphone extends DeviceData {
 }
 
 export class Desktop extends DeviceData {
-  protected deviceType: string = "Smartphone";
+  protected deviceType: string = "Desktop";
   protected searchSensor(): void { }
 }

@@ -51,6 +51,8 @@ export class Facade {
    * @param languageCode der Sprachcode von der Sprache, die geladen werden soll
    */
   constructor(languageCode: string) {
+    var sensor = new Accelerometer();
+    console.log(sensor.x, sensor.y, sensor.z);
     this.dbCon = new DatabaseConnector();
     this.language = new Language(this.dbCon.loadLanguage({ languageCode }));
   }
@@ -156,7 +158,7 @@ export class Facade {
    * @param dataSetID die Datensatz ID von der die Datenreihen gelesen werden sollen
    * @returns die Sensordaten von der Datenreihe
    */
-  getDataRows(dataSetID: number): { dataRows?: { value: number[], relativeTime: number; }[][]; } {
+  getDataRows(dataSetID: number): { dataRows?: { sensorType: number, value: number[], relativeTime: number; }[][]; } {
     if (this.user != null) {
       return this.user.getDataRows(dataSetID);
     }
@@ -168,7 +170,7 @@ export class Facade {
    * @param dataSetID die Datensatz ID von der die Datenreihen gelesen werden sollen
    * @returns die Sensordaten von der Datenreihe
    */
-  getCurrentDataRows(): { dataRows?: { value: number[], relativeTime: number; }[][]; } {
+  getCurrentDataRows(): { dataRows?: { sensorType: number, value: number[], relativeTime: number; }[][]; } {
     if (this.user != null) {
       return this.user.getCurrentDataRows();
     }
@@ -248,7 +250,7 @@ export class Facade {
 
   //wann Device erstellen ??? + constructor in User anpassen mit neuem Device parameter 
   async registerAdmin(adminName: string, adminEmail: string, password: string): Promise<boolean> {
-    //TODO
+    //TODO Device
     let device: { deviceID?: number, deviceName: string, deviceType: string, firmware: string, generation: string, MACADRESS: string, sensorInformation: { sensorTypeID: number, sensorName: string, sensorUniqueID: number; }[]; } = { deviceID: -1, deviceName: "", deviceType: "", firmware: "", generation: "", MACADRESS: "", sensorInformation: [] };
     let IDs: { adminID: number, device: { deviceID: number, sensorID: number[]; }; } = await this.dbCon.registerAdmin({ adminName, adminEmail, password, device });
     if (IDs.adminID >= 0) {
@@ -259,7 +261,7 @@ export class Facade {
   }
 
   async registerDataminer(dataminerName: string, sessionID: number): Promise<boolean> {
-    //TODO
+    //TODO Device
     let device: { deviceID?: number, deviceName: string, deviceType: string, firmware: string, generation: string, MACADRESS: string, sensorInformation: { sensorTypeID: number, sensorName: string, sensorUniqueID: number; }[]; } = { deviceID: -1, deviceName: "", deviceType: "", firmware: "", generation: "", MACADRESS: "", sensorInformation: [] };
     let dataminer: { dataminerID: number, device: { deviceID: number, sensorID: number[]; }, project: { projectID: number, projectName: string, sessionID: number; }; } = await this.dbCon.registerDataminer({ dataminerName, sessionID, device });
     if (dataminer.dataminerID >= 0 && dataminer.device.deviceID >= 0) {
@@ -275,7 +277,7 @@ export class Facade {
    * @param aiModelUserName 
    */
   async registerAIModelUser(aiModelUserName: string, modelID: number): Promise<boolean> {
-    //TODO
+    //TODO Device
     let device: { deviceID?: number, deviceName: string, deviceType: string, firmware: string, generation: string, MACADRESS: string, sensorInformation: { sensorTypeID: number, sensorName: string, sensorUniqueID: number; }[]; } = { deviceID: -1, deviceName: "", deviceType: "", firmware: "", generation: "", MACADRESS: "", sensorInformation: [] };
     let aiModelUser: { aiModelUserID: number, device: { deviceID: number, sensorID: number[]; }, project: { projectID: number, projectName: string, sessionID: -1; }; } = await this.dbCon.registerAIModelUser({ aiModelUserName, modelID, device });
     if (aiModelUser.aiModelUserID >= 0 && aiModelUser.device.deviceID >= 0) {
@@ -286,6 +288,7 @@ export class Facade {
     return false;
   }
 
+  //TODO Device
   async loginAdmin(adminEmail: string, password: string): Promise<boolean> {
     if (this.user == null) {
       let adminData: { admin: { adminID: number, deviceID: number, adminName: string, email: string, device: { deviceID?: number, deviceName: string, deviceType: string, firmware: string, generation: string, MACADRESS: string, sensorInformation: { sensorTypeID: number, sensorName: string, sensorUniqueID: number; }[]; }; }; } = await this.dbCon.loginAdmin({ adminEmail, password });
@@ -377,7 +380,7 @@ export class Facade {
     aiBuilder.classify(dataSetId, callBack);
   };
 
-  getAIModel(id: number, format: DeliveryFormat): {url:string} {
+  getAIModel(id: number, format: DeliveryFormat): object {
     let aiDist = new AIDistributor(id, format);
     return aiDist.getAIModel();
   }
@@ -388,8 +391,3 @@ export class Facade {
   }
 
 }
-
-
-//AIModelUser läd da sofort das Model?
-// wird aktuell nicht benutzt
-// checkLogin(): boolean { }
