@@ -377,7 +377,7 @@ export class Facade {
     aiBuilder.classify(dataSetId, callBack);
   };
 
-  getAIModel(id: number, format: DeliveryFormat): {url:string} {
+  getAIModel(id: number, format: DeliveryFormat): object {
     let aiDist = new AIDistributor(id, format);
     return aiDist.getAIModel();
   }
