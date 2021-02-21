@@ -82,7 +82,7 @@ export class ReferringPage extends React.Component<Props, State> implements Page
             //this.setState({ currentState: States.Register })
             //console.log(this.state.currentState)
             this.notify()
-            //this.state.wait!.then(() => {
+            this.state.wait!.then(() => {
             //console.log(this.state.currentState)
             let flag: boolean
             if (this.state.currentState != States.Register) {
@@ -92,7 +92,7 @@ export class ReferringPage extends React.Component<Props, State> implements Page
                 flag = true
             }
             PubSub.publish('registerstatus', flag)
-        //})
+        })
         })
     }
 

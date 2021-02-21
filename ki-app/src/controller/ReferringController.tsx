@@ -91,6 +91,8 @@ export class RefferingController implements PageController {
         loginSucess.catch((value: boolean) => {
             console.log(value)
         })
+        //this.state.projectData! = [{ projectID: 1, projectName: "string", AIModelID: [1,2] }]
+        //this.page.setState(this.state)
     }
 
     /**
