@@ -3,7 +3,7 @@ import { MainController } from "./MainController";
 import { Page } from "../view/pages/PageInterface";
 import { IState, States } from "../view/pages/State";
 import { DeliveryPage } from "../view/pages/DeliveryPage/index";
-import { DeliveryFormat } from "../model/DeliveryFormat"
+//import { DeliveryFormat } from "../model/DeliveryFormat"
 
 export class DeliveryController implements PageController {
 
