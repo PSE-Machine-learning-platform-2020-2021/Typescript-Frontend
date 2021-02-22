@@ -1,16 +1,15 @@
 import React, { Component } from 'react'
 import PubSub from 'pubsub-js';
-import ImageList from '../../components/VisualizationComponents/ImageList'
-import eximage1 from '../../images/exImage1.svg'
 import './VisualizationPage.css'
 import { Page } from "../PageInterface";
 import { PageController } from "../../../controller/PageController";
 import { State } from "./State";
 import { MainController } from '../../../controller/MainController';
 import ReactDOM from 'react-dom';
-import ShowImage from '../../components/VisualizationComponents/ShowImage';
 import { States } from '../State';
 import FinishButton from '../../components/VisualizationComponents/FinishButton';
+import ShowDiagram from '../../components/VisualizationComponents/ShowDiagram';
+import DiagramList from '../../components/VisualizationComponents/DiagramList';
 
 type Props = {
 };
@@ -20,17 +19,16 @@ export class VisualizationPage extends React.Component<Props, State> implements 
     observers: PageController[] = [];
     constructor(props: Props) {
         super(props);
-
+        //<ShowDiagram />
         const VDOM = (
             <div className="visualizationpage">
-                <ShowImage />
-                <ImageList />
+
+                <DiagramList />
                 <FinishButton />
             </div>
         );
         ReactDOM.render(VDOM, document.getElementById('root'));
-        this.getimagelist()
-        this.changeimg()
+        this.getDatarows()
         this.changetonextpage()
     }
 
@@ -57,17 +55,68 @@ export class VisualizationPage extends React.Component<Props, State> implements 
         return this.state;
     }
 
-    getimagelist() {
-        this.state.currentState = States.NeedImageList
-        this.notify()
-        PubSub.publish('getimagelist', this.state.imageList)
-    }
-    changeimg() {
-        PubSub.subscribe('changeimg', (_msg: any, data: string) => {
-            this.state.currentImg = data
-            //console.log(this.state.currentImg)
+    getDatarows() {
+        var emp = []
+        emp.push([{ sensorType: 85124, value: [55, 66, 12], relativeTime: 0 },
+        { sensorType: 85124, value: [26, 21, 2], relativeTime: 1 },
+        { sensorType: 85124, value: [91, 83, 50], relativeTime: 2 },
+        { sensorType: 85124, value: [22, 71, 23], relativeTime: 3 },
+        { sensorType: 85124, value: [14, 8, 77], relativeTime: 4 },
+        ])
+        emp.push([{ sensorType: 45157, value: [83, 44, 1], relativeTime: 0 },
+        { sensorType: 45157, value: [78, 55, 2], relativeTime: 1 },
+        { sensorType: 45157, value: [51, 66, 3], relativeTime: 2 },
+        { sensorType: 45157, value: [23, 81, 50], relativeTime: 3 },
+        { sensorType: 45157, value: [13, 20, 5], relativeTime: 4 },
+        ])
+        /**         sensorType: [85124, 45157], value: [
+                [55, 26, 91, 22, 14],
+                [66, 21, 83, 71, 8],
+                [12, 2, 50, 23, 77],
+                [83, 78, 51, 23, 13],
+                [44, 55, 66, 81, 20],
+                [1, 2, 3, 50, 5],
+            ], relativeTime: [0, 1, 2, 3, 4]*/
+        const ex = {
+            dataSetID: 1,
+            rows: emp
+        }
+        PubSub.publish('getrows', ex)
+        var ex2 = []
+        ex2.push([{ sensorType: 123, value: [55, 66, 12], relativeTime: 0 },
+        { sensorType: 123, value: [26, 21, 2], relativeTime: 1 },
+        { sensorType: 123, value: [91, 83, 50], relativeTime: 2 },
+        { sensorType: 123, value: [22, 71, 23], relativeTime: 3 },
+        { sensorType: 123, value: [14, 8, 77], relativeTime: 4 },
+        ])
+        ex2.push([{ sensorType: 456, value: [83, 44, 1], relativeTime: 0 },
+        { sensorType: 456, value: [78, 55, 2], relativeTime: 1 },
+        { sensorType: 456, value: [51, 66, 3], relativeTime: 2 },
+        { sensorType: 456, value: [23, 81, 50], relativeTime: 3 },
+        { sensorType: 456, value: [13, 20, 5], relativeTime: 4 },
+        ])
+        /**         sensorType: [85124, 45157], value: [
+                [55, 26, 91, 22, 14],
+                [66, 21, 83, 71, 8],
+                [12, 2, 50, 23, 77],
+                [83, 78, 51, 23, 13],
+                [44, 55, 66, 81, 20],
+                [1, 2, 3, 50, 5],
+            ], relativeTime: [0, 1, 2, 3, 4]*/
+        const ex22 = {
+            dataSetID: 2,
+            rows: ex2
+        }
+        PubSub.publish('getrows', ex22)
+
+        this.state.dataSetMetas?.map((dataset) => {
+            this.state.currentDataSet.dataSetID = dataset.dataSetID
+            this.state.currentState = States.NeedRows
+            this.notify()
+            PubSub.publish('getrows', this.state.currentDataSet)
         })
     }
+
     changetonextpage() {
         PubSub.subscribe('changepage', (_msg: any) => {
             this.state.currentState = States.ChangeToCreation
