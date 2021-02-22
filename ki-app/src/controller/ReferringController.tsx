@@ -79,11 +79,11 @@ export class RefferingController implements PageController {
         this.page.setState(this.state);
         loginSucess.then((value: boolean) => {
             if (value) {
-                this.state.projectData! = []
+                this.state.projectData! = [];
                 let projectData: Promise<{ projectID: number; projectName: string; AIModelID: number[]; }[]> = MainController.getInstance().getFacade().getProjectMetas();
                 projectData.then((data: { projectID: number; projectName: string; AIModelID: number[]; }[]) => {
                     this.state.projectData! = data;
-                    this.page.setState(this.state)
+                    this.page.setState(this.state);
                 });
 
             } else {
@@ -108,7 +108,6 @@ export class RefferingController implements PageController {
         this.state.currentState = States.waitForDB;
         this.page.setState(this.state);
         loginSucess.then((value: boolean) => {
-            console.log("PORNOSTAR");
             if (!value) {
                 this.state.currentState = States.LoginFail;
             }
@@ -121,7 +120,7 @@ export class RefferingController implements PageController {
     createQR() {
         const url = new URL(document.URL);
         url.searchParams.append("SessionID", MainController.getInstance().getFacade().getSessionID().toString());
-        url.searchParams.append("isMiner", "true")
+        url.searchParams.append("isMiner", "true");
         let link: string = url.toString();
         var qr = new QRCode();
         qr.setTypeNumber(5);
