@@ -4,7 +4,6 @@ import { MainController } from "./MainController";
 import { ModelCreationController } from "./ModelCreationController";
 import { Page } from "../view/pages/PageInterface";
 import { IState, States } from "../view/pages/State";
-import { State } from "../view/pages/DeliveryPage/State";
 
 export class VisualizationController implements PageController {
     private page: Page;
@@ -49,12 +48,17 @@ export class VisualizationController implements PageController {
     }
 
     SetDataRows() {
-        //let data = [this.state.DataSet!]//MainController.getInstance().getFacade().getMinerData();
-        //for (let index = 0; index < data.length; index++) {
-            //this.state.DataSet! = data[index];
-          //  this.state.currentState = States.SetDataRows
-           // this.page.setState(this.state)
-        //}
+        let intervalId = setInterval(() => {
+        MainController.getInstance().getFacade().loadProject()
+        let dataSets = MainController.getInstance().getFacade().getDataSetMetas()
+        for (let index = 0; index < dataSets.length; index++) {
+            let data = MainController.getInstance().getFacade().getDataRows(dataSets[index].dataSetID).dataRows!;
+            this.state.dataRows!= data;
+            this.state.currentState = States.SetDataRows
+            this.page.setState(this.state)
+        }
+        if (this.state.currentState === States.ChangeToFinish) clearInterval(intervalId);
+        }, 3000);
     }
 
     alertConnectionError() {

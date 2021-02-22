@@ -4,10 +4,7 @@ import { PageController } from "./PageController";
 import { MainController } from "./MainController";
 import { DeliveryController } from "./DeliveryController";
 import { VisualizationController } from "./VisualizationController";
-import { ReferringPage } from "../view/pages/ReferringPage/index";
-import { QRCode, ErrorCorrectLevel, QRNumber, QRAlphaNum, QR8BitByte, QRKanji } from 'qrcode-generator-ts/js';
-import { ModelCreationPage } from "../view/pages/ModelCreationPage";
-import { DeliveryPage } from "../view/pages/DeliveryPage";
+import { QRCode, ErrorCorrectLevel } from 'qrcode-generator-ts/js';
 import { FinishPage } from "../view/pages/FinishPage";
 
 
@@ -45,9 +42,6 @@ export class RefferingController implements PageController {
             case States.NewProjekt:
                 this.createNewProject();
                 break;
-            case States.LoadProject:
-                this.loadProject();
-                break;
             case States.LoadModel:
                 this.loadModel();
                 break;
@@ -56,9 +50,6 @@ export class RefferingController implements PageController {
                 break;
             case States.NeedMessage:
                 this.page.setState(MainController.getInstance().getMessage(this.state.messages));
-                break;
-            case States.Register:
-                this.register();
                 break;
             case States.ChangeToVisual:
                 MainController.getInstance().changeTo(new VisualizationController(this.state.currentProject!));
