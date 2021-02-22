@@ -42,7 +42,7 @@ export default class Input extends Component {
   handleCheckBoxChange = (e: React.ChangeEvent<HTMLInputElement>) => {
     let newAvailableSensorTypes = this.state.availableSensorTypes;
     for (var i = 0; i < newAvailableSensorTypes.length; i++) {
-      if (newAvailableSensorTypes[i].sensorTypID == +e.target.value) {
+      if (newAvailableSensorTypes[i].sensorTypID === +e.target.value) {
         newAvailableSensorTypes[i].chosen = !newAvailableSensorTypes[i].chosen;
         this.setState({ availableSensorTypes: newAvailableSensorTypes, });
         return;
@@ -61,7 +61,7 @@ export default class Input extends Component {
       let availableSensorTypes = this.state.availableSensorTypes;
       var usedSensorTypes: number[] = [];
       for (var i = 0; i < availableSensorTypes.length; i++) {
-        if (availableSensorTypes[i].chosen == true) {
+        if (availableSensorTypes[i].chosen === true) {
           usedSensorTypes.push(availableSensorTypes[i].sensorTypID);
         }
       }

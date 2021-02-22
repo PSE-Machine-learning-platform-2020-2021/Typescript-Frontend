@@ -40,7 +40,7 @@ export class AIBuilder {
      * ```
      * Die Reihenfolge ist unwichtig.
      */
-    applyModel(modelData: { sensors: number[], dataSets: number[], classifier: string, scaler: string, features: string[], trainingDataPercentage?: number, slidingWindowSize?: number, slidingWindowStep?: number;}): void {
+    applyModel(modelData: { sensors: number[], dataSets: number[], classifier: string, scaler: string, features: string[], trainingDataPercentage?: number, slidingWindowSize?: number, slidingWindowStep?: number; }): void {
         this.sendRequest(JSON.stringify(modelData), AIBuilder.url + AIBuilder.buildModel, console.log);
     }
 
@@ -65,8 +65,8 @@ export class AIBuilder {
         let xhr = new XMLHttpRequest(); // XHR ist kurz für XmlHttpRequest
         xhr.open("POST", url, true);
         xhr.onreadystatechange = () => {
-            if (xhr.readyState == 4) {
-                if (xhr.status == 200) {
+            if (xhr.readyState === 4) {
+                if (xhr.status === 200) {
                     var responseJSON: object | null;
                     try {
                         responseJSON = JSON.parse(xhr.responseText);
@@ -81,8 +81,8 @@ export class AIBuilder {
                         successAction(responseJSON);
                     }
                 }
-                else if (xhr.status == 406) {
-                    throw new Error("Error in request data - not accepted by Server")
+                else if (xhr.status === 406) {
+                    throw new Error("Error in request data - not accepted by Server");
                 }
                 else {
                     xhr.send(requestData);

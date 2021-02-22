@@ -2,7 +2,7 @@ import React, { Component } from 'react';
 import QRImage from '../QRImage';
 import LinkText from '../LinkText';
 import ChangeToVisuBtn from '../ChangeToVisuBtn';
-import { useState } from 'react';
+
 
 export default class NewProjectButton extends Component {
 
@@ -27,8 +27,9 @@ export default class NewProjectButton extends Component {
 
   componentDidMount() {
     PubSub.subscribe('disabled', (_msg: any, value: boolean) => {
-      this.state.disabled = value
-      this.setState(this.state)
+      //this.state.disabled = value
+      const disabled = value
+      this.setState({ disabled: disabled })
     })
   }
 

@@ -73,7 +73,7 @@ export class DataSet {
 
   addDatapoint(dataRowID: number, datapoint: { value: number[], relativeTime: number; }): boolean {
     for (let i = 0; i < this.dataRow.length; i++) {
-      if (this.dataRow[i].getID() == dataRowID) {
+      if (this.dataRow[i].getID() === dataRowID) {
         this.dataRow[i].addDatapoint(datapoint);
         return true;
       }

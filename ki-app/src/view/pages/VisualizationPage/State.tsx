@@ -6,6 +6,6 @@ export class State implements IState {
   languageCode: string = "de";
   messages: { text: string, id: number; }[] = [];
 
-  currentImg?: string;
-  imageList?: string[];
+  dataSetMetas!: { dataSetID: number; dataSetName: string; }[];
+  currentDataSet!: { dataSetID: number; rows: { sensorType: number; value: number[]; relativeTime: number; }[][]; }[];
 }

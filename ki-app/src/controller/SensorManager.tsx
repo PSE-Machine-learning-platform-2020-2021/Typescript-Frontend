@@ -93,6 +93,7 @@ export class SensorManager {
                     MainController.getInstance().getFacade().sendDataPoint(newDataPoint.rowId, {value: newDataPoint.value, relativeTime: newDataPoint.relativeTime})
                     page.setState(state)
                 }
+            if (this.waitTime === 0) clearInterval(intervalId2);
         }, 1);
 
         for (let index = 0; index < this.currentSensors.length; index++) {
@@ -122,15 +123,22 @@ export class SensorManager {
         let sensors: { sensorTypID: number; sensorType: string; }[] = []
         try {
             let sTest = new Accelerometer()
-            sensors.push({ sensorTypID: 2, sensorType: "Accelerometer"})
+            if (!(sTest.x === null)) {
+                sensors.push({ sensorTypID: 2, sensorType: "Accelerometer"})
+            }
         } catch (error) {}
         try {
             let sTest = new Gyroscope()
-            sensors.push({ sensorTypID: 3, sensorType: "Gyroscope"})
+            if (!(sTest.x === null)) {
+                sensors.push({ sensorTypID: 3, sensorType: "Gyroscope"})
+            }
+            
         } catch (error) {}
         try {
             let sTest = new Magnetometer()
-            sensors.push({ sensorTypID: 4, sensorType: "Magnetometer"})
+            if (!(sTest.x === null)) {
+                sensors.push({ sensorTypID: 4, sensorType: "Magnetometer"})
+            }
         } catch (error) {}
         return sensors
     }
