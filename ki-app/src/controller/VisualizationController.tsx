@@ -16,10 +16,10 @@ export class VisualizationController implements PageController {
     constructor(currentProjekt: { projectID: number, projectName: string, choosenAIModelID: number; }) {
         this.page = new VisualizationPage({});
         this.page.attach(this);
-        this.state = this.page.getState()
-        this.state.currentProject = currentProjekt
-        this.page.setState(this.state)
-        this.SetDataRows()
+        this.state = this.page.getState();
+        this.state.currentProject = currentProjekt;
+        this.page.setState(this.state);
+        this.SetDataRows();
     }
 
     /**
@@ -32,7 +32,7 @@ export class VisualizationController implements PageController {
                 this.page.setState(MainController.getInstance().getMessage(this.state.messages));
                 break;
             case States.ChangeToCreation:
-                MainController.getInstance().changeTo(new ModelCreationController())
+                MainController.getInstance().changeTo(new ModelCreationController());
                 break;
             case States.ChangeLabel:
                 this.changeDataLabel();
@@ -50,21 +50,21 @@ export class VisualizationController implements PageController {
 
     SetDataRows() {
         let intervalId = setInterval(() => {
-        MainController.getInstance().getFacade().loadProject()
-        let dataSets = MainController.getInstance().getFacade().getDataSetMetas()
-        for (let index = 0; index < dataSets.length; index++) {
-            let data = MainController.getInstance().getFacade().getDataRows(dataSets[index].dataSetID).dataRows!;
-            this.state.dataRows! = data;
-            this.state.currentState = States.SetDataRows
-            this.page.setState(this.state)
-        }
-        if (this.state.currentState === States.ChangeToCreation) clearInterval(intervalId);
+            MainController.getInstance().getFacade().loadProject();
+            let dataSets = MainController.getInstance().getFacade().getDataSetMetas();
+            for (let index = 0; index < dataSets.length; index++) {
+                let data = MainController.getInstance().getFacade().getDataRows(dataSets[index].dataSetID).dataRows!;
+                this.state.dataRows != data;
+                this.state.currentState = States.SetDataRows;
+                this.page.setState(this.state);
+            }
+            if (this.state.currentState === States.ChangeToFinish) clearInterval(intervalId);
         }, 3000);
     }
 
     alertConnectionError() {
-        this.state.currentState = States.LoadError
-        this.page.setState(this.state)
+        this.state.currentState = States.LoadError;
+        this.page.setState(this.state);
     }
 
     /**
@@ -72,18 +72,18 @@ export class VisualizationController implements PageController {
      */
     private changeDataLabel() {
         //lade Datenset
-        MainController.getInstance().getFacade().getDataRows(this.state.currentDataSet!.dataSetID)
-        let label = this.state.currentLabel!
-        let sucess = MainController.getInstance().getFacade().setLabel(label.labelID, {start: label.start, end: label.end}, label.name);
+        MainController.getInstance().getFacade().getDataRows(this.state.currentDataSet!.dataSetID);
+        let label = this.state.currentLabel!;
+        let sucess = MainController.getInstance().getFacade().setLabel(label.labelID, { start: label.start, end: label.end }, label.name);
         sucess.then((value: boolean) => {
-            if(value) {
-                this.state.currentState = States.setLabel
-                this.page.setState(this.state)
+            if (value) {
+                this.state.currentState = States.setLabel;
+                this.page.setState(this.state);
             } else {
-                this.state.currentState = States.LoadError
-                this.page.setState(this.state)
+                this.state.currentState = States.LoadError;
+                this.page.setState(this.state);
             }
-        })
+        });
     }
 
     /**
@@ -92,17 +92,17 @@ export class VisualizationController implements PageController {
      */
     private newDataLabel() {
         //lade Datenset
-        MainController.getInstance().getFacade().getDataRows(this.state.currentDataSet!.dataSetID)
-        let start: number = this.state.currentLabel!.start
-        let end: number = this.state.currentLabel!.end
-        let name: string = this.state.currentLabel!.name
-        let promise: Promise<number> = MainController.getInstance().getFacade().createLabel({start , end}, name);
-        this.state.wait! = promise
+        MainController.getInstance().getFacade().getDataRows(this.state.currentDataSet!.dataSetID);
+        let start: number = this.state.currentLabel!.start;
+        let end: number = this.state.currentLabel!.end;
+        let name: string = this.state.currentLabel!.name;
+        let promise: Promise<number> = MainController.getInstance().getFacade().createLabel({ start, end }, name);
+        this.state.wait! = promise;
         promise.then((id: number) => {
-            this.state.currentLabel!.labelID = id
-            this.state.currentState = States.setLabel
-            this.page.setState(this.state)
-        })
+            this.state.currentLabel!.labelID = id;
+            this.state.currentState = States.setLabel;
+            this.page.setState(this.state);
+        });
     }
 
     /**
@@ -110,16 +110,16 @@ export class VisualizationController implements PageController {
      */
     private deleteDataLabel() {
         //lade Datenset
-        MainController.getInstance().getFacade().getDataRows(this.state.currentDataSet!.dataSetID)
+        MainController.getInstance().getFacade().getDataRows(this.state.currentDataSet!.dataSetID);
         let sucess = MainController.getInstance().getFacade().deleteLabel(this.state.currentLabel!.labelID);
         sucess.then((value: boolean) => {
-            if(value) {
-                this.state.currentState = States.setLabel
-                this.page.setState(this.state)
+            if (value) {
+                this.state.currentState = States.setLabel;
+                this.page.setState(this.state);
             } else {
-                this.state.currentState = States.LoadError
-                this.page.setState(this.state)
+                this.state.currentState = States.LoadError;
+                this.page.setState(this.state);
             }
-        })
+        });
     }
 }
