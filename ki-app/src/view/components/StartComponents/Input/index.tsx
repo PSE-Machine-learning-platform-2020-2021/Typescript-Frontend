@@ -74,6 +74,7 @@ export default class Input extends Component {
 
   render() {
     this.setAvailableSensors();
+    const sensorTypes = this.state.availableSensorTypes;
     return (
       <div className="input">
         <form>
