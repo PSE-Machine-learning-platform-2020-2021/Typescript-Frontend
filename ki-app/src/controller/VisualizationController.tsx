@@ -16,10 +16,10 @@ export class VisualizationController implements PageController {
     constructor(currentProjekt: { projectID: number, projectName: string, choosenAIModelID: number; }) {
         this.page = new VisualizationPage({});
         this.page.attach(this);
-        this.state = this.page.getState()
-        this.state.currentProject = currentProjekt
-        this.page.setState(this.state)
-        this.SetDataRows()
+        this.state = this.page.getState();
+        this.state.currentProject = currentProjekt;
+        this.page.setState(this.state);
+        this.SetDataRows();
     }
 
     /**
@@ -32,7 +32,7 @@ export class VisualizationController implements PageController {
                 this.page.setState(MainController.getInstance().getMessage(this.state.messages));
                 break;
             case States.ChangeToCreation:
-                MainController.getInstance().changeTo(new ModelCreationController())
+                MainController.getInstance().changeTo(new ModelCreationController());
                 break;
             default:
                 break;
@@ -41,22 +41,22 @@ export class VisualizationController implements PageController {
 
     SetDataRows() {
         let intervalId = setInterval(() => {
-        MainController.getInstance().getFacade().loadProject()
-        var dataSets = MainController.getInstance().getFacade().getDataSetMetas()
-        this.state.currentDataSets! = []
-        for (let index = 0; index < dataSets.length; index++) {
-            let data = MainController.getInstance().getFacade().getDataRows(dataSets[index].dataSetID).dataRows!;
-            this.state.currentDataSets!.push({dataSetID: dataSets[index].dataSetID, rows: data})
-        }
-        this.state.currentState = States.SetDataRows
-        this.page.setState(this.state)
-        this.state = this.page.getState();
-        if (this.state.currentState === States.ChangeToCreation) clearInterval(intervalId);
+            MainController.getInstance().getFacade().loadProject();
+            var dataSets = MainController.getInstance().getFacade().getDataSetMetas();
+            this.state.currentDataSets! = [];
+            for (let index = 0; index < dataSets.length; index++) {
+                let data = MainController.getInstance().getFacade().getDataRows(dataSets[index].dataSetID).dataRows!;
+                this.state.currentDataSets!.push({ dataSetID: dataSets[index].dataSetID, rows: data });
+            }
+            this.state.currentState = States.SetDataRows;
+            this.page.setState(this.state);
+            this.state = this.page.getState();
+            if (this.state.currentState === States.ChangeToCreation) clearInterval(intervalId);
         }, 3000);
     }
 
     alertConnectionError() {
-        this.state.currentState = States.LoadError
-        this.page.setState(this.state)
+        this.state.currentState = States.LoadError;
+        this.page.setState(this.state);
     }
 }
