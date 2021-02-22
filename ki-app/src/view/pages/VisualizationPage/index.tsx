@@ -1,14 +1,12 @@
-import React, { Component } from 'react'
+import React from 'react'
 import PubSub from 'pubsub-js';
 import './VisualizationPage.css'
 import { Page } from "../PageInterface";
 import { PageController } from "../../../controller/PageController";
 import { State } from "./State";
-import { MainController } from '../../../controller/MainController';
 import ReactDOM from 'react-dom';
 import { States } from '../State';
 import FinishButton from '../../components/VisualizationComponents/FinishButton';
-import ShowDiagram from '../../components/VisualizationComponents/ShowDiagram';
 import DiagramList from '../../components/VisualizationComponents/DiagramList';
 
 type Props = {
@@ -97,13 +95,15 @@ export class VisualizationPage extends React.Component<Props, State> implements 
           */
         this.state.currentDataSet?.map((dataset) => {
             PubSub.publish('getrows', dataset)
+            return dataset
         })
 
     }
 
     changetonextpage() {
         PubSub.subscribe('changepage', (_msg: any) => {
-            this.state.currentState = States.ChangeToCreation
+            //this.state.currentState = States.ChangeToCreation
+            this.setState({ currentState: States.ChangeToCreation })
             this.notify()
 
         })

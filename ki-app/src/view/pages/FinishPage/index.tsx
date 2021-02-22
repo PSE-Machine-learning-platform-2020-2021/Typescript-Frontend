@@ -18,7 +18,12 @@ export class FinishPage extends React.Component<IProps, State> implements Page {
 
   constructor(props: IProps) {
     super(props);
-    this.giveDiagram();
+    this.setState({
+      dataRows: [
+        [{ sensorType: 1, value: [10, 20, 55], relativeTime: 0 }, { sensorType: 1, value: [55, 46, 22], relativeTime: 1, }],
+        [{ sensorType: 2, value: [16, 2, 72], relativeTime: 0 }, { sensorType: 1, value: [66, 61, 63], relativeTime: 1, }],
+      ]
+    });
     const VDOM = (
       <div>
         <Title />
@@ -29,6 +34,7 @@ export class FinishPage extends React.Component<IProps, State> implements Page {
       </div>
     );
     ReactDOM.render(VDOM, document.getElementById("root"));
+    this.giveDiagram();
   }
 
   giveDiagram() {
