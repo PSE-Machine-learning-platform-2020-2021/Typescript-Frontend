@@ -1,4 +1,4 @@
-import React, { Component } from 'react';
+import React from 'react';
 import DownloadButton from '../../components/DeliveryComponents/DownloadButton';
 import EmailList from '../../components/DeliveryComponents/EmailList';
 import { Page } from "../PageInterface";
@@ -52,15 +52,18 @@ export class DeliveryPage extends React.Component<Props, State> implements Page 
 
 	delivery() {
 		PubSub.subscribe('delivery', (_msg: any, data: string[]) => {
-			this.state.currentState = States.DeliverWeb
-			this.state.chosenEmails = data
+			//this.state.currentState = States.DeliverWeb
+			this.setState({ currentState: States.DeliverWeb })
+			//this.state.chosenEmails = data
+			this.setState({ chosenEmails: data })
 			this.notify()
 		})
 	}
 
 	download() {
 		PubSub.subscribe('download', (_msg: any) => {
-			this.state.currentState = States.NeedDownload
+			//this.state.currentState = States.NeedDownload
+			this.setState({ currentState: States.NeedDownload })
 			this.notify()
 		})
 	}

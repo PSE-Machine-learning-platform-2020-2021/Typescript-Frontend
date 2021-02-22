@@ -1,6 +1,5 @@
 import { IState } from "../State";
 import { States } from "../State";
-import { QRCode, ErrorCorrectLevel, QRNumber, QRAlphaNum, QR8BitByte, QRKanji } from 'qrcode-generator-ts/js';
 
 export class State implements IState {
   currentState: States = States.NeedMessage;
