@@ -8,5 +8,5 @@ export class State implements IState {
   languageCode: string = "de";
   leadTime: number = -1;
   usedSensorNames: string[] = [];
-  //dataRows: { value: number; relativeTime: number; }[][] = [];
+  dataPoints?: { rowId: number, sensorType: number, value: number[]; relativeTime: number; }[] = [];
 }
