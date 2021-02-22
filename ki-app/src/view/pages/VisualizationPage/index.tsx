@@ -109,13 +109,15 @@ export class VisualizationPage extends React.Component<Props, State> implements 
         }
         PubSub.publish('getrows', ex22)
 
-
-        this.state.dataSetMetas?.map((dataset) => {
-            this.state.currentDataSet.dataSetID = dataset.dataSetID
-            this.state.currentState = States.NeedRows
-            this.notify()
-            PubSub.publish('getrows', this.state.currentDataSet)
+        this.state.currentDataSet.map((dataset) => {
+            PubSub.publish('getrows', dataset)
         })
+        //   this.state.dataSetMetas?.map((dataset) => {
+        //      this.state.currentDataSet.dataSetID = dataset.dataSetID
+        //        this.state.currentState = States.NeedRows
+        //        this.notify()
+
+        //    })
     }
 
     changetonextpage() {
