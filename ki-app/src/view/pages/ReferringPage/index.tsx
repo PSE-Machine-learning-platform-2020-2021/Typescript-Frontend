@@ -1,4 +1,4 @@
-import React, { Component } from 'react';
+import React from 'react';
 import PubSub from 'pubsub-js';
 import ConstantsText from '../../components/ReferringComponents/ConstantsText';
 import NewProjectButton from '../../components/ReferringComponents/NewProjectButton';
@@ -65,8 +65,10 @@ export class ReferringPage extends React.Component<Props, State> implements Page
     createNewProject() {
         PubSub.subscribe('createnewproject', (_msg: any, data: string) => {
             // console.log(this.state.currentState)
-            this.state.currentState = States.NewProjekt;
-            this.state.currentProject = { projectID: -10000, projectName: data, choosenAIModelID: -10000 };
+            //this.state.currentState = States.NewProjekt;
+            this.setState({ currentState: States.NewProjekt })
+            //this.state.currentProject = { projectID: -10000, projectName: data, choosenAIModelID: -10000 };
+            this.setState({ currentProject: { projectID: -10000, projectName: data, choosenAIModelID: -10000 } })
             //hier notifty for createnewProject
             this.notify();
             //notify for needqr
@@ -76,16 +78,16 @@ export class ReferringPage extends React.Component<Props, State> implements Page
 
     register() {
         PubSub.subscribe('register', (_msg: any, data: { name: string, email: string, password: string; }) => {
-            this.state.adminData = data;
-            this.state.currentState = States.Register;
-            //this.setState({ adminData: data })
-            //this.setState({ currentState: States.Register })
+            // this.state.adminData = data;
+            //this.state.currentState = States.Register;
+            this.setState({ adminData: data })
+            this.setState({ currentState: States.Register })
             //console.log(this.state.currentState)
             this.notify();
             this.state.wait!.then(() => {
                 //console.log(this.state.currentState)
                 let flag: boolean;
-                if (this.state.currentState != States.Register) {
+                if (this.state.currentState !== States.Register) {
                     flag = false;
                 } else {
                     PubSub.publish('disabled', false);
@@ -99,8 +101,10 @@ export class ReferringPage extends React.Component<Props, State> implements Page
     login() {
         PubSub.subscribe('login', (_msg: any, data: { name: string, email: string, password: string; }) => {
             // console.log(this.state.currentState)
-            this.state.adminData = data;
-            this.state.currentState = States.Login;
+            //this.state.adminData = data;
+            this.setState({ adminData: data })
+            //this.state.currentState = States.Login;
+            this.setState({ currentState: States.Login })
             this.notify();
             let flag: boolean;
             this.state.wait!.then(() => {
@@ -137,8 +141,10 @@ export class ReferringPage extends React.Component<Props, State> implements Page
 
     loadproject() {
         PubSub.subscribe('loadproject', (_msg: any, data: { projectID: number, projectName: string, choosenAIModelID: number; }) => {
-            this.state.currentProject = { projectID: data.projectID, projectName: data.projectName, choosenAIModelID: -10000 };
-            this.state.currentState = States.LoadProject;
+            // this.state.currentProject = { projectID: data.projectID, projectName: data.projectName, choosenAIModelID: -10000 };
+            this.setState({ currentProject: { projectID: data.projectID, projectName: data.projectName, choosenAIModelID: -10000 } })
+            //this.state.currentState = ;
+            this.setState({ currentState: States.LoadProject })
             console.log(data.projectID);
             this.notify();
             PubSub.publish('getqr', this.state.qr);
@@ -147,15 +153,18 @@ export class ReferringPage extends React.Component<Props, State> implements Page
 
     changetovisu() {
         PubSub.subscribe('changetovisu', (_msg: any) => {
-            this.state.currentState = States.ChangeToVisual;
+            //this.state.currentState = States.ChangeToVisual;
+            this.setState({ currentState: States.ChangeToVisual })
             this.notify();
         });
     }
 
     loadmodel() {
         PubSub.subscribe('loadmodel', (_msg: any, data: { projectID: number, projectName: string, choosenAIModelID: number; }) => {
-            this.state.currentProject = data;
-            this.state.currentState = States.LoadModel;
+            // this.state.currentProject = data;
+            this.setState({ currentProject: data })
+            // this.state.currentState = States.LoadModel;
+            this.setState({ currentState: States.LoadModel })
             this.notify();
         });
     }

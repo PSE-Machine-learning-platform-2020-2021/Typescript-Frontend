@@ -1,4 +1,4 @@
-import React, { Component } from 'react'
+import React from 'react'
 import PubSub from 'pubsub-js';
 import { Page } from "../PageInterface";
 import { PageController } from "../../../controller/PageController";
@@ -51,7 +51,8 @@ export class ModelCreationPage extends React.Component<Props, State> implements 
 	}
 
 	needDatabaseList() {
-		this.state.currentState = States.NeedDatabaseList
+		//this.state.currentState = States.NeedDatabaseList
+		this.setState({ currentState: States.NeedDatabaseList })
 		this.notify()
 		let databaseList = [
 			{ dataSetID: 1, dataSetName: 'dataset1' },
@@ -65,7 +66,8 @@ export class ModelCreationPage extends React.Component<Props, State> implements 
 	train() {
 		PubSub.subscribe('train', (_msg: any, data: { dataSets: number[], imputations: string[], classifier: string, scaler: string, extractions: string[] }) => {
 			//console.log(data);
-			this.state.currentState = States.NeedKiTraining
+			//this.state.currentState = States.NeedKiTraining
+			this.setState({ currentState: States.NeedKiTraining })
 			//this.state.trainingParameter = data
 			//console.log(this.state.trainingParameter);
 			this.notify()
