@@ -99,7 +99,6 @@ export class RefferingController implements PageController {
         this.state.currentState = States.waitForDB;
         this.page.setState(this.state);
         loginSucess.then((value: boolean) => {
-            console.log("PORNOSTAR");
             if (!value) {
                 this.state.currentState = States.LoginFail;
             }
