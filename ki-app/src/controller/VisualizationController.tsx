@@ -54,7 +54,7 @@ export class VisualizationController implements PageController {
         let dataSets = MainController.getInstance().getFacade().getDataSetMetas()
         for (let index = 0; index < dataSets.length; index++) {
             let data = MainController.getInstance().getFacade().getDataRows(dataSets[index].dataSetID).dataRows!;
-            this.state.dataRows!= data;
+            this.state.dataRows! = data;
             this.state.currentState = States.SetDataRows
             this.page.setState(this.state)
         }
