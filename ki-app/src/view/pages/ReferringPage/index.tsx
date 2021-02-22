@@ -65,9 +65,9 @@ export class ReferringPage extends React.Component<Props, State> implements Page
     createNewProject() {
         PubSub.subscribe('createnewproject', (_msg: any, data: string) => {
             // console.log(this.state.currentState)
-            //this.state.currentState = States.NewProjekt;
+            this.state.currentState = States.NewProjekt;
             this.setState({ currentState: States.NewProjekt })
-            //this.state.currentProject = { projectID: -10000, projectName: data, choosenAIModelID: -10000 };
+            this.state.currentProject = { projectID: -10000, projectName: data, choosenAIModelID: -10000 };
             this.setState({ currentProject: { projectID: -10000, projectName: data, choosenAIModelID: -10000 } })
             //hier notifty for createnewProject
             this.notify();
@@ -78,8 +78,8 @@ export class ReferringPage extends React.Component<Props, State> implements Page
 
     register() {
         PubSub.subscribe('register', (_msg: any, data: { name: string, email: string, password: string; }) => {
-            // this.state.adminData = data;
-            //this.state.currentState = States.Register;
+            this.state.adminData = data;
+            this.state.currentState = States.Register;
             this.setState({ adminData: data })
             this.setState({ currentState: States.Register })
             //console.log(this.state.currentState)
@@ -101,9 +101,9 @@ export class ReferringPage extends React.Component<Props, State> implements Page
     login() {
         PubSub.subscribe('login', (_msg: any, data: { name: string, email: string, password: string; }) => {
             // console.log(this.state.currentState)
-            //this.state.adminData = data;
+            this.state.adminData = data;
             this.setState({ adminData: data })
-            //this.state.currentState = States.Login;
+            this.state.currentState = States.Login;
             this.setState({ currentState: States.Login })
             this.notify();
             let flag: boolean;
@@ -141,9 +141,9 @@ export class ReferringPage extends React.Component<Props, State> implements Page
 
     loadproject() {
         PubSub.subscribe('loadproject', (_msg: any, data: { projectID: number, projectName: string, choosenAIModelID: number; }) => {
-            // this.state.currentProject = { projectID: data.projectID, projectName: data.projectName, choosenAIModelID: -10000 };
+            this.state.currentProject = { projectID: data.projectID, projectName: data.projectName, choosenAIModelID: -10000 };
             this.setState({ currentProject: { projectID: data.projectID, projectName: data.projectName, choosenAIModelID: -10000 } })
-            //this.state.currentState = ;
+            this.state.currentState = States.LoadProject;
             this.setState({ currentState: States.LoadProject })
             console.log(data.projectID);
             this.notify();
