@@ -52,12 +52,15 @@ export class VisualizationController implements PageController {
         let intervalId = setInterval(() => {
         MainController.getInstance().getFacade().loadProject()
         var dataSets = MainController.getInstance().getFacade().getDataSetMetas()
+        this.state.currentDataSets! = []
         for (let index = 0; index < dataSets.length; index++) {
             let data = MainController.getInstance().getFacade().getDataRows(dataSets[index].dataSetID).dataRows!;
-            this.state.currentDataSet! = {dataSetID: dataSets[index].dataSetID, rows: data}
-            this.state.currentState = States.SetDataRows
-            this.page.setState(this.state)
+            this.state.currentDataSets!.push({dataSetID: dataSets[index].dataSetID, rows: data})
+            
         }
+        this.state.currentState = States.SetDataRows
+        this.page.setState(this.state)
+        this.state = this.page.getState();
         if (this.state.currentState === States.ChangeToCreation) clearInterval(intervalId);
         }, 3000);
     }
