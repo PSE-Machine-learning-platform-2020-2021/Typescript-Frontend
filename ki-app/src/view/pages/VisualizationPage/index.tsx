@@ -109,6 +109,7 @@ export class VisualizationPage extends React.Component<Props, State> implements 
         }
         PubSub.publish('getrows', ex22)
 
+
         this.state.dataSetMetas?.map((dataset) => {
             this.state.currentDataSet.dataSetID = dataset.dataSetID
             this.state.currentState = States.NeedRows
