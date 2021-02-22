@@ -49,7 +49,7 @@ export default class ProjectList extends Component {
                         alert('Es gibt keine Model in diesem Projekt!')
                     }
                 }
-                return projectObj
+                //return projectObj
             })
         }
 
@@ -64,7 +64,7 @@ export default class ProjectList extends Component {
                     PubSub.publish('loadproject', projectObj)
                     this.setState({ loadclick: true })
                 }
-                return projectObj
+                // return projectObj
             })
         }
     }
