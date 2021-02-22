@@ -1,4 +1,4 @@
-import { Admin, User } from "./User";
+import { User } from "./User";
 
 /**
  * Diese Klasse Speichert die Session informationen
