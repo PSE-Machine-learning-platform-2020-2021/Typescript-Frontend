@@ -95,7 +95,7 @@ export class VisualizationPage extends React.Component<Props, State> implements 
           }
           PubSub.publish('getrows', ex22)
           */
-        this.state.currentDataSet.map((dataset) => {
+        this.state.currentDataSet?.map((dataset) => {
             PubSub.publish('getrows', dataset)
         })
 
