@@ -33,7 +33,7 @@ export default class LoginWindow extends Component {
   register = () => {
     this.setState({ openNewWindow: false });
     /** mit controller weiter veraendern*/
-    var pattern = /^([A-Za-z0-9_\-\.])+\@([A-Za-z0-9_\-\.])+\.([A-Za-z])+$/
+    var pattern = /^([A-Za-z0-9_\-.])+@([A-Za-z0-9_\-.])+\.([A-Za-z])+$/
     if (!pattern.test(this.state.email)) {
       alert('Sie müssen eine Emailadresse eingeben!');
       return

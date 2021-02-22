@@ -70,7 +70,7 @@ export default class Train extends Component {
 	handleCheck = (id: number, chosen: boolean) => {
 		const { datasets } = this.state
 		const newDatasets = datasets.map((dataset) => {
-			if (dataset.dataSetID == id) return { ...dataset, chosen };
+			if (dataset.dataSetID === id) return { ...dataset, chosen };
 			else return dataset;
 		})
 		this.setState({ datasets: newDatasets })
@@ -113,12 +113,12 @@ export default class Train extends Component {
 	handleChoose = () => {
 		/* wait to change load model*/
 		this.setState({ openNewWindow: false })
-		if (this.state.value == '') {
+		if (this.state.value === '') {
 			alert('no choice')
 		} else {
 			const { databaseList } = this.state
 			const newDatabaseList1 = databaseList.map((databaseObj) => {
-				if (databaseObj.dataSetName == this.state.value) {
+				if (databaseObj.dataSetName === this.state.value) {
 					databaseObj.chosen = true
 					const datasetObj = { dataSetID: databaseObj.dataSetID, dataSetName: databaseObj.dataSetName, chosen: false }
 					this.addDataset(datasetObj)
@@ -190,18 +190,23 @@ export default class Train extends Component {
 		const { datasets, imputations, classifiers, scalers, extractions } = this.state
 		datasets.map((dataset) => {
 			if (dataset.chosen) chosendataSets.push(dataset.dataSetID)
+			return dataset
 		})
 		imputations.map((imputation) => {
 			if (imputation.checked) chosenimputations.push(imputation.tag)
+			return imputation
 		})
 		classifiers.map((classifier) => {
 			if (classifier.checked) chosenclassifier = classifier.tag
+			return classifier
 		})
 		scalers.map((scaler) => {
 			if (scaler.checked) chosenscaler = scaler.tag
+			return scaler
 		})
 		extractions.map((extraction) => {
 			if (extraction.checked) chosenextractions.push(extraction.tag)
+			return extraction
 		})
 		//console.log(chosendataSets, chosenimputations, chosenclassifier, chosenscaler, chosenextractions)
 		PubSub.publish('train', { chosendataSets, chosenimputations, chosenclassifier, chosenscaler, chosenextractions })

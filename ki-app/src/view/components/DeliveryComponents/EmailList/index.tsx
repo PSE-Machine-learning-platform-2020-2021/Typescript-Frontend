@@ -23,7 +23,7 @@ export default class EmailList extends Component {
 	};
 
 	inputchange = (e: React.ChangeEvent<HTMLInputElement>) => {
-		if (e.target.value == '') {
+		if (e.target.value === '') {
 			this.setState({ inputempty: true })
 		} else {
 			this.setState({ inputemail: { id: nanoid(), address: e.target.value, chosen: false }, inputempty: false })
@@ -43,13 +43,14 @@ export default class EmailList extends Component {
 		}
 		let exist = false
 		emails.map((emailObj) => {
-			if (emailObj.address == inputemail.address) exist = true
+			if (emailObj.address === inputemail.address) exist = true
+			return emailObj
 		})
 		if (exist) {
 			alert('Es gibt schon Emailadresse in List!');
 			return;
 		}
-		var pattern = /^([A-Za-z0-9_\-\.])+\@([A-Za-z0-9_\-\.])+\.([A-Za-z])+$/
+		var pattern = /^([A-Za-z0-9_\-.])+@([A-Za-z0-9_\-.])+\.([A-Za-z])+$/
 		if (pattern.test(inputemail.address)) {
 			this.addEmail(inputemail);
 		} else {
@@ -71,7 +72,7 @@ export default class EmailList extends Component {
 	handleCheck = (id: string, chosen: boolean) => {
 		const { emails } = this.state
 		const newEmails = emails.map((emailObj) => {
-			if (emailObj.id == id) return { ...emailObj, chosen };
+			if (emailObj.id === id) return { ...emailObj, chosen };
 			else return emailObj;
 		})
 		this.setState({ emails: newEmails })
@@ -140,6 +141,7 @@ export default class EmailList extends Component {
 		let emailaddressList: string[] = []
 		emails.map((emailObj) => {
 			if (emailObj.chosen) emailaddressList.push(emailObj.address)
+			return emailObj
 		});
 		console.log(emailaddressList)
 		PubSub.publish('delivery', emailaddressList)

@@ -33,15 +33,15 @@ export default class ProjectList extends Component {
             value: e.target.value
         })
     }
-    
+
     handleChoose() {
         /* wait to change load model*/
         if (this.state.value == null) {
             alert('Sie haben noch kein Projekt gewählt!')
         } else {
             this.state.projectData.map((projectObj) => {
-                if (this.state.value == projectObj.projectID) {
-                    if (projectObj.AIModelID.length != 0) {
+                if (this.state.value === projectObj.projectID) {
+                    if (projectObj.AIModelID.length !== 0) {
                         PubSub.publish('needmodellist', projectObj)
                         this.setState({ click: true })
                     } else {
@@ -49,20 +49,22 @@ export default class ProjectList extends Component {
                         alert('Es gibt keine Model in diesem Projekt!')
                     }
                 }
+                return projectObj
             })
         }
 
     }
     handleLoad() {
 
-        if (this.state.value == null) {
+        if (this.state.value === null) {
             alert('Sie haben noch kein Projekt gewählt!')
         } else {
             this.state.projectData.map((projectObj) => {
-                if (this.state.value == projectObj.projectID) {
+                if (this.state.value === projectObj.projectID) {
                     PubSub.publish('loadproject', projectObj)
                     this.setState({ loadclick: true })
                 }
+                return projectObj
             })
         }
     }

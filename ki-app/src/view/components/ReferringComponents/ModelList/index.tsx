@@ -13,8 +13,9 @@ export default class ModelList extends Component {
 
     componentDidMount() {
         PubSub.subscribe('getmodellist', (_msg: any, data: { projectID: number, projectName: string, AIModelID: number[]; }) => {
-            this.state.modelList = data.AIModelID
-            this.setState(this.state)
+            // this.state.modelList = data.AIModelID
+            const newmodelList = data.AIModelID
+            this.setState({ newmodelList: newmodelList })
         })
     }
     handleChange = (e: React.ChangeEvent<HTMLSelectElement>) => {
