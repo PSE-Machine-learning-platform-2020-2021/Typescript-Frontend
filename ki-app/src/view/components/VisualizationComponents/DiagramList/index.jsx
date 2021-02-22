@@ -56,23 +56,23 @@ export default class DiagramList extends Component {
                 }
             }
 
-            for (var j = 0; j < dataSet.rows[0].length; j++) {
-                this.state.time.push(dataSet.rows[0][j].relativeTime);
+            for (var k = 0; k < dataSet.rows[0].length; k++) {
+                this.state.time.push(dataSet.rows[0][k].relativeTime);
             }
 
             var newDatasets = [];
             var lineLabels = [];
-            for (var i = 0; i < this.state.sensorRow.length * 3; i++) {
+            for (var m = 0; m < this.state.sensorRow.length * 3; m++) {
                 var coordinate = ".X";
-                var sensor = this.state.sensorRow[parseInt(i / 3)];
-                if (i % 3 == 1) {
+                var sensor = this.state.sensorRow[parseInt(m / 3)];
+                if (m % 3 === 1) {
                     coordinate = ".Y";
                 }
-                if (i % 3 == 2) {
+                if (m % 3 === 2) {
                     coordinate = ".Z";
                 }
 
-                lineLabels.push(<font color={this.state.csscolor[i]}>■{this.state.sensorRow[parseInt(i / 3)] + coordinate}<br /></font>);
+                lineLabels.push(<font color={this.state.csscolor[i]}>■{this.state.sensorRow[parseInt(m / 3)] + coordinate}<br /></font>);
                 this.setState({ lineLabels: lineLabels })
                 newDatasets.push(
                     {
@@ -104,7 +104,7 @@ export default class DiagramList extends Component {
 
     render() {
         var LineChart = require("react-chartjs").Line;
-        const { diagramList, showDiagram } = this.state
+        const { diagramList } = this.state
 
 
         return (
@@ -112,7 +112,7 @@ export default class DiagramList extends Component {
                 {diagramList.map((diagram, index) => {
                     return (
                         <div key={index}>
-                            {(this.state.showDiagramIndex == index) && (
+                            {(this.state.showDiagramIndex === index) && (
                                 <div className="showImage">
                                     <h5>{diagram.dataSetID}</h5>
                                     {diagram.lineLabels}

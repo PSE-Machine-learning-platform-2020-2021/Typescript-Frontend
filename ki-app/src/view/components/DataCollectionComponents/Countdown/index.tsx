@@ -1,4 +1,4 @@
-import { Component, useState, useEffect, useRef } from 'react';
+import { Component } from 'react';
 import PubSub from 'pubsub-js';
 
 export default class Countdown extends Component {
@@ -17,7 +17,7 @@ export default class Countdown extends Component {
 
     updateCounting() {
         this.setState({ countdownNumber: this.state.countdownNumber - 1 });
-        if (this.state.countdownNumber == 0) {
+        if (this.state.countdownNumber === 0) {
             this.setState({ startCounting: false });
         }
     }
