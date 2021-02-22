@@ -106,12 +106,15 @@ export class Facade {
 
   /**
    * Lädt aus der Datenbank das Projekt mit der übergebenen ID, hierfür muss der Admin angemeldet sein
-   * @param projectID die Projekt ID
+   * @param projectID die Projekt ID oder keine falls das aktuelle Projekt neu geladen werden soll
    * @returns true, wenn das Projekt erfolgreich geladen wurde dies tritt nur ein, wenn eine Verbindung zur Datenbank besteht,
    *          die Projekt ID existiert und der Admin dafür angemeldet ist
    */
-  async loadProject(projectID: number): Promise<boolean> {
-    if (this.user != null && this.user instanceof Admin && !this.user.existProject(projectID)) {
+  async loadProject(projectID?: number): Promise<boolean> {
+    if (this.user != null && this.user instanceof Admin) {
+      if (projectID == null) {
+        projectID = this.user?.getCurrentProjectID();
+      }
       let adminEmail: string = this.user.getEmail();
       let userID: number = this.user.getID();
       return this.user.loadProject(await this.dbCon.loadProject({ userID, adminEmail, projectID }));
