@@ -51,8 +51,6 @@ export class Facade {
    * @param languageCode der Sprachcode von der Sprache, die geladen werden soll
    */
   constructor(languageCode: string) {
-    var sensor = new Accelerometer();
-    console.log(sensor.x, sensor.y, sensor.z);
     this.dbCon = new DatabaseConnector();
     this.language = new Language(this.dbCon.loadLanguage({ languageCode }));
   }
