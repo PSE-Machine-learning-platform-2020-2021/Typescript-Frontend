@@ -1,7 +1,7 @@
 import { PageController } from "./PageController";
 import { RefferingController } from "./ReferringController";
 import { MainControllerInterface } from "./MainControllerInterface";
-import { IState, States } from "../view/pages/State";
+import { States } from "../view/pages/State";
 import { Facade } from "../model/Facade";
 import { StartController } from "./StartController";
 
@@ -65,10 +65,11 @@ export class MainController implements MainControllerInterface {
   startApp() {
     const queryString = window.location.search;
     let urlParams = new URLSearchParams(queryString);
+    var controller: PageController
     if (urlParams.get("isMiner") === "true") {
-      var controller: PageController = new StartController();
+      controller= new StartController();
     } else {
-      var controller: PageController = new RefferingController();
+      controller = new RefferingController();
     }
     this.changeTo(controller);
   }

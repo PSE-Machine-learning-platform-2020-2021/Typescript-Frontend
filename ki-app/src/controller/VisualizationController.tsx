@@ -4,7 +4,6 @@ import { MainController } from "./MainController";
 import { ModelCreationController } from "./ModelCreationController";
 import { Page } from "../view/pages/PageInterface";
 import { IState, States } from "../view/pages/State";
-import { State } from "../view/pages/DeliveryPage/State";
 
 export class VisualizationController implements PageController {
     private page: Page;
