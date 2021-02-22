@@ -19,6 +19,7 @@ export class VisualizationController implements PageController {
         this.state = this.page.getState()
         this.state.currentProject = currentProjekt
         this.page.setState(this.state)
+        this.SetDataRows()
     }
 
     /**
