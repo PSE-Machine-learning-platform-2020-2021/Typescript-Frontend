@@ -17,8 +17,6 @@ export class StartPage extends React.Component<Props, State> implements Page {
     observers: PageController[] = [];
     constructor(props: Props) {
         super(props);
-        this.setAvailableSensors();
-        this.changeSettings();
         const VDOM = (
             <div>
                 <Title />
@@ -26,6 +24,8 @@ export class StartPage extends React.Component<Props, State> implements Page {
             </div>
         );
         ReactDOM.render(VDOM, document.getElementById('root'));
+        this.setAvailableSensors();
+        this.changeSettings();
     }
 
     setAvailableSensors() {
