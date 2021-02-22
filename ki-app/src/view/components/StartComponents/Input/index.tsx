@@ -11,11 +11,12 @@ export default class Input extends Component {
   };
 
   setAvailableSensors() {
-    PubSub.subscribe('setAvailableSensors', (
+    /*PubSub.subscribe('setAvailableSensors', (
       data: { sensorTypID: number, sensorType: string, chosen: boolean; }[]
     ) => {
       this.setState({ availableSensorTypes: data });
     });
+    */
   }
 
   changeLeadtime = (e: React.ChangeEvent<HTMLInputElement>) => {
