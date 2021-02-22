@@ -28,8 +28,8 @@ export class AIDistributor {
         let data: { url: string; };
         xhr.open("POST", AIDistributor.url, true);
         xhr.onreadystatechange = () => {
-            if (xhr.readyState == 4) {
-                if (xhr.status == 200) {
+            if (xhr.readyState === 4) {
+                if (xhr.status === 200) {
                     data = JSON.parse(xhr.responseText);
                     switch (this.format) {
                         case DeliveryFormat.EXE:

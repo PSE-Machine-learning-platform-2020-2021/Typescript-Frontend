@@ -1,11 +1,10 @@
 import { DeliveryFormat } from "./DeliveryFormat";
 import { DatabaseConnector } from "./DatabaseConnector";
 import { Language } from "./Language";
-import { AccelerometerData, MagnetometerData, SensorData } from "./SensorData";
 import { Admin, Dataminer, AIModelUser, User } from "./User";
 import { AIBuilder } from "./AIBuilder";
-import { DeviceData } from "./DeviceData";
 import { AIDistributor } from "./AIDistributor";
+import { SensorData } from "./SensorData";
 
 interface FacadeInterface {
   createDataSet(sensorTypes: string[], dataSetName: string): boolean;
@@ -293,7 +292,7 @@ export class Facade {
   async loginAdmin(adminEmail: string, password: string): Promise<boolean> {
     if (this.user == null) {
       let adminData: { admin: { adminID: number, deviceID: number, adminName: string, email: string, device: { deviceID?: number, deviceName: string, deviceType: string, firmware: string, generation: string, MACADRESS: string, sensorInformation: { sensorTypeID: number, sensorName: string, sensorUniqueID: number; }[]; }; }; } = await this.dbCon.loginAdmin({ adminEmail, password });
-      if (adminData.admin != null && adminData.admin.adminID != -1) {
+      if (adminData.admin != null && adminData.admin.adminID !== -1) {
         let admin = adminData.admin;
         this.user = new Admin(admin.adminID, admin.deviceID, admin.adminName, admin.email, admin.device);
         return true;

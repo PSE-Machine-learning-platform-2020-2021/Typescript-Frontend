@@ -23,7 +23,7 @@ export abstract class DeviceData {
    */
   setDeviceID(deviceID: number): boolean {
 
-    if (this.id == -1 && deviceID >= 0) {
+    if (this.id === -1 && deviceID >= 0) {
       this.id = deviceID;
       return true;
     }

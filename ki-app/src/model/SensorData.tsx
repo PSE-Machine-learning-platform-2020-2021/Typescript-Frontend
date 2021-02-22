@@ -23,28 +23,13 @@ export abstract class SensorData {
 //Diese Klasse ist eine Unterklasse von der abstrakten Klasse SensorData und ist für die Sensoren der Kategorie Beschleunigungssensor bestimmt
 export class AccelerometerData extends SensorData {
   SensorTypeID: number = 2;
-
-  //Dies ist der Konstruktor und nimmt eine eindeutige Sensor-ID entgegen
-  constructor(id: number, macaddress: string, deviceName: string) {
-    super(id, macaddress, deviceName);
-  }
 }
 
 //Diese Klasse ist eine Unterklasse von der abstrakten Klasse SensorData und ist für die Sensoren der Kategorie Kreiselinstrument bestimmt.
 export class GyroscopeData extends SensorData {
   SensorTypeID: number = 3;
-
-  //Dies ist der Konstruktor und nimmt eine eindeutige Sensor-ID entgegen
-  constructor(id: number, macaddress: string, deviceName: string) {
-    super(id, macaddress, deviceName);
-  }
 }
 
 export class MagnetometerData extends SensorData {
   SensorTypeID: number = 4;
-
-  //Dies ist der Konstruktor und nimmt eine eindeutige Sensor-ID entgegen
-  constructor(id: number, macaddress: string, deviceName: string) {
-    super(id, macaddress, deviceName);
-  }
 }
