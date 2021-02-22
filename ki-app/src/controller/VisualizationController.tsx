@@ -58,7 +58,7 @@ export class VisualizationController implements PageController {
             this.state.currentState = States.SetDataRows
             this.page.setState(this.state)
         }
-        if (this.state.currentState === States.ChangeToFinish) clearInterval(intervalId);
+        if (this.state.currentState === States.ChangeToCreation) clearInterval(intervalId);
         }, 3000);
     }
 
