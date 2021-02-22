@@ -1,11 +1,10 @@
 import { DeliveryFormat } from "./DeliveryFormat";
 import { DatabaseConnector } from "./DatabaseConnector";
 import { Language } from "./Language";
-import { AccelerometerData, MagnetometerData, SensorData } from "./SensorData";
 import { Admin, Dataminer, AIModelUser, User } from "./User";
 import { AIBuilder } from "./AIBuilder";
-import { DeviceData } from "./DeviceData";
 import { AIDistributor } from "./AIDistributor";
+import { SensorData } from "./SensorData";
 
 interface FacadeInterface {
   createDataSet(sensorTypes: string[], dataSetName: string): boolean;
@@ -51,8 +50,6 @@ export class Facade {
    * @param languageCode der Sprachcode von der Sprache, die geladen werden soll
    */
   constructor(languageCode: string) {
-    var sensor = new Accelerometer();
-    console.log(sensor.x, sensor.y, sensor.z);
     this.dbCon = new DatabaseConnector();
     this.language = new Language(this.dbCon.loadLanguage({ languageCode }));
   }
@@ -108,12 +105,15 @@ export class Facade {
 
   /**
    * Lädt aus der Datenbank das Projekt mit der übergebenen ID, hierfür muss der Admin angemeldet sein
-   * @param projectID die Projekt ID
+   * @param projectID die Projekt ID oder keine falls das aktuelle Projekt neu geladen werden soll
    * @returns true, wenn das Projekt erfolgreich geladen wurde dies tritt nur ein, wenn eine Verbindung zur Datenbank besteht,
    *          die Projekt ID existiert und der Admin dafür angemeldet ist
    */
-  async loadProject(projectID: number): Promise<boolean> {
-    if (this.user != null && this.user instanceof Admin && !this.user.existProject(projectID)) {
+  async loadProject(projectID?: number): Promise<boolean> {
+    if (this.user != null && this.user instanceof Admin) {
+      if (projectID == null) {
+        projectID = this.user?.getCurrentProjectID();
+      }
       let adminEmail: string = this.user.getEmail();
       let userID: number = this.user.getID();
       return this.user.loadProject(await this.dbCon.loadProject({ userID, adminEmail, projectID }));
@@ -292,7 +292,7 @@ export class Facade {
   async loginAdmin(adminEmail: string, password: string): Promise<boolean> {
     if (this.user == null) {
       let adminData: { admin: { adminID: number, deviceID: number, adminName: string, email: string, device: { deviceID?: number, deviceName: string, deviceType: string, firmware: string, generation: string, MACADRESS: string, sensorInformation: { sensorTypeID: number, sensorName: string, sensorUniqueID: number; }[]; }; }; } = await this.dbCon.loginAdmin({ adminEmail, password });
-      if (adminData.admin != null && adminData.admin.adminID != -1) {
+      if (adminData.admin != null && adminData.admin.adminID !== -1) {
         let admin = adminData.admin;
         this.user = new Admin(admin.adminID, admin.deviceID, admin.adminName, admin.email, admin.device);
         return true;

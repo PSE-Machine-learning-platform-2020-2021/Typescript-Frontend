@@ -29,7 +29,7 @@ export class DatabaseConnector {
    * @returns ProjektID und die SessionID, falls das Projekt nicht erstellt werden konnte beides -1
    */
   async createProject(requestData: { userID: number, adminEmail: string, projectName: string; }): Promise<{ projectID: number, sessionID: number; }> {
-    const result: { projectID: number, sessionID: number; } = await this.sendRequest("createProject", requestData);
+    const result: { projectID: number, sessionID: number; } = await this.sendRequest("create_project", requestData);
     return result;
   }
 
@@ -161,7 +161,7 @@ export class DatabaseConnector {
    * @param password 
    */
   async loginAdmin(requestData: { adminEmail: string, password: string; }): Promise<{ admin: { adminID: number, deviceID: number, adminName: string, email: string, device: { deviceID?: number, deviceName: string, deviceType: string, firmware: string, generation: string, MACADRESS: string, sensorInformation: { sensorTypeID: number, sensorName: string, sensorUniqueID: number; }[]; }; }; }> {
-    const result: { admin: { adminID: number, deviceID: number, adminName: string, email: string, device: { deviceID?: number, deviceName: string, deviceType: string, firmware: string, generation: string, MACADRESS: string, sensorInformation: { sensorTypeID: number, sensorName: string, sensorUniqueID: number; }[]; }; }; } = await this.sendRequest("loginAdmin", requestData);
+    const result: { admin: { adminID: number, deviceID: number, adminName: string, email: string, device: { deviceID?: number, deviceName: string, deviceType: string, firmware: string, generation: string, MACADRESS: string, sensorInformation: { sensorTypeID: number, sensorName: string, sensorUniqueID: number; }[]; }; }; } = await this.sendRequest("login_admin", requestData);
     return result;
   }
 
@@ -174,7 +174,7 @@ export class DatabaseConnector {
    * @returns labelID
    */
   async createLabel(requestData: { sessionID: number, userID: number, datasetID: number, label: { span: { start: number, end: number; }, labelName: string; }; }): Promise<number> {
-    const result: number = await this.sendRequest("createLabel", requestData);
+    const result: number = await this.sendRequest("create_label", requestData);
     return result;
   }
 
@@ -186,7 +186,7 @@ export class DatabaseConnector {
    * @param label 
    */
   async setLabel(requestData: { sessionID: number, userID: number, datasetID: number, label: { labelID: number, span: { start?: number, end?: number; }, labelName?: string; }; }): Promise<boolean> {
-    const result: boolean = await this.sendRequest("setLabel", requestData);
+    const result: boolean = await this.sendRequest("set_label", requestData);
     return result;
   }
 
@@ -198,7 +198,7 @@ export class DatabaseConnector {
    * @param labelID 
    */
   async deleteLabel(requestData: { sessionID: number, userID: number, datasetID: number, labelID: number; }): Promise<boolean> {
-    const result: boolean = await this.sendRequest("deleteLabel", requestData);
+    const result: boolean = await this.sendRequest("delete_label", requestData);
     return result;
   }
 

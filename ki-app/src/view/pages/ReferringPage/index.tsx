@@ -30,14 +30,14 @@ export class ReferringPage extends React.Component<Props, State> implements Page
             </div>
         );
         ReactDOM.render(VDOM, document.getElementById('root'));
-        this.createNewProject()
-        this.register()
-        this.login()
-        this.getmodellist()
-        this.getProjectList()
-        this.loadproject()
-        this.changetovisu()
-        this.loadmodel()
+        this.createNewProject();
+        this.register();
+        this.login();
+        this.getmodellist();
+        this.getProjectList();
+        this.loadproject();
+        this.changetovisu();
+        this.loadmodel();
     }
 
     attach(observer: PageController) {
@@ -66,97 +66,97 @@ export class ReferringPage extends React.Component<Props, State> implements Page
         PubSub.subscribe('createnewproject', (_msg: any, data: string) => {
             // console.log(this.state.currentState)
             this.state.currentState = States.NewProjekt;
-            this.state.currentProject = { projectID: -10000, projectName: data, choosenAIModelID: -10000 }
+            this.state.currentProject = { projectID: -10000, projectName: data, choosenAIModelID: -10000 };
             //hier notifty for createnewProject
-            this.notify()
+            this.notify();
             //notify for needqr
-            PubSub.publish('getqr', this.state.qr)
-        })
+            PubSub.publish('getqr', this.state.qr);
+        });
     }
 
     register() {
         PubSub.subscribe('register', (_msg: any, data: { name: string, email: string, password: string; }) => {
-            this.state.adminData = data
-            this.state.currentState = States.Register
+            this.state.adminData = data;
+            this.state.currentState = States.Register;
             //this.setState({ adminData: data })
             //this.setState({ currentState: States.Register })
             //console.log(this.state.currentState)
-            this.notify()
+            this.notify();
             this.state.wait!.then(() => {
-            //console.log(this.state.currentState)
-            let flag: boolean
-            if (this.state.currentState != States.Register) {
-                flag = false
-            } else {
-                PubSub.publish('disabled', false)
-                flag = true
-            }
-            PubSub.publish('registerstatus', flag)
-        })
-        })
+                //console.log(this.state.currentState)
+                let flag: boolean;
+                if (this.state.currentState != States.Register) {
+                    flag = false;
+                } else {
+                    PubSub.publish('disabled', false);
+                    flag = true;
+                }
+                PubSub.publish('registerstatus', flag);
+            });
+        });
     }
 
     login() {
         PubSub.subscribe('login', (_msg: any, data: { name: string, email: string, password: string; }) => {
             // console.log(this.state.currentState)
-            this.state.adminData = data
-            this.state.currentState = States.Login
-            this.notify()
-            let flag: boolean
+            this.state.adminData = data;
+            this.state.currentState = States.Login;
+            this.notify();
+            let flag: boolean;
             this.state.wait!.then(() => {
                 if (this.state.currentState as States === States.LoginFail as States) {
-                    flag = false
+                    flag = false;
                 } else {
-                    flag = true
-                    PubSub.publish('disabled', false)
-                    PubSub.publish('getprojectlist', this.state.projectData)
+                    flag = true;
+                    PubSub.publish('disabled', false);
+                    PubSub.publish('getprojectlist', this.state.projectData);
                 }
-                PubSub.publish('loginstatus', flag)
-            })
-        })
+                PubSub.publish('loginstatus', flag);
+            });
+        });
     }
 
     getmodellist() {
-        PubSub.subscribe('needmodellist', (msg: any, data: { projectID: number}) => {
+        PubSub.subscribe('needmodellist', (msg: any, data: { projectID: number; }) => {
             for (let index = 0; index < this.state.projectData!.length; index++) {
-                if(data.projectID === this.state.projectData![index].projectID) {
-                    PubSub.publish('getmodellist', this.state.projectData![index])
-                    return
+                if (data.projectID === this.state.projectData![index].projectID) {
+                    PubSub.publish('getmodellist', this.state.projectData![index]);
+                    return;
                 }
-                
+
             }
-           
-        })
+
+        });
     }
 
     getProjectList() {
         PubSub.subscribe('needprojectlist', () => {
-            PubSub.publish('getprojectlist', this.state.projectData!)
-        })
+            PubSub.publish('getprojectlist', this.state.projectData!);
+        });
     }
 
     loadproject() {
         PubSub.subscribe('loadproject', (_msg: any, data: { projectID: number, projectName: string, choosenAIModelID: number; }) => {
-            this.state.currentProject = { projectID: data.projectID, projectName: data.projectName, choosenAIModelID: -10000 }
-            this.state.currentState = States.LoadProject
-            console.log( data.projectID)
-            this.notify()
-            PubSub.publish('getqr', this.state.qr)
-        })
+            this.state.currentProject = { projectID: data.projectID, projectName: data.projectName, choosenAIModelID: -10000 };
+            this.state.currentState = States.LoadProject;
+            console.log(data.projectID);
+            this.notify();
+            PubSub.publish('getqr', this.state.qr);
+        });
     }
 
     changetovisu() {
         PubSub.subscribe('changetovisu', (_msg: any) => {
-            this.state.currentState = States.ChangeToVisual
-            this.notify()
-        })
+            this.state.currentState = States.ChangeToVisual;
+            this.notify();
+        });
     }
 
     loadmodel() {
         PubSub.subscribe('loadmodel', (_msg: any, data: { projectID: number, projectName: string, choosenAIModelID: number; }) => {
-            this.state.currentProject = data
-            this.state.currentState = States.LoadModel
-            this.notify()
-        })
+            this.state.currentProject = data;
+            this.state.currentState = States.LoadModel;
+            this.notify();
+        });
     }
 }

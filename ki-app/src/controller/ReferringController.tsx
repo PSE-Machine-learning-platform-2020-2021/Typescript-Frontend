@@ -43,9 +43,6 @@ export class RefferingController implements PageController {
             case States.NewProjekt:
                 this.createNewProject();
                 break;
-            case States.LoadProject:
-                this.loadProject();
-                break;
             case States.LoadModel:
                 this.loadModel();
                 break;
@@ -54,9 +51,6 @@ export class RefferingController implements PageController {
                 break;
             case States.NeedMessage:
                 this.page.setState(MainController.getInstance().getMessage(this.state.messages));
-                break;
-            case States.Register:
-                this.register();
                 break;
             case States.ChangeToVisual:
                 MainController.getInstance().changeTo(new VisualizationController(this.state.currentProject!));
@@ -77,11 +71,11 @@ export class RefferingController implements PageController {
         this.page.setState(this.state);
         loginSucess.then((value: boolean) => {
             if (value) {
-                this.state.projectData! = []
+                this.state.projectData! = [];
                 let projectData: Promise<{ projectID: number; projectName: string; AIModelID: number[]; }[]> = MainController.getInstance().getFacade().getProjectMetas();
                 projectData.then((data: { projectID: number; projectName: string; AIModelID: number[]; }[]) => {
                     this.state.projectData! = data;
-                    this.page.setState(this.state)
+                    this.page.setState(this.state);
                 });
 
             } else {
@@ -118,7 +112,7 @@ export class RefferingController implements PageController {
     createQR() {
         const url = new URL(document.URL);
         url.searchParams.append("SessionID", MainController.getInstance().getFacade().getSessionID().toString());
-        url.searchParams.append("isMiner", "true")
+        url.searchParams.append("isMiner", "true");
         let link: string = url.toString();
         var qr = new QRCode();
         qr.setTypeNumber(5);
