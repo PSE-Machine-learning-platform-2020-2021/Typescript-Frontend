@@ -5,6 +5,9 @@ import { IState, States } from "../view/pages/State";
 import { DeliveryPage } from "../view/pages/DeliveryPage/index";
 //import { DeliveryFormat } from "../model/DeliveryFormat"
 
+/**
+* Controller der die Auslieferungsseite verwaltet
+*/
 export class DeliveryController implements PageController {
     /**
     * Seite welche gerade von dem Controller verwaltet wird
