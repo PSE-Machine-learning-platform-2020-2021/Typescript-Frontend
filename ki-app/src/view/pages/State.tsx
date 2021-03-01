@@ -23,7 +23,7 @@ export interface IState {
   usedSensorNames?: string[];
   trainingParameter?: {
     dataSets: number[],
-    imputator: string[],
+    imputator: string,
     classifier: string,
     scaler: string,
     features: string[];
