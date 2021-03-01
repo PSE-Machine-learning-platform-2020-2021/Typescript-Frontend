@@ -50,6 +50,7 @@ export class ModelCreationController implements PageController {
     * Holt sich aus den ausgewählten Datensätzen die benutzten Sensoren.
     */
     startTraining () {
+        /*
         // Auf Sensorenarten wird geprüft
         let sensors: number[] = [];
         for ( let index = 0; index < this.state.trainingParameter!.dataSets.length; index++ ) {
@@ -64,7 +65,7 @@ export class ModelCreationController implements PageController {
             }
         }
         //Benutzte Sensoren werden hinzugefügt
-        this.state.trainingParameter!.sensors = sensors;
+        this.state.trainingParameter!.sensors = sensors;*/
         MainController.getInstance().getFacade().applyModel( this.state.trainingParameter! );
     }
 }
