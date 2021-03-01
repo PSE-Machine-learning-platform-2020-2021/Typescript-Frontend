@@ -45,7 +45,7 @@ export class VisualizationController implements PageController {
     */
     SetDataRows () {
         let intervalId = setInterval( () => {
-            MainController.getInstance().getFacade().loadProject();
+            MainController.getInstance().getFacade().loadProject(this.state.currentProject?.projectID);
             var dataSets = MainController.getInstance().getFacade().getDataSetMetas();
             this.state.currentDataSets! = [];
             for ( let index = 0; index < dataSets.length; index++ ) {
