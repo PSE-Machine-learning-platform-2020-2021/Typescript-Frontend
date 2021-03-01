@@ -49,23 +49,24 @@ export class ModelCreationPage extends React.Component<Props, State> implements 
 	getState() {
 		return this.state;
 	}
-	
+
 	setState(newState: any): void {
 		return;
 	}
 
 	needDatabaseList() {
 		// eslint-disable-next-line
-		this.state.currentState = States.NeedDatabaseList
-		//this.setState({ currentState: States.NeedDatabaseList })
-		this.notify()
+		//this.state.currentState = States.NeedDatabaseList
+		//this.notify()
+
+		/**  Beispiel
 		let databaseList = [
 			{ dataSetID: 1, dataSetName: 'dataset1' },
 			{ dataSetID: 2, dataSetName: 'dataset2' },
 			{ dataSetID: 3, dataSetName: 'dataset3' }
 		]
-		PubSub.publish('getlist', databaseList)
-		//PubSub.publish('getlist', this.state.dataSets)
+		PubSub.publish('getlist', databaseList)*/
+		PubSub.publish('getlist', this.state.dataSetMetas)
 	}
 
 	train() {

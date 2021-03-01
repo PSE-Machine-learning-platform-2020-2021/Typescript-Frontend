@@ -6,7 +6,7 @@ export class State implements IState {
   languageCode: string = "de";
   messages: { text: string, id: number; }[] = [];
 
-  dataSets?: { dataSetID: number; dataSetName: string; }[];
+  dataSetMetas?: { dataSetID: number; dataSetName: string; }[];
   trainingParameter?: {
     dataSets: number[],
     imputator: string,
@@ -16,6 +16,6 @@ export class State implements IState {
     trainingDataPercentage?: number, // optional
     slidingWindowSize?: number,      // optional
     slidingWindowStep?: number;        // optional
-  } = {dataSets: [], imputator: "", classifier: '', scaler: '', features: []};
+  } = { dataSets: [], imputator: "", classifier: '', scaler: '', features: [] };
 }
 
