@@ -13,7 +13,7 @@ export default class Input extends Component {
   componentDidMount() {
     console.log("123215");
     PubSub.subscribe("setAvailableSensors", (
-      data: { sensorTypID: number, sensorType: string, chosen: boolean; }[]
+      _msg: any, data: { sensorTypID: number, sensorType: string, chosen: boolean; }[]
     ) => {
       console.log("aaa");
       this.setState({ availableSensorTypes: data });
