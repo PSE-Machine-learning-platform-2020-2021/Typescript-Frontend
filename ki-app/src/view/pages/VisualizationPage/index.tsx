@@ -53,6 +53,10 @@ export class VisualizationPage extends React.Component<Props, State> implements 
         return this.state;
     }
 
+    setState() {
+        return;
+    }
+
     getDatarows() {
         /**   var emp = []
           emp.push([{ sensorType: 85124, value: [55, 66, 12], relativeTime: 0 },
