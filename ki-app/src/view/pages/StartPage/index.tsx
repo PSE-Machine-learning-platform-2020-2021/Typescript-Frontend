@@ -29,7 +29,9 @@ export class StartPage extends React.Component<Props, State> implements Page {
     }
 
     setAvailableSensors() {
-        PubSub.publish('setAvailableSensors', this.state.recordingSettings.availableSensorTypes);
+        console.log("Publish");
+        let data = [{ sensorTypID: 0, sensorType: "a", chosen: false }];
+        PubSub.publish("setAvailableSensors", data);
     }
 
     /**

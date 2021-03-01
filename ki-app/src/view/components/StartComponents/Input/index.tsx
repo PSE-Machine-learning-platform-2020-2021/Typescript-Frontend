@@ -7,37 +7,39 @@ export default class Input extends Component {
     usedSensorTypes: [] as number[],
     leadTime: "",
     collectionTime: "",
-    availableSensorTypes: [] as { sensorTypID: number, sensorType: string, chosen: boolean; }[]
+    availableSensorTypes: [{ sensorTypID: 0, sensorType: "a", chosen: false },] as { sensorTypID: number, sensorType: string, chosen: boolean; }[]
   };
 
-  setAvailableSensors() {
-    /*PubSub.subscribe('setAvailableSensors', (
+  componentDidMount() {
+    console.log("123215");
+    PubSub.subscribe("setAvailableSensors", (
       data: { sensorTypID: number, sensorType: string, chosen: boolean; }[]
     ) => {
+      console.log("aaa");
       this.setState({ availableSensorTypes: data });
     });
-    */
   }
 
+
   changeLeadtime = (e: React.ChangeEvent<HTMLInputElement>) => {
-    this.setState(() => ({
+    this.setState({
       leadTime: e.target.value,
-    }));
+    });
   };
   changeCollectionTime = (e: React.ChangeEvent<HTMLInputElement>) => {
-    this.setState(() => ({
+    this.setState({
       collectionTime: e.target.value,
-    }));
+    });
   };
   changeSensors = (e: React.ChangeEvent<HTMLSelectElement>) => {
-    this.setState(() => ({
+    this.setState({
       chosenSensors: e.target.value,
-    }));
+    });
   };
   changeName = (e: React.ChangeEvent<HTMLInputElement>) => {
-    this.setState(() => ({
+    this.setState({
       name: e.target.value,
-    }));
+    });
   };
 
   handleCheckBoxChange = (e: React.ChangeEvent<HTMLInputElement>) => {
@@ -74,8 +76,6 @@ export default class Input extends Component {
   };
 
   render() {
-    this.setAvailableSensors();
-    const sensorTypes = this.state.availableSensorTypes;
     return (
       <div className="input">
         <form>
@@ -102,17 +102,17 @@ export default class Input extends Component {
             onChange={this.changeName.bind(this)}
           /><br />
           Sensoren...
-          <ul className="todo-main">
+
             {
-              this.state.availableSensorTypes.map((type: { sensorTypID: number, sensorType: string, chosen: boolean; }) => {
-                return (<li key={type.sensorTypID}>
-                  <input
-                    type="checkbox" value={type.sensorTypID} checked={type.chosen} onChange={(e) => this.handleCheckBoxChange(e)} />
-                  {type.sensorType}
-                </li>);
-              })
-            }
-          </ul>
+            this.state.availableSensorTypes.map((type: { sensorTypID: number, sensorType: string, chosen: boolean; }) => {
+              return (<li key={type.sensorTypID}>
+                <input
+                  type="checkbox" value={type.sensorTypID} checked={type.chosen} onChange={(e) => this.handleCheckBoxChange(e)} />
+                {type.sensorType}
+              </li>);
+            })
+          }
+
           <br />
           <button type="button" onClick={this.submit}>
             Start
