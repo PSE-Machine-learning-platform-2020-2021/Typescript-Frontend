@@ -8,16 +8,14 @@ export class State implements IState {
 
   dataSets?: { dataSetID: number; dataSetName: string; }[];
   trainingParameter?: {
-    sensors: number[],
     dataSets: number[],
-    imputations: string[],
+    imputator: string,
     classifier: string,
     scaler: string,
     features: string[]
-    extractions: string[],
     trainingDataPercentage?: number, // optional
     slidingWindowSize?: number,      // optional
     slidingWindowStep?: number;        // optional
-  } = { sensors: [], dataSets: [], imputations: [], classifier: '', scaler: '', features: [], extractions: [], };
+  } = {dataSets: [], imputator: "", classifier: '', scaler: '', features: []};
 }
 

@@ -3,5 +3,5 @@ export enum Imputation {
     FORWARD,
     MOVING,
     LINEAR,
-    SPLINE,
+    SPLINE
 }

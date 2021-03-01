@@ -49,6 +49,10 @@ export class ModelCreationPage extends React.Component<Props, State> implements 
 	getState() {
 		return this.state;
 	}
+	
+	setState(newState: any): void {
+		return;
+	}
 
 	needDatabaseList() {
 		// eslint-disable-next-line
@@ -65,16 +69,16 @@ export class ModelCreationPage extends React.Component<Props, State> implements 
 	}
 
 	train() {
-		PubSub.subscribe('train', (_msg: any, data: { dataSets: number[], imputations: string[], classifier: string, scaler: string, extractions: string[] }) => {
+		PubSub.subscribe('train', (_msg: any, data: { dataSets: number[], imputator: string, classifier: string, scaler: string, features: string[] }) => {
 			//console.log(data);
 			// eslint-disable-next-line
 			this.state.currentState = States.NeedKiTraining
 			//this.state.trainingParameter = data 
 			this.state.trainingParameter!.dataSets = data.dataSets
-			this.state.trainingParameter!.imputations = data.imputations
+			this.state.trainingParameter!.imputator = data.imputator
 			this.state.trainingParameter!.classifier = data.classifier
 			this.state.trainingParameter!.scaler = data.scaler
-			this.state.trainingParameter!.extractions = data.extractions
+			this.state.trainingParameter!.features = data.features
 			//console.log(this.state.trainingParameter);
 			this.notify()
 		})

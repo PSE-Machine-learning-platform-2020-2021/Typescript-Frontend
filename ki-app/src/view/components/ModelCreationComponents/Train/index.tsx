@@ -14,7 +14,7 @@ export default class Train extends Component {
 			dataSetName: 'exampledataset',
 			chosen: false
 		}],
-		imputations: [
+		imputators: [
 			{ name: "Mittel", checked: false, tag: 'MEAN' },
 			{ name: "Letzer Wert fortgeführt", checked: false, tag: 'FORWARD' },
 			{ name: "Bewegter Durchschnitt", checked: false, tag: 'MOVING' },
@@ -28,7 +28,7 @@ export default class Train extends Component {
 			{ name: "Normalizer", checked: false, tag: 'NORMALIZER' },
 			{ name: "Anteilstrafo", checked: false, tag: 'SHARE' }
 		],
-		extractions: [
+		features: [
 			{ name: "Minimum", checked: false, tag: 'MIN' },
 			{ name: "Maximum", checked: false, tag: 'MAX' },
 			{ name: "Varianz", checked: false, tag: 'VARIANCE' },
@@ -47,7 +47,8 @@ export default class Train extends Component {
 			{ name: "Support Vector Machine", checked: false, tag: 'SVM' }
 		],
 		chosenScaler: 0,
-		chosenclassifier: 0
+		chosenclassifier: 0,
+		chosenImputator: 0
 	}
 
 	componentDidMount() {
@@ -145,9 +146,17 @@ export default class Train extends Component {
 			<option key={dataset.dataSetID} value={dataset.dataSetName}>{dataset.dataSetName}</option>);
 	}
 	handleImputation = (index: number) => {
-		var newList = [...this.state.imputations]
-		newList[index].checked = !newList[index].checked
-		this.setState({ imputations: newList })
+		var newList = [...this.state.imputators]
+		var newChosen = this.state.chosenImputator
+		if (newList[index].checked) { newChosen-- }
+		else { newChosen++ }
+		if (newChosen <= 1) {
+			newList[index].checked = !newList[index].checked
+			this.setState({ chosenImputator: newChosen, imputators: newList })
+		} else {
+			alert('Darf nicht mehrer Imputer wählen!')
+			return
+		}
 	}
 	handleScaler = (index: number) => {
 
@@ -160,15 +169,15 @@ export default class Train extends Component {
 			this.setState({ chosenScaler: newChosen })
 			this.setState({ scalers: newList })
 		} else {
-			alert('Darf nicht mehrer Skaler wählen!')
+			alert('Darf nicht mehrer Scaler wählen!')
 			return
 		}
 
 	}
 	handleExtraction = (index: number) => {
-		var newList = [...this.state.extractions]
+		var newList = [...this.state.features]
 		newList[index].checked = !newList[index].checked
-		this.setState({ extractions: newList })
+		this.setState({ features: newList })
 	}
 	handleClassifier = (index: number) => {
 		var newList = [...this.state.classifiers]
@@ -186,15 +195,15 @@ export default class Train extends Component {
 	}
 
 	handleTrain = () => {
-		var chosendataSets: number[] = [], chosenimputations: string[] = [], chosenclassifier = '', chosenscaler = '', chosenextractions: string[] = [];
-		const { datasets, imputations, classifiers, scalers, extractions } = this.state
+		var chosendataSets: number[] = [], chosenImputator = "", chosenclassifier = '', chosenscaler = '', chosenFeatures: string[] = [];
+		const { datasets, imputators, classifiers, scalers, features } = this.state
 		datasets.map((dataset) => {
 			if (dataset.chosen) chosendataSets.push(dataset.dataSetID)
 			return dataset
 		})
-		imputations.map((imputation) => {
-			if (imputation.checked) chosenimputations.push(imputation.tag)
-			return imputation
+		imputators.map((imputator) => {
+			if (imputator.checked) chosenImputator = imputator.tag
+			return imputator
 		})
 		classifiers.map((classifier) => {
 			if (classifier.checked) chosenclassifier = classifier.tag
@@ -204,16 +213,16 @@ export default class Train extends Component {
 			if (scaler.checked) chosenscaler = scaler.tag
 			return scaler
 		})
-		extractions.map((extraction) => {
-			if (extraction.checked) chosenextractions.push(extraction.tag)
-			return extraction
+		features.map((feature) => {
+			if (feature.checked) chosenFeatures.push(feature.tag)
+			return feature
 		})
-		console.log(chosendataSets, chosenimputations, chosenclassifier, chosenscaler, chosenextractions)
-		PubSub.publish('train', { chosendataSets, chosenimputations, chosenclassifier, chosenscaler, chosenextractions })
+		console.log(chosendataSets, chosenImputator, chosenclassifier, chosenscaler, chosenFeatures)
+		PubSub.publish('train', { chosendataSets, chosenImputator, chosenclassifier, chosenscaler, chosenFeatures })
 	}
 
 	render() {
-		const { mouse, datasets, imputations, scalers, extractions, classifiers } = this.state
+		const { mouse, datasets, imputators, scalers, features, classifiers } = this.state
 
 		return (
 			<div className="train">
@@ -249,10 +258,10 @@ export default class Train extends Component {
 				<div>
 					<div className="imputationlist">
 						<h3>Imputation</h3>
-						{imputations.map((imputation, index) => {
+						{imputators.map((imputator, index) => {
 							return (
 								<div key={index}>
-									<input type="checkbox" value={index} checked={imputation.checked} onChange={() => this.handleImputation(index)} /><span>{imputation.name}</span>
+									<input type="checkbox" value={index} checked={imputator.checked} onChange={() => this.handleImputation(index)} /><span>{imputator.name}</span>
 								</div>
 							)
 						})}
@@ -273,7 +282,7 @@ export default class Train extends Component {
 				<div>
 					<div className="extractionlist">
 						<h3>Merkmalextraktion</h3>
-						{extractions.map((extraction, index) => {
+						{features.map((extraction, index) => {
 							return (
 								<div key={index}>
 									<input type="checkbox" value={index} checked={extraction.checked} onChange={() => this.handleExtraction(index)} /><span>{extraction.name}</span>
