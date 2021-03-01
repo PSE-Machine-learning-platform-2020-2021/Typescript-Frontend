@@ -18,6 +18,6 @@ export class State implements IState {
     trainingDataPercentage?: number, // optional
     slidingWindowSize?: number,      // optional
     slidingWindowStep?: number;        // optional
-  } = {sensors: [], dataSets: [], imputations: [], classifier: '', scaler: '', features: [], extractions: [], };
+  } = { sensors: [], dataSets: [], imputations: [], classifier: '', scaler: '', features: [], extractions: [], };
 }
 

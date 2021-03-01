@@ -69,8 +69,12 @@ export class ModelCreationPage extends React.Component<Props, State> implements 
 			//console.log(data);
 			// eslint-disable-next-line
 			this.state.currentState = States.NeedKiTraining
-			//this.setState({ currentState: States.NeedKiTraining })
-			//this.state.trainingParameter = data
+			//this.state.trainingParameter = data 
+			this.state.trainingParameter!.dataSets = data.dataSets
+			this.state.trainingParameter!.imputations = data.imputations
+			this.state.trainingParameter!.classifier = data.classifier
+			this.state.trainingParameter!.scaler = data.scaler
+			this.state.trainingParameter!.extractions = data.extractions
 			//console.log(this.state.trainingParameter);
 			this.notify()
 		})
