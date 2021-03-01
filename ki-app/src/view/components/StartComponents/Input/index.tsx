@@ -7,15 +7,13 @@ export default class Input extends Component {
     usedSensorTypes: [] as number[],
     leadTime: "",
     collectionTime: "",
-    availableSensorTypes: [{ sensorTypID: 0, sensorType: "a", chosen: false },] as { sensorTypID: number, sensorType: string, chosen: boolean; }[]
+    availableSensorTypes: [] as { sensorTypID: number, sensorType: string, chosen: boolean; }[]
   };
 
   componentDidMount() {
-    console.log("123215");
     PubSub.subscribe("setAvailableSensors", (
-      data: { sensorTypID: number, sensorType: string, chosen: boolean; }[]
+      _msg: any, data: { sensorTypID: number, sensorType: string, chosen: boolean; }[]
     ) => {
-      console.log("aaa");
       this.setState({ availableSensorTypes: data });
     });
   }
@@ -107,7 +105,7 @@ export default class Input extends Component {
             this.state.availableSensorTypes.map((type: { sensorTypID: number, sensorType: string, chosen: boolean; }) => {
               return (<div>
                 <input type="checkbox" value={type.sensorTypID} checked={type.chosen} onChange={(e) => this.handleCheckBoxChange(e)} />
-                <div>{type.sensorType}</div>
+                {type.sensorType}
               </div>);
 
             })

@@ -6,7 +6,10 @@ export class State implements IState {
   messageIDs: number[] = [];
   messages: { text: string, id: number; }[] = [];
   languageCode: string = "de";
-  recordingSettings = { newDataSetName: "", usedSensorTypes: [0,], waitTime: -1, readTime: -1, availableSensorTypes: [{ sensorTypID: 0, sensorType: "", chosen: false },], };
+  recordingSettings = {
+    newDataSetName: "", usedSensorTypes: [0,], waitTime: -1, readTime: -1,
+    availableSensorTypes: [] as { sensorTypID: number, sensorType: string, chosen: boolean; }[]
+  };
   leadTime: number = -1;
   collectionTime: number = -1;
 }

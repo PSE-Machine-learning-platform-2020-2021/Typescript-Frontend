@@ -29,9 +29,7 @@ export class StartPage extends React.Component<Props, State> implements Page {
     }
 
     setAvailableSensors() {
-        console.log("Publish");
-        let data = [{ sensorTypID: 0, sensorType: "a", chosen: false }];
-        PubSub.publish("setAvailableSensors", data);
+        PubSub.publish("setAvailableSensors", this.state.recordingSettings.availableSensorTypes);
     }
 
     /**
@@ -45,7 +43,7 @@ export class StartPage extends React.Component<Props, State> implements Page {
             readTime: number,
             availableSensorTypes: { sensorTypID: number, sensorType: string, chosen: boolean; }[];
         }) => {
-            this.setState({ recordingSettings: data });
+            this.state.recordingSettings = data;
             this.state.currentState = States.ChangeToDataCollection;
             this.notify();
         });
