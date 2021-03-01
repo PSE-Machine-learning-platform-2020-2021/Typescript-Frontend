@@ -55,7 +55,6 @@ export default class ProjectList extends Component {
 
     }
     handleLoad() {
-
         if (this.state.value === null) {
             alert('Sie haben noch kein Projekt gewählt!')
         } else {

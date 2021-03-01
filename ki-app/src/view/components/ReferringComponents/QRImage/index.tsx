@@ -5,10 +5,12 @@ export default class QRImage extends Component {
     state = {
         qr: ''
     }
-    getqr() {
+    componentDidMount() {
         PubSub.subscribe('getqr', (_msg: any, data: string) => {
             this.setState({ qr: data });
         })
+    }
+    getqr() {
         return this.state.qr
     }
     render() {
