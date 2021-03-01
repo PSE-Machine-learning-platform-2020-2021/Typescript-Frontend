@@ -6,6 +6,7 @@ import { DeliveryController } from "./DeliveryController";
 import { VisualizationController } from "./VisualizationController";
 import { ReferringPage } from "../view/pages/ReferringPage/index";
 import { QRCode, ErrorCorrectLevel } from 'qrcode-generator-ts/js';
+import { StartPage } from "../view/pages/StartPage";
 
 /**
 * Controller für die Verweisseite
@@ -18,7 +19,8 @@ export class RefferingController implements PageController {
      * Konstruktor des Seitenverwalters. Registriert sich als Beobachter auf seiner Seite und setzt den Start Status. 
      */
     constructor() {
-        this.page = new ReferringPage({});
+        //this.page = new ReferringPage({});
+        this.page = new StartPage({});
         //this.page = new ModelCreationPage({});
         // this.page = new VisualizationPage({});
 
