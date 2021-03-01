@@ -49,6 +49,10 @@ export class ModelCreationPage extends React.Component<Props, State> implements 
 	getState() {
 		return this.state;
 	}
+	
+	setState(newState: any): void {
+		return;
+	}
 
 	needDatabaseList() {
 		// eslint-disable-next-line
