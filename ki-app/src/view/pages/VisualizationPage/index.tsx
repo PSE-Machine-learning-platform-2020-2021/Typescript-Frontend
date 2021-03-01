@@ -53,7 +53,7 @@ export class VisualizationPage extends React.Component<Props, State> implements 
         return this.state;
     }
 
-    setState() {
+    setState(newState: any) {
         return;
     }
 
