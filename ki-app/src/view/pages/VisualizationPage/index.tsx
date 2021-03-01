@@ -102,8 +102,8 @@ export class VisualizationPage extends React.Component<Props, State> implements 
 
     changetonextpage() {
         PubSub.subscribe('changepage', (_msg: any) => {
-            //this.state.currentState = States.ChangeToCreation
-            this.setState({ currentState: States.ChangeToCreation })
+            // eslint-disable-next-line
+            this.state.currentState = States.ChangeToCreation
             this.notify()
 
         })

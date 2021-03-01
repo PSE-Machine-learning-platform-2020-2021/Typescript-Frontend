@@ -52,18 +52,18 @@ export class DeliveryPage extends React.Component<Props, State> implements Page 
 
 	delivery() {
 		PubSub.subscribe('delivery', (_msg: any, data: string[]) => {
-			//this.state.currentState = States.DeliverWeb
-			this.setState({ currentState: States.DeliverWeb })
-			//this.state.chosenEmails = data
-			this.setState({ chosenEmails: data })
+			// eslint-disable-next-line
+			this.state.currentState = States.DeliverWeb
+			// eslint-disable-next-line
+			this.state.chosenEmails = data
 			this.notify()
 		})
 	}
 
 	download() {
 		PubSub.subscribe('download', (_msg: any) => {
-			//this.state.currentState = States.NeedDownload
-			this.setState({ currentState: States.NeedDownload })
+			// eslint-disable-next-line
+			this.state.currentState = States.NeedDownload
 			this.notify()
 		})
 	}

@@ -36,9 +36,10 @@ export default class ProjectList extends Component {
 
     handleChoose() {
         /* wait to change load model*/
-        if (this.state.value == null) {
+        if (this.state.value === null) {
             alert('Sie haben noch kein Projekt gewählt!')
         } else {
+            // eslint-disable-next-line
             this.state.projectData.map((projectObj) => {
                 if (this.state.value === projectObj.projectID) {
                     if (projectObj.AIModelID.length !== 0) {
@@ -49,7 +50,6 @@ export default class ProjectList extends Component {
                         alert('Es gibt keine Model in diesem Projekt!')
                     }
                 }
-                //return projectObj
             })
         }
 
@@ -59,12 +59,12 @@ export default class ProjectList extends Component {
         if (this.state.value === null) {
             alert('Sie haben noch kein Projekt gewählt!')
         } else {
+            // eslint-disable-next-line
             this.state.projectData.map((projectObj) => {
                 if (this.state.value === projectObj.projectID) {
                     PubSub.publish('loadproject', projectObj)
                     this.setState({ loadclick: true })
                 }
-                // return projectObj
             })
         }
     }
