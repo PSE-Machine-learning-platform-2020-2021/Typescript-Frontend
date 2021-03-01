@@ -208,7 +208,7 @@ export default class Train extends Component {
 			if (extraction.checked) chosenextractions.push(extraction.tag)
 			return extraction
 		})
-		//console.log(chosendataSets, chosenimputations, chosenclassifier, chosenscaler, chosenextractions)
+		console.log(chosendataSets, chosenimputations, chosenclassifier, chosenscaler, chosenextractions)
 		PubSub.publish('train', { chosendataSets, chosenimputations, chosenclassifier, chosenscaler, chosenextractions })
 	}
 
