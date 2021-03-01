@@ -107,8 +107,8 @@ export default class Input extends Component {
             this.state.availableSensorTypes.map((type: { sensorTypID: number, sensorType: string, chosen: boolean; }) => {
               return (<div>
                 <input type="checkbox" value={type.sensorTypID} checked={type.chosen} onChange={(e) => this.handleCheckBoxChange(e)} />
-                <div>type.sensorType</div>
-              </div>)
+                <div>{type.sensorType}</div>
+              </div>);
 
             })
           }
