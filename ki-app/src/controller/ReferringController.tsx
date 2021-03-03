@@ -5,8 +5,8 @@ import { MainController } from "./MainController";
 import { DeliveryController } from "./DeliveryController";
 import { VisualizationController } from "./VisualizationController";
 import { ReferringPage } from "../view/pages/ReferringPage/index";
-import { QRCode, ErrorCorrectLevel } from 'qrcode-generator-ts/js';
-import { StartPage } from "../view/pages/StartPage";
+import { QRCode, ErrorCorrectLevel, QRNumber, QRAlphaNum, QR8BitByte, QRKanji } from 'qrcode-generator-ts/js';
+
 
 /**
 * Controller für die Verweisseite

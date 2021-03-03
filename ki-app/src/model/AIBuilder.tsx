@@ -40,7 +40,7 @@ export class AIBuilder {
      * ```
      * Die Reihenfolge ist unwichtig.
      */
-    applyModel(modelData: { sensors: number[], dataSets: number[], classifier: string, scaler: string, features: string[], trainingDataPercentage?: number, slidingWindowSize?: number, slidingWindowStep?: number; }): void {
+    applyModel(modelData: { dataSets: number[], imputator: string, classifier: string, scaler: string, features: string[], trainingDataPercentage?: number, slidingWindowSize?: number, slidingWindowStep?: number; }): void {
         this.sendRequest(JSON.stringify(modelData), AIBuilder.url + AIBuilder.buildModel, console.log);
     }
 

@@ -385,7 +385,7 @@ export class Facade {
     return aiDist.getAIModel();
   }
 
-  applyModel(trainingParameter: { sensors: number[], dataSets: number[], classifier: string, scaler: string, features: string[], trainingDataPercentage?: number, slidingWindowSize?: number, slidingWindowStep?: number; }): void {
+  applyModel(trainingParameter: { dataSets: number[], imputator: string, classifier: string, scaler: string, features: string[], trainingDataPercentage?: number, slidingWindowSize?: number, slidingWindowStep?: number; }): void {
     let aiBuilder = new AIBuilder(-1);
     aiBuilder.applyModel(trainingParameter);
   }
