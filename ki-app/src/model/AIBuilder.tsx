@@ -5,8 +5,8 @@
 export class AIBuilder {
     private modelId: number;
     private static readonly url: string = "../";
-    private static readonly buildModel: string = "buildModel/";
-    private static readonly classify: string = "classify/";
+    private static readonly buildModel: string = "src/buildModel/";
+    private static readonly classify: string = "src/classify/";
 
     /**
      * Erstellt den AIBuilder und übergibt ihm die ID des zu bearbeitenden Modells.
