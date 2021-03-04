@@ -306,12 +306,15 @@ export class Admin extends User {
       }[];
     };
   }): boolean {
-    if (!this.existProject(project.projectID)) {
-      this.project.push(new Project(project.projectID, project.sessionID, project.projectName, project.projectData));
-      return true;
+    var id = this.existProject(project.projectID);
+    var newProject: Project = new Project(project.projectID, project.sessionID, project.projectName, project.projectData);
+    this.currentProject = newProject;
+    if (id == -1) {
+      this.project.push(newProject);
     } else {
-      return false;
+      this.project[id] = newProject;
     }
+    return true;
   }
 
   /**
@@ -332,13 +335,13 @@ export class Admin extends User {
     }
   }
 
-  existProject(projectID: number): boolean {
+  existProject(projectID: number): number {
     for (let i = 0; i < this.project.length; i++) {
       if (this.project[i].getID() === projectID) {
-        return true;
+        return i;
       }
     }
-    return false;
+    return -1;
   }
 
   /**
