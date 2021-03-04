@@ -101,15 +101,13 @@ export default class Input extends Component {
             value={this.state.name}
             onChange={this.changeName.bind(this)}
           /><br />
-          Sensoren...
-
-            {
+          Sensoren:
+          {
             this.state.availableSensorTypes.map((type: { sensorTypID: number, sensorType: string, chosen: boolean; }) => {
               return (<div>
                 <input type="checkbox" value={type.sensorTypID} checked={type.chosen} onChange={(e) => this.handleCheckBoxChange(e)} />
                 {type.sensorType}
               </div>);
-
             })
           }
 

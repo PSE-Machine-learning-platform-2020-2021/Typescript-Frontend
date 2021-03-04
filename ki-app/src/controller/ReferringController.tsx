@@ -166,6 +166,7 @@ export class RefferingController implements PageController {
         sucess.then((value: boolean) => {
             if (value) {
                 this.createQR();
+                PubSub.publish('getqr', this.state.qr);
             } else {
                 this.state.currentState = States.LoadError;
             }

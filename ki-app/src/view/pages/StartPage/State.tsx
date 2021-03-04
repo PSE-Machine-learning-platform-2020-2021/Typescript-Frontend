@@ -10,7 +10,8 @@ export class State implements IState {
     newDataSetName: "", usedSensorTypes: [0,], waitTime: -1, readTime: -1,
     availableSensorTypes: [] as { sensorTypID: number, sensorType: string, chosen: boolean; }[]
   };
-  leadTime: number = -1;
-  collectionTime: number = -1;
+  leadTime: number = 3;
+  collectionTime: number = 5;
+  name: string = "";
 }
 
