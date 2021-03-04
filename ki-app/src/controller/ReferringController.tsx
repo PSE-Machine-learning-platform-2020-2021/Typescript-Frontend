@@ -125,6 +125,7 @@ export class RefferingController implements PageController {
         qr.make();
         this.state.qr = qr.toDataURL();
         this.state.currentState = States.SetQRC;
+        PubSub.publish('getlink', link);
     }
 
     /**
@@ -142,7 +143,10 @@ export class RefferingController implements PageController {
                 projectData.then((data: { projectID: number; projectName: string; AIModelID: number[]; }[]) => {
                     this.state.projectData! = data;
                 });
+                PubSub.publish('getqr', this.state.qr);
+
             } else {
+
                 this.state.currentState = States.LoadError;
             }
             this.page.setState(this.state);
@@ -162,6 +166,7 @@ export class RefferingController implements PageController {
         sucess.then((value: boolean) => {
             if (value) {
                 this.createQR();
+                PubSub.publish('getqr', this.state.qr);
             } else {
                 this.state.currentState = States.LoadError;
             }

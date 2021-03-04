@@ -28,7 +28,7 @@ export default class Train extends Component {
 			{ name: "Normalizer", checked: false, tag: 'NORMALIZER' },
 			{ name: "Anteilstrafo", checked: false, tag: 'SHARE' }
 		],
-		features: [
+		myfeatures: [
 			{ name: "Minimum", checked: false, tag: 'MIN' },
 			{ name: "Maximum", checked: false, tag: 'MAX' },
 			{ name: "Varianz", checked: false, tag: 'VARIANCE' },
@@ -52,6 +52,7 @@ export default class Train extends Component {
 	}
 
 	componentDidMount() {
+		PubSub.unsubscribe('getlist')
 		PubSub.subscribe('getlist', (_msg: any, data: { dataSetID: number, dataSetName: string }[]) => {
 			let i: number
 			let newDatabaseList: { dataSetID: number, dataSetName: string, chosen: boolean }[] = []
@@ -71,7 +72,8 @@ export default class Train extends Component {
 	handleCheck = (id: number, chosen: boolean) => {
 		const { datasets } = this.state
 		const newDatasets = datasets.map((dataset) => {
-			if (dataset.dataSetID === id) return { ...dataset, chosen };
+			// eslint-disable-next-line
+			if (dataset.dataSetID == id) return { ...dataset, chosen };
 			else return dataset;
 		})
 		this.setState({ datasets: newDatasets })
@@ -114,12 +116,14 @@ export default class Train extends Component {
 	handleChoose = () => {
 		/* wait to change load model*/
 		this.setState({ openNewWindow: false })
-		if (this.state.value === '') {
+		// eslint-disable-next-line
+		if (this.state.value == '') {
 			alert('no choice')
 		} else {
 			const { databaseList } = this.state
 			const newDatabaseList1 = databaseList.map((databaseObj) => {
-				if (databaseObj.dataSetName === this.state.value) {
+				// eslint-disable-next-line
+				if (databaseObj.dataSetName == this.state.value) {
 					databaseObj.chosen = true
 					const datasetObj = { dataSetID: databaseObj.dataSetID, dataSetName: databaseObj.dataSetName, chosen: false }
 					this.addDataset(datasetObj)
@@ -128,7 +132,8 @@ export default class Train extends Component {
 			}
 			)
 			const newDatabaseList2 = newDatabaseList1.filter((databaseObj) => {
-				return databaseObj.chosen === false
+				// eslint-disable-next-line
+				return databaseObj.chosen == false
 			})
 			//update emailList
 			this.setState({ databaseList: newDatabaseList2 })
@@ -175,7 +180,7 @@ export default class Train extends Component {
 
 	}
 	handleExtraction = (index: number) => {
-		var newList = [...this.state.features]
+		var newList = [...this.state.myfeatures]
 		newList[index].checked = !newList[index].checked
 		this.setState({ features: newList })
 	}
@@ -195,34 +200,34 @@ export default class Train extends Component {
 	}
 
 	handleTrain = () => {
-		var chosendataSets: number[] = [], chosenImputator = "", chosenclassifier = '', chosenscaler = '', chosenFeatures: string[] = [];
-		const { datasets, imputators, classifiers, scalers, features } = this.state
-		datasets.map((dataset) => {
-			if (dataset.chosen) chosendataSets.push(dataset.dataSetID)
-			return dataset
+		var dataSets: number[] = [], imputator = "", classifier = '', scaler = '', features: string[] = [];
+		const { datasets, imputators, classifiers, scalers, myfeatures } = this.state
+		datasets.map((datasetObj) => {
+			if (datasetObj.chosen) dataSets.push(datasetObj.dataSetID)
+			return datasetObj
 		})
-		imputators.map((imputator) => {
-			if (imputator.checked) chosenImputator = imputator.tag
-			return imputator
+		imputators.map((imputatorObj) => {
+			if (imputatorObj.checked) imputator = imputatorObj.tag
+			return imputatorObj
 		})
-		classifiers.map((classifier) => {
-			if (classifier.checked) chosenclassifier = classifier.tag
-			return classifier
+		classifiers.map((classifierObj) => {
+			if (classifierObj.checked) classifier = classifierObj.tag
+			return classifierObj
 		})
-		scalers.map((scaler) => {
-			if (scaler.checked) chosenscaler = scaler.tag
-			return scaler
+		scalers.map((scalerObj) => {
+			if (scalerObj.checked) scaler = scalerObj.tag
+			return scalerObj
 		})
-		features.map((feature) => {
-			if (feature.checked) chosenFeatures.push(feature.tag)
-			return feature
+		myfeatures.map((featureObj) => {
+			if (featureObj.checked) features.push(featureObj.tag)
+			return featureObj
 		})
-		console.log(chosendataSets, chosenImputator, chosenclassifier, chosenscaler, chosenFeatures)
-		PubSub.publish('train', { chosendataSets, chosenImputator, chosenclassifier, chosenscaler, chosenFeatures })
+		//console.log(chosendataSets, chosenImputator, chosenclassifier, chosenscaler, chosenFeatures)
+		PubSub.publish('train', { dataSets, imputator, classifier, scaler, features })
 	}
 
 	render() {
-		const { mouse, datasets, imputators, scalers, features, classifiers } = this.state
+		const { mouse, datasets, imputators, scalers, myfeatures, classifiers } = this.state
 
 		return (
 			<div className="train">
@@ -282,7 +287,7 @@ export default class Train extends Component {
 				<div>
 					<div className="extractionlist">
 						<h3>Merkmalextraktion</h3>
-						{features.map((extraction, index) => {
+						{myfeatures.map((extraction, index) => {
 							return (
 								<div key={index}>
 									<input type="checkbox" value={index} checked={extraction.checked} onChange={() => this.handleExtraction(index)} /><span>{extraction.name}</span>

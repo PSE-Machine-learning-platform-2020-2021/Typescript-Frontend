@@ -22,6 +22,7 @@ export default class ProjectList extends Component {
 
     componentDidMount() {
         PubSub.publish("needprojectlist")
+        PubSub.unsubscribe('getprojectlist')
         PubSub.subscribe('getprojectlist', (_msg: any, data: { projectID: number, projectName: string, AIModelID: number[]; }[]) => {
             this.setState({ projectData: data })
         })
@@ -36,13 +37,15 @@ export default class ProjectList extends Component {
 
     handleChoose() {
         /* wait to change load model*/
-        if (this.state.value === null) {
+        if (this.state.value == null) {
             alert('Sie haben noch kein Projekt gewählt!')
         } else {
             // eslint-disable-next-line
             this.state.projectData.map((projectObj) => {
-                if (this.state.value === projectObj.projectID) {
-                    if (projectObj.AIModelID.length !== 0) {
+                // eslint-disable-next-line
+                if (this.state.value == projectObj.projectID) {
+                    // eslint-disable-next-line
+                    if (projectObj.AIModelID.length != 0) {
                         PubSub.publish('needmodellist', projectObj)
                         this.setState({ click: true })
                     } else {
@@ -55,12 +58,13 @@ export default class ProjectList extends Component {
 
     }
     handleLoad() {
-        if (this.state.value === null) {
+        if (this.state.value == null) {
             alert('Sie haben noch kein Projekt gewählt!')
         } else {
             // eslint-disable-next-line
             this.state.projectData.map((projectObj) => {
-                if (this.state.value === projectObj.projectID) {
+                // eslint-disable-next-line
+                if (this.state.value == projectObj.projectID) {
                     PubSub.publish('loadproject', projectObj)
                     this.setState({ loadclick: true })
                 }

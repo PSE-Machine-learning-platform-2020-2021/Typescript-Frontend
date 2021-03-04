@@ -5,13 +5,11 @@ import ProjectList from '../ProjectList'
 export default class LoadModelButton extends Component {
   state = { click: false, disabled: true, }
   handleCreate = () => {
-    this.state.click = true
-    this.setState(this.state)
+    this.setState({ click: true })
   }
 
   componentDidMount() {
     PubSub.subscribe('disabled', (_msg: any, value: boolean) => {
-      this.state.disabled = false
       this.setState({ disabled: false })
     })
 

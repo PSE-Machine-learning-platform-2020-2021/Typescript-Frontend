@@ -39,9 +39,11 @@ export default class LoginWindow extends Component {
       return
     } else {
       PubSub.publish('register', { name: this.state.username, email: this.state.email, password: this.state.password })
+      PubSub.unsubscribe('registerstatus')
       PubSub.subscribe('registerstatus', (data: boolean) => {
         if (data) {
           PubSub.publish('login', { name: this.state.username, email: this.state.email, password: this.state.password })
+          PubSub.unsubscribe('loginstatus')
           PubSub.subscribe('loginstatus', (_msg: any, newdata: boolean) => {
             if (newdata) {
               alert('Register und Einloggen Erfolg!')
@@ -58,6 +60,7 @@ export default class LoginWindow extends Component {
     this.setState({ openNewWindow: false });
     /** mit controller weiter veraendern*/
     PubSub.publish('login', { name: this.state.username, email: this.state.email, password: this.state.password })
+    PubSub.unsubscribe('loginstatus')
     PubSub.subscribe('loginstatus', (_msg: any, data: boolean) => {
       if (data) {
         alert('Einloggen Erfolg!')

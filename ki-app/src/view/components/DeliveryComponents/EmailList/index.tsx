@@ -23,7 +23,8 @@ export default class EmailList extends Component {
 	};
 
 	inputchange = (e: React.ChangeEvent<HTMLInputElement>) => {
-		if (e.target.value === '') {
+		// eslint-disable-next-line
+		if (e.target.value == '') {
 			this.setState({ inputempty: true })
 		} else {
 			this.setState({ inputemail: { id: nanoid(), address: e.target.value, chosen: false }, inputempty: false })
@@ -43,7 +44,8 @@ export default class EmailList extends Component {
 		}
 		let exist = false
 		emails.map((emailObj) => {
-			if (emailObj.address === inputemail.address) exist = true
+			// eslint-disable-next-line
+			if (emailObj.address == inputemail.address) exist = true
 			return emailObj
 		})
 		if (exist) {
@@ -72,7 +74,8 @@ export default class EmailList extends Component {
 	handleCheck = (id: string, chosen: boolean) => {
 		const { emails } = this.state
 		const newEmails = emails.map((emailObj) => {
-			if (emailObj.id === id) return { ...emailObj, chosen };
+			// eslint-disable-next-line
+			if (emailObj.id == id) return { ...emailObj, chosen };
 			else return emailObj;
 		})
 		this.setState({ emails: newEmails })

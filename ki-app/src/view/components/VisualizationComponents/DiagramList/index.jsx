@@ -33,6 +33,7 @@ export default class DiagramList extends Component {
     }
 
     componentDidMount() {
+        PubSub.unsubscribe('getrows')
         PubSub.subscribe("getrows", (_msg, dataSet) => {
             this.setState({
                 lineLabels: [],

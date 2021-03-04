@@ -28,7 +28,7 @@ export default class NewProjectButton extends Component {
   componentDidMount() {
     PubSub.subscribe('disabled', (_msg: any, value: boolean) => {
       // const disabled = value
-      const disabled = false
+      const disabled = value
       this.setState({ disabled: disabled })
     })
   }

@@ -63,6 +63,7 @@ export class ReferringPage extends React.Component<Props, State> implements Page
     }
 
     createNewProject() {
+        PubSub.unsubscribe('createnewproject')
         PubSub.subscribe('createnewproject', (_msg: any, data: string) => {
             //console.log(this.state.currentState)
             // eslint-disable-next-line
@@ -72,12 +73,11 @@ export class ReferringPage extends React.Component<Props, State> implements Page
             this.state.currentProject = { projectID: -10000, projectName: data, choosenAIModelID: -10000 };
             //hier notifty for createnewProject
             this.notify();
-            //notify for needqr
-            PubSub.publish('getqr', this.state.qr);
         });
     }
 
     register() {
+        PubSub.unsubscribe('register')
         PubSub.subscribe('register', (_msg: any, data: { name: string, email: string, password: string; }) => {
             // eslint-disable-next-line
             this.state.adminData = data;
@@ -88,7 +88,8 @@ export class ReferringPage extends React.Component<Props, State> implements Page
             this.state.wait!.then(() => {
                 //console.log(this.state.currentState)
                 let flag: boolean;
-                if (this.state.currentState !== States.Register) {
+                // eslint-disable-next-line
+                if (this.state.currentState != States.Register) {
                     flag = false;
                 } else {
                     PubSub.publish('disabled', false);
@@ -100,6 +101,7 @@ export class ReferringPage extends React.Component<Props, State> implements Page
     }
 
     login() {
+        PubSub.unsubscribe('login')
         PubSub.subscribe('login', (_msg: any, data: { name: string, email: string, password: string; }) => {
             // console.log(this.state.currentState)
             // eslint-disable-next-line
@@ -109,7 +111,8 @@ export class ReferringPage extends React.Component<Props, State> implements Page
             this.notify();
             let flag: boolean;
             this.state.wait!.then(() => {
-                if (this.state.currentState as States === States.LoginFail as States) {
+                // eslint-disable-next-line
+                if (this.state.currentState as States == States.LoginFail as States) {
                     flag = false;
                 } else {
                     flag = true;
@@ -117,42 +120,46 @@ export class ReferringPage extends React.Component<Props, State> implements Page
                     PubSub.publish('getprojectlist', this.state.projectData);
                 }
                 PubSub.publish('loginstatus', flag);
+
             });
         });
     }
 
     getmodellist() {
+        PubSub.unsubscribe('needmodellist')
         PubSub.subscribe('needmodellist', (msg: any, data: { projectID: number; }) => {
             for (let index = 0; index < this.state.projectData!.length; index++) {
-                if (data.projectID === this.state.projectData![index].projectID) {
+                // eslint-disable-next-line
+                if (data.projectID == this.state.projectData![index].projectID) {
                     PubSub.publish('getmodellist', this.state.projectData![index]);
                     return;
                 }
-
             }
 
         });
     }
 
     getProjectList() {
+        PubSub.unsubscribe('needprojectlist')
         PubSub.subscribe('needprojectlist', () => {
             PubSub.publish('getprojectlist', this.state.projectData!);
         });
     }
 
     loadproject() {
+        PubSub.unsubscribe('loadproject')
         PubSub.subscribe('loadproject', (_msg: any, data: { projectID: number, projectName: string, choosenAIModelID: number; }) => {
             // eslint-disable-next-line
             this.state.currentProject = { projectID: data.projectID, projectName: data.projectName, choosenAIModelID: -10000 };
             // eslint-disable-next-line
             this.state.currentState = States.LoadProject;
-            console.log(data.projectID);
+            //console.log(data.projectID);
             this.notify();
-            PubSub.publish('getqr', this.state.qr);
         });
     }
 
     changetovisu() {
+        PubSub.unsubscribe('changetovisu')
         PubSub.subscribe('changetovisu', (_msg: any) => {
             // eslint-disable-next-line
             this.state.currentState = States.ChangeToVisual;
@@ -161,6 +168,7 @@ export class ReferringPage extends React.Component<Props, State> implements Page
     }
 
     loadmodel() {
+        PubSub.unsubscribe('loadmodel')
         PubSub.subscribe('loadmodel', (_msg: any, data: { projectID: number, projectName: string, choosenAIModelID: number; }) => {
             // eslint-disable-next-line
             this.state.currentProject = data;

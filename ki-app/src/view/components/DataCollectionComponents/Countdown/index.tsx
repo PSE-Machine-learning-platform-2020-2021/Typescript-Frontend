@@ -17,7 +17,7 @@ export default class Countdown extends Component {
 
     updateCounting() {
         this.setState({ countdownNumber: this.state.countdownNumber - 1 });
-        if (this.state.countdownNumber === 0) {
+        if (this.state.countdownNumber == 0) {
             this.setState({ startCounting: false });
         }
     }

@@ -51,6 +51,7 @@ export class DeliveryPage extends React.Component<Props, State> implements Page 
 	}
 
 	delivery() {
+		PubSub.unsubscribe('delivery')
 		PubSub.subscribe('delivery', (_msg: any, data: string[]) => {
 			// eslint-disable-next-line
 			this.state.currentState = States.DeliverWeb
@@ -61,6 +62,7 @@ export class DeliveryPage extends React.Component<Props, State> implements Page 
 	}
 
 	download() {
+		PubSub.unsubscribe('download')
 		PubSub.subscribe('download', (_msg: any) => {
 			// eslint-disable-next-line
 			this.state.currentState = States.NeedDownload

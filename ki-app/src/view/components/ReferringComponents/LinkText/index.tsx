@@ -2,13 +2,14 @@ import React, { Component } from 'react'
 
 export default class LinkText extends Component {
     state = {
-        qr: ''
+        link: ''
     }
-    getqr() {
-        PubSub.subscribe('getqr', (_msg: any, data: string) => {
-            this.setState({ qr: data });
+    getlink() {
+        PubSub.unsubscribe('getlink')
+        PubSub.subscribe('getlink', (_msg: any, data: string) => {
+            this.setState({ link: data });
         })
-        return this.state.qr
+        return this.state.link
     }
 
     render() {
@@ -19,7 +20,7 @@ export default class LinkText extends Component {
                     <p>QR-Code scannen oder Link folgen, um neues Projekt zu beginnen:</p>
                 </div>
 
-                <a href={this.getqr()}>{this.getqr()}</a>
+                <a href={this.getlink()}>{this.getlink()}</a>
             </div>
         )
     }
