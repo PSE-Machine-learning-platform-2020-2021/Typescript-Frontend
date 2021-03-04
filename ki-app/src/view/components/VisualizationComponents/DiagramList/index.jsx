@@ -33,7 +33,6 @@ export default class DiagramList extends Component {
     }
 
     componentDidMount() {
-        PubSub.unsubscribe('getrows')
         PubSub.subscribe("getrows", (_msg, dataSet) => {
             this.setState({
                 lineLabels: [],
@@ -56,24 +55,27 @@ export default class DiagramList extends Component {
                     datavalues = []
                 }
             }
-
-            for (var k = 0; k < dataSet.rows[0].length; k++) {
-                this.state.time.push(dataSet.rows[0][k].relativeTime);
+            // eslint-disable-next-line
+            for (var j = 0; j < dataSet.rows[0].length; j++) {
+                this.state.time.push(dataSet.rows[0][j].relativeTime);
             }
 
             var newDatasets = [];
             var lineLabels = [];
-            for (var m = 0; m < this.state.sensorRow.length * 3; m++) {
+            // eslint-disable-next-line
+            for (var i = 0; i < this.state.sensorRow.length * 3; i++) {
                 var coordinate = ".X";
-                var sensor = this.state.sensorRow[parseInt(m / 3)];
-                if (m % 3 === 1) {
+                var sensor = this.state.sensorRow[parseInt(i / 3)];
+                // eslint-disable-next-line
+                if (i % 3 == 1) {
                     coordinate = ".Y";
                 }
-                if (m % 3 === 2) {
+                // eslint-disable-next-line
+                if (i % 3 == 2) {
                     coordinate = ".Z";
                 }
 
-                lineLabels.push(<font color={this.state.csscolor[i]}>■{this.state.sensorRow[parseInt(m / 3)] + coordinate}<br /></font>);
+                lineLabels.push(<font color={this.state.csscolor[i]}>■{this.state.sensorRow[parseInt(i / 3)] + coordinate}<br /></font>);
                 this.setState({ lineLabels: lineLabels })
                 newDatasets.push(
                     {
