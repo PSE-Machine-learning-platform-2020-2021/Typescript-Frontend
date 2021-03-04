@@ -307,7 +307,9 @@ export class Admin extends User {
     };
   }): boolean {
     if (!this.existProject(project.projectID)) {
-      this.project.push(new Project(project.projectID, project.sessionID, project.projectName, project.projectData));
+      var newProject: Project = new Project(project.projectID, project.sessionID, project.projectName, project.projectData);
+      this.project.push(newProject);
+      this.currentProject = newProject;
       return true;
     } else {
       return false;
