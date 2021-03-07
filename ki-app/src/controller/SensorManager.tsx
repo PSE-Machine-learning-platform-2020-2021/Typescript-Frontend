@@ -1,6 +1,7 @@
 import { MainController } from "./MainController";
 import { Page } from "../view/pages/PageInterface";
 import { IState, States } from "../view/pages/State";
+import { wait } from "@testing-library/dom";
 
 export class SensorManager {
     private currentSensors: Sensor[] = [];
@@ -128,48 +129,38 @@ export class SensorManager {
     * Prüft welche Sensoren verfügbar sind.
     * @returns ein Array welches alle SensorTypeIDs enthält die verfügbar sind
     */
-    getAvailableSensors() {
+    async getAvailableSensors(): Promise<{ sensorTypID: number; sensorType: string; }[]> {
         let sensors: { sensorTypID: number; sensorType: string; }[] = [];
-        try {
-            let sTest = new Accelerometer({ frequency: 60 });
-            sTest.addEventListener('reading', e => {
-                console.log("Accelerometer: x = " + sTest.x);
-                if (sTest.x != null) {
-                    sensors.push({ sensorTypID: 2, sensorType: "Accelerometer" });
-                }
-                sTest.stop();
-            });
-            sTest.start();
-            while (sTest.activated) {
-
-            }
-        } catch (error) { }
-        try {
-            let sTest = new Gyroscope({ frequency: 60 });
-            sTest.addEventListener('reading', e => {
-                if (sTest.x != null) {
-                    sensors.push({ sensorTypID: 2, sensorType: "Accelerometer" });
-                }
-                sTest.stop();
-            });
-            sTest.start();
-            while (sTest.activated) {
-
-            }
-        } catch (error) { }
-        try {
-            let sTest = new Magnetometer({ frequency: 60 });
-            sTest.addEventListener('reading', e => {
-                if (sTest.x != null) {
-                    sensors.push({ sensorTypID: 2, sensorType: "Accelerometer" });
-                }
-                sTest.stop();
-            });
-            sTest.start();
-            while (sTest.activated) {
-
-            }
-        } catch (error) { }
+        let accelerometer = new Accelerometer({ frequency: 60 });
+        let accelerometerExist = this.test(accelerometer);
+        let gyroscope = new Gyroscope({ frequency: 60 });
+        let gyroscopeExist = this.test(gyroscope);
+        /*let magnetometer = new Magnetometer();            Nicht definiert?
+        let magnetometerExist = this.test(magnetometer);*/
+        if (await accelerometerExist) {
+            sensors.push({ sensorTypID: 2, sensorType: "Accelerometer" });
+        }
+        if (await gyroscopeExist) {
+            sensors.push({ sensorTypID: 3, sensorType: "Gyroscope" });
+        }
+        /*if (await magnetometerExist) {
+            sensors.push({ sensorTypID: 4, sensorType: "Magnetometer" });
+        }*/
         return sensors;
+    }
+
+    private async test(sensor: Sensor): Promise<boolean> {
+        var finish = false;
+        sensor.addEventListener('reading', e => {
+            finish = true;
+            sensor.stop();
+        });
+        sensor.start();
+        await this.wait(1000);
+        sensor.stop();
+        return finish;
+    }
+    private async wait(ms: number) {
+        return new Promise(resolve => setTimeout(resolve, ms));
     }
 }

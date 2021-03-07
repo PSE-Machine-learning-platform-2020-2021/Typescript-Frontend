@@ -8,6 +8,7 @@ export default class Input extends Component {
     leadTime: "",
     collectionTime: "",
     availableSensorTypes: [] as { sensorTypID: number, sensorType: string, chosen: boolean; }[]
+    //wait: new Promise(resolve => setTimeout(resolve, 1000))
   };
 
   componentDidMount() {
@@ -74,6 +75,10 @@ export default class Input extends Component {
       alert("Deine Eingabe ist ungültig.");
     }
   };
+
+  private async wait(ms: number) {
+    return new Promise(resolve => setTimeout(resolve, ms));
+  }
 
   render() {
     return (

@@ -13,5 +13,6 @@ export class State implements IState {
   leadTime: number = 3;
   collectionTime: number = 5;
   name: string = "";
+  wait?: Promise<any>;
 }
 
