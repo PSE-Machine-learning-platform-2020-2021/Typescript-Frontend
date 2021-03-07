@@ -48,6 +48,9 @@ export default class LoginWindow extends Component {
             if (newdata) {
               alert('Register und Einloggen Erfolg!')
             }
+            else {
+              alert('Register Erfolg und Einloggen Misfolg!')
+            }
           })
         } else {
           alert('Register Mißerfolg!')
