@@ -131,32 +131,45 @@ export class SensorManager {
     getAvailableSensors() {
         let sensors: { sensorTypID: number; sensorType: string; }[] = [];
         try {
-            let sTest = new Accelerometer();
+            let sTest = new Accelerometer({ frequency: 60 });
+            sTest.addEventListener('reading', e => {
+                console.log("Accelerometer: x = " + sTest.x);
+                if (sTest.x != null) {
+                    sensors.push({ sensorTypID: 2, sensorType: "Accelerometer" });
+                }
+                sTest.stop();
+            });
             sTest.start();
-            console.log(sTest.x + "\n");
-            if (sTest.x != null) {
-                sensors.push({ sensorTypID: 2, sensorType: "Accelerometer" });
+            while (sTest.activated) {
+
             }
-            sTest.stop();
-        } catch (error) { console.log("Geht net"); }
+        } catch (error) { }
         try {
-            let sTest = new Gyroscope();
+            let sTest = new Gyroscope({ frequency: 60 });
+            sTest.addEventListener('reading', e => {
+                if (sTest.x != null) {
+                    sensors.push({ sensorTypID: 2, sensorType: "Accelerometer" });
+                }
+                sTest.stop();
+            });
             sTest.start();
-            console.log(sTest.x + "\n");
-            if (sTest.x != null) {
-                sensors.push({ sensorTypID: 3, sensorType: "Gyroscope" });
+            while (sTest.activated) {
+
             }
-            sTest.stop();
-        } catch (error) { console.log("Geht net"); }
+        } catch (error) { }
         try {
-            let sTest = new Magnetometer();
+            let sTest = new Magnetometer({ frequency: 60 });
+            sTest.addEventListener('reading', e => {
+                if (sTest.x != null) {
+                    sensors.push({ sensorTypID: 2, sensorType: "Accelerometer" });
+                }
+                sTest.stop();
+            });
             sTest.start();
-            console.log(sTest.x + "\n");
-            if (sTest.x != null) {
-                sensors.push({ sensorTypID: 4, sensorType: "Magnetometer" });
+            while (sTest.activated) {
+
             }
-            sTest.stop();
-        } catch (error) { console.log("Geht net"); }
+        } catch (error) { }
         return sensors;
     }
 }
