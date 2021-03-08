@@ -25,7 +25,9 @@ export class ReferringPage extends React.Component<Props, State> implements Page
             <div>
                 <ConstantsText />
                 <LoginWindow />
+                <br /><br /><br /><br /><br />
                 <NewProjectButton />
+                <br />
                 <LoadModelButton />
             </div>
         );

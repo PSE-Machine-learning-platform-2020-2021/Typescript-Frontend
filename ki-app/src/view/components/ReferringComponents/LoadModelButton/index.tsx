@@ -1,6 +1,6 @@
 import React, { Component } from 'react'
 import ProjectList from '../ProjectList'
-
+import './LoadModelButton.css'
 
 export default class LoadModelButton extends Component {
   state = { click: false, disabled: true, }
@@ -16,8 +16,8 @@ export default class LoadModelButton extends Component {
   }
   render() {
     return (
-      <div>
-        <button onClick={() => this.handleCreate()} className="btn" disabled={this.state.disabled}>Projekt und Model Wählen</button>
+      <div className="loadProject">
+        <button onClick={() => this.handleCreate()} className="lp-btn" disabled={this.state.disabled}>Projekt und Model Wählen</button>
         {this.state.click ? <div><ProjectList /> </div> : null}
       </div>
     );
