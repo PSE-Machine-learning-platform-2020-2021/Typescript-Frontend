@@ -8,6 +8,7 @@ export default class Input extends Component {
     leadTime: "",
     collectionTime: "",
     availableSensorTypes: [] as { sensorTypID: number, sensorType: string, chosen: boolean; }[]
+    //wait: new Promise(resolve => setTimeout(resolve, 1000))
   };
 
   componentDidMount() {
@@ -75,6 +76,10 @@ export default class Input extends Component {
     }
   };
 
+  private async wait(ms: number) {
+    return new Promise(resolve => setTimeout(resolve, ms));
+  }
+
   render() {
     return (
       <div className="input">
@@ -101,15 +106,13 @@ export default class Input extends Component {
             value={this.state.name}
             onChange={this.changeName.bind(this)}
           /><br />
-          Sensoren...
-
-            {
+          Sensoren:
+          {
             this.state.availableSensorTypes.map((type: { sensorTypID: number, sensorType: string, chosen: boolean; }) => {
               return (<div>
                 <input type="checkbox" value={type.sensorTypID} checked={type.chosen} onChange={(e) => this.handleCheckBoxChange(e)} />
                 {type.sensorType}
               </div>);
-
             })
           }
 

@@ -74,5 +74,4 @@ export class StartPage extends React.Component<Props, State> implements Page {
     getState() {
         return this.state;
     }
-
 }
