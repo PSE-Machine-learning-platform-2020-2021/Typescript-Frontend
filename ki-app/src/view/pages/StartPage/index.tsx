@@ -36,14 +36,13 @@ export class StartPage extends React.Component<Props, State> implements Page {
      * Prüft ob der Nutzer "Start" druckt und ändert den Zustand.
      */
     changeSettings() {
-        PubSub.subscribe('settingsFinish', (data: {
+        PubSub.subscribe('settingsFinish', (_msg: any, data: {
             newDataSetName: string,
             usedSensorTypes: number[],
             waitTime: number,
             readTime: number,
             availableSensorTypes: { sensorTypID: number, sensorType: string, chosen: boolean; }[];
         }) => {
-            console.log(data);
             this.state.recordingSettings = data;
             this.state.currentState = States.ChangeToDataCollection;
             this.notify();

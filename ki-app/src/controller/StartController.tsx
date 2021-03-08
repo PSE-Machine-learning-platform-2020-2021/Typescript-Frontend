@@ -74,7 +74,7 @@ export class StartController implements PageController {
         let dataSetName: string = this.state.recordingSettings!.newDataSetName;
         let waitTime: number = this.state.recordingSettings!.waitTime;
         let readTime: number = this.state.recordingSettings!.readTime;
-        this.sensorManager.setUpDataRead(sensorTypes, dataSetName, waitTime, readTime, true);
+        this.sensorManager.setUpDataRead(sensorTypes, dataSetName, waitTime, readTime, true); //Was ist wenn Datensatz nicht erstellt? also false zurück gegeben wird
         let dataCollectionController = new DataCollectionController(this.sensorManager);
         MainController.getInstance().changeTo(dataCollectionController);
     }

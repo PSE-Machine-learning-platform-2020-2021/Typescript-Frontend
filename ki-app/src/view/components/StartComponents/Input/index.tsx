@@ -44,7 +44,6 @@ export default class Input extends Component {
   handleCheckBoxChange = (e: React.ChangeEvent<HTMLInputElement>) => {
     let newAvailableSensorTypes = this.state.availableSensorTypes;
     for (var i = 0; i < newAvailableSensorTypes.length; i++) {
-      console.log(newAvailableSensorTypes[i]);
       // eslint-disable-next-line
       if (newAvailableSensorTypes[i].sensorTypID == +e.target.value) {
         newAvailableSensorTypes[i].chosen = !newAvailableSensorTypes[i].chosen;
@@ -54,13 +53,11 @@ export default class Input extends Component {
     }
   };
 
-
+  ////////////////////////////////////////Error bei anderem außer zahlen?
   submit = () => {
     if (
-      parseInt(this.state.leadTime) <= 5 &&
-      parseInt(this.state.leadTime) >= 3 &&
-      parseInt(this.state.collectionTime) <= 10 &&
-      parseInt(this.state.collectionTime) >= 5
+      parseInt(this.state.leadTime) >= 0 &&
+      parseInt(this.state.collectionTime) >= 0
     ) {
       let availableSensorTypes = this.state.availableSensorTypes;
       var usedSensorTypes: number[] = [];
@@ -72,9 +69,9 @@ export default class Input extends Component {
       }
       this.setState({ usedSensorTypes: usedSensorTypes });
 
-      const newDataSetName = this.state.name
-      const waitTime = this.state.leadTime
-      const readTime = this.state.collectionTime
+      const newDataSetName = this.state.name;
+      const waitTime = this.state.leadTime;
+      const readTime = this.state.collectionTime;
       PubSub.publish('settingsFinish', { newDataSetName, usedSensorTypes, waitTime, readTime, availableSensorTypes });
     } else {
       alert("Deine Eingabe ist ungültig.");
@@ -111,7 +108,7 @@ export default class Input extends Component {
           {
             this.state.availableSensorTypes.map((type: { sensorTypID: number, sensorType: string, chosen: boolean; }) => {
               return (<div>
-                <input type="checkbox" value={type.sensorTypID} checked={type.chosen} onChange={(e) => this.handleCheckBoxChange(e)} />
+                <input type="checkbox" value={type.sensorTypID} checked={type.chosen} onChange={(e: React.ChangeEvent<HTMLInputElement>): void => this.handleCheckBoxChange(e)} />
                 {type.sensorType}
               </div>);
             })
