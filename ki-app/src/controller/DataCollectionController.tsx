@@ -32,6 +32,8 @@ export class DataCollectionController implements PageController {
         this.page.attach(this);
         this.state = this.page.getState();
         this.state.leadTime = this.sensorManager.getWaitTime()
+        PubSub.publish('startCounting', this.state.leadTime);
+
     }
 
     /**
@@ -46,6 +48,8 @@ export class DataCollectionController implements PageController {
                 break;
             case States.NeedMessage:
                 this.page.setState(MainController.getInstance().getMessage(this.state.messages));
+                break;
+            case States.NeedInstantDiagram:
                 break;
             default:
                 break;

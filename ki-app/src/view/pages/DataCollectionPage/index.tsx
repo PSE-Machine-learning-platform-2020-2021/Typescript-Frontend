@@ -26,27 +26,17 @@ export class DataCollectionPage extends React.Component<Props, State> implements
             </div>
         );
         ReactDOM.render(VDOM, document.getElementById('root'));
-        this.showCountdownNumber();
         this.finishCountdown();
     }
 
 
     /**
-     * Diese Methode braucht nur einmal aufzurufen, Countdown geht automatisch.
-     * @param countdownNumber Die Countdownzahl zu zeigen.
-     */
-    showCountdownNumber() {
-        //this.setState({ leadTime: leadTime });
-        PubSub.publish('startCounting', this.state.leadTime);
-    }
-
-    /**
      * Prüft ob Countdown fertig ist und ändert den Zustand.
      */
     finishCountdown() {
-        PubSub.subscribe('finishCountdwon', () => {
+        PubSub.unsubscribe('finishCountdown');
+        PubSub.subscribe('finishCountdown', () => {
             this.state.currentState = States.NeedInstantDiagram;
-            //this.setState({ currentState: States.NeedInstantDiagram });
             this.notify();
         }
         );

@@ -175,6 +175,8 @@ export enum States {
   /**
    * Eine Veränderung des Labels war erfolgreich
    */
-  setLabel
+  setLabel,
+
+  NeedLeadTime,
 
 }

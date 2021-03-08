@@ -23,9 +23,12 @@ export class SensorManager {
     */
     setUpDataRead(sensorTypes: number[], dataSetName: string, waitTime: number, readTime: number, saving: boolean) {
         //this.currentSensorIDs = sensorTypes;
-        this.waitTime = waitTime * this.TO_SECOND;
-        this.readTime = readTime * this.TO_SECOND;
-        this.startTime = readTime * this.TO_SECOND;
+        // this.waitTime = waitTime * this.TO_SECOND;
+        //this.readTime = readTime * this.TO_SECOND;
+        //this.startTime = readTime * this.TO_SECOND;
+        this.waitTime = waitTime;
+        this.readTime = readTime;
+        this.startTime = readTime;
         this.saving = saving;
         for (let index = 0; index < sensorTypes.length; index++) {
             switch (sensorTypes[index]) {
