@@ -51,7 +51,7 @@ export class StartController implements PageController {
     update() {
         this.state = this.page.getState();
         switch (this.state.currentState) {
-            case States.StartDataRead:
+            case States.ChangeToDataCollection:
                 this.start();
                 break;
             case States.SetLanguage:

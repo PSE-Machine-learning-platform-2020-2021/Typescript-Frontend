@@ -73,7 +73,7 @@ export default class ProjectList extends Component {
     }
     render() {
         return (
-            <section>
+            <section className='projectlist'>
                 <label>ProjektList</label>
                 <select onChange={this.handleChange}>
                     <option>Projekt Wählen</option>
