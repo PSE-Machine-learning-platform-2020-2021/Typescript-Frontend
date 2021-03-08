@@ -18,7 +18,6 @@ export class DataCollectionPage extends React.Component<Props, State> implements
 
     constructor(props: Props) {
         super(props);
-
         const VDOM = (
             <div>
                 <Title />
@@ -35,9 +34,9 @@ export class DataCollectionPage extends React.Component<Props, State> implements
      * Prüft ob Countdown fertig ist und ändert den Zustand.
      */
     finishCountdown() {
-        PubSub.unsubscribe('finishCountdown')
+        PubSub.unsubscribe('finishCountdown');
         PubSub.subscribe('finishCountdown', () => {
-            this.state.currentState = States.NeedInstantDiagram
+            this.state.currentState = States.NeedInstantDiagram;
             this.notify();
         }
         );
@@ -49,7 +48,7 @@ export class DataCollectionPage extends React.Component<Props, State> implements
      */
     showDiagram(dataRows: { value: number; relativeTime: number; }[][], usedSensorNames: string[]) {
         // this.setState({ dataRows: dataRows });
-        this.state.usedSensorNames = usedSensorNames
+        this.state.usedSensorNames = usedSensorNames;
         // this.setState({ usedSensorNames: usedSensorNames });
         //PubSub.publish('startDiagram', this.state.dataRows);
         PubSub.publish('giveLineLabels', this.state.usedSensorNames);

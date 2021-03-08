@@ -7,7 +7,7 @@ export class SensorManager {
     private currentSensors: Sensor[] = [];
     //private currentSensorIDs: number[] = [];
     private facade = MainController.getInstance().getFacade();
-    private waitTime = 5;
+    private waitTime: number = 5;
     private readTime = 10;
     private startTime = 10;
     private saving = true;
@@ -78,11 +78,12 @@ export class SensorManager {
         //Warte für waitTime und update dabei die Seite
         let intervalId1 = setInterval(() => {
             this.waitTime = this.waitTime - 1;
-            state.recordingSettings!.waitTime = this.waitTime;
-            state.currentState = States.SetWaitTime;
+            //state.recordingSettings!.waitTime = this.waitTime;
+            //state.currentState = States.SetWaitTime;
             page.setState(state);
+            PubSub.publish('nextCount', this.waitTime);
             if (this.waitTime === 0) clearInterval(intervalId1);
-        }, 1);
+        }, 1000);
 
         for (let index = 0; index < this.currentSensors.length; index++) {
             this.currentSensors[index].start();
@@ -126,6 +127,7 @@ export class SensorManager {
     */
     getData(sensor: Magnetometer | Gyroscope | Accelerometer, rowId: number, sensorType: number) {
         this.dataPoints.push({ rowId, sensorType, value: [sensor.x!, sensor.y!, sensor.z!], relativeTime: this.startTime - this.readTime });
+        console.log(this.dataPoints);
     }
 
     /**
@@ -136,8 +138,8 @@ export class SensorManager {
         let sensors: { sensorTypID: number; sensorType: string; }[] = [];
 
 
-        sensors.push({ sensorTypID: 2, sensorType: "Accelerometer" }); //Nur test
-        return sensors;//Nur test
+        //sensors.push({ sensorTypID: 2, sensorType: "Accelerometer" }); //Nur test
+        //return sensors;//Nur test
 
 
         let accelerometer = new Accelerometer({ frequency: 60 });

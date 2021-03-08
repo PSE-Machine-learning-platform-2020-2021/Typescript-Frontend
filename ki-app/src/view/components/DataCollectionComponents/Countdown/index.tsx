@@ -5,25 +5,17 @@ export default class Countdown extends Component {
     state = { countdownNumber: 5, startCounting: false, chosenSensors: "" };
 
     componentDidMount() {
-        PubSub.unsubscribe('startCounting')
+        PubSub.unsubscribe('startCounting');
         PubSub.subscribe('startCounting', (_msg: any, leadTime: number) => {
             this.setState({ countdownNumber: leadTime, startCounting: true });
         }
         );
-
-        setInterval(() => {
-            this.updateCounting();
-        }, 1000);
-    }
-
-    updateCounting() {
-        this.setState({ countdownNumber: this.state.countdownNumber - 1 });
-        if (this.state.countdownNumber == 0) {
-            this.setState({ startCounting: false });
-            PubSub.publish('finishCountdown')
+        PubSub.unsubscribe('nextCount');
+        PubSub.subscribe('nextCount', (_msg: any, waitTime: number) => {
+            this.setState({ countdownNumber: waitTime, startCounting: true });
         }
+        );
     }
-
 
     render() {
         return (
