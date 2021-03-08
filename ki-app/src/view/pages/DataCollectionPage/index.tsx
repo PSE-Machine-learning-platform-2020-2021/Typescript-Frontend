@@ -18,7 +18,6 @@ export class DataCollectionPage extends React.Component<Props, State> implements
 
     constructor(props: Props) {
         super(props);
-
         const VDOM = (
             <div>
                 <Title />

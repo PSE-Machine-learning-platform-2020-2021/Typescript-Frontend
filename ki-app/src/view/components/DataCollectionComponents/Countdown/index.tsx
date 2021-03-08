@@ -10,18 +10,14 @@ export default class Countdown extends Component {
         }
         );
 
-        setInterval(() => {
-            this.updateCounting();
+        var countdown = setInterval(() => {
+            this.setState({ countdownNumber: this.state.countdownNumber - 1 });
+            if (this.state.countdownNumber == 0) {
+                clearInterval(countdown);
+                this.setState({ startCounting: false });
+            }
         }, 1000);
     }
-
-    updateCounting() {
-        this.setState({ countdownNumber: this.state.countdownNumber - 1 });
-        if (this.state.countdownNumber == 0) {
-            this.setState({ startCounting: false });
-        }
-    }
-
 
     render() {
         return (
