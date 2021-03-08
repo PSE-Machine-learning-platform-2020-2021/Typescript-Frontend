@@ -71,7 +71,11 @@ export default class Input extends Component {
         }
       }
       this.setState({ usedSensorTypes: usedSensorTypes });
-      PubSub.publish('settingsFinish', this.state);
+
+      const newDataSetName = this.state.name
+      const waitTime = this.state.leadTime
+      const readTime = this.state.collectionTime
+      PubSub.publish('settingsFinish', { newDataSetName, usedSensorTypes, waitTime, readTime, availableSensorTypes });
     } else {
       alert("Deine Eingabe ist ungültig.");
     }
