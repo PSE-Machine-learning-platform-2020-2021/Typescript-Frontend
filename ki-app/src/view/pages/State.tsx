@@ -20,7 +20,7 @@ export interface IState {
   qr?: string;
   diagramSvg?: string;
   recordingSettings?: { newDataSetName: string, usedSensorTypes: number[], readTime: number, waitTime: number, availableSensorTypes: { sensorTypID: number; sensorType: string; chosen: boolean; }[]; };
-  leadTime: number;
+  leadTime?: number;
   usedSensorNames?: string[];
   trainingParameter?: {
     dataSets: number[],
