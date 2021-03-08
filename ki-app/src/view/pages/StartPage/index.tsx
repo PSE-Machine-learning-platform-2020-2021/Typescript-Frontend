@@ -24,12 +24,7 @@ export class StartPage extends React.Component<Props, State> implements Page {
             </div>
         );
         ReactDOM.render(VDOM, document.getElementById('root'));
-        this.setAvailableSensors();
         this.changeSettings();
-    }
-
-    setAvailableSensors() {
-        PubSub.publish("setAvailableSensors", this.state.recordingSettings.availableSensorTypes);
     }
 
     /**

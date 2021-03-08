@@ -44,12 +44,15 @@ export class DataCollectionController implements PageController {
         switch (state.currentState) {
             case States.StartDataRead:
                 this.sensorManager.readData(this.page);
-                MainController.getInstance().changeTo(new FinishController());
+
                 break;
             case States.NeedMessage:
                 this.page.setState(MainController.getInstance().getMessage(this.state.messages));
                 break;
             case States.NeedInstantDiagram:
+                break;
+            case States.ChangeToFinish:
+                MainController.getInstance().changeTo(new FinishController());
                 break;
             default:
                 break;
