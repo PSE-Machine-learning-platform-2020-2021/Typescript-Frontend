@@ -43,7 +43,7 @@ export class DataCollectionPage extends React.Component<Props, State> implements
      * Prüft ob Countdown fertig ist und ändert den Zustand.
      */
     finishCountdown() {
-        PubSub.subscribe('finishCountdwon', () => {
+        PubSub.subscribe('finishCountdwon', (_msg: any) => {
             this.setState({ currentState: States.NeedInstantDiagram });
             this.notify();
         }
@@ -55,7 +55,7 @@ export class DataCollectionPage extends React.Component<Props, State> implements
      * @param countdownNumber Die Countdownzahl zu zeigen
      */
     showDiagram(dataRows: { value: number; relativeTime: number; }[][], usedSensorNames: string[]) {
-       // this.setState({ dataRows: dataRows });
+        // this.setState({ dataRows: dataRows });
         this.setState({ usedSensorNames: usedSensorNames });
         //PubSub.publish('startDiagram', this.state.dataRows);
         PubSub.publish('giveLineLabels', this.state.usedSensorNames);
