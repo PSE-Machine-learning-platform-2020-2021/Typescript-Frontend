@@ -44,6 +44,7 @@ export default class Input extends Component {
   handleCheckBoxChange = (e: React.ChangeEvent<HTMLInputElement>) => {
     let newAvailableSensorTypes = this.state.availableSensorTypes;
     for (var i = 0; i < newAvailableSensorTypes.length; i++) {
+      console.log(newAvailableSensorTypes[i]);
       // eslint-disable-next-line
       if (newAvailableSensorTypes[i].sensorTypID == +e.target.value) {
         newAvailableSensorTypes[i].chosen = !newAvailableSensorTypes[i].chosen;
@@ -75,10 +76,6 @@ export default class Input extends Component {
       alert("Deine Eingabe ist ungültig.");
     }
   };
-
-  private async wait(ms: number) {
-    return new Promise(resolve => setTimeout(resolve, ms));
-  }
 
   render() {
     return (

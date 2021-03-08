@@ -131,6 +131,12 @@ export class SensorManager {
     */
     async getAvailableSensors(): Promise<{ sensorTypID: number; sensorType: string; }[]> {
         let sensors: { sensorTypID: number; sensorType: string; }[] = [];
+
+
+        sensors.push({ sensorTypID: 2, sensorType: "Accelerometer" }); //Nur test
+        return sensors;//Nur test
+
+
         let accelerometer = new Accelerometer({ frequency: 60 });
         let accelerometerExist = this.test(accelerometer);
         let gyroscope = new Gyroscope({ frequency: 60 });

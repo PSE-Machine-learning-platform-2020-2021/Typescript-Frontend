@@ -291,8 +291,8 @@ export class Admin extends User {
   }
 
   /**
-    * Implementiert die abstrakte Methode von User
-    */
+   * Implementiert die abstrakte Methode von User
+   */
   loadProject(project: {
     projectID: number, sessionID: number, projectName: string, projectData?: {
       aiModelID?: number[],
@@ -325,7 +325,7 @@ export class Admin extends User {
    * @returns Bei angabe einer Project ID, die schon existiert wird false zurück gegeben
    */
   createProject(projectID: number, sessionID: number, projectName: string): boolean {
-    if (!this.existProject(projectID)) {
+    if (this.existProject(projectID) === -1) {
       var newproject: Project = new Project(projectID, sessionID, projectName);
       this.project.push(newproject);
       this.currentProject = newproject;
@@ -335,7 +335,12 @@ export class Admin extends User {
     }
   }
 
-  existProject(projectID: number): number {
+  /**
+   * 
+   * @param projectID 
+   * @returns -1 falls das Projekt nicht existiert oder die Array Position des Projekts
+   */
+  private existProject(projectID: number): number {
     for (let i = 0; i < this.project.length; i++) {
       if (this.project[i].getID() === projectID) {
         return i;

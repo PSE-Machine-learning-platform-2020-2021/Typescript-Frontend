@@ -43,6 +43,7 @@ export class StartPage extends React.Component<Props, State> implements Page {
             readTime: number,
             availableSensorTypes: { sensorTypID: number, sensorType: string, chosen: boolean; }[];
         }) => {
+            console.log(data);
             this.state.recordingSettings = data;
             this.state.currentState = States.ChangeToDataCollection;
             this.notify();
