@@ -30,8 +30,8 @@ export class StartController implements PageController {
                     const chosen: boolean = false;
                     this.state.recordingSettings!.availableSensorTypes.push({ sensorTypID, sensorType, chosen });
                 }
-                console.log(this.state.recordingSettings?.availableSensorTypes.length);
                 this.page.setState(this.state);
+                PubSub.publish("setAvailableSensors", this.state.recordingSettings!.availableSensorTypes);
             });
         //Promise<{ sensorTypID: number; sensorType: string; }[]> = MainController.getInstance().getFacade().getAvailableSensors();
         //

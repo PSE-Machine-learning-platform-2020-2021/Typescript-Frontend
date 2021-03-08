@@ -10,15 +10,11 @@ export default class Countdown extends Component {
             this.setState({ countdownNumber: leadTime, startCounting: true });
         }
         );
-
-        var countdown = setInterval(() => {
-            this.setState({ countdownNumber: this.state.countdownNumber - 1 });
-            if (this.state.countdownNumber == 0) {
-                clearInterval(countdown);
-                this.setState({ startCounting: false });
-                PubSub.publish('finishCountdown');
-            }
-        }, 1000);
+        PubSub.unsubscribe('nextCount');
+        PubSub.subscribe('nextCount', (_msg: any, waitTime: number) => {
+            this.setState({ countdownNumber: waitTime, startCounting: true });
+        }
+        );
     }
 
     render() {
