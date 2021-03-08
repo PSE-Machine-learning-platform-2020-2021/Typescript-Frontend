@@ -31,6 +31,7 @@ export class DataCollectionController implements PageController {
         this.sensorManager = sensorManager;
         this.page.attach(this);
         this.state = this.page.getState();
+        this.state.leadTime = this.sensorManager.getWaitTime()
     }
 
     /**
