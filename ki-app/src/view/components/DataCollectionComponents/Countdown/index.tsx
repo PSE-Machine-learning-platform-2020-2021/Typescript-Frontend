@@ -5,7 +5,7 @@ export default class Countdown extends Component {
     state = { countdownNumber: 5, startCounting: false, chosenSensors: "" };
 
     componentDidMount() {
-        PubSub.subscribe('startCounting', (leadTime: number) => {
+        PubSub.subscribe('startCounting', (_msg: any, leadTime: number) => {
             this.setState({ countdownNumber: leadTime, startCounting: true });
         }
         );

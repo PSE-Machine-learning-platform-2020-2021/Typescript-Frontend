@@ -11,7 +11,7 @@ export default class Diagram extends Component {
     };
 
     render() {
-        PubSub.subscribe("startDiagram", (dataRows) => {
+        PubSub.subscribe("startDiagram", (_msg, dataRows) => {
             this.setState({
                 sensorRow: [],
                 datavalue: [],

@@ -18,7 +18,7 @@ export class DataCollectionPage extends React.Component<Props, State> implements
 
     constructor(props: Props) {
         super(props);
-        this.finishCountdown();
+
         const VDOM = (
             <div>
                 <Title />
@@ -27,6 +27,8 @@ export class DataCollectionPage extends React.Component<Props, State> implements
             </div>
         );
         ReactDOM.render(VDOM, document.getElementById('root'));
+        this.showCountdownNumber();
+        this.finishCountdown();
     }
 
 
@@ -34,8 +36,8 @@ export class DataCollectionPage extends React.Component<Props, State> implements
      * Diese Methode braucht nur einmal aufzurufen, Countdown geht automatisch.
      * @param countdownNumber Die Countdownzahl zu zeigen.
      */
-    showCountdownNumber(leadTime: number) {
-        this.setState({ leadTime: leadTime });
+    showCountdownNumber() {
+        //this.setState({ leadTime: leadTime });
         PubSub.publish('startCounting', this.state.leadTime);
     }
 
@@ -44,7 +46,8 @@ export class DataCollectionPage extends React.Component<Props, State> implements
      */
     finishCountdown() {
         PubSub.subscribe('finishCountdwon', () => {
-            this.setState({ currentState: States.NeedInstantDiagram });
+            this.state.currentState = States.NeedInstantDiagram
+            //this.setState({ currentState: States.NeedInstantDiagram });
             this.notify();
         }
         );
@@ -55,8 +58,9 @@ export class DataCollectionPage extends React.Component<Props, State> implements
      * @param countdownNumber Die Countdownzahl zu zeigen
      */
     showDiagram(dataRows: { value: number; relativeTime: number; }[][], usedSensorNames: string[]) {
-       // this.setState({ dataRows: dataRows });
-        this.setState({ usedSensorNames: usedSensorNames });
+        // this.setState({ dataRows: dataRows });
+        this.state.usedSensorNames = usedSensorNames
+        // this.setState({ usedSensorNames: usedSensorNames });
         //PubSub.publish('startDiagram', this.state.dataRows);
         PubSub.publish('giveLineLabels', this.state.usedSensorNames);
     }
