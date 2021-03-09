@@ -1,7 +1,6 @@
 import { MainController } from "./MainController";
 import { Page } from "../view/pages/PageInterface";
 import { IState, States } from "../view/pages/State";
-import { wait } from "@testing-library/dom";
 
 export class SensorManager {
     private currentSensors: Sensor[] = [];
@@ -170,7 +169,7 @@ export class SensorManager {
     * @param sensor der Sensor von dem die Daten gelsen werden
     * @param sensorType Die ID des Sensortypes
     */
-    getData(sensor: Magnetometer | Gyroscope | Accelerometer, rowId: number, sensorType: number) {
+    private getData(sensor: Magnetometer | Gyroscope | Accelerometer, rowId: number, sensorType: number) {
         const point = { rowId, sensorType, value: [sensor.x!, sensor.y!, sensor.z!], relativeTime: (new Date().getTime() - this.startTime) / 1000 };
         this.dataPoints.push(point);
         this.saveDatapointinRow(point);
@@ -189,9 +188,9 @@ export class SensorManager {
 
 
         let accelerometer = new Accelerometer({ frequency: 60 });
-        let accelerometerExist = this.test(accelerometer);
+        let accelerometerExist = this.existSensor(accelerometer);
         let gyroscope = new Gyroscope({ frequency: 60 });
-        let gyroscopeExist = this.test(gyroscope);
+        let gyroscopeExist = this.existSensor(gyroscope);
         /*let magnetometer = new Magnetometer();            Nicht definiert?
         let magnetometerExist = this.test(magnetometer);*/
 
@@ -208,7 +207,7 @@ export class SensorManager {
         return sensors;
     }
 
-    private async test(sensor: Sensor): Promise<boolean> {
+    private async existSensor(sensor: Sensor): Promise<boolean> {
         var finish = false;
         sensor.addEventListener('reading', e => {
             finish = true;

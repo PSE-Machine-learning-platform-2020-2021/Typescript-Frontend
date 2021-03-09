@@ -4,7 +4,8 @@ import { Language } from "./Language";
 import { Admin, Dataminer, AIModelUser, User } from "./User";
 import { AIBuilder } from "./AIBuilder";
 import { AIDistributor } from "./AIDistributor";
-import { SensorData } from "./SensorData";
+import { AccelerometerData, GyroscopeData, SensorData } from "./SensorData";
+import { isBreakStatement } from "typescript";
 
 interface FacadeInterface {
   createDataSet(sensorTypes: string[], dataSetName: string): boolean;
@@ -63,22 +64,33 @@ export class Facade {
   async createDataSet(sensorTypeID: number[], dataSetName: string, datarowNames?: string[]): Promise<boolean> {
     if (this.user != null) {
       let sessionID: number = this.getSessionID();
-      let dataRowSensors: SensorData[] = this.user.getDeviceSensors(sensorTypeID);
-      if (dataRowSensors.length > 0 && dataRowSensors.length === sensorTypeID.length && sessionID >= 0) {
+      if (sessionID >= 0) {
         let projectID: number = this.user.getCurrentProjectID();
         let userID: number = this.user.getID();
         let dataRow: { sensorID: number, datarowName?: string; }[] = [];
-        for (let i = 0; i < dataRowSensors.length; i++) {
-          let sensordata = dataRowSensors[i].getSensorData();
+        for (let i = 0; i < sensorTypeID.length; i++) {
+          let sensorID = sensorTypeID[i];
           if (datarowNames != null && datarowNames.length >= i) {
-            dataRow.push({ sensorID: sensordata.id, datarowName: datarowNames[i] });
+            dataRow.push({ sensorID, datarowName: datarowNames[i] });
           } else {
-            dataRow.push({ sensorID: sensordata.id });
+            dataRow.push({ sensorID });
           }
         }
         let dataSetID: number = await this.dbCon.createDataSet({ sessionID, projectID, userID, dataSetName, dataRow });
-        if (dataSetID > 0) {
-          return this.user.createDataSet(dataRowSensors, dataSetID, dataSetName);
+        if (dataSetID >= 0) {
+          ///////////////////////////////DUMMY
+          var sensoren: SensorData[] = [];
+          for (let i = 0; i < sensorTypeID.length; i++) {
+            switch (sensorTypeID[i]) {
+              case 2:
+                sensoren.push(new AccelerometerData(-1, "", ""));
+                break;
+              case 3:
+                sensoren.push(new GyroscopeData(-1, "", ""));
+                break;
+            }
+          }
+          return this.user.createDataSet(sensoren, dataSetID, dataSetName);
         }
       }
     }

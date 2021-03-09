@@ -44,8 +44,8 @@ export class DatabaseConnector {
    *          bei fehler, -1
    */
   async createDataSet(requestData: { sessionID: number, projectID: number, userID: number, dataSetName: string, dataRow: { sensorID: number, datarowName?: string; }[]; }): Promise<number> {
-    const result: number = await this.sendRequest("create_data_set", requestData);
-    return result;
+    const dataSetID: { result: number; } = await this.sendRequest("create_data_set", requestData);
+    return dataSetID.result;
   }
 
   /**
