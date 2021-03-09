@@ -27,6 +27,7 @@ export class DataCollectionPage extends React.Component<Props, State> implements
         );
         ReactDOM.render(VDOM, document.getElementById('root'));
         this.finishCountdown();
+        this.showDiagram()
     }
 
 
@@ -46,12 +47,45 @@ export class DataCollectionPage extends React.Component<Props, State> implements
      * Diese Methode sollte während Datenerfassung jede Sekunde von Controller aufgerufen werden, um Bild zu updaten.
      * @param countdownNumber Die Countdownzahl zu zeigen
      */
-    showDiagram(dataRows: { value: number; relativeTime: number; }[][], usedSensorNames: string[]) {
+    showDiagram() {
         // this.setState({ dataRows: dataRows });
-        this.state.usedSensorNames = usedSensorNames;
+        //this.state.usedSensorNames = usedSensorNames;
         // this.setState({ usedSensorNames: usedSensorNames });
         //PubSub.publish('startDiagram', this.state.dataRows);
-        PubSub.publish('giveLineLabels', this.state.usedSensorNames);
+        // PubSub.publish('giveLineLabels', this.state.usedSensorNames);
+
+        //Beispiel
+        var exdatarows = []
+        var exdatapoints = []
+        const allpoints = [{ rowId: 0, sensorType: 85124, value: [55, 66, 12], relativeTime: 0 },
+        { rowId: 0, sensorType: 85124, value: [26, 21, 2], relativeTime: 1 },
+        { rowId: 0, sensorType: 85124, value: [91, 83, 50], relativeTime: 2 },
+        { rowId: 0, sensorType: 85124, value: [22, 71, 23], relativeTime: 3 },
+        { rowId: 0, sensorType: 85124, value: [14, 8, 77], relativeTime: 4 },
+        { rowId: 1, sensorType: 45157, value: [83, 44, 1], relativeTime: 0 },
+        { rowId: 1, sensorType: 45157, value: [78, 55, 2], relativeTime: 1 },
+        { rowId: 1, sensorType: 45157, value: [51, 66, 3], relativeTime: 2 },
+        { rowId: 1, sensorType: 45157, value: [23, 81, 50], relativeTime: 3 },
+        { rowId: 1, sensorType: 45157, value: [13, 20, 5], relativeTime: 4 },]
+        for (var i = 0; i < allpoints.length; i++) {
+            if (i === 0) {
+                exdatapoints.push({ sensorType: allpoints[i].sensorType, value: allpoints[i].value, relativeTime: allpoints[i].relativeTime })
+                continue;
+            }
+            if (allpoints[i].rowId === allpoints[i - 1].rowId) {
+                exdatapoints.push({ sensorType: allpoints[i].sensorType, value: allpoints[i].value, relativeTime: allpoints[i].relativeTime })
+            } else {
+                exdatarows.push(exdatapoints)
+                exdatapoints = []
+                exdatapoints.push({ sensorType: allpoints[i].sensorType, value: allpoints[i].value, relativeTime: allpoints[i].relativeTime })
+            }
+        }
+        exdatarows.push(exdatapoints)
+        console.log('xxxxxxxx')
+        console.log(exdatapoints)
+        console.log(exdatarows)
+
+        PubSub.publish('startDiagram', exdatarows)
     }
 
     /**

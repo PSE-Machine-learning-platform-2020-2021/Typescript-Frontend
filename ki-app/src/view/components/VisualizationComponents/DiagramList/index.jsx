@@ -76,7 +76,7 @@ export default class DiagramList extends Component {
                 }
 
                 lineLabels.push(<font color={this.state.csscolor[i]}>■{this.state.sensorRow[parseInt(i / 3)] + coordinate}<br /></font>);
-                this.setState({ lineLabels: lineLabels })
+                // this.setState({ lineLabels: lineLabels })
                 newDatasets.push(
                     {
                         label: sensor + coordinate,

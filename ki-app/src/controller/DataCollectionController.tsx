@@ -33,6 +33,7 @@ export class DataCollectionController implements PageController {
         this.state = this.page.getState();
         this.state.leadTime = this.sensorManager.getWaitTime();
         PubSub.publish('startCounting', this.state.leadTime);
+
         this.sensorManager.readData(this.page);
 
 
@@ -45,28 +46,20 @@ export class DataCollectionController implements PageController {
         let state = this.page.getState();
         switch (state.currentState) {
             case States.StartDataRead:
-<<<<<<< HEAD
                 this.sensorManager.readData(this.page);
 
-=======
-
-                MainController.getInstance().changeTo(new FinishController());
->>>>>>> a4e36fa601e1669c66e209bc74a7985d52e00b9b
                 break;
             case States.NeedMessage:
                 this.page.setState(MainController.getInstance().getMessage(this.state.messages));
                 break;
             case States.NeedInstantDiagram:
                 break;
-<<<<<<< HEAD
             case States.ChangeToFinish:
                 MainController.getInstance().changeTo(new FinishController());
                 break;
-=======
             //case States.SetWaitTime:
             //    PubSub.publish('nextCount', this.state.recordingSettings!.waitTime);
             //    break;
->>>>>>> a4e36fa601e1669c66e209bc74a7985d52e00b9b
             default:
                 break;
         }

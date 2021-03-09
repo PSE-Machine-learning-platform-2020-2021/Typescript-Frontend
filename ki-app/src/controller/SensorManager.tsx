@@ -11,7 +11,7 @@ export class SensorManager {
     private readTime = 10;
     private startTime = 10;
     private saving = true;
-
+    private sensorTypes: number[] = [];
     private dataPoints: { rowId: number, sensorType: number, value: number[]; relativeTime: number; }[] = [];
 
     private readonly TO_SECOND = 1000;
@@ -30,11 +30,15 @@ export class SensorManager {
         this.readTime = readTime;
         this.startTime = readTime;
         this.saving = saving;
+        this.sensorTypes = sensorTypes;
         for (let index = 0; index < sensorTypes.length; index++) {
             switch (sensorTypes[index]) {
                 case 2:
                     let accSensor = new Accelerometer({ frequency: 60 });
                     this.currentSensors.push(accSensor);
+                    //hier addEventListener noch nicht benutzen kann
+                    this.getData(accSensor, index, sensorTypes[index]);
+                    //oben fuer test
                     accSensor.addEventListener('reading', e => {
                         this.getData(accSensor, index, sensorTypes[index]);
                     });
@@ -75,6 +79,7 @@ export class SensorManager {
     */
     readData(page: Page) {
         let state: IState = page.getState();
+        PubSub.publish('usedsensors', this.sensorTypes)
         //Warte für waitTime und update dabei die Seite
         let intervalId1 = setInterval(() => {
             this.waitTime = this.waitTime - 1;
@@ -82,28 +87,66 @@ export class SensorManager {
             //state.currentState = States.SetWaitTime;
             page.setState(state);
             PubSub.publish('nextCount', this.waitTime);
-            if (this.waitTime === 0) clearInterval(intervalId1);
-        }, 1000);
+            if (this.waitTime === 0) {
+                clearInterval(intervalId1);
 
-        for (let index = 0; index < this.currentSensors.length; index++) {
-            this.currentSensors[index].start();
-        }
+                for (let index = 0; index < this.currentSensors.length; index++) {
+                    this.currentSensors[index].start();
+                }
+                //Nimm Daten auf verteile sie an die Seite und das Modell. Erneuere dabei die aufnahmezeit auf der Seite
+                let intervalId2 = setInterval(() => {
+                    this.readTime = this.readTime - 1;
+                    while (this.dataPoints.length > 0) {
+                        let newDataPoint = this.dataPoints.shift()!;
+                        state.dataPoints!.push(newDataPoint);
+                        MainController.getInstance().getFacade().sendDataPoint(newDataPoint.rowId, { value: newDataPoint.value, relativeTime: newDataPoint.relativeTime });
+                        page.setState(state);
+                        console.log(this.readTime)
+                        console.log(state.dataPoints)
 
-        //Nimm Daten auf verteile sie an die Seite und das Modell. Erneuere dabei die aufnahmezeit auf der Seite
-        let intervalId2 = setInterval(() => {
-            this.readTime = this.readTime - 1;
-            while (this.dataPoints.length > 0) {
-                let newDataPoint = this.dataPoints.shift()!;
-                state.dataPoints!.push(newDataPoint);
-                MainController.getInstance().getFacade().sendDataPoint(newDataPoint.rowId, { value: newDataPoint.value, relativeTime: newDataPoint.relativeTime });
-                page.setState(state);
+                    }
+                    if (this.readTime === 0) {
+                        clearInterval(intervalId2);
+                        for (let index = 0; index < this.currentSensors.length; index++) {
+                            this.currentSensors[index].stop();
+                        }
+                    }
+                }, 1000);
+
+
+
             }
-            if (this.waitTime === 0) clearInterval(intervalId2);
-        }, 1);
-
-        for (let index = 0; index < this.currentSensors.length; index++) {
-            this.currentSensors[index].stop();
-        }
+        }, 1000);
+        /**
+              if (this.waitTime === 0) {
+                  console.log(this.currentSensors)
+                  console.log(this.readTime)
+                  for (let index = 0; index < this.currentSensors.length; index++) {
+                      this.currentSensors[index].start();
+                  }
+                  console.log('xxx')
+                  //Nimm Daten auf verteile sie an die Seite und das Modell. Erneuere dabei die aufnahmezeit auf der Seite
+                  let intervalId2 = setInterval(() => {
+                      console.log(this.currentSensors)
+                      console.log(this.readTime)
+                      console.log(this.dataPoints)
+                      this.readTime = this.readTime - 1;
+                      while (this.dataPoints.length > 0) {
+                          let newDataPoint = this.dataPoints.shift()!;
+                          state.dataPoints!.push(newDataPoint);
+                          MainController.getInstance().getFacade().sendDataPoint(newDataPoint.rowId, { value: newDataPoint.value, relativeTime: newDataPoint.relativeTime });
+                          page.setState(state);
+                          console.log(this.readTime)
+                          console.log(state.dataPoints)
+                      }
+                      if (this.readTime === 0) clearInterval(intervalId2);
+                  }, 1000);
+  
+                  for (let index = 0; index < this.currentSensors.length; index++) {
+                      this.currentSensors[index].stop();
+                  }
+              }
+           */
     }
 
     /**
@@ -138,8 +181,8 @@ export class SensorManager {
         let sensors: { sensorTypID: number; sensorType: string; }[] = [];
 
 
-        //sensors.push({ sensorTypID: 2, sensorType: "Accelerometer" }); //Nur test
-        //return sensors;//Nur test
+        // sensors.push({ sensorTypID: 2, sensorType: "Accelerometer" }); //Nur test
+        // return sensors;//Nur test
 
 
         let accelerometer = new Accelerometer({ frequency: 60 });
@@ -148,12 +191,13 @@ export class SensorManager {
         let gyroscopeExist = this.test(gyroscope);
         /*let magnetometer = new Magnetometer();            Nicht definiert?
         let magnetometerExist = this.test(magnetometer);*/
-        if (await accelerometerExist) {
-            sensors.push({ sensorTypID: 2, sensorType: "Accelerometer" });
-        }
-        if (await gyroscopeExist) {
-            sensors.push({ sensorTypID: 3, sensorType: "Gyroscope" });
-        }
+        //hier fuer test 2 if commentar
+        // if (await accelerometerExist) {
+        sensors.push({ sensorTypID: 2, sensorType: "Accelerometer" });
+        //   }
+        //   if (await gyroscopeExist) {
+        sensors.push({ sensorTypID: 3, sensorType: "Gyroscope" });
+        //   }
         /*if (await magnetometerExist) {
             sensors.push({ sensorTypID: 4, sensorType: "Magnetometer" });
         }*/
