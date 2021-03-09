@@ -18,24 +18,22 @@ export default class Countdown extends Component {
 
         PubSub.unsubscribe('usedsensors');
         PubSub.subscribe('usedsensors', (_msg: any, sensorTypes: number[]) => {
-            console.log(sensorTypes)
-            let sensors: string[] = []
+            let sensors: string[] = [];
             for (let index = 0; index < sensorTypes.length; index++) {
                 switch (sensorTypes[index]) {
                     case 2:
-                        sensors.push('Accelerometer')
+                        sensors.push('Accelerometer');
                         break;
                     case 3:
-                        sensors.push('Gyroscope')
+                        sensors.push('Gyroscope');
                         break;
                     case 4:
-                        sensors.push('Magnetometer')
+                        sensors.push('Magnetometer');
                         break;
                     default:
                         break;
                 }
             }
-            console.log(sensorTypes)
             this.setState({ chosenSensors: sensors });
         }
         );
@@ -49,7 +47,7 @@ export default class Countdown extends Component {
                 <h2>Verwendete Sensoren:</h2>
                 {
                     this.state.chosenSensors.map((sensor) => {
-                        return <h4>{sensor}</h4>
+                        return <h4>{sensor}</h4>;
                     })
                 }
             </div>

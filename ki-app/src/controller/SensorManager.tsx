@@ -28,7 +28,6 @@ export class SensorManager {
         //this.startTime = readTime * this.TO_SECOND;
         this.waitTime = waitTime;
         this.readTime = readTime;
-        this.startTime = readTime;
         this.saving = saving;
         this.sensorTypes = sensorTypes;
         for (let index = 0; index < sensorTypes.length; index++) {
@@ -36,9 +35,6 @@ export class SensorManager {
                 case 2:
                     let accSensor = new Accelerometer({ frequency: 60 });
                     this.currentSensors.push(accSensor);
-                    //hier addEventListener noch nicht benutzen kann
-                    this.getData(accSensor, index, sensorTypes[index]);
-                    //oben fuer test
                     accSensor.addEventListener('reading', e => {
                         this.getData(accSensor, index, sensorTypes[index]);
                     });
@@ -79,7 +75,7 @@ export class SensorManager {
     */
     readData(page: Page) {
         let state: IState = page.getState();
-        PubSub.publish('usedsensors', this.sensorTypes)
+        PubSub.publish('usedsensors', this.sensorTypes);
         //Warte für waitTime und update dabei die Seite
         let intervalId1 = setInterval(() => {
             this.waitTime = this.waitTime - 1;
@@ -89,7 +85,7 @@ export class SensorManager {
             PubSub.publish('nextCount', this.waitTime);
             if (this.waitTime === 0) {
                 clearInterval(intervalId1);
-
+                this.startTime = new Date().getTime();
                 for (let index = 0; index < this.currentSensors.length; index++) {
                     this.currentSensors[index].start();
                 }
@@ -101,9 +97,6 @@ export class SensorManager {
                         state.dataPoints!.push(newDataPoint);
                         MainController.getInstance().getFacade().sendDataPoint(newDataPoint.rowId, { value: newDataPoint.value, relativeTime: newDataPoint.relativeTime });
                         page.setState(state);
-                        console.log(this.readTime)
-                        console.log(state.dataPoints)
-
                     }
                     if (this.readTime === 0) {
                         clearInterval(intervalId2);
@@ -169,8 +162,7 @@ export class SensorManager {
     * @param sensorType Die ID des Sensortypes
     */
     getData(sensor: Magnetometer | Gyroscope | Accelerometer, rowId: number, sensorType: number) {
-        this.dataPoints.push({ rowId, sensorType, value: [sensor.x!, sensor.y!, sensor.z!], relativeTime: this.startTime - this.readTime });
-        console.log(this.dataPoints);
+        this.dataPoints.push({ rowId, sensorType, value: [sensor.x!, sensor.y!, sensor.z!], relativeTime: new Date().getTime() - this.startTime });
     }
 
     /**
@@ -192,13 +184,12 @@ export class SensorManager {
         /*let magnetometer = new Magnetometer();            Nicht definiert?
         let magnetometerExist = this.test(magnetometer);*/
 
-        //hier fuer test, 2-if commentaren
-        // if (await accelerometerExist) {
-        sensors.push({ sensorTypID: 2, sensorType: "Accelerometer" });
-        //   }
-        //   if (await gyroscopeExist) {
-        sensors.push({ sensorTypID: 3, sensorType: "Gyroscope" });
-        //   }
+        if (await accelerometerExist) {
+            sensors.push({ sensorTypID: 2, sensorType: "Accelerometer" });
+        }
+        if (await gyroscopeExist) {
+            sensors.push({ sensorTypID: 3, sensorType: "Gyroscope" });
+        }
 
         /*if (await magnetometerExist) {
             sensors.push({ sensorTypID: 4, sensorType: "Magnetometer" });
