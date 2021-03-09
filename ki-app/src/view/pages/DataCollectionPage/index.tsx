@@ -68,6 +68,8 @@ export class DataCollectionPage extends React.Component<Props, State> implements
         { rowId: 1, sensorType: 45157, value: [23, 81, 50], relativeTime: 3 },
         { rowId: 1, sensorType: 45157, value: [13, 20, 5], relativeTime: 4 }
         ]
+
+        //jede ein datapoints addieren, kann publish in for-schleife sein,
         for (var i = 0; i < allpoints.length; i++) {
             if (i === 0) {
                 exdatapoints.push({ sensorType: allpoints[i].sensorType, value: allpoints[i].value, relativeTime: allpoints[i].relativeTime })
@@ -86,7 +88,15 @@ export class DataCollectionPage extends React.Component<Props, State> implements
 
         PubSub.publish('startDiagram', exdatarows)
     }
+    changeToFinish() {
+        PubSub.unsubscribe('changeToFinish')
+        PubSub.subscribe('changeToFinish', (_msg: any) => {
+            // eslint-disable-next-line
+            this.state.currentState = States.ChangeToFinish
+            this.notify()
 
+        })
+    }
     /**
      * Die Methoden für Beobachtermuster
      * @param observer Beobachter,nähmlich Controller

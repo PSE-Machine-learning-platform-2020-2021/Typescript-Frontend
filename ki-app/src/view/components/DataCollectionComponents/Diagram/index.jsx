@@ -89,6 +89,10 @@ export default class Diagram extends Component {
         })
 
     }
+
+    submit = () => {
+        PubSub.publish('changeToFinish');
+    }
     render() {
 
 
@@ -98,6 +102,7 @@ export default class Diagram extends Component {
             <div>
                 {lineLabels}
                 <LineChart data={diagramData} options={diagramOptions} width="400" height="200" redraw />
+                <button type="button" onClick={this.submit}>ChangeToFinish</button>
             </div>
         );
     }
