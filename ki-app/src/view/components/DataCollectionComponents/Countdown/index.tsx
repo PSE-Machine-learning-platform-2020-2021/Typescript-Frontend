@@ -49,7 +49,7 @@ export default class Countdown extends Component {
                 <h2>Verwendete Sensoren:</h2>
                 {
                     this.state.chosenSensors.map((sensor) => {
-                        return <h2>{sensor}</h2>
+                        return <h4>{sensor}</h4>
                     })
                 }
             </div>

@@ -191,13 +191,15 @@ export class SensorManager {
         let gyroscopeExist = this.test(gyroscope);
         /*let magnetometer = new Magnetometer();            Nicht definiert?
         let magnetometerExist = this.test(magnetometer);*/
-        //hier fuer test 2 if commentar
+
+        //hier fuer test, 2-if commentaren
         // if (await accelerometerExist) {
         sensors.push({ sensorTypID: 2, sensorType: "Accelerometer" });
         //   }
         //   if (await gyroscopeExist) {
         sensors.push({ sensorTypID: 3, sensorType: "Gyroscope" });
         //   }
+
         /*if (await magnetometerExist) {
             sensors.push({ sensorTypID: 4, sensorType: "Magnetometer" });
         }*/
