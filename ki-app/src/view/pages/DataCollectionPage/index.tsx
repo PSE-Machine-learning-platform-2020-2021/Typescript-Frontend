@@ -27,7 +27,8 @@ export class DataCollectionPage extends React.Component<Props, State> implements
         );
         ReactDOM.render(VDOM, document.getElementById('root'));
         this.finishCountdown();
-        this.showDiagram()
+        this.showDiagram();
+        this.changeToFinish();
     }
 
 
