@@ -66,7 +66,8 @@ export class DataCollectionPage extends React.Component<Props, State> implements
         { rowId: 1, sensorType: 45157, value: [78, 55, 2], relativeTime: 1 },
         { rowId: 1, sensorType: 45157, value: [51, 66, 3], relativeTime: 2 },
         { rowId: 1, sensorType: 45157, value: [23, 81, 50], relativeTime: 3 },
-        { rowId: 1, sensorType: 45157, value: [13, 20, 5], relativeTime: 4 },]
+        { rowId: 1, sensorType: 45157, value: [13, 20, 5], relativeTime: 4 }
+        ]
         for (var i = 0; i < allpoints.length; i++) {
             if (i === 0) {
                 exdatapoints.push({ sensorType: allpoints[i].sensorType, value: allpoints[i].value, relativeTime: allpoints[i].relativeTime })
@@ -81,9 +82,7 @@ export class DataCollectionPage extends React.Component<Props, State> implements
             }
         }
         exdatarows.push(exdatapoints)
-        console.log('xxxxxxxx')
-        console.log(exdatapoints)
-        console.log(exdatarows)
+
 
         PubSub.publish('startDiagram', exdatarows)
     }
