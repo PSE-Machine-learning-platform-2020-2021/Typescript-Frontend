@@ -1,8 +1,8 @@
 import { Page } from "../view/pages/PageInterface";
 import { IState, States } from "../view/pages/State";
-import { ReferringPage } from "../view/pages/ReferringPage/index";
 import { PageController } from "./PageController";
 import { MainController } from "./MainController";
+import { FinishPage } from "../view/pages/FinishPage";
 
 /**
 * Controller der die Fertigungsseite verwaltet
@@ -21,7 +21,7 @@ export class FinishController implements PageController {
      * Konstruktor des Seitenverwalters. Registriert sich als Beobachter auf seiner Seite und setzt den start Status. 
      */
     constructor() {
-        this.page = new ReferringPage({});
+        this.page = new FinishPage({});
         this.page.attach(this);
         this.state = this.page.getState();
         this.state.dataRows! = MainController.getInstance().getFacade().getCurrentDataRows()!.dataRows!;

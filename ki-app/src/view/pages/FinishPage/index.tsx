@@ -18,12 +18,6 @@ export class FinishPage extends React.Component<IProps, State> implements Page {
 
   constructor(props: IProps) {
     super(props);
-    this.setState({
-      dataRows: [
-        [{ sensorType: 1, value: [10, 20, 55], relativeTime: 0 }, { sensorType: 1, value: [55, 46, 22], relativeTime: 1, }],
-        [{ sensorType: 2, value: [16, 2, 72], relativeTime: 0 }, { sensorType: 1, value: [66, 61, 63], relativeTime: 1, }],
-      ]
-    });
     const VDOM = (
       <div>
         <Title />
@@ -38,7 +32,24 @@ export class FinishPage extends React.Component<IProps, State> implements Page {
   }
 
   giveDiagram() {
-    PubSub.publish('startDiagram', this.state.dataRows);
+    //Beispiel
+    var exrows = []
+    exrows.push([{ sensorType: 85124, value: [55, 66, 12], relativeTime: 0 },
+    { sensorType: 85124, value: [26, 21, 2], relativeTime: 1 },
+    { sensorType: 85124, value: [91, 83, 50], relativeTime: 2 },
+    { sensorType: 85124, value: [22, 71, 23], relativeTime: 3 },
+    { sensorType: 85124, value: [14, 8, 77], relativeTime: 4 },
+    ])
+    exrows.push([{ sensorType: 45157, value: [83, 44, 1], relativeTime: 0 },
+    { sensorType: 45157, value: [78, 55, 2], relativeTime: 1 },
+    { sensorType: 45157, value: [51, 66, 3], relativeTime: 2 },
+    { sensorType: 45157, value: [23, 81, 50], relativeTime: 3 },
+    { sensorType: 45157, value: [13, 20, 5], relativeTime: 4 },
+    ])
+
+    PubSub.publish('finishDiagram', exrows)
+
+    //PubSub.publish('finishDiagram', this.state.dataRows);
   }
 
 
