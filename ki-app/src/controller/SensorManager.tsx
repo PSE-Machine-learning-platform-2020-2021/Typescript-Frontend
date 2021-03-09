@@ -13,6 +13,7 @@ export class SensorManager {
     private saving = true;
     private sensorTypes: number[] = [];
     private dataPoints: { rowId: number, sensorType: number, value: number[]; relativeTime: number; }[] = [];
+    private dataRows: { sensorType: number, value: number[]; relativeTime: number; }[][] = [];
 
     private readonly TO_SECOND = 1000;
 
@@ -142,6 +143,14 @@ export class SensorManager {
            */
     }
 
+    private saveDatapointinRow(dataPoint: { rowId: number, sensorType: number, value: number[]; relativeTime: number; }) {
+        while (this.dataRows.length - 1 < dataPoint.rowId) {
+            this.dataRows.push([]);
+        }
+        this.dataRows[dataPoint.rowId].push({ sensorType: dataPoint.sensorType, value: dataPoint.value, relativeTime: dataPoint.relativeTime });
+        PubSub.publish('startDiagram', this.dataRows);
+    }
+
     /**
      * @returns Gibt als Zahl die Zeit in Sekunden zurück, für welche vor der Aufnahme gewartet wird. 
      */
@@ -162,7 +171,9 @@ export class SensorManager {
     * @param sensorType Die ID des Sensortypes
     */
     getData(sensor: Magnetometer | Gyroscope | Accelerometer, rowId: number, sensorType: number) {
-        this.dataPoints.push({ rowId, sensorType, value: [sensor.x!, sensor.y!, sensor.z!], relativeTime: new Date().getTime() - this.startTime });
+        const point = { rowId, sensorType, value: [sensor.x!, sensor.y!, sensor.z!], relativeTime: (new Date().getTime() - this.startTime) / 1000 };
+        this.dataPoints.push(point);
+        this.saveDatapointinRow(point);
     }
 
     /**
