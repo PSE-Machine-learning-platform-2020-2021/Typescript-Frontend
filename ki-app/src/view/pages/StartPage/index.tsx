@@ -24,19 +24,14 @@ export class StartPage extends React.Component<Props, State> implements Page {
             </div>
         );
         ReactDOM.render(VDOM, document.getElementById('root'));
-        this.setAvailableSensors();
         this.changeSettings();
-    }
-
-    setAvailableSensors() {
-        PubSub.publish("setAvailableSensors", this.state.recordingSettings.availableSensorTypes);
     }
 
     /**
      * Prüft ob der Nutzer "Start" druckt und ändert den Zustand.
      */
     changeSettings() {
-        PubSub.subscribe('settingsFinish', (data: {
+        PubSub.subscribe('settingsFinish', (_msg: any, data: {
             newDataSetName: string,
             usedSensorTypes: number[],
             waitTime: number,
@@ -74,5 +69,4 @@ export class StartPage extends React.Component<Props, State> implements Page {
     getState() {
         return this.state;
     }
-
 }

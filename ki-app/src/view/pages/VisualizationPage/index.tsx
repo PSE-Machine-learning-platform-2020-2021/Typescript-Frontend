@@ -53,55 +53,51 @@ export class VisualizationPage extends React.Component<Props, State> implements 
         return this.state;
     }
 
-    setState(newState: any) {
-        return;
-    }
-
     getDatarows() {
-        /**   var emp = []
-          emp.push([{ sensorType: 85124, value: [55, 66, 12], relativeTime: 0 },
-          { sensorType: 85124, value: [26, 21, 2], relativeTime: 1 },
-          { sensorType: 85124, value: [91, 83, 50], relativeTime: 2 },
-          { sensorType: 85124, value: [22, 71, 23], relativeTime: 3 },
-          { sensorType: 85124, value: [14, 8, 77], relativeTime: 4 },
-          ])
-          emp.push([{ sensorType: 45157, value: [83, 44, 1], relativeTime: 0 },
-          { sensorType: 45157, value: [78, 55, 2], relativeTime: 1 },
-          { sensorType: 45157, value: [51, 66, 3], relativeTime: 2 },
-          { sensorType: 45157, value: [23, 81, 50], relativeTime: 3 },
-          { sensorType: 45157, value: [13, 20, 5], relativeTime: 4 },
-          ])
-          
-          const ex = {
-              dataSetID: 1,
-              rows: emp
-          }
-          PubSub.publish('getrows', ex)
-          var ex2 = []
-          ex2.push([{ sensorType: 123, value: [55, 66, 12], relativeTime: 0 },
-          { sensorType: 123, value: [26, 21, 2], relativeTime: 1 },
-          { sensorType: 123, value: [91, 83, 50], relativeTime: 2 },
-          { sensorType: 123, value: [22, 71, 23], relativeTime: 3 },
-          { sensorType: 123, value: [14, 8, 77], relativeTime: 4 },
-          ])
-          ex2.push([{ sensorType: 456, value: [83, 44, 1], relativeTime: 0 },
-          { sensorType: 456, value: [78, 55, 2], relativeTime: 1 },
-          { sensorType: 456, value: [51, 66, 3], relativeTime: 2 },
-          { sensorType: 456, value: [23, 81, 50], relativeTime: 3 },
-          { sensorType: 456, value: [13, 20, 5], relativeTime: 4 },
-          ])
-         
-          const ex22 = {
-              dataSetID: 2,
-              rows: ex2
-          }
-          PubSub.publish('getrows', ex22)
-          */
-        this.state.currentDataSet?.map((dataset) => {
-            PubSub.publish('getrows', dataset)
-            return dataset
-        })
+        //Beispiel
+        var emp = []
+        emp.push([{ sensorType: 85124, value: [55, 66, 12], relativeTime: 0 },
+        { sensorType: 85124, value: [26, 21, 2], relativeTime: 1 },
+        { sensorType: 85124, value: [91, 83, 50], relativeTime: 2 },
+        { sensorType: 85124, value: [22, 71, 23], relativeTime: 3 },
+        { sensorType: 85124, value: [14, 8, 77], relativeTime: 4 },
+        ])
+        emp.push([{ sensorType: 45157, value: [83, 44, 1], relativeTime: 0 },
+        { sensorType: 45157, value: [78, 55, 2], relativeTime: 1 },
+        { sensorType: 45157, value: [51, 66, 3], relativeTime: 2 },
+        { sensorType: 45157, value: [23, 81, 50], relativeTime: 3 },
+        { sensorType: 45157, value: [13, 20, 5], relativeTime: 4 },
+        ])
 
+        const ex = {
+            dataSetID: 1,
+            rows: emp
+        }
+        PubSub.publish('getrows', ex)
+        var ex2 = []
+        ex2.push([{ sensorType: 123, value: [55, 66, 12], relativeTime: 0 },
+        { sensorType: 123, value: [26, 21, 2], relativeTime: 1 },
+        { sensorType: 123, value: [91, 83, 50], relativeTime: 2 },
+        { sensorType: 123, value: [22, 71, 23], relativeTime: 3 },
+        { sensorType: 123, value: [14, 8, 77], relativeTime: 4 },
+        ])
+        ex2.push([{ sensorType: 456, value: [83, 44, 1], relativeTime: 0 },
+        { sensorType: 456, value: [78, 55, 2], relativeTime: 1 },
+        { sensorType: 456, value: [51, 66, 3], relativeTime: 2 },
+        { sensorType: 456, value: [23, 81, 50], relativeTime: 3 },
+        { sensorType: 456, value: [13, 20, 5], relativeTime: 4 },
+        ])
+
+        const ex22 = {
+            dataSetID: 2,
+            rows: ex2
+        }
+        PubSub.publish('getrows', ex22)
+
+        /**  this.state.currentDataSet?.map((dataset) => {
+              PubSub.publish('getrows', dataset)
+              return dataset
+          })*/
     }
 
     changetonextpage() {

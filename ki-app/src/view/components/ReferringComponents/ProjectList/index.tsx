@@ -2,7 +2,7 @@ import React, { Component } from 'react'
 import ChangeToVisuBtn from '../ChangeToVisuBtn';
 import ModelList from '../ModelList';
 import QRImage from '../QRImage';
-
+import './ProjectList.css'
 export default class ProjectList extends Component {
     state = {
         value: null,
@@ -73,7 +73,7 @@ export default class ProjectList extends Component {
     }
     render() {
         return (
-            <section>
+            <section className='projectlist'>
                 <label>ProjektList</label>
                 <select onChange={this.handleChange}>
                     <option>Projekt Wählen</option>
@@ -81,8 +81,8 @@ export default class ProjectList extends Component {
                         return <option value={projectObj.projectID}>{projectObj.projectName}</option>
                     })}
                 </select>
-                <button onClick={() => this.handleChoose()} className="btn" >Wählen Modell in diesem Projekt </button>
-                <button onClick={() => this.handleLoad()} className="btn" >Laden das Projekt!</button>
+                <button onClick={() => this.handleChoose()} className="pl-btn" >Wählen Modell in diesem Projekt </button>
+                <button onClick={() => this.handleLoad()} className="pl-btn" >Laden das Projekt!</button>
                 {this.state.loadclick ? <div> <QRImage /><ChangeToVisuBtn /></div> : null}
                 {this.state.click ? <div> <ModelList /></div> : null}
             </section>

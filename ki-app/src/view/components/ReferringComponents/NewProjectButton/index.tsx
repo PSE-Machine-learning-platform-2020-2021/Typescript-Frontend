@@ -2,7 +2,7 @@ import React, { Component } from 'react';
 import QRImage from '../QRImage';
 import LinkText from '../LinkText';
 import ChangeToVisuBtn from '../ChangeToVisuBtn';
-
+import './NewProjectButton.css'
 
 export default class NewProjectButton extends Component {
 
@@ -35,9 +35,9 @@ export default class NewProjectButton extends Component {
 
   render() {
     return (
-      <div>
+      <div className="newProject">
         <input type="text" value={this.state.projectName} onChange={this.changeProjectName} placeholder='Neuen Projektnamen eingeben' disabled={this.state.disabled} />
-        <button onClick={() => this.handleCreate()} className="newProject" id="new" disabled={this.state.disabled}>Neues Projekt</button>
+        <button onClick={() => this.handleCreate()} className="newProject-button" id="new" disabled={this.state.disabled}>Neues Projekt</button>
         {this.state.click ? <div> <QRImage /><ChangeToVisuBtn /><LinkText /></div> : null}
       </div>
     );

@@ -1,6 +1,6 @@
 import React, { Component } from 'react';
 import NewWindow from "react-new-window";
-
+import './LoginWindow.css'
 export default class LoginWindow extends Component {
 
   state = {
@@ -48,6 +48,9 @@ export default class LoginWindow extends Component {
             if (newdata) {
               alert('Register und Einloggen Erfolg!')
             }
+            else {
+              alert('Register Erfolg und Einloggen Misfolg!')
+            }
           })
         } else {
           alert('Register Mißerfolg!')
@@ -72,10 +75,12 @@ export default class LoginWindow extends Component {
 
   render() {
     return (
-      <div className="login-button">
-        <button onClick={this.openNewWindow}> Einloggen Fenster </button>
+      <div>
+        <div className="right">
+          <button className="login-button" onClick={this.openNewWindow}>Einloggen</button>
+        </div>
         {this.state.openNewWindow && (
-          <NewWindow>
+          <NewWindow title="Login">
             <div className="login-window">
               <form>
                 <label>
@@ -91,8 +96,8 @@ export default class LoginWindow extends Component {
                   <input type="password" value={this.state.password} onChange={this.changePassword} />
                 </label>
                 <div>
-                  <button onClick={this.register}>Registrieren</button>
-                  <button onClick={this.login}>Loggen ein</button>
+                  <button className="register" onClick={this.register}>Registrieren</button>
+                  <button className="login" onClick={this.login}>Loggen ein</button>
                 </div>
               </form>
             </div>

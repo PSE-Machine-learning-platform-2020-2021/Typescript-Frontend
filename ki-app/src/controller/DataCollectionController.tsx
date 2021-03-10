@@ -17,7 +17,7 @@ export class DataCollectionController implements PageController {
     /**
     * Seite welche gerade von dem Controller verwaltet wird
     */
-    private page: Page = new DataCollectionPage( {} );
+    private page: Page = new DataCollectionPage({});
     /**
     * Status der Seite
     */
@@ -27,25 +27,39 @@ export class DataCollectionController implements PageController {
      * Konstruktor des Seitenverwalters. Registriert sich als Beobachter auf seiner Seite und setzt den start Status.
      * Dieser Seitenverwalter benötigt einen SensorManager, welcher schon initilisiert wurde. 
      */
-    constructor ( sensorManager: SensorManager ) {
+    constructor(sensorManager: SensorManager) {
         this.sensorManager = sensorManager;
-        this.page.attach( this );
+        this.page.attach(this);
         this.state = this.page.getState();
+        this.state.leadTime = this.sensorManager.getWaitTime();
+        PubSub.publish('startCounting', this.state.leadTime);
+
+        this.sensorManager.readData(this.page);
+
+
     }
 
     /**
      * Die Update Methode des Seitenverwalters.
      */
-    update () {
+    update() {
         let state = this.page.getState();
-        switch ( state.currentState ) {
+        switch (state.currentState) {
             case States.StartDataRead:
-                this.sensorManager.readData( this.page );
-                MainController.getInstance().changeTo( new FinishController() );
+                this.sensorManager.readData(this.page);
+
                 break;
             case States.NeedMessage:
-                this.page.setState( MainController.getInstance().getMessage( this.state.messages ) );
+                this.page.setState(MainController.getInstance().getMessage(this.state.messages));
                 break;
+            case States.NeedInstantDiagram:
+                break;
+            case States.ChangeToFinish:
+                MainController.getInstance().changeTo(new FinishController());
+                break;
+            //case States.SetWaitTime:
+            //    PubSub.publish('nextCount', this.state.recordingSettings!.waitTime);
+            //    break;
             default:
                 break;
         }

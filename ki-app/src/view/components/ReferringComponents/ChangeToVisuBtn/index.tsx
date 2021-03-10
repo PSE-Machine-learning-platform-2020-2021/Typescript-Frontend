@@ -1,4 +1,5 @@
 import React, { Component } from 'react'
+import './ChangeToVisuBtn.css'
 
 export default class ChangeToVisuBtn extends Component {
     handleClick = () => {
@@ -8,7 +9,7 @@ export default class ChangeToVisuBtn extends Component {
     render() {
         return (
             <div>
-                <button onClick={() => this.handleClick()} className="btn" >Wechseln auf die Visualisierungsseite</button>
+                <button onClick={() => this.handleClick()} className="ctv-btn" >Wechseln auf die Visualisierungsseite</button>
             </div>
         )
     }
