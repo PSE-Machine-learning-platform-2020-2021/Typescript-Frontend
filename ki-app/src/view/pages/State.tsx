@@ -16,7 +16,7 @@ export interface IState {
   dataRows?: { sensorType: number, value: number[]; relativeTime: number; }[][];
   //DataSet?: {dataSetID: number, rows: {sensorType: number, value: number[]; relativeTime: number; }[] }[]
   dataSetMetas?: { dataSetID: number; dataSetName: string; }[];
-  currentDataSets?: { dataSetID: number, rows: { sensorType: number, value: number[]; relativeTime: number; }[][] }[];
+  currentDataSets?: { dataSetID: number, rows: { sensorType: number, value: number[]; relativeTime: number; }[][]; }[];
   qr?: string;
   diagramSvg?: string;
   recordingSettings?: { newDataSetName: string, usedSensorTypes: number[], readTime: number, waitTime: number, availableSensorTypes: { sensorTypID: number; sensorType: string; chosen: boolean; }[]; };
@@ -115,7 +115,7 @@ export enum States {
   /**
    * Ein Label soll gelöscht werden
    */
-  DeleteDataLabel,
+  DeleteLabel,
   /**
    * Ein neues Label los erstellt werden
    */

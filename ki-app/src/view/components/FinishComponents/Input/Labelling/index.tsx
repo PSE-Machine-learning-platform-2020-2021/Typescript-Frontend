@@ -23,11 +23,16 @@ export default class Labelling extends Component {
         const labelObj = { id: newId, start: newStart, end: newEnd, name: newName };
         this.addLabel(labelObj);
         this.setState({ newId: "", newStart: "", newEnd: '', newName: "" });
-    }
+    };
 
     addLabel = (labelObj: { id: string, start: string, end: string, name: string; }) => {
-        const { labels } = this.state
-        const newLabels = [labelObj, ...labels]
+        const label: { labelId: number, start: number, end: number, name: string; } = { labelId: parseInt(labelObj.id), start: this.formatFloatingString(labelObj.start), end: this.formatFloatingString(labelObj.end), name: labelObj.name }; //was ist bei fehlerfall?? keine Zahlen
+        console.log(label.start);
+        PubSub.publish('newLabel', label);
+        const labelObjReal: { id: string, start: string, end: string, name: string; } = { id: labelObj.id, start: this.formatFloatingString(labelObj.start).toString(), end: this.formatFloatingString(labelObj.end).toString(), name: labelObj.name };
+        const { labels } = this.state;
+
+        const newLabels = [labelObjReal, ...labels];
         this.setState({ labels: newLabels });
     };
 
@@ -42,6 +47,10 @@ export default class Labelling extends Component {
 
         this.setState({ labels: newLabels });
     };
+
+    private formatFloatingString(stringNumber: string): number {
+        return (parseInt((parseFloat(stringNumber) * 1000).toString()) / 1000);
+    }
 
 
     render() {

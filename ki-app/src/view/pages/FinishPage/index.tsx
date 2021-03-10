@@ -13,7 +13,7 @@ type IProps = {
 };
 
 export class FinishPage extends React.Component<IProps, State> implements Page {
-  state = new State();
+  state = new State;
   observers: PageController[] = [];
 
   constructor(props: IProps) {
@@ -27,6 +27,9 @@ export class FinishPage extends React.Component<IProps, State> implements Page {
         </div>
       </div>
     );
+    this.newLabel();
+    this.changeLabel();
+    this.deleteLabel();
     ReactDOM.render(VDOM, document.getElementById("root"));
     //this.giveDiagram();
   }
@@ -50,6 +53,36 @@ export class FinishPage extends React.Component<IProps, State> implements Page {
     PubSub.publish('finishDiagram', exrows)*/
 
     //PubSub.publish('finishDiagram', this.state.dataRows);
+  }
+
+  newLabel() {
+    PubSub.unsubscribe('newLabel');
+    PubSub.subscribe('newLabel', (_msg: any, label: { labelId: number, start: number, end: number, name: string; }) => {
+      // eslint-disable-next-line
+      this.state.currentLabel = label;
+      this.state.currentState = States.NewLabel;
+      this.notify();
+    });
+  }
+
+  changeLabel() {
+    PubSub.unsubscribe('changeLabel');
+    PubSub.subscribe('changeLabel', (_msg: any) => {
+      // eslint-disable-next-line
+      this.state.currentState = States.ChangeLabel;
+      this.notify();
+
+    });
+  }
+
+  deleteLabel() {
+    PubSub.unsubscribe('deleteLabel');
+    PubSub.subscribe('deleteLabel', (_msg: any) => {
+      // eslint-disable-next-line
+      this.state.currentState = States.DeleteLabel;
+      this.notify();
+
+    });
   }
 
 

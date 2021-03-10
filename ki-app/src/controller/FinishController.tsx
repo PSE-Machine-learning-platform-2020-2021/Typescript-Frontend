@@ -33,7 +33,7 @@ export class FinishController implements PageController {
      * Die Update Methode des Seitenverwalters.
      */
     update() {
-        this.state = this.page.getState().currenState;
+        this.state = this.page.getState();
         switch (this.state.currentState) {
             case States.NeedMessage:
                 this.page.setState(MainController.getInstance().getMessage(this.state.messages));
@@ -44,7 +44,7 @@ export class FinishController implements PageController {
             case States.NewLabel:
                 this.newDataLabel();
                 break;
-            case States.DeleteDataLabel:
+            case States.DeleteLabel:
                 this.deleteDataLabel();
                 break;
             default:
