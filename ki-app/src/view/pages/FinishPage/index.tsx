@@ -28,12 +28,12 @@ export class FinishPage extends React.Component<IProps, State> implements Page {
       </div>
     );
     ReactDOM.render(VDOM, document.getElementById("root"));
-    this.giveDiagram();
+    //this.giveDiagram();
   }
 
   giveDiagram() {
     //Beispiel
-    var exrows = []
+    /*var exrows = []
     exrows.push([{ sensorType: 85124, value: [55, 66, 12], relativeTime: 0 },
     { sensorType: 85124, value: [26, 21, 2], relativeTime: 1 },
     { sensorType: 85124, value: [91, 83, 50], relativeTime: 2 },
@@ -47,7 +47,7 @@ export class FinishPage extends React.Component<IProps, State> implements Page {
     { sensorType: 45157, value: [13, 20, 5], relativeTime: 4 },
     ])
 
-    PubSub.publish('finishDiagram', exrows)
+    PubSub.publish('finishDiagram', exrows)*/
 
     //PubSub.publish('finishDiagram', this.state.dataRows);
   }

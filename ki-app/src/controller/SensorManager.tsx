@@ -148,6 +148,7 @@ export class SensorManager {
         }
         this.dataRows[dataPoint.rowId].push({ sensorType: dataPoint.sensorType, value: dataPoint.value, relativeTime: dataPoint.relativeTime });
         PubSub.publish('startDiagram', this.dataRows);
+        PubSub.publish('finishDiagram', this.dataRows);
     }
 
     /**
