@@ -81,6 +81,7 @@ export class FinishController implements PageController {
         this.state.wait! = promise;
         promise.then((id: number) => {
             this.state.currentLabel!.labelID = id;
+            PubSub.publish('newLabelWithID', this.state.currentLabel);
             this.state.currentState = States.setLabel;
             this.page.setState(this.state);
         });

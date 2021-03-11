@@ -44,7 +44,7 @@ export class DatabaseConnector {
    *          bei fehler, -1
    */
   async createDataSet(requestData: { sessionID: number, projectID: number, userID: number, dataSetName: string, dataRow: { sensorID: number, datarowName?: string; }[]; }): Promise<number> {
-    const dataSetID: number = (await this.sendRequest("create_data_set", requestData))[0];
+    const dataSetID: number = (await this.sendRequest("create_data_set", requestData)).dataSetID;
     return dataSetID;
   }
 
@@ -174,7 +174,7 @@ export class DatabaseConnector {
    * @returns labelID
    */
   async createLabel(requestData: { sessionID: number, userID: number, datasetID: number, label: { span: { start: number, end: number; }, labelName: string; }; }): Promise<number> {
-    const result: number = await this.sendRequest("create_label", requestData);
+    const result: number = (await this.sendRequest("create_label", requestData)).labelID;
     return result;
   }
 

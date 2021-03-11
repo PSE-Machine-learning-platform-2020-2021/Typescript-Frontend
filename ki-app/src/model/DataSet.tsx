@@ -101,13 +101,13 @@ export class DataSet {
    * @param end die Endzeit des Zeitfensters in Millisekunden
    * @returns falls das Label mit der ID schon existiert wird false zurück gegeben
    */
-  public createLabel(name: string, labelID: number, start: number, end: number): boolean {
+  public createLabel(labelID: number, span: { start: number, end: number; }, labelName: string): boolean {
     for (let i = 0; i < this.label.length; i++) {
       if (this.label[i].getID() === labelID) {
         return false;
       }
     }
-    this.label.push(new Label(name, labelID, start, end));
+    this.label.push(new Label(labelName, labelID, span.start, span.end));
     return true;
   }
 
@@ -134,7 +134,7 @@ export class DataSet {
    */
   public deleteLabel(labelID: number): boolean {
     for (let i = 0; i < this.label.length; i++) {
-      if (this.label[i].getID() === labelID) {
+      if (this.label[i].getID() == labelID) { //keine absolute gleichheit!
         delete this.label[i];
         return true;
       }

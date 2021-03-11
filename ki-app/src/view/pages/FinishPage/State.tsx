@@ -2,7 +2,7 @@ import { States } from "../State";
 
 export class State {
   currentState: States = States.NeedMessage;
-  currentLabel?: { labelId: number, start: number, end: number, name: string; };
+  currentLabel?: { labelID: number, start: number, end: number, name: string; }; //unbearbeitete Eingabe
   languageCode: string = "de";
   messageIDs: number[] = [];
   messages: string[] = [];

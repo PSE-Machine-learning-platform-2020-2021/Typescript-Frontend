@@ -171,7 +171,7 @@ export class Project {
    */
   createLabel(labelID: number, span: { start: number, end: number; }, labelName: string): boolean {
     if (this.currentDataSet != null) {
-      return this.currentDataSet.setLabel(labelID, span, labelName);
+      return this.currentDataSet.createLabel(labelID, span, labelName);
     }
     return false;
   }

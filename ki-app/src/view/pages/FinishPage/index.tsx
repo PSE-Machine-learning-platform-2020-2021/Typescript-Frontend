@@ -57,8 +57,7 @@ export class FinishPage extends React.Component<IProps, State> implements Page {
 
   newLabel() {
     PubSub.unsubscribe('newLabel');
-    PubSub.subscribe('newLabel', (_msg: any, label: { labelId: number, start: number, end: number, name: string; }) => {
-      // eslint-disable-next-line
+    PubSub.subscribe('newLabel', (_msg: any, label: { labelID: number, start: number, end: number, name: string; }) => {
       this.state.currentLabel = label;
       this.state.currentState = States.NewLabel;
       this.notify();
@@ -67,8 +66,8 @@ export class FinishPage extends React.Component<IProps, State> implements Page {
 
   changeLabel() {
     PubSub.unsubscribe('changeLabel');
-    PubSub.subscribe('changeLabel', (_msg: any) => {
-      // eslint-disable-next-line
+    PubSub.subscribe('changeLabel', (_msg: any, label: { labelID: number, start: number, end: number, name: string; }) => {
+      this.state.currentLabel = label;
       this.state.currentState = States.ChangeLabel;
       this.notify();
 
@@ -77,11 +76,11 @@ export class FinishPage extends React.Component<IProps, State> implements Page {
 
   deleteLabel() {
     PubSub.unsubscribe('deleteLabel');
-    PubSub.subscribe('deleteLabel', (_msg: any) => {
-      // eslint-disable-next-line
+    PubSub.subscribe('deleteLabel', (_msg: any, label: { start: number, end: number, name: string, labelID: number; }) => {
+      var deleteLabel = { labelID: label.labelID, start: label.start, end: label.end, name: label.name };
+      this.state.currentLabel = deleteLabel;
       this.state.currentState = States.DeleteLabel;
       this.notify();
-
     });
   }
 
