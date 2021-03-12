@@ -238,7 +238,7 @@ export default class Train extends Component {
 						<li style={{ backgroundColor: mouse ? '#ddd' : 'white' }} onMouseEnter={this.handleMouse(true)} onMouseLeave={this.handleMouse(false)}>
 							<label>
 								<input type="checkbox" checked={dataset.chosen} onChange={(e: React.ChangeEvent<HTMLInputElement>): void => this.handleCheck(dataset.dataSetID, e.target.checked)} />
-								<span>{dataset.dataSetName + "   " + dataset.dataSetID}</span>
+								<span>{dataset.dataSetName}</span>
 							</label>
 							<button onClick={() => this.handleDelete(dataset.dataSetID)} className="btn-item" style={{ display: mouse ? 'block' : 'none' }}>Löschen</button>
 						</li>
