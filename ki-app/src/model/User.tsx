@@ -296,7 +296,7 @@ export class Admin extends User {
   loadProject(project: {
     projectID: number, sessionID: number, projectName: string, projectData?: {
       aiModelID?: number[],
-      dataSet?: {
+      dataSet: {
         dataRowSensors: SensorData[], dataSetID: number, dataSetName: string, generateDate: number,
         dataRows: {
           dataRowID: number, recordingStart: number,
@@ -306,7 +306,10 @@ export class Admin extends User {
       }[];
     };
   }): boolean {
+    console.log(project);
     var id = this.existProject(project.projectID);
+    console.log(id);
+    console.log(project.projectData);
     var newProject: Project = new Project(project.projectID, project.sessionID, project.projectName, project.projectData);
     this.currentProject = newProject;
     if (id == -1) {
@@ -342,7 +345,7 @@ export class Admin extends User {
    */
   private existProject(projectID: number): number {
     for (let i = 0; i < this.project.length; i++) {
-      if (this.project[i].getID() === projectID) {
+      if (this.project[i].getID() == projectID) {
         return i;
       }
     }

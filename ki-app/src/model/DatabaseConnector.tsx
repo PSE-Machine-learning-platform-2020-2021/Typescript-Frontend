@@ -1,3 +1,5 @@
+import { SensorData } from "./SensorData";
+
 //Die Schnittstelle zur Datenbank.
 export class DatabaseConnector {
   private static readonly databasePHPURL: string = "/src/database/index.php";
@@ -69,26 +71,30 @@ export class DatabaseConnector {
    * @returns Gibt die Daten zurück, als Fehler werden alle IDs auf -1 gesetzt
    */
   async loadProject(requestData: { userID: number, adminEmail: string, projectID: number; }): Promise<{
-    projectID: number, sessionID: number, projectName: string, aiModelID: number[],
-    dataSet: {
-      dataRowSensors: Sensor[], dataSetID: number, dataSetName: string, generateDate: number,
-      dataRows: {
-        dataRowID: number,
-        dataRow: { value: number[], relativeTime: number; }[];
-      }[],
-      label: { name: string, labelID: number, start: number, end: number; }[];
-    }[];
-  }> {
-    const result: {
-      projectID: number, sessionID: number, projectName: string, aiModelID: number[],
+    projectID: number, sessionID: number, projectName: string, projectData?: {
+      aiModelID?: number[],
       dataSet: {
-        dataRowSensors: Sensor[], dataSetID: number, dataSetName: string, generateDate: number,
+        dataRowSensors: SensorData[], dataSetID: number, dataSetName: string, generateDate: number,
         dataRows: {
-          dataRowID: number,
+          dataRowID: number, recordingStart: number,
           dataRow: { value: number[], relativeTime: number; }[];
         }[],
         label: { name: string, labelID: number, start: number, end: number; }[];
       }[];
+    };
+  }> {
+    const result: {
+      projectID: number, sessionID: number, projectName: string, projectData?: {
+        aiModelID?: number[],
+        dataSet: {
+          dataRowSensors: SensorData[], dataSetID: number, dataSetName: string, generateDate: number,
+          dataRows: {
+            dataRowID: number, recordingStart: number,
+            dataRow: { value: number[], relativeTime: number; }[];
+          }[],
+          label: { name: string, labelID: number, start: number, end: number; }[];
+        }[];
+      };
     } = await this.sendRequest("load_project", requestData);
     return result;
   }
