@@ -9,11 +9,7 @@ export default class Train extends Component {
 		openNewWindow: false,
 		value: '',
 		databaseList: [] as { dataSetID: number, dataSetName: string, chosen: boolean; }[],
-		datasets: [{
-			dataSetID: 0,
-			dataSetName: 'exampledataset',
-			chosen: false
-		}],
+		datasets: [] as { dataSetID: number, dataSetName: string, chosen: boolean; }[],
 		imputators: [
 			{ name: "Mittel", checked: false, tag: 'MEAN' },
 			{ name: "Letzer Wert fortgeführt", checked: false, tag: 'FORWARD' },
