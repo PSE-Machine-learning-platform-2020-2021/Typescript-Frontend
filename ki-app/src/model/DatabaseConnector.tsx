@@ -197,7 +197,7 @@ export class DatabaseConnector {
    * @param datasetID 
    * @param labelID 
    */
-  async deleteLabel(requestData: { sessionID: number, userID: number, datasetID: number, labelID: number; }): Promise<boolean> {
+  async deleteLabel(requestData: { sessionID: number, userID: number, dataSetID: number, labelID: number; }): Promise<boolean> {
     const result: boolean = await this.sendRequest("delete_label", requestData);
     return result;
   }

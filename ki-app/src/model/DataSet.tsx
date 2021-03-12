@@ -135,7 +135,7 @@ export class DataSet {
   public deleteLabel(labelID: number): boolean {
     for (let i = 0; i < this.label.length; i++) {
       if (this.label[i].getID() == labelID) { //keine absolute gleichheit!
-        delete this.label[i];
+        this.label.splice(i, 1);
         return true;
       }
     }

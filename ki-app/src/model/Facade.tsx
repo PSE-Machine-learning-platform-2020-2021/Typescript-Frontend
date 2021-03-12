@@ -372,8 +372,8 @@ export class Facade {
       if (deleted) {
         let sessionID: number = this.getSessionID();
         let userID: number = this.user.getID();
-        let datasetID: number = this.user.getCurrentDataSetID();
-        return this.dbCon.deleteLabel({ sessionID, userID, datasetID, labelID });
+        let dataSetID: number = this.user.getCurrentDataSetID();
+        return this.dbCon.deleteLabel({ sessionID, userID, dataSetID, labelID });
       }
     }
     return false;
