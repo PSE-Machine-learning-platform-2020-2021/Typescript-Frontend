@@ -71,12 +71,10 @@ export class ModelCreationPage extends React.Component<Props, State> implements 
 	train() {
 		PubSub.unsubscribe('train');
 		PubSub.subscribe('train', (_msg: any, data: { dataSets: number[], imputator: string, classifier: string, scaler: string, features: string[]; }) => {
-			console.log(data);
 			// eslint-disable-next-line
 			this.state.currentState = States.NeedKiTraining;
 			// eslint-disable-next-line
 			this.state.trainingParameter = data;
-			console.log(this.state.trainingParameter);
 			this.notify();
 		});
 	}

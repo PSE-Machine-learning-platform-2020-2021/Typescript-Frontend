@@ -67,7 +67,6 @@ export class ModelCreationController implements PageController {
         }
         //Benutzte Sensoren werden hinzugefügt
         this.state.trainingParameter!.sensors = sensors;*/
-        console.log(this.state.trainingParameter);
         MainController.getInstance().getFacade().applyModel(this.state.trainingParameter!);
     }
 }
