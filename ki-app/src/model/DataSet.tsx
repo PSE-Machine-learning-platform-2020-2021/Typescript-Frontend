@@ -34,7 +34,6 @@ export class DataSet {
    */
   constructor(dataRowSensors: SensorData[], dataSetID: number, dataSetName: string, generateDate: number, dataRows: { dataRowID: number, dataRow: { value: number[], relativeTime: number; }[]; }[], label: { name: string, labelID: number, start: number, end: number; }[]);
   constructor(dataRowSensors: SensorData[], dataSetID: number, dataSetName: string, generateDate?: number, dataRows?: { dataRowID: number, dataRow: { value: number[], relativeTime: number; }[]; }[], label?: { name: string, labelID: number, start: number, end: number; }[]) {
-    console.log(dataSetName);
     if (dataRows != null) {
       for (let i = 0; i < dataRows.length && i < dataRowSensors.length; i++) {
         this.dataRow.push(new DataRow(dataRowSensors[i], dataRows[i].dataRowID, dataRows[i].dataRow));
@@ -56,7 +55,6 @@ export class DataSet {
     }
     this.id = dataSetID;
     this.name = dataSetName;
-    console.log(this.name);
   }
 
   /**

@@ -306,10 +306,7 @@ export class Admin extends User {
       }[];
     };
   }): boolean {
-    console.log(project);
     var id = this.existProject(project.projectID);
-    console.log(id);
-    console.log(project.projectData);
     var newProject: Project = new Project(project.projectID, project.sessionID, project.projectName, project.projectData);
     this.currentProject = newProject;
     if (id == -1) {

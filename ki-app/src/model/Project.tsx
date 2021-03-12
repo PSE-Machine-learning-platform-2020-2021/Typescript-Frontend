@@ -39,7 +39,6 @@ export class Project {
     this.name = projectName;
     this.session = new Session(sessionID);
     if (projectData != null) {
-      console.log("da bin ich");
       if (projectData.aiModelID != null) {
         for (let i = 0; i < projectData.aiModelID.length; i++) {
           this.aiModel.push(new AIModel(projectData.aiModelID[i]));
@@ -47,7 +46,6 @@ export class Project {
       }
       if (projectData.dataSet != null) {
         for (let i = 0; i < projectData.dataSet.length; i++) {
-          console.log("da bin ich nicht");
           this.dataSet.push(new DataSet(projectData.dataSet[i].dataRowSensors, projectData.dataSet[i].dataSetID, projectData.dataSet[i].dataSetName, projectData.dataSet[i].generateDate, projectData.dataSet[i].dataRows, projectData.dataSet[i].label));
         }
       }

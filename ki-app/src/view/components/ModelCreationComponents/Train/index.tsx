@@ -52,13 +52,13 @@ export default class Train extends Component {
 	};
 
 	componentDidMount() {
-		PubSub.unsubscribe('getlist');
-		PubSub.subscribe('getlist', (_msg: any, data: { dataSetID: number, dataSetName: string; }[]) => {
+		PubSub.unsubscribe('setlist');
+		PubSub.subscribe('setlist', (_msg: any, data: { dataSetID: number, dataSetName: string; }[]) => {
 			let newDatabaseList: { dataSetID: number, dataSetName: string, chosen: boolean; }[] = [];
 			for (let i = 0; i < data.length; i++) {
 				newDatabaseList.push({ dataSetID: data[i].dataSetID, dataSetName: data[i].dataSetName, chosen: false });
 			}
-			console.log(newDatabaseList);
+			this.state.databaseList = newDatabaseList;
 			this.setState({ databaseList: newDatabaseList });
 		});
 	}
@@ -242,7 +242,7 @@ export default class Train extends Component {
 						<li style={{ backgroundColor: mouse ? '#ddd' : 'white' }} onMouseEnter={this.handleMouse(true)} onMouseLeave={this.handleMouse(false)}>
 							<label>
 								<input type="checkbox" checked={dataset.chosen} onChange={(e: React.ChangeEvent<HTMLInputElement>): void => this.handleCheck(dataset.dataSetID, e.target.checked)} />
-								<span>{dataset.dataSetName}</span>
+								<span>{dataset.dataSetName + "   " + dataset.dataSetID}</span>
 							</label>
 							<button onClick={() => this.handleDelete(dataset.dataSetID)} className="btn-item" style={{ display: mouse ? 'block' : 'none' }}>Löschen</button>
 						</li>

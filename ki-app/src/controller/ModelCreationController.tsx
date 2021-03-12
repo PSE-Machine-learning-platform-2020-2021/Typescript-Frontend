@@ -26,8 +26,7 @@ export class ModelCreationController implements PageController {
         this.page.attach(this);
         this.state = this.page.getState();
         this.state.dataSetMetas! = MainController.getInstance().getFacade().getDataSetMetas()!;
-        console.log(this.state.dataSetMetas!);
-        PubSub.publish("getlist", this.state.dataSetMetas!);
+        PubSub.publish("setlist", this.state.dataSetMetas!);
     }
 
     /**
@@ -68,6 +67,7 @@ export class ModelCreationController implements PageController {
         }
         //Benutzte Sensoren werden hinzugefügt
         this.state.trainingParameter!.sensors = sensors;*/
+        console.log(this.state.trainingParameter);
         MainController.getInstance().getFacade().applyModel(this.state.trainingParameter!);
     }
 }
