@@ -3,12 +3,12 @@
  */
 export class DataPoint {
   private value: number[]; //Dies ist der Sensormesswert, meist x,y,z.
-  private relativeTime: number; //Dies ist die relative Zeit zum Start der Aufnahme in Millisekunden.
+  private relativeTime: number; //Dies ist die relative Zeit zum Start der Aufnahme in Sekunden.
 
   /**
    * Erstellt einen Datenpunkt.
    * @param value Sensorwert vom Datenpunkt.
-   * @param relativeTime Die relative Zeit zum Start der Aufnahme in Millisekunden.
+   * @param relativeTime Die relative Zeit zum Start der Aufnahme in Sekunden.
    */
   constructor(value: number[], relativeTime: number) {
     this.value = value;
@@ -23,7 +23,7 @@ export class DataPoint {
   }
 
   /**
-   * Gibt die relative Zeit zum Start der Aufnahme in Millisekunden zurück.
+   * Gibt die relative Zeit zum Start der Aufnahme in Sekunden zurück.
    */
   public getRelativeTime(): number {
     return this.relativeTime;
