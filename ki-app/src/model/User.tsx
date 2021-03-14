@@ -57,7 +57,7 @@ export abstract class User {
    * @param dataSetID die Datensatz ID von der die Datenreihen gelesen werden sollen
    * @returns die Sensordaten von der Datenreihe
    */
-  getDataRows(dataSetID: number): { dataRows?: { sensorType: number, value: number[], relativeTime: number; }[][]; } {
+  getDataRows(dataSetID: number): { dataRows?: { sensorType: number, datapoint: { value: number[], relativeTime: number; }[]; }[]; } {
     if (this.currentProject != null) {
       return this.currentProject.getDataRows(dataSetID);
     } else {
@@ -70,10 +70,11 @@ export abstract class User {
    * @param dataSetID die Datensatz ID von der die Datenreihen gelesen werden sollen
    * @returns die Sensordaten von der Datenreihe
    */
-  getCurrentDataRows(): { dataRows?: { sensorType: number, value: number[], relativeTime: number; }[][]; } {
+  getCurrentDataRows(): { dataRows?: { sensorType: number, datapoint: { value: number[], relativeTime: number; }[]; }[]; } {
     if (this.currentProject != null) {
       return this.currentProject.getCurrentDataRows();
     } else {
+      console.log(this.currentProject);
       return {};
     }
   }

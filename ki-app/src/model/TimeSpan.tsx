@@ -8,20 +8,29 @@ export class TimeSpan {
 
   /**
    * Erstellt ein Zeitfenster.
-   * @param start Startpunkt in Millisekunden 
-   * @param end Endpunkt in Millisekunden
+   * @param start Startpunkt in Millisekunden (start >= 0)
+   * @param end Endpunkt in Millisekunden (end >= start)
    */
   public constructor(start: number, end: number) {
-    this.start = start;
-    this.end = end;
+    if (start >= 0) {
+      this.start = start;
+    } else {
+      this.start = 0;
+    }
+    if (end >= this.start) {
+      this.end = end;
+    } else {
+      this.end = this.start;
+    }
+    console.log("ist das in MilliSekunden?: " + this.start + " kommentar Test");
   }
 
   /**
    * Setzt den übergebenen Startpunkt als Startpunkt, wenn dieser ein positiver Wert ist.
-   * @param start start: Startpunkt in Millisekunden
+   * @param start start: Startpunkt in Millisekunden (0 <= start <= end)
    */
   public setStart(start: number): boolean {
-    if (start >= 0) {
+    if (start >= 0 && start <= this.end) {
       this.start = start;
       return true;
     }
@@ -30,10 +39,10 @@ export class TimeSpan {
 
   /**
    * Setzt den übergebenen Endpunkt als Endpunkt, wenn dieser ein positiver Wert ist.
-   * @param end Endpunkt in Millisekunden
+   * @param end Endpunkt in Millisekunden (0 <= start <= end)
    */
   public setEnd(end: number): boolean {
-    if (end >= 0) {
+    if (end >= this.start) {
       this.end = end;
       return true;
     }

@@ -18,7 +18,7 @@ export default class Diagram extends Component {
             '6A5ACD', 'EE7600', '696969'],
     };
 
-    componentDidMount() {
+    componentDidMount() {//{ sensorType: number, datapoint:{value: number[], relativeTime: number; }[]}[]
         PubSub.subscribe("finishDiagram", (_msg, dataRows) => {
             this.setState({
                 lineLabels: [],
@@ -30,18 +30,18 @@ export default class Diagram extends Component {
             //put each value Array in State
             var datavalues = [];
             for (var i = 0; i < dataRows.length; i++) {
-                this.state.sensorRow.push(dataRows[i][0].sensorType);
+                this.state.sensorRow.push(dataRows[i].sensorType);
                 for (var dataCoordinate = 0; dataCoordinate < 3; dataCoordinate++) {
-                    for (var j = 0; j < dataRows[i].length; j++) {
-                        datavalues.push(dataRows[i][j].value[dataCoordinate]);
+                    for (var j = 0; j < dataRows[i].datapoint.length; j++) {
+                        datavalues.push(dataRows[i].datapoint[j].value[dataCoordinate]);
                     }
                     this.state.datavalue.push(datavalues);
-                    datavalues = []
+                    datavalues = [];
                 }
             }
             // eslint-disable-next-line
-            for (var j = 0; j < dataRows[0].length; j++) {
-                this.state.time.push(dataRows[0][j].relativeTime);
+            for (var j = 0; j < dataRows[0].datapoint.length; j++) {
+                this.state.time.push(dataRows[0].datapoint[j].relativeTime);
             }
 
             var newDatasets = [];
@@ -80,19 +80,19 @@ export default class Diagram extends Component {
                 pointHitDetectionRadius: 1,
                 offsetGridLines: false,
                 pointDot: false
-            }
-            this.setState({ lineLabels: lineLabels })
+            };
+            this.setState({ lineLabels: lineLabels });
             //this.setState({ diagram: { lineLabels, data, options } })
             //this.setState({ diagramLineLabels: lineLabels })
-            this.setState({ diagramData: data })
-            this.setState({ diagramOptions: options })
-        })
+            this.setState({ diagramData: data });
+            this.setState({ diagramOptions: options });
+        });
 
     }
 
     render() {
         var LineChart = require("react-chartjs").Line;
-        const { lineLabels, diagramData, diagramOptions } = this.state
+        const { lineLabels, diagramData, diagramOptions } = this.state;
         return (
             <div>
                 {lineLabels}

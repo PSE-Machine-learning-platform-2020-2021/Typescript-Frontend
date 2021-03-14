@@ -12,7 +12,7 @@ export class SensorManager {
     private saving = true;
     private sensorTypes: number[] = [];
     private dataPoints: { rowId: number, sensorType: number, value: number[]; relativeTime: number; }[] = [];
-    private dataRows: { sensorType: number, value: number[]; relativeTime: number; }[][] = [];
+    private dataRows: { sensorType: number, datapoint: { value: number[]; relativeTime: number; }[]; }[] = [];
 
     private readonly TO_SECOND = 1000;
 
@@ -144,9 +144,10 @@ export class SensorManager {
 
     private saveDatapointinRow(dataPoint: { rowId: number, sensorType: number, value: number[]; relativeTime: number; }) {
         while (this.dataRows.length - 1 < dataPoint.rowId) {
-            this.dataRows.push([]);
+            this.dataRows.push({ sensorType: -1, datapoint: [] });
         }
-        this.dataRows[dataPoint.rowId].push({ sensorType: dataPoint.sensorType, value: dataPoint.value, relativeTime: dataPoint.relativeTime });
+        this.dataRows[dataPoint.rowId].sensorType = dataPoint.sensorType;
+        this.dataRows[dataPoint.rowId].datapoint.push({ value: dataPoint.value, relativeTime: dataPoint.relativeTime });
         PubSub.publish('startDiagram', this.dataRows);
         PubSub.publish('finishDiagram', this.dataRows);
     }

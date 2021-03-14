@@ -7,6 +7,6 @@ export class State {
   messageIDs: number[] = [];
   messages: string[] = [];
   usedSensorNames: string[] = [];
-  dataRows: { sensorType: number, value: number[]; relativeTime: number; }[][] = [];
+  dataRows: { sensorType: number, datapoint: { value: number[]; relativeTime: number; }[]; }[] = [];
   labels: { id: number, start: number, end: number, name: string; }[] = [];
 }

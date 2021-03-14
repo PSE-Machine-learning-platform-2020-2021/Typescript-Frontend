@@ -7,5 +7,5 @@ export class State implements IState {
   messages: { text: string, id: number; }[] = [];
 
   dataSetMetas!: { dataSetID: number; dataSetName: string; }[];
-  currentDataSet!: { dataSetID: number; rows: { sensorType: number; value: number[]; relativeTime: number; }[][]; }[];
+  currentDataSet!: { dataSetID: number; rows: { sensorType: number; datapoint: { value: number[]; relativeTime: number; }[]; }[]; }[];
 }

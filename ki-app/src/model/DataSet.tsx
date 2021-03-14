@@ -85,8 +85,8 @@ export class DataSet {
    * Gibt alle Datenreihen zurück.
    * @returns Ein zwei Dimensionales Array, die Erste Dimension wählt die Datenreihe und die zweite Dimension den Datenpunkt.
    */
-  public getDataRows(): { sensorType: number, value: number[], relativeTime: number; }[][] {
-    var dataRows: { sensorType: number, value: number[], relativeTime: number; }[][] = [];
+  public getDataRows(): { sensorType: number, datapoint: { value: number[], relativeTime: number; }[]; }[] {
+    var dataRows: { sensorType: number, datapoint: { value: number[], relativeTime: number; }[]; }[] = [];
     for (let i = 0; i < this.dataRow.length; i++) {
       dataRows.push(this.dataRow[i].getDataRow());
     }

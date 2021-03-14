@@ -170,7 +170,7 @@ export class Facade {
    * @param dataSetID die Datensatz ID von der die Datenreihen gelesen werden sollen
    * @returns die Sensordaten von der Datenreihe
    */
-  getDataRows(dataSetID: number): { dataRows?: { sensorType: number, value: number[], relativeTime: number; }[][]; } {
+  getDataRows(dataSetID: number): { dataRows?: { sensorType: number, datapoint: { value: number[], relativeTime: number; }[]; }[]; } {
     if (this.user != null) {
       return this.user.getDataRows(dataSetID);
     }
@@ -182,7 +182,7 @@ export class Facade {
    * @param dataSetID die Datensatz ID von der die Datenreihen gelesen werden sollen
    * @returns die Sensordaten von der Datenreihe
    */
-  getCurrentDataRows(): { dataRows?: { sensorType: number, value: number[], relativeTime: number; }[][]; } {
+  getCurrentDataRows(): { dataRows?: { sensorType: number, datapoint: { value: number[], relativeTime: number; }[]; }[]; } {
     if (this.user != null) {
       return this.user.getCurrentDataRows();
     }

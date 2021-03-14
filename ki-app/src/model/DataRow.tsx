@@ -1,3 +1,4 @@
+import { relative } from "node:path";
 import { DataPoint } from "./DataPoint";
 import { SensorData } from "./SensorData";
 
@@ -45,10 +46,22 @@ export class DataRow {
 
   /**
    * Fügt den Datenpunkt der Datenreihe hinzu
+   * 
+   */
+
+  /**
+   * Fügt den Datenpunkt der Datenreihe hinzu
+   * @param datapoint der Datenpunkt
+   * @returns false, falls datapoint.value leer ist oder datapoint.relativeTime < 0
    */
   public addDatapoint(datapoint: { value: number[], relativeTime: number; }): boolean {
-    this.datapoint.push(new DataPoint(datapoint.value, datapoint.relativeTime));
-    return true;
+    if (datapoint.value.length == 0 || datapoint.relativeTime < 0) {
+      return false;
+    } else {
+      this.datapoint.push(new DataPoint(datapoint.value, datapoint.relativeTime));
+      return true;
+    }
+
   }
 
 
@@ -57,11 +70,13 @@ export class DataRow {
    * Gibt die Datenreihe zurück.
    * @returns value ist der Messwert und relativeTime die relative Zeit in Millisekunden zum Aufnahmestart.
    */
-  public getDataRow(): { sensorType: number, value: number[], relativeTime: number; }[] {
-    var dataRow: { sensorType: number, value: number[], relativeTime: number; }[] = [];
+  public getDataRow(): { sensorType: number, datapoint: { value: number[], relativeTime: number; }[]; } {
+    var dataRow: { sensorType: number, datapoint: { value: number[], relativeTime: number; }[]; };
+    var datapoint: { value: number[], relativeTime: number; }[] = [];
     for (let i = 0; i < this.datapoint.length; i++) {
-      dataRow[i] = { sensorType: this.sensor.getSensorTypeID(), value: this.datapoint[i].getValue(), relativeTime: this.datapoint[i].getRelativeTime() };
+      datapoint[i] = { value: this.datapoint[i].getValue(), relativeTime: this.datapoint[i].getRelativeTime() };
     }
+    dataRow = { sensorType: this.sensor.getSensorTypeID(), datapoint };
     return dataRow;
   }
 }

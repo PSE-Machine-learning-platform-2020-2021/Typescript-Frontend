@@ -133,7 +133,7 @@ export class Project {
    * @param dataSetID die Datensatz ID von der die Datenreihen gelesen werden sollen
    * @returns die Sensordaten von der Datenreihe
    */
-  getDataRows(dataSetID: number): { dataRows?: { sensorType: number, value: number[], relativeTime: number; }[][]; } {
+  getDataRows(dataSetID: number): { dataRows?: { sensorType: number, datapoint: { value: number[], relativeTime: number; }[]; }[]; } {
     for (let i = 0; i < this.dataSet.length; i++) {
       if (this.dataSet[i].getID() === dataSetID) {
         this.currentDataSet = this.dataSet[i];
@@ -147,7 +147,7 @@ export class Project {
    * Gibt die Datenreihen der aktuellen Datenreihe zurück
    * @returns die Sensordaten von der Datenreihe
    */
-  getCurrentDataRows(): { dataRows?: { sensorType: number, value: number[], relativeTime: number; }[][]; } {
+  getCurrentDataRows(): { dataRows?: { sensorType: number, datapoint: { value: number[], relativeTime: number; }[]; }[]; } {
     if (this.currentDataSet != null) {
       return { dataRows: this.currentDataSet.getDataRows() };
     }
