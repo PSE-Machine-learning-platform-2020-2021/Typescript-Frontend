@@ -118,7 +118,7 @@ export class DataSet {
    * @param labelName Ist bei Angabe der neue Name des Labels.
    * @returns falls das Label nicht existiert wird false zurück gegeben
    */
-  public setLabel(labelID: number, span?: { start: number, end: number; }, labelName?: string): boolean {
+  public setLabel(labelID: number, span: { start: number, end: number; }, labelName?: string): boolean {
     for (let i = 0; i < this.label.length; i++) {
       if (this.label[i].getID() === labelID) {
         this.label[i].setLabel(span, labelName);
