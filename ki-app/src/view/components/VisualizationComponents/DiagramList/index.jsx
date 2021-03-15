@@ -1,4 +1,4 @@
-import React, { Component } from 'react'
+import React, { Component } from 'react';
 import PubSub from 'pubsub-js';
 export default class DiagramList extends Component {
     state = {
@@ -28,36 +28,36 @@ export default class DiagramList extends Component {
     };
 
     handleClick = (diagram, index) => {
-        this.setState({ showDiagramIndex: index })
+        this.setState({ showDiagramIndex: index });
         //  PubSub.publish('getdiagram', diagram)
-    }
+    };
 
     componentDidMount() {
-        PubSub.subscribe("getrows", (_msg, dataSet) => {
+        PubSub.subscribe("visualizationDiagram", (_msg, { dataSetID, dataRows }) => {
             this.setState({
                 lineLabels: [],
-                dataSetID: -1000,
+                dataSetID: -1,
                 sensorRow: [],
                 datavalue: [],
                 time: []
-            })
-            this.setState({ dataSetID: dataSet.dataSetID })
+            });
+            this.setState({ dataSetID });
 
             //put each value Array in State
             var datavalues = [];
-            for (var i = 0; i < dataSet.rows.length; i++) {
-                this.state.sensorRow.push(dataSet.rows[i][0].sensorType);
+            for (var i = 0; i < dataRows.length; i++) {
+                this.state.sensorRow.push(dataRows[i].sensorType);
                 for (var dataCoordinate = 0; dataCoordinate < 3; dataCoordinate++) {
-                    for (var j = 0; j < dataSet.rows[i].length; j++) {
-                        datavalues.push(dataSet.rows[i][j].value[dataCoordinate]);
+                    for (var j = 0; j < dataRows[i].datapoint.length; j++) {
+                        datavalues.push(dataRows[i].datapoint[j].value[dataCoordinate]);
                     }
                     this.state.datavalue.push(datavalues);
-                    datavalues = []
+                    datavalues = [];
                 }
             }
             // eslint-disable-next-line
-            for (var j = 0; j < dataSet.rows[0].length; j++) {
-                this.state.time.push(dataSet.rows[0][j].relativeTime);
+            for (var j = 0; j < dataRows[0].datapoint.length; j++) {
+                this.state.time.push(dataRows[0].datapoint[j].relativeTime);
             }
 
             var newDatasets = [];
@@ -97,17 +97,24 @@ export default class DiagramList extends Component {
                 offsetGridLines: false,
                 pointDot: false
             };
-            const { dataSetID } = this.state
-            const newList = this.state.diagramList
-            newList.push({ dataSetID, lineLabels, data, options })
-            this.setState({ diagramList: newList })
+            const newList = this.state.diagramList;
+            for (i = 0; i < newList.length; i++) {
+                if (newList[i].dataSetID == dataSetID) {
+                    newList[i] = { dataSetID, lineLabels, data, options };
+                    break;
+                }
+            }
+            if (i == newList.length) {
+                newList.push({ dataSetID, lineLabels, data, options });
+            }
+            this.setState({ diagramList: newList });
         });
 
     }
 
     render() {
         var LineChart = require("react-chartjs").Line;
-        const { diagramList } = this.state
+        const { diagramList } = this.state;
 
 
         return (
@@ -124,7 +131,7 @@ export default class DiagramList extends Component {
                             }
 
                         </div>
-                    )
+                    );
                 })
                 }
 
@@ -135,7 +142,7 @@ export default class DiagramList extends Component {
                             {diagram.lineLabels}
                             <LineChart data={diagram.data} options={diagram.options} width="200" height="100" onClick={() => this.handleClick(diagram, index)} />
                         </div>
-                    )
+                    );
                 })
                 }
             </div>

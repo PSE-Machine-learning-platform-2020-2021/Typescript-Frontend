@@ -1,6 +1,6 @@
-import React from 'react'
+import React from 'react';
 import PubSub from 'pubsub-js';
-import './VisualizationPage.css'
+import './VisualizationPage.css';
 import { Page } from "../PageInterface";
 import { PageController } from "../../../controller/PageController";
 import { State } from "./State";
@@ -13,7 +13,7 @@ type Props = {
 };
 
 export class VisualizationPage extends React.Component<Props, State> implements Page {
-    state = new State()
+    state = new State();
     observers: PageController[] = [];
     constructor(props: Props) {
         super(props);
@@ -26,8 +26,8 @@ export class VisualizationPage extends React.Component<Props, State> implements 
             </div>
         );
         ReactDOM.render(VDOM, document.getElementById('root'));
-        this.getDatarows()
-        this.changetonextpage()
+        this.getDatarows();
+        this.changetonextpage();
     }
 
 
@@ -54,7 +54,7 @@ export class VisualizationPage extends React.Component<Props, State> implements 
     }
 
     getDatarows() {
-        //Beispiel
+        /*//Beispiel
         var emp = []
         emp.push([{ sensorType: 85124, value: [55, 66, 12], relativeTime: 0 },
         { sensorType: 85124, value: [26, 21, 2], relativeTime: 1 },
@@ -101,12 +101,12 @@ export class VisualizationPage extends React.Component<Props, State> implements 
     }
 
     changetonextpage() {
-        PubSub.unsubscribe('changepage')
+        PubSub.unsubscribe('changepage');
         PubSub.subscribe('changepage', (_msg: any) => {
             // eslint-disable-next-line
-            this.state.currentState = States.ChangeToCreation
-            this.notify()
+            this.state.currentState = States.ChangeToCreation;
+            this.notify();
 
-        })
+        });
     }
 }

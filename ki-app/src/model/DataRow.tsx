@@ -1,6 +1,6 @@
 import { relative } from "node:path";
 import { DataPoint } from "./DataPoint";
-import { SensorData } from "./SensorData";
+import { AccelerometerData, GyroscopeData, MagnetometerData } from "./SensorData";
 
 /**
  * Die Klasse DataRow beschreibt eine Reihe aufgenommener Daten eines Sensors.
@@ -8,14 +8,14 @@ import { SensorData } from "./SensorData";
 export class DataRow {
   private id: number; //Dies ist die DataRow ID, diese ist eindeutig für Datensätze.
   private datapoint: DataPoint[] = []; //Dies ist Datenreihe, eine Reihe von Datenpunkten.
-  private sensor: SensorData; //Dies ist der Sensor von dem die Daten gelesen wurden.
+  private sensor: AccelerometerData | GyroscopeData | MagnetometerData; //Dies ist der Sensor von dem die Daten gelesen wurden.
 
   /**
    * Eine neue Datenreihe erstellen.
    * @param sensor Sensor, von dem die Daten gelesen werden.
    * @param dataRowID Eine eindeutige Datenreihen ID.
    */
-  constructor(sensor: SensorData, dataRowID: number);
+  constructor(sensor: AccelerometerData | GyroscopeData | MagnetometerData, dataRowID: number);
 
   /**
    * Eine bereits existierende Datenreihe kann wie folgt in das Model geladen werden.
@@ -26,8 +26,8 @@ export class DataRow {
    * @param dataRow.value der Sensor Messwert
    * @param dataRow.relativeTime die relative Zeit zum Aufnahmestart
    */
-  constructor(sensor: SensorData, dataRowID: number, dataRow: { value: number[], relativeTime: number; }[]);
-  constructor(sensor: SensorData, dataRowID: number, dataRow?: { value: number[], relativeTime: number; }[]) {
+  constructor(sensor: AccelerometerData | GyroscopeData | MagnetometerData, dataRowID: number, dataRow: { value: number[], relativeTime: number; }[]);
+  constructor(sensor: AccelerometerData | GyroscopeData | MagnetometerData, dataRowID: number, dataRow?: { value: number[], relativeTime: number; }[]) {
     this.sensor = sensor;
     this.id = dataRowID;
     if (dataRow != null) {
@@ -76,7 +76,8 @@ export class DataRow {
     for (let i = 0; i < this.datapoint.length; i++) {
       datapoint[i] = { value: this.datapoint[i].getValue(), relativeTime: this.datapoint[i].getRelativeTime() };
     }
-    dataRow = { sensorType: this.sensor.getSensorTypeID(), datapoint };
+    var sensorType: number = this.sensor.SensorTypeID;
+    dataRow = { sensorType, datapoint };
     return dataRow;
   }
 }
