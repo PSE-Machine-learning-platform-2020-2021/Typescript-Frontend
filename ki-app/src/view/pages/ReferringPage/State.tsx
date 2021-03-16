@@ -5,7 +5,7 @@ export class State implements IState {
   currentState: States = States.NeedMessage;
   languageCode: string = "de";
   messages: { text: string, id: number; }[] = [];
-  projectData?: { projectID: number; projectName: string; AIModelID: number[]; }[];
+  projectData?: { projectID: number; projectName: string; AIModelID: number[]; }[] = [];
   currentProject?: { projectID: number, projectName: string, choosenAIModelID: number; };
   // chosenModel?: string;
   adminData?: { name: string, email: string, password: string; };
@@ -16,4 +16,5 @@ export class State implements IState {
   //aiParameter?: 
   qr?: string;
   wait?: Promise<any>
+  islogedIn?: false
 }

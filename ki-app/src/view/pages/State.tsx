@@ -32,7 +32,7 @@ export interface IState {
     slidingWindowSize?: number,      // optional
     slidingWindowStep?: number;        // optional
   };
-
+  islogedIn?: boolean
 
   chosenEmails?: string[];
   wait?: Promise<any>;

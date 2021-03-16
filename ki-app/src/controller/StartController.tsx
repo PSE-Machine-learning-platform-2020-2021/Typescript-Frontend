@@ -42,6 +42,8 @@ export class StartController implements PageController {
 
 
         // })
+        this.state.languageCode = "TEST"
+        this.page.setState(this.state)
     }
 
 

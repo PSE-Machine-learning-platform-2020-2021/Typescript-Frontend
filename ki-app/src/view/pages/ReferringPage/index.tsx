@@ -1,4 +1,3 @@
-import React from 'react';
 import PubSub from 'pubsub-js';
 import ConstantsText from '../../components/ReferringComponents/ConstantsText';
 import NewProjectButton from '../../components/ReferringComponents/NewProjectButton';
@@ -6,40 +5,41 @@ import LoadModelButton from '../../components/ReferringComponents/LoadModelButto
 import { Page } from "../PageInterface";
 import { PageController } from "../../../controller/PageController";
 import { State } from "./State";
-import ReactDOM from 'react-dom';
 import { States } from '../State';
 import LoginWindow from '../../components/ReferringComponents/LoginWindow';
+import {NotificationContainer, NotificationManager} from 'react-notifications';
+import 'react-notifications/lib/notifications.css';
+import ReactDOM from 'react-dom';
 
-type Props = {
 
-};
+export class ReferringPage implements Page {
 
-export class ReferringPage extends React.Component<Props, State> implements Page {
+    private state: State
+    private observers: PageController[] = [];
 
-    state = new State();
-    observers: PageController[] = [];
-    constructor(props: Props) {
-        super(props);
+    constructor() {
+        this.state = new State()
+        ReactDOM.render(this.render(), document.getElementById('root'));
+    }
 
+    render() {
         const VDOM = (
             <div>
                 <ConstantsText />
-                <LoginWindow />
+                <LoginWindow pageRegister = {this.register.bind(this)} pageLogin = {this.login.bind(this)}/>
                 <br /><br /><br /><br /><br />
-                <NewProjectButton />
+                <NewProjectButton disabled = {!this.state.islogedIn!}/>
                 <br />
-                <LoadModelButton />
+                <LoadModelButton    pageLoadModel = {this.loadmodel} 
+                                    disabled = {!this.state.islogedIn!} 
+                                    projectData = {this.state.projectData!} 
+                                    pageSetCurrentprojekt = {this.setCurrentProjekt}
+                />
+
+                <NotificationContainer/>
             </div>
         );
-        ReactDOM.render(VDOM, document.getElementById('root'));
-        this.createNewProject();
-        this.register();
-        this.login();
-        this.getmodellist();
-        this.getProjectList();
-        this.loadproject();
-        this.changetovisu();
-        this.loadmodel();
+        return VDOM
     }
 
     attach(observer: PageController) {
@@ -69,114 +69,80 @@ export class ReferringPage extends React.Component<Props, State> implements Page
         PubSub.subscribe('createnewproject', (_msg: any, data: string) => {
             //console.log(this.state.currentState)
             // eslint-disable-next-line
-            this.state.currentState = States.NewProjekt;
+            this.setState({currentState: States.NewProjekt})
             //console.log(this.state.currentState)
             // eslint-disable-next-line
-            this.state.currentProject = { projectID: -10000, projectName: data, choosenAIModelID: -10000 };
+            this.setState({currentProject: { projectID: -10000, projectName: data, choosenAIModelID: -10000 }})
             //hier notifty for createnewProject
             this.notify();
         });
     }
 
-    register() {
-        PubSub.unsubscribe('register')
-        PubSub.subscribe('register', (_msg: any, data: { name: string, email: string, password: string; }) => {
-            // eslint-disable-next-line
-            this.state.adminData = data;
-            // eslint-disable-next-line
-            this.state.currentState = States.Register;
-            //console.log(this.state.currentState)
-            this.notify();
-            this.state.wait!.then(() => {
-                //console.log(this.state.currentState)
-                let flag: boolean;
+    register(username: string, email: string, password: string) {
+        /** mit controller weiter veraendern*/
+    var pattern = /^([A-Za-z0-9_\-.])+@([A-Za-z0-9_\-.])+\.([A-Za-z])+$/
+    if (!pattern.test(email)) {
+        NotificationManager.error("Email-Adresse nicht gültig", "", 3000)
+    } else {
+      // eslint-disable-next-line
+      this.state.adminData! = {name: username, email: email, password: password}
+      // eslint-disable-next-line
+      this.state.currentState = States.Register
+      //console.log(this.state.currentState)
+      this.notify();
+      this.state.wait!.then(() => {
+          //console.log(this.state.currentState)
+          // eslint-disable-next-line
+          if (this.state.currentState != States.Register) {
+            alert('Registrieren fehlgeschlagen!');
+          }
+          this.render()
+      });
+    }
+}
+
+    login(email: string, password: string) {
+                // console.log(this.state.currentState)
                 // eslint-disable-next-line
-                if (this.state.currentState != States.Register) {
-                    flag = false;
-                } else {
-                    PubSub.publish('disabled', false);
-                    flag = true;
-                }
-                PubSub.publish('registerstatus', flag);
-            });
-        });
-    }
-
-    login() {
-        PubSub.unsubscribe('login')
-        PubSub.subscribe('login', (_msg: any, data: { name: string, email: string, password: string; }) => {
-            // console.log(this.state.currentState)
-            // eslint-disable-next-line
-            this.state.adminData = data;
-            // eslint-disable-next-line
-            this.state.currentState = States.Login;
-            this.notify();
-            let flag: boolean;
-            this.state.wait!.then(() => {
+                this.state.adminData! = {name: "", email: email, password: password}
                 // eslint-disable-next-line
-                if (this.state.currentState as States == States.LoginFail as States) {
-                    flag = false;
-                } else {
-                    flag = true;
-                    PubSub.publish('disabled', false);
-                    PubSub.publish('getprojectlist', this.state.projectData);
-                }
-                PubSub.publish('loginstatus', flag);
-
-            });
-        });
+                this.state.currentState = States.Login
+                this.notify();
+                this.state.wait!.then(() => {
+                    // eslint-disable-next-line
+                    if (this.state.currentState as States == States.LoginFail as States) {
+                        alert('Login fehlgeschlagen!');
+                    }
+                    this.render()
+                });
     }
 
-    getmodellist() {
-        PubSub.unsubscribe('needmodellist')
-        PubSub.subscribe('needmodellist', (msg: any, data: { projectID: number; }) => {
-            for (let index = 0; index < this.state.projectData!.length; index++) {
-                // eslint-disable-next-line
-                if (data.projectID == this.state.projectData![index].projectID) {
-                    PubSub.publish('getmodellist', this.state.projectData![index]);
-                    return;
-                }
-            }
-
-        });
-    }
-
-    getProjectList() {
-        PubSub.unsubscribe('needprojectlist')
-        PubSub.subscribe('needprojectlist', () => {
-            PubSub.publish('getprojectlist', this.state.projectData!);
-        });
-    }
-
-    loadproject() {
-        PubSub.unsubscribe('loadproject')
-        PubSub.subscribe('loadproject', (_msg: any, data: { projectID: number, projectName: string, choosenAIModelID: number; }) => {
+    loadproject(data: { projectID: number, projectName: string, choosenAIModelID: number }) {
+            this.state.currentProject = data
             // eslint-disable-next-line
-            this.state.currentProject = { projectID: data.projectID, projectName: data.projectName, choosenAIModelID: -10000 };
-            // eslint-disable-next-line
-            this.state.currentState = States.LoadProject;
+            this.state.currentState = States.LoadProject
             //console.log(data.projectID);
             this.notify();
-        });
+    }
+
+    setCurrentProjekt( currentProject: { projectID: number, projectName: string, choosenAIModelID: number }) {
+        this.state.currentProject = currentProject
     }
 
     changetovisu() {
-        PubSub.unsubscribe('changetovisu')
-        PubSub.subscribe('changetovisu', (_msg: any) => {
-            // eslint-disable-next-line
-            this.state.currentState = States.ChangeToVisual;
-            this.notify();
-        });
+        this.state.currentState = States.ChangeToVisual
+        this.notify();
     }
 
-    loadmodel() {
-        PubSub.unsubscribe('loadmodel')
-        PubSub.subscribe('loadmodel', (_msg: any, data: { projectID: number, projectName: string, choosenAIModelID: number; }) => {
-            // eslint-disable-next-line
-            this.state.currentProject = data;
-            // eslint-disable-next-line
-            this.state.currentState = States.LoadModel;
-            this.notify();
-        });
+    loadmodel(chosenmodelID: number) {
+        this.state.currentProject!.choosenAIModelID = chosenmodelID
+        this.state.currentState =  States.LoadModel
+        this.notify();
+    }
+
+    setState(state: any) {
+        this.state = state
+        ReactDOM.render(this.render(), document.getElementById('root'))
+        this.notify()
     }
 }

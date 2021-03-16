@@ -6,6 +6,7 @@ import { DeliveryController } from "./DeliveryController";
 import { VisualizationController } from "./VisualizationController";
 import { ReferringPage } from "../view/pages/ReferringPage/index";
 import { QRCode, ErrorCorrectLevel, QRNumber, QRAlphaNum, QR8BitByte, QRKanji } from 'qrcode-generator-ts/js';
+import ReactDOM from 'react-dom';
 
 
 /**
@@ -19,11 +20,10 @@ export class RefferingController implements PageController {
      * Konstruktor des Seitenverwalters. Registriert sich als Beobachter auf seiner Seite und setzt den Start Status. 
      */
     constructor() {
-        this.page = new ReferringPage({});
+        this.page = new ReferringPage();
         //this.page = new StartPage({});
         //this.page = new ModelCreationPage({});
         // this.page = new VisualizationPage({});
-
         this.page.attach(this);
         this.state = this.page.getState();
         this.update();
@@ -33,6 +33,7 @@ export class RefferingController implements PageController {
      * Die Update Methode des Seitenverwalters.
      */
     update() {
+        return
         this.state = this.page.getState();
         switch (this.state.currentState) {
             case States.LoadProject:
@@ -81,7 +82,7 @@ export class RefferingController implements PageController {
                     this.state.projectData! = data;
                     this.page.setState(this.state);
                 });
-
+                this.state.islogedIn! = true
             } else {
                 this.state.currentState = States.LoginFail;
             }
@@ -104,9 +105,18 @@ export class RefferingController implements PageController {
         this.state.currentState = States.waitForDB;
         this.page.setState(this.state);
         loginSucess.then((value: boolean) => {
-            if (!value) {
+            if (value) {
+                this.state.projectData! = [];
+                let projectData: Promise<{ projectID: number; projectName: string; AIModelID: number[]; }[]> = MainController.getInstance().getFacade().getProjectMetas();
+                projectData.then((data: { projectID: number; projectName: string; AIModelID: number[]; }[]) => {
+                    this.state.projectData! = data;
+                    this.page.setState(this.state);
+                });
+                this.state.islogedIn! = true
+            } else {
                 this.state.currentState = States.LoginFail;
             }
+            this.page.setState(this.state);
         });
     }
 

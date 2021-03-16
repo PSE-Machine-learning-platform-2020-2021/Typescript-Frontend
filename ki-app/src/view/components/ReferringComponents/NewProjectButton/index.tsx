@@ -6,12 +6,12 @@ import './NewProjectButton.css'
 
 export default class NewProjectButton extends Component {
 
-
   state = {
     click: false,
     projectName: '',
-    disabled: true
   };
+
+  props = { disabled: true }
 
   changeProjectName = (e: React.ChangeEvent<HTMLInputElement>) => {
     this.setState({
@@ -36,8 +36,8 @@ export default class NewProjectButton extends Component {
   render() {
     return (
       <div className="newProject">
-        <input type="text" value={this.state.projectName} onChange={this.changeProjectName} placeholder='Neuen Projektnamen eingeben' disabled={this.state.disabled} />
-        <button onClick={() => this.handleCreate()} className="newProject-button" id="new" disabled={this.state.disabled}>Neues Projekt</button>
+        <input type="text" value={this.state.projectName} onChange={this.changeProjectName} placeholder='Neuen Projektnamen eingeben' disabled={this.props.disabled} />
+        <button onClick={() => this.handleCreate()} className="newProject-button" id="new" disabled={this.props.disabled}>Neues Projekt</button>
         {this.state.click ? <div> <QRImage /><ChangeToVisuBtn /><LinkText /></div> : null}
       </div>
     );

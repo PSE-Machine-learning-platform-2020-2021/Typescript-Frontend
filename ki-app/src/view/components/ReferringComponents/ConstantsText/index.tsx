@@ -1,9 +1,14 @@
+import { Method } from '@testing-library/dom'
 import React, { Component } from 'react'
 import './ConstantsText.css'
-export default class ConstantsText extends Component {
+
+interface Props {
+}
+
+export default class ConstantsText extends  React.Component<Props, {}> {
     render() {
         return (
-            <h1 className='title'>Explorer</h1>
+            <h1 className='title'>Explorer </h1>
         )
     }
 }

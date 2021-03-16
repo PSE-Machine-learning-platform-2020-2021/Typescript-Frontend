@@ -21,6 +21,7 @@
     "react-chartjs-2": "^2.11.1",
     "react-dom": "^17.0.1",
     "react-new-window": "^0.1.2",
+    "react-notifications": "^1.7.2",
     "react-scripts": "^4.0.1",
     "ts-node": "^9.1.1",
     "web-vitals": "^0.2.4"

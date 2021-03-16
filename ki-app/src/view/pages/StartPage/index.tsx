@@ -8,7 +8,7 @@ import { State } from "./State";
 import ReactDOM from 'react-dom';
 import { States } from '../State';
 
-type Props = {
+interface Props  {
 
 };
 
@@ -20,7 +20,7 @@ export class StartPage extends React.Component<Props, State> implements Page {
         const VDOM = (
             <div>
                 <Title />
-                <Input />
+                <Input testString = {this.state.languageCode}/>
             </div>
         );
         ReactDOM.render(VDOM, document.getElementById('root'));

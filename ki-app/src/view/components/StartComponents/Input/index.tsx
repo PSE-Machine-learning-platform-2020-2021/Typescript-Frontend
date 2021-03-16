@@ -1,7 +1,11 @@
 import React, { Component } from "react";
 import input from "./index.module.css";
 
-export default class Input extends Component {
+interface Props {
+  testString: string
+}
+
+export default class Input extends Component<Props, {}> {
   state = {
     name: "",
     usedSensorTypes: [] as number[],
@@ -74,7 +78,7 @@ export default class Input extends Component {
       const readTime = this.state.collectionTime;
       PubSub.publish('settingsFinish', { newDataSetName, usedSensorTypes, waitTime, readTime, availableSensorTypes });
     } else {
-      alert("Deine Eingabe ist ungültig.");
+      alert("Deine Eingabe ist ungültig." + this.props.testString);
     }
   };
 
