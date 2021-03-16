@@ -18,28 +18,24 @@ test("creat and getter", () => {
 test("setLabel", () => {
     const label = new Label("Laufen", 28, 0, 17.456);
     //setLabel mit validem Zeitfenster
-    label.setLabel({ start: 7.42, end: 19 });
-    expect(label.getID()).toBe(28);
-    expect(label.getLabel().name).toBe("Laufen");
-    expect(label.getLabel().id).toBe(28);
-    expect(label.getLabel().start).toBe(7.42);
-    expect(label.getLabel().end).toBe(19);
-    //setLabel mit invalidem Zeitfenster
-    label.setLabel({ start: 19.25, end: 19 });
+    expect(label.setLabel({ start: 7.42, end: 19 })).toBeTruthy();
     expect(label.getID()).toBe(28);
     expect(label.getLabel().name).toBe("Laufen");
     expect(label.getLabel().id).toBe(28);
     expect(label.getLabel().start).toBe(7.42);
     expect(label.getLabel().end).toBe(19);
     //setLabel mit neuem Namen und validem Zeitfenster
-    label.setLabel({ start: 19.25, end: 19.26 }, "Treppen steigen");
+    expect(label.setLabel({ start: 19.25, end: 19.26 }, "Treppen steigen")).toBeTruthy();
     expect(label.getID()).toBe(28);
     expect(label.getLabel().name).toBe("Treppen steigen");
     expect(label.getLabel().id).toBe(28);
     expect(label.getLabel().start).toBe(19.25);
     expect(label.getLabel().end).toBe(19.26);
+    //setLabel mit invalidem Zeitfenster
+    expect(label.setLabel({ start: 19.25, end: 19 })).toBeFalsy();
     //setLabel mit neuem Namen und invalidem Zeitfenster
-    label.setLabel({ start: 19.266, end: 19.26 }, "schlafen");
+    expect(label.setLabel({ start: 19.266, end: 19.26 }, "schlafen")).toBeFalsy();
+    //Test, dass keine falschen Änderungen aufkamen
     expect(label.getID()).toBe(28);
     expect(label.getLabel().name).toBe("Treppen steigen");
     expect(label.getLabel().id).toBe(28);

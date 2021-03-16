@@ -74,8 +74,7 @@ export class DataSet {
   addDatapoint(dataRowID: number, datapoint: { value: number[], relativeTime: number; }): boolean {
     for (let i = 0; i < this.dataRow.length; i++) {
       if (this.dataRow[i].getID() === dataRowID) {
-        this.dataRow[i].addDatapoint(datapoint);
-        return true;
+        return this.dataRow[i].addDatapoint(datapoint);
       }
     }
     return false;
@@ -102,6 +101,9 @@ export class DataSet {
    * @returns falls das Label mit der ID schon existiert wird false zurück gegeben
    */
   public createLabel(labelID: number, span: { start: number, end: number; }, labelName: string): boolean {
+    if (span.start < 0 || span.end < span.start) {
+      return false;
+    }
     for (let i = 0; i < this.label.length; i++) {
       if (this.label[i].getID() === labelID) {
         return false;
@@ -121,8 +123,7 @@ export class DataSet {
   public setLabel(labelID: number, span: { start: number, end: number; }, labelName?: string): boolean {
     for (let i = 0; i < this.label.length; i++) {
       if (this.label[i].getID() === labelID) {
-        this.label[i].setLabel(span, labelName);
-        return true;
+        return this.label[i].setLabel(span, labelName);
       }
     }
     return false;

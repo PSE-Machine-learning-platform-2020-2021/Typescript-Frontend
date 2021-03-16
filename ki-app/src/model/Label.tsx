@@ -27,13 +27,17 @@ export class Label {
    * @param end Ist die neue Endzeit des Labels.
    * @param name Ist bei angabe der neue Name des Labels.
    */
-  setLabel(span: { start: number, end: number; }, name?: string): void {
+  setLabel(span: { start: number, end: number; }, name?: string): boolean {
     if (span != null) {
       const setted: boolean = this.timeSpan.setTimeSpan(span);
-      if (name != null && setted) {
-        this.name = name;
+      if (setted) {
+        if (name != null) {
+          this.name = name;
+        }
+        return true;
       }
     }
+    return false;
   }
 
   /**
