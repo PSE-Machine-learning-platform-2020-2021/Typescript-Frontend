@@ -1,5 +1,3 @@
-import React, { Component } from 'react';
-import PubSub from 'pubsub-js';
 import Title from '../../components/StartComponents/Title';
 import Input from '../../components/StartComponents/Input';
 import { Page } from "../PageInterface";
@@ -7,48 +5,52 @@ import { PageController } from "../../../controller/PageController";
 import { State } from "./State";
 import ReactDOM from 'react-dom';
 import { States } from '../State';
+import {NotificationContainer, NotificationManager} from 'react-notifications';
+import 'react-notifications/lib/notifications.css';
 
-interface Props  {
-
-};
-
-export class StartPage extends React.Component<Props, State> implements Page {
-    state = new State();
+export class StartPage implements Page {
+    state: State
     observers: PageController[] = [];
-    constructor(props: Props) {
-        super(props);
+
+    constructor(admin: string) {
+        this.state = new State()
+        this.update()
+        NotificationManager.success(admin)
+    }
+
+    update() {
+        this.notify()
         const VDOM = (
             <div>
                 <Title />
-                <Input testString = {this.state.languageCode}/>
+                <Input availableSensorTypes = {this.state.recordingSettings.availableSensorTypes} pageChangeSettings = {this.changeSettings.bind(this)}/>
+                <NotificationContainer/>
             </div>
+            
         );
         ReactDOM.render(VDOM, document.getElementById('root'));
-        this.changeSettings();
     }
 
-    /**
+     /**
      * Prüft ob der Nutzer "Start" druckt und ändert den Zustand.
      */
-    changeSettings() {
-        PubSub.subscribe('settingsFinish', (_msg: any, data: {
-            newDataSetName: string,
-            usedSensorTypes: number[],
-            waitTime: number,
-            readTime: number,
-            availableSensorTypes: { sensorTypID: number, sensorType: string, chosen: boolean; }[];
-        }) => {
-            this.state.recordingSettings = data;
-            this.state.currentState = States.ChangeToDataCollection;
-            this.notify();
-        });
+      changeSettings(recordingSettings: {
+        newDataSetName: string, 
+        usedSensorTypes: number[], 
+        waitTime: number, 
+        readTime: number, 
+        availableSensorTypes: { sensorTypID: number, sensorType: string, chosen: boolean; }[] 
+    }) {
+        this.state.recordingSettings = recordingSettings;
+        this.state.currentState = States.ChangeToDataCollection;
+        this.notify();
     }
 
     /**
      * Die Methoden für Beobachtermuster
      * @param observer Beobachter,nähmlich Controller
      */
-    attach(observer: PageController) {
+     attach(observer: PageController) {
         this.observers.push(observer);
     }
 
@@ -68,5 +70,10 @@ export class StartPage extends React.Component<Props, State> implements Page {
 
     getState() {
         return this.state;
+    }
+
+    setState(state: any) {
+        this.state = state
+        this.update()
     }
 }

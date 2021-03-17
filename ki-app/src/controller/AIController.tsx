@@ -19,7 +19,7 @@ export class AIController implements PageController {
     /**
     * Seite welche gerade von dem Controller verwaltet wird
     */
-    private page: Page = new StartPage( {} );
+    private page: Page = new StartPage("Willkomen!");
     /**
     * Status der Seite
     */

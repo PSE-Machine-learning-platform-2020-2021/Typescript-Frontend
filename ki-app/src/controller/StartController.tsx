@@ -10,7 +10,7 @@ export class StartController implements PageController {
 
     private urlParams: URLSearchParams;
 
-    private page: Page = new StartPage({});
+    private page: Page 
     private sensorManager = new SensorManager();
     private state: IState;
     /**
@@ -19,6 +19,8 @@ export class StartController implements PageController {
     constructor() {
         const queryString = window.location.search;
         this.urlParams = new URLSearchParams(queryString);
+        let admin = this.urlParams.get("Admin")!
+        this.page = new StartPage("Wilkommen! Sie erfassen für " + admin);
         this.state = this.page.getState();
         this.page.attach(this);
         MainController.getInstance().getFacade().registerDataminer("Miner", +this.urlParams.get("SessionID")!);
@@ -32,18 +34,7 @@ export class StartController implements PageController {
 
                 }
                 this.page.setState(this.state);
-                PubSub.publish("setAvailableSensors", this.state.recordingSettings!.availableSensorTypes);
             });
-        //Promise<{ sensorTypID: number; sensorType: string; }[]> = MainController.getInstance().getFacade().getAvailableSensors();
-        //
-        //this.state.currentState = States.waitForDB
-        //this.page.setState(this.state)
-        //availableSensor.then((sensors) => {
-
-
-        // })
-        this.state.languageCode = "TEST"
-        this.page.setState(this.state)
     }
 
 
@@ -57,12 +48,14 @@ export class StartController implements PageController {
             case States.ChangeToDataCollection:
                 this.start();
                 break;
-            case States.SetLanguage:
-                this.page.setState(MainController.getInstance().setLanguage(this.state.languageCode));
-                break;
-            case States.NeedMessage:
-                this.page.setState(MainController.getInstance().getMessage(this.state.messages));
-                break;
+                case States.SetLanguage:
+                    MainController.getInstance().setLanguage(this.state.languageCode)
+                    break;
+                case States.NeedMessage:
+                    this.state.messages = MainController.getInstance().getMessage(this.state.messages)!
+                    this.state.currentState = States.waitForDB
+                    this.page.setState(this.state);
+                    break;
             default:
                 break;
         }
