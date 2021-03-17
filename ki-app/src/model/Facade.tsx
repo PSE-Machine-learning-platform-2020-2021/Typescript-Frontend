@@ -170,11 +170,11 @@ export class Facade {
    * @param dataSetID die Datensatz ID von der die Datenreihen gelesen werden sollen
    * @returns die Sensordaten von der Datenreihe
    */
-  getDataRows(dataSetID: number): { dataRows?: { sensorType: number, datapoint: { value: number[], relativeTime: number; }[]; }[]; } {
+  getDataRows(dataSetID: number): { dataRows: { sensorType: number, datapoint: { value: number[], relativeTime: number; }[]; }[]; } {
     if (this.user != null) {
       return this.user.getDataRows(dataSetID);
     }
-    return {};
+    return { dataRows: [] };
   }
 
   /**
@@ -182,11 +182,11 @@ export class Facade {
    * @param dataSetID die Datensatz ID von der die Datenreihen gelesen werden sollen
    * @returns die Sensordaten von der Datenreihe
    */
-  getCurrentDataRows(): { dataRows?: { sensorType: number, datapoint: { value: number[], relativeTime: number; }[]; }[]; } {
+  getCurrentDataRows(): { dataRows: { sensorType: number, datapoint: { value: number[], relativeTime: number; }[]; }[]; } {
     if (this.user != null) {
       return this.user.getCurrentDataRows();
     }
-    return {};
+    return { dataRows: [] };
   }
 
   /**
@@ -384,11 +384,11 @@ export class Facade {
   }
 
 
-  getLabels(): { labels?: { name: string, id: number, start: number, end: number; }[]; } {
+  getLabels(): { labels: { name: string, id: number, start: number, end: number; }[]; } {
     if (this.user != null) {
       return this.user.getLabels();
     }
-    return {};
+    return { labels: [] };
   }
 
   classify(aiId: number, dataSetId: number, callBack: <R = unknown>(prediction: string | object) => R): void {

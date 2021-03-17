@@ -57,11 +57,11 @@ export abstract class User {
    * @param dataSetID die Datensatz ID von der die Datenreihen gelesen werden sollen
    * @returns die Sensordaten von der Datenreihe
    */
-  getDataRows(dataSetID: number): { dataRows?: { sensorType: number, datapoint: { value: number[], relativeTime: number; }[]; }[]; } {
+  getDataRows(dataSetID: number): { dataRows: { sensorType: number, datapoint: { value: number[], relativeTime: number; }[]; }[]; } {
     if (this.currentProject != null) {
       return this.currentProject.getDataRows(dataSetID);
     } else {
-      return {};
+      return { dataRows: [] };
     }
   }
 
@@ -70,12 +70,12 @@ export abstract class User {
    * @param dataSetID die Datensatz ID von der die Datenreihen gelesen werden sollen
    * @returns die Sensordaten von der Datenreihe
    */
-  getCurrentDataRows(): { dataRows?: { sensorType: number, datapoint: { value: number[], relativeTime: number; }[]; }[]; } {
+  getCurrentDataRows(): { dataRows: { sensorType: number, datapoint: { value: number[], relativeTime: number; }[]; }[]; } {
     if (this.currentProject != null) {
       return this.currentProject.getCurrentDataRows();
     } else {
       console.log(this.currentProject);
-      return {};
+      return { dataRows: [] };
     }
   }
 
@@ -167,11 +167,11 @@ export abstract class User {
    * Gibt alle Daten von allen Labeln vom aktuellen Datensatz zurück.
    * @returns leer, falls kein aktueller Datensatz existiert
    */
-  getLabels(): { labels?: { name: string, id: number, start: number, end: number; }[]; } {
+  getLabels(): { labels: { name: string, id: number, start: number, end: number; }[]; } {
     if (this.currentProject != null) {
       return this.currentProject.getLabels();
     }
-    return {};
+    return { labels: [] };
   }
 
   /**
@@ -382,7 +382,7 @@ export class Dataminer extends User {
   loadProject(project: {
     projectID: number, sessionID: number, projectName: string, projectData?: {
       aiModelID?: number[],
-      dataSet?: {
+      dataSet: {
         dataRowSensors: SensorData[], dataSetID: number, dataSetName: string, generateDate: number,
         dataRows: {
           dataRowID: number, recordingStart: number,
@@ -417,7 +417,7 @@ export class AIModelUser extends User {
   loadProject(project: {
     projectID: number, sessionID: number, projectName: string, projectData?: {
       aiModelID?: number[],
-      dataSet?: {
+      dataSet: {
         dataRowSensors: SensorData[], dataSetID: number, dataSetName: string, generateDate: number,
         dataRows: {
           dataRowID: number, recordingStart: number,

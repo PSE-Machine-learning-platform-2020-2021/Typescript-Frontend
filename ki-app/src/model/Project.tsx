@@ -26,7 +26,7 @@ export class Project {
      */
   constructor(projectID: number, sessionID: number, projectName: string, projectData?: {
     aiModelID?: number[],
-    dataSet?: {
+    dataSet: {
       dataRowSensors: SensorData[], dataSetID: number, dataSetName: string, generateDate: number,
       dataRows: {
         dataRowID: number, recordingStart: number,
@@ -44,10 +44,8 @@ export class Project {
           this.aiModel.push(new AIModel(projectData.aiModelID[i]));
         }
       }
-      if (projectData.dataSet != null) {
-        for (let i = 0; i < projectData.dataSet.length; i++) {
-          this.dataSet.push(new DataSet(projectData.dataSet[i].dataRowSensors, projectData.dataSet[i].dataSetID, projectData.dataSet[i].dataSetName, projectData.dataSet[i].generateDate, projectData.dataSet[i].dataRows, projectData.dataSet[i].label));
-        }
+      for (let i = 0; i < projectData.dataSet.length; i++) {
+        this.dataSet.push(new DataSet(projectData.dataSet[i].dataRowSensors, projectData.dataSet[i].dataSetID, projectData.dataSet[i].dataSetName, projectData.dataSet[i].generateDate, projectData.dataSet[i].dataRows, projectData.dataSet[i].label));
       }
     }
 
@@ -133,25 +131,25 @@ export class Project {
    * @param dataSetID die Datensatz ID von der die Datenreihen gelesen werden sollen
    * @returns die Sensordaten von der Datenreihe
    */
-  getDataRows(dataSetID: number): { dataRows?: { sensorType: number, datapoint: { value: number[], relativeTime: number; }[]; }[]; } {
+  getDataRows(dataSetID: number): { dataRows: { sensorType: number, datapoint: { value: number[], relativeTime: number; }[]; }[]; } {
     for (let i = 0; i < this.dataSet.length; i++) {
       if (this.dataSet[i].getID() === dataSetID) {
         this.currentDataSet = this.dataSet[i];
         return { dataRows: this.dataSet[i].getDataRows() };
       }
     }
-    return {};
+    return { dataRows: [] };
   }
 
   /**
    * Gibt die Datenreihen der aktuellen Datenreihe zurück
    * @returns die Sensordaten von der Datenreihe
    */
-  getCurrentDataRows(): { dataRows?: { sensorType: number, datapoint: { value: number[], relativeTime: number; }[]; }[]; } {
+  getCurrentDataRows(): { dataRows: { sensorType: number, datapoint: { value: number[], relativeTime: number; }[]; }[]; } {
     if (this.currentDataSet != null) {
       return { dataRows: this.currentDataSet.getDataRows() };
     }
-    return {};
+    return { dataRows: [] };
   }
 
   /**
@@ -195,10 +193,10 @@ export class Project {
    * Gibt alle Daten von allen Labeln vom aktuellen Datensatz zurück.
    * @returns leer, falls kein aktueller Datensatz existiert
    */
-  getLabels(): { labels?: { name: string, id: number, start: number, end: number; }[]; } {
+  getLabels(): { labels: { name: string, id: number, start: number, end: number; }[]; } {
     if (this.currentDataSet != null) {
       return { labels: this.currentDataSet.getLabels() };
     }
-    return {};
+    return { labels: [] };
   }
 }

@@ -10,8 +10,9 @@ test("creat and getter", () => {
     var dataSet = new DataSet([sensor], 17, "Die tolle Aufnahme",);
     expect(dataSet.getID()).toBe(17);
     expect(dataSet.getLabels().length).toBe(0);
-    expect(dataSet.getDataRows()[0].sensorType).toBe(2);
-    expect(dataSet.getDataRows()[0].datapoint.length).toBe(0);
+    var dataRow = dataSet.getDataRows()[0];
+    expect(dataRow.sensorType).toBe(2);
+    expect(dataRow.datapoint.length).toBe(0);
     expect(dataSet.getName()).toBe("Die tolle Aufnahme");
     //Konstruktor mit generateDate, dataRows
     const dataRows = [
@@ -31,12 +32,13 @@ test("creat and getter", () => {
     var dataSet = new DataSet([sensor, sensor], 33, "Die wundervolle Aufnahme", 132948239, dataRows, labels);
     expect(dataSet.getID()).toBe(33);
     for (let i = 0; i < dataRows.length; i++) {
-        expect(dataSet.getDataRows()[i].sensorType).toBe(2);
+        var datarow = dataSet.getDataRows()[i];
+        expect(datarow.sensorType).toBe(2);
         for (let j = 0; j < dataRows[i].dataRow.length; j++) {
             for (let k = 0; k < dataRows[i].dataRow[j].value.length; k++) {
-                expect(dataSet.getDataRows()[i].datapoint[j].value[k]).toBe(dataRows[i].dataRow[j].value[k]);
+                expect(datarow.datapoint[j].value[k]).toBe(dataRows[i].dataRow[j].value[k]);
             }
-            expect(dataSet.getDataRows()[i].datapoint[j].relativeTime).toBe(dataRows[i].dataRow[j].relativeTime);
+            expect(datarow.datapoint[j].relativeTime).toBe(dataRows[i].dataRow[j].relativeTime);
         }
     }
     for (let i = 0; i < labels.length; i++) {
@@ -58,18 +60,20 @@ test("addDatapoint without a loaded Datarow", () => {
     //laden getestet in getter und setter test
     //Normale Nutzung Sensor 1
     expect(dataSet.addDatapoint(0, { value: [6, 7, 8], relativeTime: 20 })).toBeTruthy();
-    expect(dataSet.getDataRows()[0].datapoint.length).toBe(1);
-    expect(dataSet.getDataRows()[0].datapoint[0].relativeTime).toBe(20);
-    expect(dataSet.getDataRows()[0].datapoint[0].value[0]).toBe(6);
-    expect(dataSet.getDataRows()[0].datapoint[0].value[1]).toBe(7);
-    expect(dataSet.getDataRows()[0].datapoint[0].value[2]).toBe(8);
+    var dataRow = dataSet.getDataRows()[0];
+    expect(dataRow.datapoint.length).toBe(1);
+    expect(dataRow.datapoint[0].relativeTime).toBe(20);
+    expect(dataRow.datapoint[0].value[0]).toBe(6);
+    expect(dataRow.datapoint[0].value[1]).toBe(7);
+    expect(dataRow.datapoint[0].value[2]).toBe(8);
     //Normale Nutzung Sensor 2
     expect(dataSet.addDatapoint(1, { value: [9, 10, 11], relativeTime: 66 })).toBeTruthy();
-    expect(dataSet.getDataRows()[1].datapoint.length).toBe(1);
-    expect(dataSet.getDataRows()[1].datapoint[0].relativeTime).toBe(66);
-    expect(dataSet.getDataRows()[1].datapoint[0].value[0]).toBe(9);
-    expect(dataSet.getDataRows()[1].datapoint[0].value[1]).toBe(10);
-    expect(dataSet.getDataRows()[1].datapoint[0].value[2]).toBe(11);
+    var dataRow = dataSet.getDataRows()[1];
+    expect(dataRow.datapoint.length).toBe(1);
+    expect(dataRow.datapoint[0].relativeTime).toBe(66);
+    expect(dataRow.datapoint[0].value[0]).toBe(9);
+    expect(dataRow.datapoint[0].value[1]).toBe(10);
+    expect(dataRow.datapoint[0].value[2]).toBe(11);
     //DatenreihenID existiert nicht
     expect(dataSet.addDatapoint(-1, { value: [1, 2, 3], relativeTime: 27 })).toBeFalsy();
     expect(dataSet.addDatapoint(20, { value: [1, 2, 3], relativeTime: 27 })).toBeFalsy();
@@ -82,19 +86,22 @@ test("addDatapoint without a loaded Datarow", () => {
     //Test, dass keine falschen Änderungen aufkamen
     expect(dataSet.getID()).toBe(17);
     expect(dataSet.getLabels().length).toBe(0);
-    expect(dataSet.getDataRows()[0].sensorType).toBe(2);
-    expect(dataSet.getDataRows()[1].sensorType).toBe(3);
+    var dataRowA = dataSet.getDataRows();
+    expect(dataRowA[0].sensorType).toBe(2);
+    expect(dataRowA[1].sensorType).toBe(3);
     expect(dataSet.getName()).toBe("Die tolle Aufnahme");
-    expect(dataSet.getDataRows()[0].datapoint.length).toBe(1);
-    expect(dataSet.getDataRows()[0].datapoint[0].relativeTime).toBe(20);
-    expect(dataSet.getDataRows()[0].datapoint[0].value[0]).toBe(6);
-    expect(dataSet.getDataRows()[0].datapoint[0].value[1]).toBe(7);
-    expect(dataSet.getDataRows()[0].datapoint[0].value[2]).toBe(8);
-    expect(dataSet.getDataRows()[1].datapoint.length).toBe(1);
-    expect(dataSet.getDataRows()[1].datapoint[0].relativeTime).toBe(66);
-    expect(dataSet.getDataRows()[1].datapoint[0].value[0]).toBe(9);
-    expect(dataSet.getDataRows()[1].datapoint[0].value[1]).toBe(10);
-    expect(dataSet.getDataRows()[1].datapoint[0].value[2]).toBe(11);
+    var dataRow = dataSet.getDataRows()[0];
+    expect(dataRow.datapoint.length).toBe(1);
+    expect(dataRow.datapoint[0].relativeTime).toBe(20);
+    expect(dataRow.datapoint[0].value[0]).toBe(6);
+    expect(dataRow.datapoint[0].value[1]).toBe(7);
+    expect(dataRow.datapoint[0].value[2]).toBe(8);
+    var dataRow = dataSet.getDataRows()[1];
+    expect(dataRow.datapoint.length).toBe(1);
+    expect(dataRow.datapoint[0].relativeTime).toBe(66);
+    expect(dataRow.datapoint[0].value[0]).toBe(9);
+    expect(dataRow.datapoint[0].value[1]).toBe(10);
+    expect(dataRow.datapoint[0].value[2]).toBe(11);
 });
 
 /**
