@@ -41,7 +41,7 @@ interface FacadeInterface {
  * Die Facade stellt alle interaktionen mit dem Model zur Verfügung
  */
 export class Facade {
-  private language: Language; //Alle Nachrichten, in der geladenen Sprache
+  private language?: Language; //Alle Nachrichten, in der geladenen Sprache
   private dbCon: DatabaseConnector; //Die Verbindung zur Datenbank
   private user?: User; //Der Benutzer, entweder Admin, Datenerfasser oder AIModelUser
 
@@ -52,7 +52,7 @@ export class Facade {
    */
   constructor(languageCode: string) {
     this.dbCon = new DatabaseConnector();
-    this.language = new Language(this.dbCon.loadLanguage({ languageCode }));
+    this.dbCon.loadLanguage({ languageCode }).then((language: string[]) => { this.language = new Language(language); });
   }
 
   /**
@@ -194,17 +194,20 @@ export class Facade {
    * @param messageID alle IDs, von denen die Sprachnachricht geladen werden soll
    * @returns alle Nachrichten, in der gleichen Reihenfolge wie angefordert
    */
-  getMessage(messageID: number[]): Promise<{ messageID: number, message: string; }[]> {
-    return this.language.getMessage(messageID);
+  getMessage(messageID: number[]): { messageID: number, message: string; }[] {
+    if (this.language != null) {
+      return this.language.getMessage(messageID);
+    }
+    return [];
   }
 
   /**
    * Gibt die auswählbaren Sensoren als ID mit ihrer Art in der Passenden Sprache zurück
    */
-  async getAvailableSensors(): Promise<{ sensorTypID: number, sensorType: string; }[]> {
-    if (this.user != null) {
+  getAvailableSensors(): { sensorTypID: number, sensorType: string; }[] {
+    if (this.user != null && this.language != null) {
       var sensors: { sensorTypID: number, sensorType: string; }[] = [];
-      let message: { messageID: number, message: string; }[] = await this.language.getMessage(this.user.getAvailableSensors());
+      let message: { messageID: number, message: string; }[] = this.language.getMessage(this.user.getAvailableSensors());
       for (let i = 0; i < message.length; i++) {
         sensors.push({ sensorTypID: message[i].messageID, sensorType: message[i].message });
       }
@@ -219,8 +222,9 @@ export class Facade {
    * @returns true, falls die Sprache erfolgreich geladen wurde
    */
   async setLanguage(languageCode: string): Promise<boolean> {
-    if (languageCode !== await this.language.getLanguageCode()) {
-      return this.language.setLanguagePromise(this.dbCon.loadLanguage({ languageCode }));
+    if (this.language != null && languageCode != this.language.getLanguageCode()) {
+      const language: string[] = await this.dbCon.loadLanguage({ languageCode });
+      return this.language.setLanguage(language);
     }
     return true;
   }

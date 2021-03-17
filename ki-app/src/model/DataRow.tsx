@@ -55,9 +55,7 @@ export class DataRow {
    * @returns false, falls datapoint.value leer ist oder datapoint.relativeTime < 0
    */
   public addDatapoint(datapoint: { value: number[], relativeTime: number; }): boolean {
-    console.log(datapoint.value.length);
     if (datapoint.value.length == 0 || datapoint.relativeTime < 0) {
-      console.log(false);
       return false;
     } else {
       this.datapoint.push(new DataPoint(datapoint.value, datapoint.relativeTime));
