@@ -1,4 +1,5 @@
 import React, { Component } from 'react'
+import { NotificationManager } from 'react-notifications';
 import ChangeToVisuBtn from '../ChangeToVisuBtn';
 import ModelList from '../ModelList';
 import QRImage from '../QRImage';
@@ -10,7 +11,10 @@ export default class ProjectList extends Component {
     props = {
         projectData: [{ projectID: -1, projectName: "null", AIModelID: [-1], }],
         pageSetCurrentprojekt: function (currentProject: { projectID: number; projectName: string; choosenAIModelID: number; }) {},
-        pageLoadModel: function(chosenmodelID: number){}
+        pageLoadModel: function(chosenmodelID: number){},
+        pageLoadProjekt: function(currentProject: { projectID: number; projectName: string; choosenAIModelID: number; }){},
+        pageChangeToVisu: function() {},
+        qr: ''
       }
 
     state = {
@@ -29,7 +33,7 @@ export default class ProjectList extends Component {
     handleChoose() {
         /* wait to change load model*/
         if (this.state.value == null) {
-            alert('Sie haben noch kein Projekt gewählt!')
+            NotificationManager.error("Sie haben noch kein Projekt gewählt", "", 3000)
         } else {
             // eslint-disable-next-line
             this.props.projectData.map((projectObj) => {
@@ -48,7 +52,7 @@ export default class ProjectList extends Component {
                         this.setState({ click: true })
                     } else {
                         this.setState({ click: false })
-                        alert('Es gibt keine Model in diesem Projekt!')
+                        NotificationManager.error('Es gibt keine Model in diesem Projekt!', "", 3000)
                     }
                 }
             })
@@ -57,12 +61,14 @@ export default class ProjectList extends Component {
     }
     handleLoad() {
         if (this.state.value == null) {
-            alert('Sie haben noch kein Projekt gewählt!')
+            NotificationManager.error("Sie haben noch kein Projekt gewählt", "", 3000)
         } else {
             // eslint-disable-next-line
             this.props.projectData.map((projectObj) => {
                 // eslint-disable-next-line
                 if (this.state.value == projectObj.projectID) {
+                    let id: number = projectObj.projectID
+                    this.props.pageLoadProjekt({projectID: id, projectName: projectObj.projectName, choosenAIModelID: -1})
                     this.setState({ loadclick: true })
                 }
             })
@@ -79,9 +85,9 @@ export default class ProjectList extends Component {
                         return <option value={projectObj.projectID}>{projectObj.projectName}</option>
                     })}
                 </select>
-                <button onClick={() => this.handleChoose()} className="pl-btn" >Wählen Modell in diesem Projekt </button>
-                <button onClick={() => this.handleLoad()} className="pl-btn" >Laden das Projekt!</button>
-                {this.state.loadclick ? <div> <QRImage /><ChangeToVisuBtn /></div> : null}
+                <button onClick={() => this.handleChoose()} className="pl-btn" >Modellliste ladent </button>
+                <button onClick={() => this.handleLoad()} className="pl-btn" >Projekt laden</button>
+                {this.state.loadclick ? <div> <QRImage qr = {this.props.qr} /><ChangeToVisuBtn pageChangeToVisu = {this.props.pageChangeToVisu} /></div> : null}
                 {this.state.click ? <div> <ModelList pageLoadModel = {this.props.pageLoadModel} currentProject = {this.state.currentProject}/></div> : null}
             </section>
 

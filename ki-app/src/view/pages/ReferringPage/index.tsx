@@ -19,27 +19,36 @@ export class ReferringPage implements Page {
 
     constructor() {
         this.state = new State()
-        ReactDOM.render(this.render(), document.getElementById('root'));
+        this.update()
     }
 
-    render() {
+    update() {
+        this.notify()
         const VDOM = (
             <div>
                 <ConstantsText />
                 <LoginWindow pageRegister = {this.register.bind(this)} pageLogin = {this.login.bind(this)}/>
                 <br /><br /><br /><br /><br />
-                <NewProjectButton disabled = {!this.state.islogedIn!}/>
+                <NewProjectButton   disabled = {!this.state.islogedIn!} 
+                                    pageNewProject = {this.createNewProject.bind(this)}
+                                    qr = {this.state.qr!}
+                                    link = {this.state.link!}
+                                    pageChangeToVisu = {this.changetovisu.bind(this)}
+                />
                 <br />
-                <LoadModelButton    pageLoadModel = {this.loadmodel} 
+                <LoadModelButton    pageLoadModel = {this.loadmodel.bind(this)} 
                                     disabled = {!this.state.islogedIn!} 
                                     projectData = {this.state.projectData!} 
-                                    pageSetCurrentprojekt = {this.setCurrentProjekt}
+                                    pageSetCurrentprojekt = {this.setCurrentProjekt.bind(this)}
+                                    qr = {this.state.qr!}
+                                    pageLoadProjekt = {this.loadproject.bind(this)}
+                                    pageChangeToVisu = {this.changetovisu.bind(this)}
                 />
 
                 <NotificationContainer/>
             </div>
         );
-        return VDOM
+        ReactDOM.render(VDOM, document.getElementById('root'))
     }
 
     attach(observer: PageController) {
@@ -64,18 +73,10 @@ export class ReferringPage implements Page {
         return this.state;
     }
 
-    createNewProject() {
-        PubSub.unsubscribe('createnewproject')
-        PubSub.subscribe('createnewproject', (_msg: any, data: string) => {
-            //console.log(this.state.currentState)
-            // eslint-disable-next-line
-            this.setState({currentState: States.NewProjekt})
-            //console.log(this.state.currentState)
-            // eslint-disable-next-line
-            this.setState({currentProject: { projectID: -10000, projectName: data, choosenAIModelID: -10000 }})
-            //hier notifty for createnewProject
-            this.notify();
-        });
+    createNewProject(projectName: string) {
+        this.state.currentProject!.projectName = projectName
+        this.state.currentState = States.NewProjekt
+        this.update()
     }
 
     register(username: string, email: string, password: string) {
@@ -89,14 +90,16 @@ export class ReferringPage implements Page {
       // eslint-disable-next-line
       this.state.currentState = States.Register
       //console.log(this.state.currentState)
-      this.notify();
+      this.update()
       this.state.wait!.then(() => {
           //console.log(this.state.currentState)
           // eslint-disable-next-line
-          if (this.state.currentState != States.Register) {
-            alert('Registrieren fehlgeschlagen!');
+          if (this.state.currentState as States == States.LoginFail as States) {
+            NotificationManager.error("Registrieren fehlgeschlagen!", "", 3000)
+            return
           }
-          this.render()
+          NotificationManager.success("Wilkommen " + this.state.adminData?.email)
+          this.update()
       });
     }
 }
@@ -111,9 +114,11 @@ export class ReferringPage implements Page {
                 this.state.wait!.then(() => {
                     // eslint-disable-next-line
                     if (this.state.currentState as States == States.LoginFail as States) {
-                        alert('Login fehlgeschlagen!');
+                        NotificationManager.error("Login fehlgeschlagen!", "", 3000)
+                        return
                     }
-                    this.render()
+                    NotificationManager.success("Wilkommen " + this.state.adminData?.email)
+                    this.update()
                 });
     }
 
@@ -122,27 +127,27 @@ export class ReferringPage implements Page {
             // eslint-disable-next-line
             this.state.currentState = States.LoadProject
             //console.log(data.projectID);
-            this.notify();
+            this.update()
     }
 
     setCurrentProjekt( currentProject: { projectID: number, projectName: string, choosenAIModelID: number }) {
         this.state.currentProject = currentProject
+        this.update()
     }
 
     changetovisu() {
         this.state.currentState = States.ChangeToVisual
-        this.notify();
+        this.notify()
     }
 
     loadmodel(chosenmodelID: number) {
         this.state.currentProject!.choosenAIModelID = chosenmodelID
         this.state.currentState =  States.LoadModel
-        this.notify();
+        this.update()
     }
 
     setState(state: any) {
         this.state = state
-        ReactDOM.render(this.render(), document.getElementById('root'))
-        this.notify()
+        this.update()
     }
 }

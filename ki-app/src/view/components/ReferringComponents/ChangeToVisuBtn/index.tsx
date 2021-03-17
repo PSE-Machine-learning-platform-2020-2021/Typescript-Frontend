@@ -2,14 +2,15 @@ import React, { Component } from 'react'
 import './ChangeToVisuBtn.css'
 
 export default class ChangeToVisuBtn extends Component {
-    handleClick = () => {
-        PubSub.publish('changetovisu',)
+
+    props = {
+        pageChangeToVisu: function() {}
     }
 
     render() {
         return (
             <div>
-                <button onClick={() => this.handleClick()} className="ctv-btn" >Wechseln auf die Visualisierungsseite</button>
+                <button onClick={() => this.props.pageChangeToVisu()} className="ctv-btn" >Wechseln auf die Visualisierungsseite</button>
             </div>
         )
     }
