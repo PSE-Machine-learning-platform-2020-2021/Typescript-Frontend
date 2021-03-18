@@ -149,7 +149,6 @@ export class Project {
     if (this.currentDataSet != null) {
       return { dataRows: this.currentDataSet.getDataRows() };
     }
-    console.log(this.name);
     return { dataRows: [] };
   }
 
