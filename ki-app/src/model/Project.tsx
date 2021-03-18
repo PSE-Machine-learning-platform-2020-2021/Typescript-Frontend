@@ -65,7 +65,7 @@ export class Project {
   deleteDataSet(dataSetID: number): boolean {
     for (let i = 0; i < this.dataSet.length; i++) {
       if (this.dataSet[i].getID() === dataSetID) {
-        delete this.dataSet[i];
+        this.dataSet.splice(i, 1);
         if (this.currentDataSet != null && this.currentDataSet.getID() === dataSetID) {
           delete this.currentDataSet;
         }
@@ -149,6 +149,7 @@ export class Project {
     if (this.currentDataSet != null) {
       return { dataRows: this.currentDataSet.getDataRows() };
     }
+    console.log(this.name);
     return { dataRows: [] };
   }
 
