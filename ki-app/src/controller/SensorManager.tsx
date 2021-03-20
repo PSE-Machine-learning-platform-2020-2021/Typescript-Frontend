@@ -1,6 +1,8 @@
 import { MainController } from "./MainController";
 import { Page } from "../view/pages/PageInterface";
 import { IState, States } from "../view/pages/State";
+import { State } from "../view/pages/DeliveryPage/State";
+import { NotificationManager } from "react-notifications";
 
 export class SensorManager {
     private currentSensors: Sensor[] = [];
@@ -10,6 +12,7 @@ export class SensorManager {
     private readTime = 10;
     private startTime = 10;
     private saving = true;
+    private page: Page | undefined = undefined
     private sensorTypes: number[] = [];
     private dataPoints: { rowId: number, sensorType: number, value: number[]; relativeTime: number; }[] = [];
     private dataRows: { sensorType: number, datapoint: { value: number[]; relativeTime: number; }[]; }[] = [];
@@ -74,15 +77,17 @@ export class SensorManager {
     * Wartet zuerst für die angegebene Wartezeit und nimmt dann für die angegeben Lesezeit daten auf.
     */
     readData(page: Page) {
+        this.page = page
         let state: IState = page.getState();
-        PubSub.publish('usedsensors', this.sensorTypes);
+        state.recordingSettings!.usedSensorTypes = this.sensorTypes
+        state.currentState = States.waitForDB
+        page.setState(state)
         //Warte für waitTime und update dabei die Seite
         let intervalId1 = setInterval(() => {
             this.waitTime = this.waitTime - 1;
-            //state.recordingSettings!.waitTime = this.waitTime;
+            state.recordingSettings!.waitTime = this.waitTime;
             //state.currentState = States.SetWaitTime;
             page.setState(state);
-            PubSub.publish('nextCount', this.waitTime);
             if (this.waitTime === 0) {
                 clearInterval(intervalId1);
                 this.startTime = new Date().getTime();
@@ -105,41 +110,8 @@ export class SensorManager {
                         }
                     }
                 }, 1000);
-
-
-
             }
         }, 1000);
-        /**
-              if (this.waitTime === 0) {
-                  console.log(this.currentSensors)
-                  console.log(this.readTime)
-                  for (let index = 0; index < this.currentSensors.length; index++) {
-                      this.currentSensors[index].start();
-                  }
-                  console.log('xxx')
-                  //Nimm Daten auf verteile sie an die Seite und das Modell. Erneuere dabei die aufnahmezeit auf der Seite
-                  let intervalId2 = setInterval(() => {
-                      console.log(this.currentSensors)
-                      console.log(this.readTime)
-                      console.log(this.dataPoints)
-                      this.readTime = this.readTime - 1;
-                      while (this.dataPoints.length > 0) {
-                          let newDataPoint = this.dataPoints.shift()!;
-                          state.dataPoints!.push(newDataPoint);
-                          MainController.getInstance().getFacade().sendDataPoint(newDataPoint.rowId, { value: newDataPoint.value, relativeTime: newDataPoint.relativeTime });
-                          page.setState(state);
-                          console.log(this.readTime)
-                          console.log(state.dataPoints)
-                      }
-                      if (this.readTime === 0) clearInterval(intervalId2);
-                  }, 1000);
-  
-                  for (let index = 0; index < this.currentSensors.length; index++) {
-                      this.currentSensors[index].stop();
-                  }
-              }
-           */
     }
 
     private saveDatapointinRow(dataPoint: { rowId: number, sensorType: number, value: number[]; relativeTime: number; }) {
@@ -148,6 +120,13 @@ export class SensorManager {
         }
         this.dataRows[dataPoint.rowId].sensorType = dataPoint.sensorType;
         this.dataRows[dataPoint.rowId].datapoint.push({ value: dataPoint.value, relativeTime: dataPoint.relativeTime });
+
+        if (this.page != undefined) {
+            let state = this.page.getState()
+            state.dataRows = this.dataRows
+            this.page.setState(state)
+        }
+        
         PubSub.publish('startDiagram', this.dataRows);
         PubSub.publish('finishDiagram', this.dataRows);
     }

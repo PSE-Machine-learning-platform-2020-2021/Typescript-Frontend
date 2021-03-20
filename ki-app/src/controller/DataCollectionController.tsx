@@ -5,6 +5,7 @@ import { PageController } from "./PageController";
 import { SensorManager } from "./SensorManager";
 import { MainController } from "./MainController";
 import { FinishController } from "./FinishController";
+import { NotificationManager } from "react-notifications";
 
 /**
 * Controller der die Datenerfassungsseite verwaltet
@@ -17,7 +18,7 @@ export class DataCollectionController implements PageController {
     /**
     * Seite welche gerade von dem Controller verwaltet wird
     */
-    private page: Page = new DataCollectionPage({});
+    private page: Page = new DataCollectionPage();
     /**
     * Status der Seite
     */
@@ -47,7 +48,6 @@ export class DataCollectionController implements PageController {
         switch (state.currentState) {
             case States.StartDataRead:
                 this.sensorManager.readData(this.page);
-
                 break;
             case States.NeedMessage:
                 this.page.setState(MainController.getInstance().getMessage(this.state.messages));

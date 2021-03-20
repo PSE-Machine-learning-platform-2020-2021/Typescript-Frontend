@@ -79,7 +79,7 @@ export class AIController implements PageController {
         let waitTime = this.state.recordingSettings!.waitTime;
         let readTime = this.state.recordingSettings!.readTime;
         this.sensorManager.setUpDataRead( sensorTypes, dataSetName, waitTime, readTime, false );
-        this.page = new DataCollectionPage( {} );
+        this.page = new DataCollectionPage();
         this.page.attach( this );
         this.state = this.page.getState();
     }
