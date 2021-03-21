@@ -22,7 +22,7 @@ export class ModelCreationController implements PageController {
      * Dieser Seitenverwalter benötigt einen SensorManager, welcher schon initilisiert wurde. 
      */
     constructor() {
-        this.page = new ModelCreationPage({});
+        this.page = new ModelCreationPage();
         this.page.attach(this);
         this.state = this.page.getState();
         this.state.dataSetMetas! = MainController.getInstance().getFacade().getDataSetMetas()!;

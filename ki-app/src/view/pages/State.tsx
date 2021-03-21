@@ -37,6 +37,8 @@ export interface IState {
   chosenEmails?: string[];
   wait?: Promise<any>;
   link?: string
+  //Beispiel fuer Visu
+  //testDataSet?: { dataSetID: number; rows: { sensorType: number; datapoint: { value: number[]; relativeTime: number; }[]; }[]; }[];
 }
 
 export enum States {
@@ -48,35 +50,35 @@ export enum States {
   /**
    * Seite kann nun aus dem status die texte laden
    */
-  SetMessage  = "SetMessage",
+  SetMessage = "SetMessage",
   /**
    * Seite benötigt ein QRC
    */
-  NeedQRC  = "NeedQRC",
+  NeedQRC = "NeedQRC",
   /**
    * QRC kann angezeigt werden
    */
-  SetQRC  = "SetQRC",
+  SetQRC = "SetQRC",
   /**
    * Projektdaten können benutzt werden
    */
-  SetProjects  = "SetProjects",
+  SetProjects = "SetProjects",
   /**
    * Sprache der Anwendung soll geändert werden
    */
-  SetLanguage  = "SetLanguage",
+  SetLanguage = "SetLanguage",
   /**
    * Fehler für alle zu ladenen sachen
    */
-  LoadError  = "LoadError",
+  LoadError = "LoadError",
   /**
    * Ein Login Versuch soll durchgeführt werden
    */
-  Login  = "Login",
+  Login = "Login",
   /**
    * Ein Registrierungsversuch soll durchgeführt werden
    */
-  Register = "Register", 
+  Register = "Register",
   /**
      * Update aller Daten welche auf der Seite angezeigt werden, zum Beispiel Projekt Daten für die Projekt liste.
      */

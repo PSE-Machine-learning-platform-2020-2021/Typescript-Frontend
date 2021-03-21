@@ -21,7 +21,7 @@ export class FinishController implements PageController {
      * Konstruktor des Seitenverwalters. Registriert sich als Beobachter auf seiner Seite und setzt den start Status. 
      */
     constructor() {
-        this.page = new FinishPage({});
+        this.page = new FinishPage();
         this.page.attach(this);
         this.state = this.page.getState();
         this.state.dataRows! = MainController.getInstance().getFacade().getCurrentDataRows()!.dataRows!;
