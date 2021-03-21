@@ -6,26 +6,43 @@ import { PageController } from "../../../controller/PageController";
 import { State } from "./State";
 import { States } from '../State';
 import LoginWindow from '../../components/ReferringComponents/LoginWindow';
+<<<<<<< HEAD
 import { NotificationContainer, NotificationManager } from 'react-notifications';
 import 'react-notifications/lib/notifications.css';
+=======
+>>>>>>> 7f1ba52dabe282f007a8c62a9adeb3eb3b0bf01b
 import ReactDOM from 'react-dom';
 
+import { NotificationContainer, NotificationManager } from 'react-notifications';
+import 'react-notifications/lib/notifications.css';
 
+
+/*
+*Darstellungsseite der Verweisseite.
+*/
 export class ReferringPage implements Page {
-
-    private state: State
+    private state: State;
     private observers: PageController[] = [];
 
-    constructor() {
-        this.state = new State()
-        this.update()
+    /**
+    * Konstruktor der Darstellungsseite.
+    */
+    constructor () {
+        this.state = new State();
+        this.update();
     }
 
-    update() {
-        this.notify()
+    /**
+    * Update Methode der Darstellungsseite. Diese Methode wird nach jeder Änderung, die kein Seitenwechsel ist, aufgerufen. 
+    * Die Methode enthält den Aufbau der Seite und wird von ihr gerendert.
+    * Es werden durch notify() alle controller über ein Update informiert und alle Seiten Elemente werden aktualisiert und erneut gerendert. 
+    */
+    private update () {
+        this.notify();
         const VDOM = (
             <div>
                 <ConstantsText />
+<<<<<<< HEAD
                 <LoginWindow pageRegister={this.register.bind(this)} pageLogin={this.login.bind(this)} />
                 <br /><br /><br /><br /><br />
                 <NewProjectButton disabled={!this.state.islogedIn!}
@@ -42,36 +59,69 @@ export class ReferringPage implements Page {
                     qr={this.state.qr!}
                     pageLoadProjekt={this.loadproject.bind(this)}
                     pageChangeToVisu={this.changetovisu.bind(this)}
+=======
+                <LoginWindow pageRegister={ this.register.bind( this ) } pageLogin={ this.login.bind( this ) } />
+                <br /><br /><br /><br /><br />
+                <NewProjectButton disabled={ !this.state.islogedIn! }
+                    pageNewProject={ this.createNewProject.bind( this ) }
+                    qr={ this.state.qr! }
+                    link={ this.state.link! }
+                    pageChangeToVisu={ this.changetovisu.bind( this ) }
+                />
+                <br />
+                <LoadModelButton pageLoadModel={ this.loadmodel.bind( this ) }
+                    disabled={ !this.state.islogedIn! }
+                    projectData={ this.state.projectData! }
+                    pageSetCurrentprojekt={ this.setCurrentProjekt.bind( this ) }
+                    qr={ this.state.qr! }
+                    pageLoadProjekt={ this.loadproject.bind( this ) }
+                    pageChangeToVisu={ this.changetovisu.bind( this ) }
+>>>>>>> 7f1ba52dabe282f007a8c62a9adeb3eb3b0bf01b
                 />
 
                 <NotificationContainer />
             </div>
         );
-        ReactDOM.render(VDOM, document.getElementById('root'))
+        ReactDOM.render( VDOM, document.getElementById( 'root' ) );
     }
 
-    attach(observer: PageController) {
-        this.observers.push(observer);
+    /**
+    * Durch diese Methode kann sich ein Controller als Beobachter anmelden.
+    * @param oberver neuer Beobachter
+    */
+    attach ( observer: PageController ) {
+        this.observers.push( observer );
     }
 
-    detach(observer: PageController) {
-        const index = this.observers.indexOf(observer, 0);
-        if (index > -1) {
-            this.observers.splice(index, 1);
+    /**
+    * Durch diese Methode kann sich ein Controller als Beobachter abmelden.
+    * @param oberver Beobachter der zu entfernen ist
+    */
+    detach ( observer: PageController ) {
+        const index = this.observers.indexOf( observer, 0 );
+        if ( index > -1 ) {
+            this.observers.splice( index, 1 );
         }
     }
 
-    notify() {
-        for (let index = 0; index < this.observers.length; index++) {
-            const element = this.observers[index];
+    /**
+    * Durch diese Methode werden alle Beobachter über eine Änderung auf der Seite informiert.
+    */
+    notify () {
+        for ( let index = 0; index < this.observers.length; index++ ) {
+            const element = this.observers[ index ];
             element.update();
         }
     }
 
-    getState() {
+    /**
+    * Gibt den Status der Seite zurück
+    */
+    getState () {
         return this.state;
     }
 
+<<<<<<< HEAD
     setState(state: any) {
         this.state = state
         this.update()
@@ -137,13 +187,94 @@ export class ReferringPage implements Page {
     setCurrentProjekt(currentProject: { projectID: number, projectName: string, choosenAIModelID: number }) {
         this.state.currentProject = currentProject
         this.update()
+=======
+    /**
+    * Der Benutzer möchte ein neues Projekt erstellen
+    * @param projectName Name des neuen Projekts
+    */
+    private createNewProject ( projectName: string ) {
+        this.state.currentProject!.projectName = projectName;
+        this.state.currentState = States.NewProjekt;
+        this.update();
     }
 
-    changetovisu() {
-        this.state.currentState = States.ChangeToVisual
-        this.notify()
+    /**
+     * Ein Benutzer möchte sich registrieren
+     * @param username Name des Benutzers
+     * @param email Email des Benutzers
+     * @param password Passwort des Benutzers
+     */
+    private register ( username: string, email: string, password: string ) {
+        var pattern = /^([A-Za-z0-9_\-.])+@([A-Za-z0-9_\-.])+\.([A-Za-z])+$/;
+        if ( !pattern.test( email ) ) {
+            NotificationManager.error( "Email-Adresse nicht gültig", "", 3000 );
+        } else {
+            this.state.adminData! = { name: username, email: email, password: password };
+            this.state.currentState = States.Register;
+            this.update();
+            this.state.wait!.then( () => {
+                if ( this.state.currentState as States == States.LoginFail as States ) {
+                    NotificationManager.error( "Registrieren fehlgeschlagen!", "", 3000 );
+                    return;
+                }
+                NotificationManager.success( "Wilkommen " + this.state.adminData?.email );
+                this.update();
+            } );
+        }
     }
 
+    /**
+     * Ein Benutzer möchte sich Anmelden
+     * @param email Email des Benutzers
+     * @param password Passwort des Benutzers
+     */
+    private login ( email: string, password: string ) {
+        // console.log(this.state.currentState)
+        // eslint-disable-next-line
+        this.state.adminData! = { name: "", email: email, password: password };
+        // eslint-disable-next-line
+        this.state.currentState = States.Login;
+        this.update();
+        this.state.wait!.then( () => {
+            // eslint-disable-next-line
+            if ( this.state.currentState as States == States.LoginFail as States ) {
+                NotificationManager.error( "Login fehlgeschlagen!", "", 3000 );
+                return;
+            }
+            NotificationManager.success( "Wilkommen " + this.state.adminData?.email );
+            this.update();
+        } );
+    }
+
+    /**
+     * Ein Projekt soll geladen werden
+     * @param data Infomationen über das zu ladene Projekt
+     */
+    private loadproject ( data: { projectID: number, projectName: string, choosenAIModelID: number; } ) {
+        this.state.currentProject = data;
+        this.state.currentState = States.LoadProject;
+        this.update();
+    }
+
+    /**
+     * Ein Projekt als momentanes Projekt setzen
+     * @param currentProject Infomationene über das momentane projekt
+     */
+    private setCurrentProjekt ( currentProject: { projectID: number, projectName: string, choosenAIModelID: number; } ) {
+        this.state.currentProject = currentProject;
+        this.update();
+>>>>>>> 7f1ba52dabe282f007a8c62a9adeb3eb3b0bf01b
+    }
+
+    /**
+     * Wechsel der Seite zur Visualisierungseite.
+     */
+    private changetovisu () {
+        this.state.currentState = States.ChangeToVisual;
+        this.notify(); // Kein Update, da sonst die Seite neu rendert und der Seitenwechsel fehlschlägt
+    }
+
+<<<<<<< HEAD
     loadmodel(chosenmodelID: number) {
         this.state.currentProject!.choosenAIModelID = chosenmodelID
         this.state.currentState = States.LoadModel
@@ -151,4 +282,24 @@ export class ReferringPage implements Page {
     }
 
 
+=======
+    /**
+     * Lade ein KI-Model
+     * @param chosenmodelID ID des Models
+     */
+    private loadmodel ( chosenmodelID: number ) {
+        this.state.currentProject!.choosenAIModelID = chosenmodelID;
+        this.state.currentState = States.LoadModel;
+        this.update();
+    }
+
+    /**
+     * Setzt einen neuen Zustand für die Seite und aktualisiert sie
+     * @param state neuer Zustand für die Seite
+     */
+    setState ( state: any ) {
+        this.state = state;
+        this.update();
+    }
+>>>>>>> 7f1ba52dabe282f007a8c62a9adeb3eb3b0bf01b
 }
