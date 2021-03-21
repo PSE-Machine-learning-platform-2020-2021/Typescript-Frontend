@@ -7,25 +7,26 @@ import ReactDOM from 'react-dom';
 import './ModelCreationPage.css';
 import { States } from '../State';
 import Train from '../../components/ModelCreationComponents/Train';
+import { NotificationContainer, NotificationManager } from 'react-notifications';
+import 'react-notifications/lib/notifications.css';
 
-type Props = {
-};
-
-export class ModelCreationPage extends React.Component<Props, State> implements Page {
-	state = new State();
+export class ModelCreationPage implements Page {
+	state = new State;
 	observers: PageController[] = [];
-	constructor(props: Props) {
-		super(props);
 
+	constructor() {
+		this.state = new State()
+	}
+
+	update() {
+		this.notify()
 		const VDOM = (
-			<div className="modelcreationpage">
+			<div>
 				<Train />
+				<NotificationContainer />
 			</div>
 		);
-
 		ReactDOM.render(VDOM, document.getElementById('root'));
-		this.needDatabaseList();
-		this.train();
 	}
 
 	attach(observer: PageController) {
@@ -50,8 +51,9 @@ export class ModelCreationPage extends React.Component<Props, State> implements 
 		return this.state;
 	}
 
-	setState(newState: any): void {
-		return;
+	setState(state: any) {
+		this.state = state
+		this.update()
 	}
 
 	needDatabaseList() {

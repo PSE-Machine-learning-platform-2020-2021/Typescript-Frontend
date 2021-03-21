@@ -9,15 +9,16 @@ import { State } from "./State";
 import ReactDOM from "react-dom";
 import { States } from "../State";
 
-type IProps = {
-};
-
-export class FinishPage extends React.Component<IProps, State> implements Page {
+export class FinishPage implements Page {
   state = new State;
   observers: PageController[] = [];
 
-  constructor(props: IProps) {
-    super(props);
+  constructor() {
+    this.state = new State()
+  }
+
+  update() {
+    this.notify()
     const VDOM = (
       <div>
         <Title />
@@ -27,12 +28,9 @@ export class FinishPage extends React.Component<IProps, State> implements Page {
         </div>
       </div>
     );
-    this.newLabel();
-    this.changeLabel();
-    this.deleteLabel();
-    ReactDOM.render(VDOM, document.getElementById("root"));
-    //this.giveDiagram();
+    ReactDOM.render(VDOM, document.getElementById('root'));
   }
+
 
   giveDiagram() {
     //Beispiel
@@ -109,5 +107,9 @@ export class FinishPage extends React.Component<IProps, State> implements Page {
 
   getState() {
     return this.state;
+  }
+  setState(state: any) {
+    this.state = state
+    this.update()
   }
 }

@@ -33,7 +33,6 @@ export class DataCollectionController implements PageController {
         this.page.attach(this);
         this.state = this.page.getState();
         this.state.leadTime = this.sensorManager.getWaitTime();
-        PubSub.publish('startCounting', this.state.leadTime);
 
         this.sensorManager.readData(this.page);
 

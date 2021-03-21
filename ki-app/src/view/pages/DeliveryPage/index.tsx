@@ -6,27 +6,28 @@ import { PageController } from "../../../controller/PageController";
 import { State } from "./State";
 import ReactDOM from 'react-dom';
 import { States } from '../State';
+import { NotificationContainer, NotificationManager } from 'react-notifications';
+import 'react-notifications/lib/notifications.css';
+export class DeliveryPage implements Page {
 
-type Props = {
-};
-
-export class DeliveryPage extends React.Component<Props, State> implements Page {
-
-	state = new State();
+	state = new State;
 	observers: PageController[] = [];
-	constructor(props: Props) {
-		super(props);
 
+	constructor() {
+		this.state = new State()
+	}
+
+
+	update() {
+		this.notify()
 		const VDOM = (
-			<div className="deliverypage">
-				<EmailList />
-				<DownloadButton />
+			<div>
+
 			</div>
 		);
 		ReactDOM.render(VDOM, document.getElementById('root'));
-		this.delivery()
-		this.download()
 	}
+
 
 	attach(observer: PageController) {
 		this.observers.push(observer);
@@ -48,6 +49,11 @@ export class DeliveryPage extends React.Component<Props, State> implements Page 
 
 	getState() {
 		return this.state;
+	}
+
+	setState(state: any) {
+		this.state = state
+		this.update()
 	}
 
 	delivery() {
