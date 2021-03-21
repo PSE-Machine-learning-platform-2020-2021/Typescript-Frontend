@@ -1,5 +1,5 @@
 import React, { Component } from 'react'
-
+import "./DiagramList.css"
 export default class DiagramList extends Component {
     props = {
         currentDataSet: [{ dataSetID: 0, rows: [{ sensorType: 0, datapoint: [{ value: [0], relativeTime: 0 }] }] }],
@@ -49,6 +49,7 @@ export default class DiagramList extends Component {
 
         var newDatasets = [];
         var lineLabels = [];
+        // eslint-disable-next-line
         for (var i = 0; i < this.diagrammData.sensorRow.length * 3; i++) {
             var coordinate = ".X";
             var sensor = this.diagrammData.sensorRow[parseInt(i / 3)];
@@ -63,10 +64,14 @@ export default class DiagramList extends Component {
                 case 4:
                     sensorName = 'Magnetometer'
                     break;
+                default:
+                    break;
             }
+            // eslint-disable-next-line
             if (i % 3 == 1) {
                 coordinate = ".Y";
             }
+            // eslint-disable-next-line
             if (i % 3 == 2) {
                 coordinate = ".Z";
             }
@@ -102,8 +107,10 @@ export default class DiagramList extends Component {
 
     render() {
         var LineChart = require("react-chartjs").Line;
+        // eslint-disable-next-line
         this.props.currentDataSet?.map((dataSet, index) => {
             var flag = false
+            // eslint-disable-next-line
             this.diagramList.map((diagram) => {
                 if (diagram.dataSetID === dataSet.dataSetID) {
                     flag = true
@@ -130,17 +137,17 @@ export default class DiagramList extends Component {
                     )
                 })
                 }
-
-                {this.diagramList.map((diagram, index) => {
-                    return (
-                        <div key={index}>
-                            <h5>{diagram.dataSetID}</h5>
-                            {diagram.lineLabels}
-                            <LineChart data={diagram.data} options={diagram.options} width="200" height="100" onClick={() => this.handleClick(diagram, index)} />
-                        </div>
-                    )
-                })
-                }
+                <div className="diagramList">
+                    {this.diagramList.map((diagram, index) => {
+                        return (
+                            <div key={index}>
+                                <h5>{diagram.dataSetID}</h5>
+                                {diagram.lineLabels}
+                                <LineChart data={diagram.data} options={diagram.options} width="200" height="100" onClick={() => this.handleClick(diagram, index)} />
+                            </div>
+                        )
+                    })}
+                </div>
             </div>
         );
     }
