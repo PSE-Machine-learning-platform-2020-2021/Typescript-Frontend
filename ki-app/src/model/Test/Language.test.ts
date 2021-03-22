@@ -1,5 +1,8 @@
 import { Language } from "../Language";
 
+/**
+ * Prüft die einfache Nutzung, erstellen und prüfen ob der getter dies wieder zurück gibt
+ */
 test("create and setter", () => {
     const languageMessage: string[] = [
         "de-de",
@@ -19,6 +22,9 @@ test("create and setter", () => {
     expect(language.getLanguageCode()).toBe(languageMessage[0]);
 });
 
+/**
+ * Prüft, ob setLanguage fehlerfrei läuft
+ */
 test("setLanguage", () => {
     const languageMessage: string[] = [
         "de-de",
