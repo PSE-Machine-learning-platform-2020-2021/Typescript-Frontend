@@ -25,16 +25,19 @@ export default class Input extends Component {
       leadTime: e.target.value,
     });
   };
+  
   changeCollectionTime = (e: React.ChangeEvent<HTMLInputElement>) => {
     this.setState({
       collectionTime: e.target.value,
     });
   };
+
   changeSensors = (e: React.ChangeEvent<HTMLSelectElement>) => {
     this.setState({
       chosenSensors: e.target.value,
     });
   };
+
   changeName = (e: React.ChangeEvent<HTMLInputElement>) => {
     this.setState({
       name: e.target.value,
