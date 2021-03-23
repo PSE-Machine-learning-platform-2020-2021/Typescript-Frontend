@@ -1,6 +1,6 @@
 import { relative } from "node:path";
 import { DataPoint } from "./DataPoint";
-import { AccelerometerData, GyroscopeData, MagnetometerData } from "./SensorData";
+import { AccelerometerData, GyroscopeData } from "./SensorData";
 
 /**
  * Die Klasse DataRow beschreibt eine Reihe aufgenommener Daten eines Sensors.
@@ -8,14 +8,14 @@ import { AccelerometerData, GyroscopeData, MagnetometerData } from "./SensorData
 export class DataRow {
   private id: number; //Dies ist die DataRow ID, diese ist eindeutig für Datensätze.
   private datapoint: DataPoint[] = []; //Dies ist Datenreihe, eine Reihe von Datenpunkten.
-  private sensor: AccelerometerData | GyroscopeData | MagnetometerData; //Dies ist der Sensor von dem die Daten gelesen wurden.
+  private sensor: AccelerometerData | GyroscopeData; //Dies ist der Sensor von dem die Daten gelesen wurden.
 
   /**
    * Eine neue Datenreihe erstellen.
    * @param sensor Sensor, von dem die Daten gelesen werden.
    * @param dataRowID Eine eindeutige Datenreihen ID.
    */
-  constructor(sensor: AccelerometerData | GyroscopeData | MagnetometerData, dataRowID: number);
+  constructor(sensor: AccelerometerData | GyroscopeData, dataRowID: number);
 
   /**
    * Eine bereits existierende Datenreihe kann wie folgt in das Model geladen werden.
@@ -25,8 +25,8 @@ export class DataRow {
    * @param dataRow.value der Sensor Messwert
    * @param dataRow.relativeTime die relative Zeit zum Aufnahmestart
    */
-  constructor(sensor: AccelerometerData | GyroscopeData | MagnetometerData, dataRowID: number, dataRow: { value: number[], relativeTime: number; }[]);
-  constructor(sensor: AccelerometerData | GyroscopeData | MagnetometerData, dataRowID: number, dataRow?: { value: number[], relativeTime: number; }[]) {
+  constructor(sensor: AccelerometerData | GyroscopeData, dataRowID: number, dataRow: { value: number[], relativeTime: number; }[]);
+  constructor(sensor: AccelerometerData | GyroscopeData, dataRowID: number, dataRow?: { value: number[], relativeTime: number; }[]) {
     this.sensor = sensor;
     this.id = dataRowID;
     if (dataRow != null) {

@@ -28,14 +28,12 @@ export class Label {
    * @param name Ist bei angabe der neue Name des Labels.
    */
   setLabel(span: { start: number, end: number; }, name?: string): boolean {
-    if (span != null) {
-      const setted: boolean = this.timeSpan.setTimeSpan(span);
-      if (setted) {
-        if (name != null) {
-          this.name = name;
-        }
-        return true;
+    const setted: boolean = this.timeSpan.setTimeSpan(span);
+    if (setted) {
+      if (name != null) {
+        this.name = name;
       }
+      return true;
     }
     return false;
   }
