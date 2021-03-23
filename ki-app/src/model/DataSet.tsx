@@ -101,7 +101,7 @@ export class DataSet {
    * @returns falls das Label mit der ID schon existiert wird false zurück gegeben
    */
   public createLabel(labelID: number, span: { start: number, end: number; }, labelName: string): boolean {
-    if (span.start < 0 || span.end < span.start) {
+    if (labelID < 0 || span.start < 0 || span.end < span.start) {
       return false;
     }
     for (let i = 0; i < this.label.length; i++) {
@@ -135,8 +135,12 @@ export class DataSet {
    */
   public deleteLabel(labelID: number): boolean {
     for (let i = 0; i < this.label.length; i++) {
+      console.log(this.label[i].getID() + "   " + labelID);
       if (this.label[i].getID() == labelID) { //keine absolute gleichheit!
+        console.log(labelID);
+        console.log(this.label);
         this.label.splice(i, 1);
+        console.log(this.label);
         return true;
       }
     }

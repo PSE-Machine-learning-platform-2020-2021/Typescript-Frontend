@@ -1,4 +1,3 @@
-import { DataRow } from "../DataRow";
 import { Project } from "../Project";
 import { AccelerometerData, GyroscopeData, SensorData } from "../SensorData";
 
@@ -34,6 +33,8 @@ var projectData1: { dataSet: { dataRowSensors: (AccelerometerData | GyroscopeDat
 //3. Projekt (mit Datensatz mit AIModelID)
 var projectData2: { aiModelID: number[], dataSet: { dataRowSensors: (AccelerometerData | GyroscopeData)[], dataSetID: number, dataSetName: string, generateDate: number, dataRows: { dataRowID: number, dataRow: { value: number[], relativeTime: number; }[]; }[], label: { name: string, labelID: number, start: number, end: number; }[]; }[]; };
 //new Project(projectID2, sessionID2, projectName2, projectData2);
+
+var projectData: { aiModelID?: number[], dataSet: { dataRowSensors: SensorData[], dataSetID: number, dataSetName: string, generateDate?: number, dataRows: { dataRowID: number, dataRow: { value: number[], relativeTime: number; }[]; }[], label?: { name: string, labelID: number, start: number, end: number; }[]; }[]; };
 
 /**
  * Sollte vor jedem Test ausgeführt werden, es lädt die erwarteten Daten.
@@ -73,6 +74,7 @@ function clearStart() {
     //new Project(projectID2, sessionID2, projectName2, projectData2);
 }
 
+
 test("create and setter", () => {
     clearStart();
     //Einfache Erstellung ohne Daten (Projekt 1)
@@ -100,6 +102,9 @@ test("create and setter", () => {
     checkAll(project, projectID, sessionID, projectName, currentDataRows, projectData);
 });
 
+/**
+ * Prüft, ob deleteDataSet fehlerfrei läuft
+ */
 test("deleteDataSet", () => {
     clearStart();
     var project = new Project(projectID2, sessionID2, projectName2, projectData2);
@@ -133,6 +138,9 @@ test("deleteDataSet", () => {
     checkAll(project, projectID, sessionID, projectName, currentDataRows, projectData);
 });
 
+/**
+ * Prüft, ob createDataSet ohne geladenem Datensatz fehlerfrei läuft
+ */
 test("createDataSet without loaded Datasets", () => {
     clearStart();
     //Normale Benutzung
@@ -168,6 +176,9 @@ test("createDataSet without loaded Datasets", () => {
     checkAll(project, projectID, sessionID, projectName, currentDataRows, projectData);
 });
 
+/**
+ * Prüft, ob createDataSet mit geladenem Datensatz fehlerfrei läuft
+ */
 test("createDataSet with loaded Datasets", () => {
     clearStart();
     //Normale Benutzung
@@ -178,7 +189,7 @@ test("createDataSet with loaded Datasets", () => {
     var dataSetID = 29;
     var dataSetName = "Mamma mia!";
     expect(project.createDataSet(dataRowSensors2, dataSetID, dataSetName)).toBeTruthy();
-    var projectData: { aiModelID?: number[], dataSet: { dataRowSensors: SensorData[], dataSetID: number, dataSetName: string, generateDate?: number, dataRows: { dataRowID: number, dataRow: { value: number[], relativeTime: number; }[]; }[], label?: { name: string, labelID: number, start: number, end: number; }[]; }[]; } = Object.assign({}, projectData2); //Copy
+    projectData = projectData2;
     projectData.dataSet.push({ dataRowSensors: dataRowSensors2, dataSetID, dataSetName, dataRows: [{ dataRowID: 0, dataRow: [] }, { dataRowID: 1, dataRow: [] }] });
     var currentDataRows = dataRowSensors2.length; //Da die Sensoren leere Datenreihen anlegen
     checkAll(project, projectID, sessionID, projectName, currentDataRows, projectData);
@@ -200,18 +211,144 @@ test("createDataSet with loaded Datasets", () => {
     checkAll(project, projectID, sessionID, projectName, currentDataRows, projectData);
 });
 
+/**
+ * Prüft, ob createLabel fehlerfrei läuft
+ */
 test("createLabel", () => {
     clearStart();
+    var project = new Project(projectID2, sessionID2, projectName2, projectData2);
+    var projectID = projectID2;
+    var sessionID = sessionID2;
+    var projectName = projectName2;
+    var dataSetID = 12;
+    var dataSetName = "Gib mir Labels";
+    projectData = projectData2;
+    //Normale benutzung auf aktueller Datenreihe
+    project.getDataRows(dataSetID2); //Datensatz mit DatensatzID 43 als aktuellen Datensatz laden
+    expect(project.createLabel(279, { start: 5, end: 17 }, "Aufstehen")).toBeTruthy();
+    projectData.dataSet[1].label!.push({ name: "Aufstehen", labelID: 279, start: 5, end: 17 });
+    project.getDataRows(dataSetID1); //Datensatz mit DatensatzID 42 als aktuellen Datensatz laden
+    expect(project.createLabel(289, { start: 18, end: 18 }, "Pennen")).toBeTruthy();
+    projectData.dataSet[0].label!.push({ name: "Pennen", labelID: 289, start: 18, end: 18 });
+    var currentDataRows = 2;
+    checkAll(project, projectID, sessionID, projectName, currentDataRows, projectData);
+    //Bei neu erstelltem Datensatz
+    project.createDataSet(dataRowSensors2, dataSetID, dataSetName);
+    projectData.dataSet.push({ dataRowSensors: dataRowSensors2, dataSetID, dataSetName, dataRows: [{ dataRowID: 0, dataRow: [] }, { dataRowID: 1, dataRow: [] }], label: [] });
+    expect(project.createLabel(299, { start: 19, end: 22 }, "Pennen 2.0")).toBeTruthy();
+    projectData.dataSet[2].label!.push({ name: "Pennen 2.0", labelID: 299, start: 19, end: 22 });
+    checkAll(project, projectID, sessionID, projectName, currentDataRows, projectData);
+    //Bei fehlerhaften übergabe
+    expect(project.createLabel(-1, { start: 19, end: 22 }, "Pennen 2.0")).toBeFalsy();
+    expect(project.createLabel(299, { start: 19, end: 22 }, "Pennen 2.0")).toBeFalsy();
+    expect(project.createLabel(300, { start: -1, end: 22 }, "Pennen 2.0")).toBeFalsy();
+    expect(project.createLabel(300, { start: 19, end: 5 }, "Pennen 2.0")).toBeFalsy();
+    //ohne currentDataSet
+    expect(project.deleteDataSet(dataSetID)).toBeTruthy();
+    projectData.dataSet.pop();
+    expect(project.createLabel(300, { start: 19, end: 22 }, "Me llamo")).toBeFalsy();
+    currentDataRows = 0; //Da currentDataSet gelöscht wurde
+    checkAll(project, projectID, sessionID, projectName, currentDataRows, projectData);
 });
 
+/**
+ * Prüft, ob setLabel fehlerfrei läuft
+ */
 test("setLabel", () => {
     clearStart();
-
+    var project = new Project(projectID2, sessionID2, projectName2, projectData2);
+    var projectID = projectID2;
+    var sessionID = sessionID2;
+    var projectName = projectName2;
+    var dataSetID = 12;
+    var dataSetName = "Gib mir Labels";
+    projectData = projectData2;
+    //Normale benutzung auf aktueller Datenreihe
+    project.getDataRows(dataSetID1); //Datensatz mit DatensatzID 43 als aktuellen Datensatz laden
+    expect(project.setLabel(26, { start: 5, end: 17 }, "Aufstehen")).toBeTruthy();
+    projectData.dataSet[0].label![0] = { name: "Aufstehen", labelID: 26, start: 5, end: 17 };
+    expect(project.setLabel(27, { start: 12, end: 15 },)).toBeTruthy();
+    projectData.dataSet[0].label![1] = { name: labels1[1].name, labelID: 27, start: 12, end: 15 };
+    project.getDataRows(dataSetID2); //Datensatz mit DatensatzID 42 als aktuellen Datensatz laden
+    expect(project.setLabel(28, { start: 17, end: 20 }, "Pennen")).toBeTruthy();
+    projectData.dataSet[1].label![0] = { name: "Pennen", labelID: 28, start: 17, end: 20 };
+    expect(project.setLabel(29, { start: 18, end: 130 })).toBeTruthy();
+    projectData.dataSet[1].label![1] = { name: labels2[1].name, labelID: 29, start: 18, end: 130 };
+    var currentDataRows = 2;
+    checkAll(project, projectID, sessionID, projectName, currentDataRows, projectData);
+    //Bei neu erstelltem Datensatz
+    project.createDataSet(dataRowSensors2, dataSetID, dataSetName);
+    project.createLabel(30, { start: 15, end: 22 }, "er lief");
+    projectData.dataSet.push({ dataRowSensors: dataRowSensors2, dataSetID, dataSetName, dataRows: [{ dataRowID: 0, dataRow: [] }, { dataRowID: 1, dataRow: [] }], label: [{ name: "er lief", labelID: 30, start: 15, end: 22 }] });
+    expect(project.setLabel(30, { start: 19, end: 23 }, "Pennen 2.0")).toBeTruthy();
+    projectData.dataSet[2].label![0] = { name: "Pennen 2.0", labelID: 30, start: 19, end: 23 };
+    checkAll(project, projectID, sessionID, projectName, currentDataRows, projectData);
+    //Bei fehlerhaften übergabe
+    expect(project.setLabel(-1, { start: 19, end: 22 }, "Pennen 2.0")).toBeFalsy();
+    expect(project.setLabel(299, { start: 19, end: 22 }, "Pennen 2.0")).toBeFalsy();
+    expect(project.setLabel(300, { start: -1, end: 22 }, "Pennen 2.0")).toBeFalsy();
+    expect(project.setLabel(300, { start: 19, end: 5 }, "Pennen 2.0")).toBeFalsy();
+    expect(project.setLabel(-1, { start: 19, end: 22 })).toBeFalsy();
+    expect(project.setLabel(299, { start: 19, end: 22 })).toBeFalsy();
+    expect(project.setLabel(300, { start: -1, end: 22 })).toBeFalsy();
+    expect(project.setLabel(300, { start: 19, end: 5 })).toBeFalsy();
+    //ohne currentDataSet
+    expect(project.deleteDataSet(dataSetID)).toBeTruthy();
+    projectData.dataSet.pop();
+    expect(project.createLabel(300, { start: 19, end: 22 }, "Me llamo")).toBeFalsy();
+    currentDataRows = 0; //Da currentDataSet gelöscht wurde
+    checkAll(project, projectID, sessionID, projectName, currentDataRows, projectData);
 });
 
+/**
+ * Prüft, ob deleteLabel fehlerfrei läuft
+ */
 test("deleteLabel", () => {
     clearStart();
-
+    var project = new Project(projectID2, sessionID2, projectName2, projectData2);
+    var projectID = projectID2;
+    var sessionID = sessionID2;
+    var projectName = projectName2;
+    var dataSetID = 12;
+    var dataSetName = "Gib mir Labels";
+    projectData = projectData2;
+    //Normale benutzung auf aktueller Datenreihe
+    project.getDataRows(dataSetID1); //Datensatz mit DatensatzID 42 als aktuellen Datensatz laden
+    expect(project.deleteLabel(labels1[1].labelID)).toBeTruthy();
+    expect(project.getLabels().labels.length).toBe(1);
+    projectData.dataSet[0].label!.pop();
+    var currentDataRows = 2;
+    checkAll(project, projectID, sessionID, projectName, currentDataRows, projectData);
+    project.getDataRows(dataSetID1); //Datensatz mit DatensatzID 42 als aktuellen Datensatz laden (da checkAll auch den aktuellen Datensatz ändert)
+    expect(project.deleteLabel(labels1[0].labelID)).toBeTruthy();
+    expect(project.getLabels().labels.length).toBe(0);
+    projectData.dataSet[0].label!.pop();
+    checkAll(project, projectID, sessionID, projectName, currentDataRows, projectData);
+    //Bei neu erstelltem Datensatz
+    project.createDataSet(dataRowSensors2, dataSetID, dataSetName);
+    project.createLabel(30, { start: 15, end: 22 }, "er lief");
+    projectData.dataSet.push({ dataRowSensors: dataRowSensors2, dataSetID, dataSetName, dataRows: [{ dataRowID: 0, dataRow: [] }, { dataRowID: 1, dataRow: [] }], label: [{ name: "er lief", labelID: 30, start: 15, end: 22 }] });
+    expect(project.deleteLabel(30)).toBeTruthy();
+    projectData.dataSet[2].label!.pop();
+    checkAll(project, projectID, sessionID, projectName, currentDataRows, projectData);
+    //Bei fehlerhaften übergabe
+    expect(project.deleteLabel(30)).toBeFalsy();
+    expect(project.deleteLabel(-1)).toBeFalsy();
+    project.getDataRows(dataSetID1); //Datensatz mit DatensatzID 42 als aktuellen Datensatz laden
+    expect(project.deleteLabel(26)).toBeFalsy();
+    expect(project.deleteLabel(27)).toBeFalsy();
+    expect(project.deleteLabel(28)).toBeFalsy();
+    expect(project.deleteLabel(29)).toBeFalsy();
+    project.getDataRows(dataSetID2); //Datensatz mit DatensatzID 43 als aktuellen Datensatz laden
+    expect(project.deleteLabel(26)).toBeFalsy();
+    expect(project.deleteLabel(27)).toBeFalsy();
+    //ohne currentDataSet
+    project.getDataRows(dataSetID);
+    expect(project.deleteDataSet(dataSetID)).toBeTruthy();
+    projectData.dataSet.pop();
+    expect(project.deleteLabel(30)).toBeFalsy();
+    currentDataRows = 0; //Da currentDataSet gelöscht wurde
+    checkAll(project, projectID, sessionID, projectName, currentDataRows, projectData);
 });
 
 /**
@@ -273,4 +410,3 @@ function checkAll(project: Project, projectID: number, sessionID: number, projec
     // ToDo Es wird nicht getestet ob generateDate übereinstimmt //
     ///////////////////////////////////////////////////////////////
 }
-
