@@ -22,7 +22,8 @@ export class DeliveryPage implements Page {
 		this.notify()
 		const VDOM = (
 			<div>
-
+				<EmailList delivery={this.delivery.bind(this)} />
+				<DownloadButton download={this.download.bind(this)} />
 			</div>
 		);
 		ReactDOM.render(VDOM, document.getElementById('root'));
@@ -56,24 +57,20 @@ export class DeliveryPage implements Page {
 		this.update()
 	}
 
-	delivery() {
-		PubSub.unsubscribe('delivery')
-		PubSub.subscribe('delivery', (_msg: any, data: string[]) => {
-			// eslint-disable-next-line
-			this.state.currentState = States.DeliverWeb
-			// eslint-disable-next-line
-			this.state.chosenEmails = data
-			this.notify()
-		})
+	delivery(chosenEmails: string[]) {
+
+		// eslint-disable-next-line
+		this.state.currentState = States.DeliverWeb
+		// eslint-disable-next-line
+		this.state.chosenEmails = chosenEmails
+		this.notify()
 	}
 
 	download() {
-		PubSub.unsubscribe('download')
-		PubSub.subscribe('download', (_msg: any) => {
-			// eslint-disable-next-line
-			this.state.currentState = States.NeedDownload
-			this.notify()
-		})
+
+		// eslint-disable-next-line
+		this.state.currentState = States.NeedDownload
+		this.notify()
 	}
 
 

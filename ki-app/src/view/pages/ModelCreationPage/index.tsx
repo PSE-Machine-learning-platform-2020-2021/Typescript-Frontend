@@ -1,5 +1,4 @@
 import React from 'react';
-import PubSub from 'pubsub-js';
 import { Page } from "../PageInterface";
 import { PageController } from "../../../controller/PageController";
 import { State } from "./State";
@@ -22,7 +21,10 @@ export class ModelCreationPage implements Page {
 		this.notify()
 		const VDOM = (
 			<div>
-				<Train />
+				<Train
+					dataSetMetas={this.state.dataSetMetas!}
+					train={this.train.bind(this)}
+				/>
 				<NotificationContainer />
 			</div>
 		);
@@ -56,29 +58,16 @@ export class ModelCreationPage implements Page {
 		this.update()
 	}
 
-	needDatabaseList() {
+	train(dataSets: number[], imputator: string, classifier: string, scaler: string, features: string[]) {
 		// eslint-disable-next-line
-		//this.state.currentState = States.NeedDatabaseList
-		//this.notify()
-
-		/**  Beispiel
-		let databaseList = [
-			{ dataSetID: 1, dataSetName: 'dataset1' },
-			{ dataSetID: 2, dataSetName: 'dataset2' },
-			{ dataSetID: 3, dataSetName: 'dataset3' }
-		]
-		PubSub.publish('getlist', databaseList)*/
-	}
-
-	train() {
-		PubSub.unsubscribe('train');
-		PubSub.subscribe('train', (_msg: any, data: { dataSets: number[], imputator: string, classifier: string, scaler: string, features: string[]; }) => {
-			// eslint-disable-next-line
-			this.state.currentState = States.NeedKiTraining;
-			// eslint-disable-next-line
-			this.state.trainingParameter = data;
-			this.notify();
-		});
+		this.state.currentState = States.NeedKiTraining;
+		// eslint-disable-next-line
+		this.state.trainingParameter!.dataSets = dataSets;
+		this.state.trainingParameter!.imputator = imputator;
+		this.state.trainingParameter!.classifier = classifier;
+		this.state.trainingParameter!.scaler = scaler;
+		this.state.trainingParameter!.features = features;
+		this.notify();
 	}
 
 }

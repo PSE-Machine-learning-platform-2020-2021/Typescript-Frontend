@@ -1,5 +1,5 @@
 import React, { Component } from 'react'
-
+import "./FinishButton.css"
 export default class FinishButton extends Component {
     props = {
         pageChangeToCreation: function () { }
@@ -8,7 +8,8 @@ export default class FinishButton extends Component {
     render() {
         return (
             <div>
-                <button onClick={() => this.props.pageChangeToCreation()} className="btn" >Train Anfang!</button>
+                <h4>Wählen Diagramm mit Klicken!</h4>
+                <button onClick={() => this.props.pageChangeToCreation()} className="finish-btn" >Train Anfang!</button>
             </div>
         )
     }
