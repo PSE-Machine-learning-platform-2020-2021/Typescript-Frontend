@@ -31,7 +31,7 @@ export class StartPage implements Page {
     * Die Methode enthält den Aufbau der Seite und wird von ihr gerendert.
     * Es werden durch notify() alle controller über ein Update informiert und alle Seiten Elemente werden aktualisiert und erneut gerendert. 
     */
-    update () {
+    private update () {
         this.notify();
         const VDOM = (
             <div>
@@ -41,13 +41,15 @@ export class StartPage implements Page {
             </div>
 
         );
-        ReactDOM.render( VDOM, document.getElementById( 'root' ) );
+        if (document.getElementById( 'root' ) !== null) {
+            ReactDOM.render( VDOM, document.getElementById( 'root' ) );
+        }
     }
 
     /**
     * Prüft ob der Nutzer "Start" druckt und ändert den Zustand.
     */
-    changeSettings ( recordingSettings: {
+    private changeSettings ( recordingSettings: {
         newDataSetName: string,
         usedSensorTypes: number[],
         waitTime: number,
