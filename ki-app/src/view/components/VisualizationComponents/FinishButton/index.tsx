@@ -1,13 +1,15 @@
 import React, { Component } from 'react'
-
+import "./FinishButton.css"
 export default class FinishButton extends Component {
-    handleClick = () => {
-        PubSub.publish('changepage',)
+    props = {
+        pageChangeToCreation: function () { }
     }
+
     render() {
         return (
             <div>
-                <button onClick={() => this.handleClick()} className="btn" >Train Anfang!</button>
+                <h4>Wählen Diagramm mit Klicken!</h4>
+                <button onClick={() => this.props.pageChangeToCreation()} className="finish-btn" >Train Anfang!</button>
             </div>
         )
     }

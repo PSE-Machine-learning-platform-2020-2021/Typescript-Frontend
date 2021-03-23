@@ -1,53 +1,42 @@
 import { Component } from 'react';
-import PubSub from 'pubsub-js';
+import { NotificationManager } from 'react-notifications';
 
 export default class Countdown extends Component {
-    state = { countdownNumber: 5, startCounting: false, chosenSensors: [] };
 
-    componentDidMount() {
-        PubSub.unsubscribe('startCounting');
-        PubSub.subscribe('startCounting', (_msg: any, leadTime: number) => {
-            this.setState({ countdownNumber: leadTime, startCounting: true });
-        }
-        );
-        PubSub.unsubscribe('nextCount');
-        PubSub.subscribe('nextCount', (_msg: any, waitTime: number) => {
-            this.setState({ countdownNumber: waitTime, startCounting: true });
-        }
-        );
-
-        PubSub.unsubscribe('usedsensors');
-        PubSub.subscribe('usedsensors', (_msg: any, sensorTypes: number[]) => {
-            let sensors: string[] = [];
-            for (let index = 0; index < sensorTypes.length; index++) {
-                switch (sensorTypes[index]) {
-                    case 2:
-                        sensors.push('Accelerometer');
-                        break;
-                    case 3:
-                        sensors.push('Gyroscope');
-                        break;
-                    case 4:
-                        sensors.push('Magnetometer');
-                        break;
-                    default:
-                        break;
-                }
-            }
-            this.setState({ chosenSensors: sensors });
-        }
-        );
+    props = {
+        countdownNumber: 5, chosenSensors: [1]
     }
 
     render() {
+        let countdown
+        if (this.props.countdownNumber > 0) {
+            countdown = this.props.countdownNumber
+        } else if (this.props.countdownNumber != 0) {
+            countdown = " "
+        } else {
+            countdown = "Aufnahme gestartet"
+        }
+        
+        let sensornames: string[] = []
+        for (let sensor in this.props.chosenSensors) {
+            switch(sensor){
+                case "0":
+                    sensornames.push("Accelerometer")
+                    break;
+                case "1":
+                    sensornames.push("Gyroscope")
+                    break;
+            }
+        }
+
         return (
             <div>
                 <h2>Bereit machen zur Aufnahme!</h2>
-                <h2>{this.state.startCounting ? this.state.countdownNumber : ""}</h2>
+                <h2>{ countdown }</h2>
                 <h2>Verwendete Sensoren:</h2>
                 {
-                    this.state.chosenSensors.map((sensor) => {
-                        return <h4>{sensor}</h4>;
+                   sensornames.map((x) => {
+                        return <h4>{x}</h4>;
                     })
                 }
             </div>

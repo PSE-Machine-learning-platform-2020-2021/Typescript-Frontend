@@ -1,24 +1,24 @@
 import React, { Component } from "react";
-import input from "./index.module.css";
+import {NotificationContainer, NotificationManager} from 'react-notifications';
+import './Input.css'
 
 export default class Input extends Component {
+
+  props = {
+    pageChangeSettings: function(recordingSettings: {
+      newDataSetName: string, usedSensorTypes: number[], waitTime: number, readTime: number,
+      availableSensorTypes: { sensorTypID: number, sensorType: string, chosen: boolean; }[]
+    }){},
+    availableSensorTypes: [] as { sensorTypID: number, sensorType: string, chosen: boolean; }[]
+  }
+
   state = {
     name: "",
     usedSensorTypes: [] as number[],
     leadTime: "",
     collectionTime: "",
-    availableSensorTypes: [] as { sensorTypID: number, sensorType: string, chosen: boolean; }[]
     //wait: new Promise(resolve => setTimeout(resolve, 1000))
   };
-
-  componentDidMount() {
-    PubSub.subscribe("setAvailableSensors", (
-      _msg: any, data: { sensorTypID: number, sensorType: string, chosen: boolean; }[]
-    ) => {
-      this.setState({ availableSensorTypes: data });
-    });
-  }
-
 
   changeLeadtime = (e: React.ChangeEvent<HTMLInputElement>) => {
     this.setState({
@@ -42,7 +42,7 @@ export default class Input extends Component {
   };
 
   handleCheckBoxChange = (e: React.ChangeEvent<HTMLInputElement>) => {
-    let newAvailableSensorTypes = this.state.availableSensorTypes;
+    let newAvailableSensorTypes = this.props.availableSensorTypes;
     for (var i = 0; i < newAvailableSensorTypes.length; i++) {
       // eslint-disable-next-line
       if (newAvailableSensorTypes[i].sensorTypID == +e.target.value) {
@@ -53,13 +53,12 @@ export default class Input extends Component {
     }
   };
 
-  ////////////////////////////////////////Error bei anderem außer zahlen?
   submit = () => {
     if (
       parseInt(this.state.leadTime) >= 0 &&
       parseInt(this.state.collectionTime) >= 0
     ) {
-      let availableSensorTypes = this.state.availableSensorTypes;
+      let availableSensorTypes = this.props.availableSensorTypes;
       var usedSensorTypes: number[] = [];
       for (var i = 0; i < availableSensorTypes.length; i++) {
         // eslint-disable-next-line
@@ -69,12 +68,20 @@ export default class Input extends Component {
       }
       this.setState({ usedSensorTypes: usedSensorTypes });
 
+      if ( isNaN(+this.state.leadTime) || isNaN(+this.state.collectionTime)){
+        NotificationManager.error("Die Eingabe der Zeit ist ungültig. Nur Ganze Zahlen sind Erlaubt");
+        return
+      }
+
       const newDataSetName = this.state.name;
-      const waitTime = this.state.leadTime;
-      const readTime = this.state.collectionTime;
-      PubSub.publish('settingsFinish', { newDataSetName, usedSensorTypes, waitTime, readTime, availableSensorTypes });
+      const waitTime = +this.state.leadTime;
+      const readTime = +this.state.collectionTime;
+      this.props.pageChangeSettings({
+        newDataSetName: newDataSetName, usedSensorTypes: usedSensorTypes, waitTime: waitTime, readTime: readTime,
+        availableSensorTypes: availableSensorTypes
+      });
     } else {
-      alert("Deine Eingabe ist ungültig.");
+      NotificationManager.error("Die Eingabe ist ungültig");
     }
   };
 
@@ -106,7 +113,7 @@ export default class Input extends Component {
           /><br />
           Sensoren:
           {
-            this.state.availableSensorTypes.map((type: { sensorTypID: number, sensorType: string, chosen: boolean; }) => {
+            this.props.availableSensorTypes.map((type: { sensorTypID: number, sensorType: string, chosen: boolean; }) => {
               return (<div>
                 <input type="checkbox" value={type.sensorTypID} checked={type.chosen} onChange={(e: React.ChangeEvent<HTMLInputElement>): void => this.handleCheckBoxChange(e)} />
                 {type.sensorType}
@@ -115,7 +122,7 @@ export default class Input extends Component {
           }
 
           <br />
-          <button type="button" onClick={this.submit}>
+          <button type="button" onClick={this.submit} className="submit-btn">
             Start
           </button>
         </form>
