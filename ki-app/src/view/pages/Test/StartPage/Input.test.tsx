@@ -36,3 +36,30 @@ test('Rendert', () => {
     submit.simulate("click");
     expect(pageChangeSettings.mock.calls.length).toBe(1)
   });
+
+  test('Falsche eingabe', () => {
+    Enzyme.configure({ adapter: new Adapter() });
+    let pageChangeSettings = jest.fn()
+    let availableSensorTypes =  [{ sensorTypID: 5, sensorType: "1", chosen: true }]
+    const wrapper = Enzyme.mount<Input>(<Input pageChangeSettings={pageChangeSettings} availableSensorTypes={availableSensorTypes}/>)
+
+    const leadTime: any = wrapper.find("input").at(0);
+    leadTime.instance().value = "Falsch";
+    leadTime.simulate("change");
+    expect(wrapper.state().leadTime).toBe("Falsch")
+
+    const collectionTime: any = wrapper.find("input").at(1);
+    collectionTime.instance().value = "Falsch";
+    collectionTime.simulate("change");
+    expect(wrapper.state().collectionTime).toBe("Falsch")
+
+    const name: any = wrapper.find("input").at(2);
+    name.instance().value = "";
+    name.simulate("change");
+    expect(wrapper.state().name).toBe("")
+
+    expect(pageChangeSettings.mock.calls.length).toBe(0)
+    const submit: any = wrapper.find("button").at(0);
+    submit.simulate("click");
+    expect(pageChangeSettings.mock.calls.length).toBe(0)
+  });
