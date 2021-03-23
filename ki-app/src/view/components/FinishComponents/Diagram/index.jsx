@@ -18,75 +18,80 @@ export default class Diagram extends Component {
             '6A5ACD', 'EE7600', '696969'],
     };
 
+    props = {
+        dataRows: [{ sensorType: 1, datapoint: [{ value: [5], relativeTime: 5 }] }],
+    };
+
     componentDidMount() {//{ sensorType: number, datapoint:{value: number[], relativeTime: number; }[]}[]
-        PubSub.subscribe("finishDiagram", (_msg, dataRows) => {
-            this.setState({
-                lineLabels: [],
-                sensorRow: [],
-                datavalue: [],
-                time: [],
-                showDiagram: true
-            });
-            //put each value Array in State
-            var datavalues = [];
-            for (var i = 0; i < dataRows.length; i++) {
-                this.state.sensorRow.push(dataRows[i].sensorType);
-                for (var dataCoordinate = 0; dataCoordinate < 3; dataCoordinate++) {
-                    for (var j = 0; j < dataRows[i].datapoint.length; j++) {
-                        datavalues.push(dataRows[i].datapoint[j].value[dataCoordinate]);
-                    }
-                    this.state.datavalue.push(datavalues);
-                    datavalues = [];
-                }
-            }
-            // eslint-disable-next-line
-            for (var j = 0; j < dataRows[0].datapoint.length; j++) {
-                this.state.time.push(dataRows[0].datapoint[j].relativeTime);
-            }
 
-            var newDatasets = [];
-            var lineLabels = [];
-            // eslint-disable-next-line
-            for (var i = 0; i < this.state.sensorRow.length * 3; i++) {
-                var coordinate = ".X";
-                var sensor = this.state.sensorRow[parseInt(i / 3)];
-                // eslint-disable-next-line
-                if (i % 3 == 1) {
-                    coordinate = ".Y";
-                }
-                // eslint-disable-next-line
-                if (i % 3 == 2) {
-                    coordinate = ".Z";
-                }
-
-                lineLabels.push(<font color={this.state.csscolor[i]}>■{this.state.sensorRow[parseInt(i / 3)] + coordinate}<br /></font>);
-                //this.setState({ lineLabels: lineLabels })
-                newDatasets.push(
-                    {
-                        label: sensor + coordinate,
-                        strokeColor: this.state.color[i],
-                        borderWidth: 1,
-                        data: this.state.datavalue[i],
-                    }
-                );
-            }
-            const data = {
-                labels: this.state.time,
-                datasets: newDatasets
-            };
-            const options = {
-                datasetFill: false,
-                pointDotRadius: 2,
-                pointHitDetectionRadius: 1,
-                offsetGridLines: false,
-                pointDot: false
-            };
-            this.setState({ lineLabels: lineLabels });
-            //this.setState({ diagram: { lineLabels, data, options } })
-            //this.setState({ diagramLineLabels: lineLabels })
-            this.setState({ diagramData: data });
-            this.setState({ diagramOptions: options });
+        this.setState({
+            lineLabels: [],
+            sensorRow: [],
+            datavalue: [],
+            time: [],
+            showDiagram: true
         });
+        //put each value Array in State
+        var datavalues = [];
+        for (var i = 0; i < this.props.dataRows.length; i++) {
+            this.state.sensorRow.push(this.props.dataRows[i].sensorType);
+            for (var dataCoordinate = 0; dataCoordinate < 3; dataCoordinate++) {
+                for (var j = 0; j < this.props.dataRows[i].datapoint.length; j++) {
+                    datavalues.push(this.props.dataRows[i].datapoint[j].value[dataCoordinate]);
+                }
+                this.state.datavalue.push(datavalues);
+                datavalues = [];
+            }
+        }
+        // eslint-disable-next-line
+        if (this.props.dataRows != 0) {
+            for (var j = 0; j < this.props.dataRows[0].datapoint.length; j++) {
+                this.state.time.push(this.props.dataRows[0].datapoint[j].relativeTime);
+            }
+        }
+
+        var newDatasets = [];
+        var lineLabels = [];
+        // eslint-disable-next-line
+        for (var i = 0; i < this.state.sensorRow.length * 3; i++) {
+            var coordinate = ".X";
+            var sensor = this.state.sensorRow[parseInt(i / 3)];
+            // eslint-disable-next-line
+            if (i % 3 == 1) {
+                coordinate = ".Y";
+            }
+            // eslint-disable-next-line
+            if (i % 3 == 2) {
+                coordinate = ".Z";
+            }
+
+            lineLabels.push(<font color={this.state.csscolor[i]}>■{this.state.sensorRow[parseInt(i / 3)] + coordinate}<br /></font>);
+            //this.setState({ lineLabels: lineLabels })
+            newDatasets.push(
+                {
+                    label: sensor + coordinate,
+                    strokeColor: this.state.color[i],
+                    borderWidth: 1,
+                    data: this.state.datavalue[i],
+                }
+            );
+        }
+        const data = {
+            labels: this.state.time,
+            datasets: newDatasets
+        };
+        const options = {
+            datasetFill: false,
+            pointDotRadius: 2,
+            pointHitDetectionRadius: 1,
+            offsetGridLines: false,
+            pointDot: false
+        };
+        this.setState({ lineLabels: lineLabels });
+        //this.setState({ diagram: { lineLabels, data, options } })
+        //this.setState({ diagramLineLabels: lineLabels })
+        this.setState({ diagramData: data });
+        this.setState({ diagramOptions: options });
 
     }
 

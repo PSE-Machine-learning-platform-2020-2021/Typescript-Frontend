@@ -1,5 +1,3 @@
-import React, { Component } from "react";
-import PubSub from 'pubsub-js';
 import Title from "../../components/FinishComponents/Title";
 import Body from "../../components/FinishComponents/Diagram";
 import Labelling from "../../components/FinishComponents/Input/Labelling";
@@ -10,28 +8,30 @@ import ReactDOM from "react-dom";
 import { States } from "../State";
 
 export class FinishPage implements Page {
-  state = new State;
-  observers: PageController[] = [];
+  private state: State;
+  private observers: PageController[] = [];
 
   constructor() {
-    this.state = new State()
+    this.state = new State();
+    this.update();
   }
 
-  update() {
-    this.notify()
+  private update() {
+    this.notify();
     const VDOM = (
       <div>
         <Title />
-        <Body />
+        <Body dataRows={this.state.dataRows} />
         <div className="label-container">
-          <Labelling />
+          <Labelling newLabel={this.newLabel.bind(this)} pagedeleteLabel={this.pagedeleteLabel.bind(this)} />
         </div>
+        <button type="submit" onSubmit={this.finish}>Finish</button>
       </div>
     );
     ReactDOM.render(VDOM, document.getElementById('root'));
   }
 
-
+  //braucht nicht mehr
   giveDiagram() {
     //Beispiel
     /*var exrows = []
@@ -49,37 +49,24 @@ export class FinishPage implements Page {
     ])
 
     PubSub.publish('finishDiagram', exrows)*/
-
-    //PubSub.publish('finishDiagram', this.state.dataRows);
   }
 
-  newLabel() {
-    PubSub.unsubscribe('newLabel');
-    PubSub.subscribe('newLabel', (_msg: any, label: { labelID: number, start: number, end: number, name: string; }) => {
-      this.state.currentLabel = label;
-      this.state.currentState = States.NewLabel;
-      this.notify();
-    });
+  newLabel(label: { labelID: number, start: number, end: number, name: string; }) {
+    this.state.currentLabel = label;
+    this.state.currentState = States.NewLabel;
+    this.notify();
   }
 
-  changeLabel() {
-    PubSub.unsubscribe('changeLabel');
-    PubSub.subscribe('changeLabel', (_msg: any, label: { labelID: number, start: number, end: number, name: string; }) => {
-      this.state.currentLabel = label;
-      this.state.currentState = States.ChangeLabel;
-      this.notify();
-
-    });
+  pagedeleteLabel(label: { start: number, end: number, name: string, labelID: number; }) {
+    var deleteLabel = { labelID: label.labelID, start: label.start, end: label.end, name: label.name };
+    this.state.currentLabel = deleteLabel;
+    this.state.currentState = States.DeleteLabel;
+    this.notify();
   }
 
-  deleteLabel() {
-    PubSub.unsubscribe('deleteLabel');
-    PubSub.subscribe('deleteLabel', (_msg: any, label: { start: number, end: number, name: string, labelID: number; }) => {
-      var deleteLabel = { labelID: label.labelID, start: label.start, end: label.end, name: label.name };
-      this.state.currentLabel = deleteLabel;
-      this.state.currentState = States.DeleteLabel;
-      this.notify();
-    });
+  finish() {
+    this.state.currentState = States.ChangeToVisual;
+    this.notify();
   }
 
 
@@ -109,7 +96,7 @@ export class FinishPage implements Page {
     return this.state;
   }
   setState(state: any) {
-    this.state = state
-    this.update()
+    this.state = state;
+    this.update();
   }
 }

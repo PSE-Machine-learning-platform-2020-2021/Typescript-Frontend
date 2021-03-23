@@ -5,6 +5,7 @@ import { MainController } from "./MainController";
 import { DeliveryController } from "./DeliveryController";
 import { VisualizationController } from "./VisualizationController";
 import { ReferringPage } from "../view/pages/ReferringPage/index";
+import { FinishPage } from "../view/pages/FinishPage/index";
 import { QRCode, ErrorCorrectLevel, QRNumber, QRAlphaNum, QR8BitByte, QRKanji } from 'qrcode-generator-ts/js';
 
 /**
@@ -18,7 +19,7 @@ export class RefferingController implements PageController {
      * Konstruktor des Seitenverwalters. Registriert sich als Beobachter auf seiner Seite und setzt den Start Status. 
      */
     constructor() {
-        this.page = new ReferringPage();
+        this.page = new FinishPage();
         //this.page = new StartPage({});
         //this.page = new ModelCreationPage({});
         // this.page = new VisualizationPage({});
@@ -32,7 +33,7 @@ export class RefferingController implements PageController {
      */
     update() {
         this.state = this.page.getState();
-        console.log("controller update: " + this.state.currentState.toString())
+        console.log("controller update: " + this.state.currentState.toString());
         switch (this.state.currentState) {
             case States.LoadProject:
                 this.loadProject();
@@ -50,11 +51,11 @@ export class RefferingController implements PageController {
                 this.loadModel();
                 break;
             case States.SetLanguage:
-                MainController.getInstance().setLanguage(this.state.languageCode)
+                MainController.getInstance().setLanguage(this.state.languageCode);
                 break;
             case States.NeedMessage:
-                this.state.messages = MainController.getInstance().getMessage(this.state.messages)!
-                this.state.currentState = States.waitForDB
+                this.state.messages = MainController.getInstance().getMessage(this.state.messages)!;
+                this.state.currentState = States.waitForDB;
                 this.page.setState(this.state);
                 break;
             case States.ChangeToVisual:
@@ -82,7 +83,7 @@ export class RefferingController implements PageController {
                     this.state.projectData! = data;
                     this.page.setState(this.state);
                 });
-                this.state.islogedIn! = true
+                this.state.islogedIn! = true;
             } else {
                 this.state.currentState = States.LoginFail;
             }
@@ -112,11 +113,11 @@ export class RefferingController implements PageController {
                     this.state.projectData! = data;
                     this.page.setState(this.state);
                 });
-                this.state.islogedIn! = true
+                this.state.islogedIn! = true;
             } else {
                 this.state.currentState = States.LoginFail;
             }
-            console.log("Eingelogt? " + this.state.islogedIn! + " " + this.state.currentState)
+            console.log("Eingelogt? " + this.state.islogedIn! + " " + this.state.currentState);
             this.page.setState(this.state);
         });
     }
@@ -128,7 +129,7 @@ export class RefferingController implements PageController {
         const url = new URL(document.URL);
         url.searchParams.append("SessionID", MainController.getInstance().getFacade().getSessionID().toString());
         url.searchParams.append("isMiner", "true");
-        url.searchParams.append("Admin", this.state.adminData?.email!)
+        url.searchParams.append("Admin", this.state.adminData?.email!);
         let link: string = url.toString();
         var qr = new QRCode();
         qr.setTypeNumber(5);
@@ -136,7 +137,7 @@ export class RefferingController implements PageController {
         qr.addData(link);
         qr.make();
         this.state.qr = qr.toDataURL();
-        this.state.link = link
+        this.state.link = link;
         this.state.currentState = States.SetQRC;
     }
 
