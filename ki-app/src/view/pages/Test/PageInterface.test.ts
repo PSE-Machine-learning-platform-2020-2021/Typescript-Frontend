@@ -6,9 +6,9 @@ import { DeliveryPage } from "../DeliveryPage/index"
 import { DataCollectionPage } from "../DataCollectionPage/index"
 import { Page } from "../PageInterface"
 import { States } from "../State";
-import { StartController } from "../../../controller/StartController"
+import { PageController } from "../../../controller/PageController"
 
-test('setState Test', () => {
+test('State Test', () => {
   let pages = [new StartPage("TEST"), new ReferringPage(), new ModelCreationPage(), new FinishPage(), new DeliveryPage(), new DataCollectionPage()]
   let page: Page
   for (page of pages) {
@@ -23,24 +23,26 @@ test('setState Test', () => {
 });
 
 test('Test des Beobachter Musters', () => {
-  let page = new StartPage("TEST")
+  let pages = [new StartPage("TEST"), new ReferringPage(), new ModelCreationPage(), new FinishPage(), new DeliveryPage(), new DataCollectionPage()]
+  let page: Page
+  for (page of pages) {
+    const controller = jest.mock("../../../controller/PageController") as unknown as PageController;
+    const update = jest.fn();
+    controller.update = update
 
-  const controller = jest.mock("../../../controller/StartController") as unknown as StartController;
-  const update = jest.fn();
-  controller.update = update
+    page.attach(controller)
+    page.notify()
+    expect(update.mock.calls.length).toBe(1)
 
-  page.attach(controller)
-  page.notify()
-  expect(update.mock.calls.length).toBe(1)
+    let state = page.getState()
+    expect(update.mock.calls.length).toBe(1)
 
-  let state = page.getState()
-  expect(update.mock.calls.length).toBe(1)
+    page.setState(state)
+    expect(update.mock.calls.length).toBe(2)
 
-  page.setState(state)
-  expect(update.mock.calls.length).toBe(2)
-
-  page.detach(controller)
-  page.setState(state)
-  expect(update.mock.calls.length).toBe(2)
+    page.detach(controller)
+    page.setState(state)
+    expect(update.mock.calls.length).toBe(2)
+  }
 });
 

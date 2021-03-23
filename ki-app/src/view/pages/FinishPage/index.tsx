@@ -28,7 +28,9 @@ export class FinishPage implements Page {
         <button type="submit" onSubmit={this.finish}>Finish</button>
       </div>
     );
-    ReactDOM.render(VDOM, document.getElementById('root'));
+    if (document.getElementById( 'root' ) !== null) {
+      ReactDOM.render( VDOM, document.getElementById( 'root' ) );
+  }
   }
 
   //braucht nicht mehr
