@@ -19,7 +19,7 @@ export class RefferingController implements PageController {
      * Konstruktor des Seitenverwalters. Registriert sich als Beobachter auf seiner Seite und setzt den Start Status. 
      */
     constructor() {
-        this.page = new ReferringPage();
+        this.page = new FinishPage();
         //this.page = new StartPage({});
         //this.page = new ModelCreationPage({});
         // this.page = new VisualizationPage({});

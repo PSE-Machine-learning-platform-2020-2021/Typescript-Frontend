@@ -21,7 +21,7 @@ export class FinishPage implements Page {
     const VDOM = (
       <div>
         <Title />
-        <Body dataRows={this.state.dataRows} />
+        <Body dataRows={this.state.dataRows!} />
         <div className="label-container">
           <Labelling newLabel={this.newLabel.bind(this)} pagedeleteLabel={this.pagedeleteLabel.bind(this)} />
         </div>
