@@ -1,31 +1,36 @@
-import React from 'react'
-import PubSub from 'pubsub-js';
+import React from 'react';
 import { Page } from "../PageInterface";
 import { PageController } from "../../../controller/PageController";
 import { State } from "./State";
 import ReactDOM from 'react-dom';
-import './ModelCreationPage.css'
-import { States } from '../State'
+import './ModelCreationPage.css';
+import { States } from '../State';
 import Train from '../../components/ModelCreationComponents/Train';
+import { NotificationContainer, NotificationManager } from 'react-notifications';
+import 'react-notifications/lib/notifications.css';
 
-type Props = {
-};
-
-export class ModelCreationPage extends React.Component<Props, State> implements Page {
-	state = new State();
+export class ModelCreationPage implements Page {
+	state = new State;
 	observers: PageController[] = [];
-	constructor(props: Props) {
-		super(props);
 
+	constructor() {
+		this.state = new State()
+	}
+
+	update() {
+		this.notify()
 		const VDOM = (
-			<div className="modelcreationpage">
-				<Train />
+			<div>
+				<Train
+					dataSetMetas={this.state.dataSetMetas!}
+					train={this.train.bind(this)}
+				/>
+				<NotificationContainer />
 			</div>
 		);
-
-		ReactDOM.render(VDOM, document.getElementById('root'));
-		this.needDatabaseList()
-		this.train()
+		if (document.getElementById( 'root' ) !== null) {
+            ReactDOM.render( VDOM, document.getElementById( 'root' ) );
+        }
 	}
 
 	attach(observer: PageController) {
@@ -50,30 +55,21 @@ export class ModelCreationPage extends React.Component<Props, State> implements 
 		return this.state;
 	}
 
-	needDatabaseList() {
-		// eslint-disable-next-line
-		this.state.currentState = States.NeedDatabaseList
-		//this.setState({ currentState: States.NeedDatabaseList })
-		this.notify()
-		let databaseList = [
-			{ dataSetID: 1, dataSetName: 'dataset1' },
-			{ dataSetID: 2, dataSetName: 'dataset2' },
-			{ dataSetID: 3, dataSetName: 'dataset3' }
-		]
-		PubSub.publish('getlist', databaseList)
-		//PubSub.publish('getlist', this.state.dataSets)
+	setState(state: any) {
+		this.state = state
+		this.update()
 	}
 
-	train() {
-		PubSub.subscribe('train', (_msg: any, data: { dataSets: number[], imputations: string[], classifier: string, scaler: string, extractions: string[] }) => {
-			//console.log(data);
-			// eslint-disable-next-line
-			this.state.currentState = States.NeedKiTraining
-			//this.setState({ currentState: States.NeedKiTraining })
-			//this.state.trainingParameter = data
-			//console.log(this.state.trainingParameter);
-			this.notify()
-		})
+	train(dataSets: number[], imputator: string, classifier: string, scaler: string, features: string[]) {
+		// eslint-disable-next-line
+		this.state.currentState = States.NeedKiTraining;
+		// eslint-disable-next-line
+		this.state.trainingParameter!.dataSets = dataSets;
+		this.state.trainingParameter!.imputator = imputator;
+		this.state.trainingParameter!.classifier = classifier;
+		this.state.trainingParameter!.scaler = scaler;
+		this.state.trainingParameter!.features = features;
+		this.notify();
 	}
 
 }

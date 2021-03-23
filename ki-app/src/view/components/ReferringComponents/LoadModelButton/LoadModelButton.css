@@ -1,0 +1,12 @@
+.lp-btn {
+    background-color: #003cff; 
+    border: 1px solid #003cff;
+    border-radius: 20px;
+    color: white;
+    padding: 20px 32px;
+    text-align: center;
+    text-decoration: none;
+    display: inline-block;
+    font-size: 16px;
+}
+

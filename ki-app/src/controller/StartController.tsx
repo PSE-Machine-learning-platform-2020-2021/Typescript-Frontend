@@ -10,7 +10,7 @@ export class StartController implements PageController {
 
     private urlParams: URLSearchParams;
 
-    private page: Page = new StartPage({});
+    private page: Page;
     private sensorManager = new SensorManager();
     private state: IState;
     /**
@@ -19,22 +19,22 @@ export class StartController implements PageController {
     constructor() {
         const queryString = window.location.search;
         this.urlParams = new URLSearchParams(queryString);
+        let admin = this.urlParams.get("Admin")!;
+        this.page = new StartPage("Wilkommen! Sie erfassen für " + admin);
         this.state = this.page.getState();
         this.page.attach(this);
         MainController.getInstance().getFacade().registerDataminer("Miner", +this.urlParams.get("SessionID")!);
-        let availableSensor: { sensorTypID: number; sensorType: string; }[] = this.sensorManager.getAvailableSensors(); //Promise<{ sensorTypID: number; sensorType: string; }[]> = MainController.getInstance().getFacade().getAvailableSensors();
-        //this.state.wait! = availableSensor
-        //this.state.currentState = States.waitForDB
-        //this.page.setState(this.state)
-        //availableSensor.then((sensors) => {
-        for (let index = 0; index < availableSensor.length; index++) {
-            const sensorTypID: number = availableSensor[index].sensorTypID;
-            const sensorType: string = availableSensor[index].sensorType;
-            const chosen: boolean = false;
-            this.state.recordingSettings!.availableSensorTypes.push({ sensorTypID, sensorType, chosen });
-        }
-        this.page.setState(this.state);
-        // })
+        this.state.wait! = this.sensorManager.getAvailableSensors().then( //die view frägt zu früh den Wert der Sensoren ab
+            (availableSensor) => {
+                for (let index = 0; index < availableSensor.length; index++) {
+                    const sensorTypID: number = availableSensor[index].sensorTypID;
+                    const sensorType: string = availableSensor[index].sensorType;
+                    const chosen: boolean = false;
+                    this.state.recordingSettings!.availableSensorTypes.push({ sensorTypID, sensorType, chosen });
+
+                }
+                this.page.setState(this.state);
+            });
     }
 
 
@@ -45,14 +45,16 @@ export class StartController implements PageController {
     update() {
         this.state = this.page.getState();
         switch (this.state.currentState) {
-            case States.StartDataRead:
+            case States.ChangeToDataCollection:
                 this.start();
                 break;
             case States.SetLanguage:
-                this.page.setState(MainController.getInstance().setLanguage(this.state.languageCode));
+                MainController.getInstance().setLanguage(this.state.languageCode);
                 break;
             case States.NeedMessage:
-                this.page.setState(MainController.getInstance().getMessage(this.state.messages));
+                this.state.messages = MainController.getInstance().getMessage(this.state.messages)!;
+                this.state.currentState = States.waitForDB;
+                this.page.setState(this.state);
                 break;
             default:
                 break;
@@ -68,7 +70,7 @@ export class StartController implements PageController {
         let dataSetName: string = this.state.recordingSettings!.newDataSetName;
         let waitTime: number = this.state.recordingSettings!.waitTime;
         let readTime: number = this.state.recordingSettings!.readTime;
-        this.sensorManager.setUpDataRead(sensorTypes, dataSetName, waitTime, readTime, true);
+        this.sensorManager.setUpDataRead(sensorTypes, dataSetName, waitTime, readTime, true); //Was ist wenn Datensatz nicht erstellt? also false zurück gegeben wird
         let dataCollectionController = new DataCollectionController(this.sensorManager);
         MainController.getInstance().changeTo(dataCollectionController);
     }

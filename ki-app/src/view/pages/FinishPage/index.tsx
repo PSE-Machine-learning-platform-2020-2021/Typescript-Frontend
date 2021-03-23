@@ -1,5 +1,3 @@
-import React, { Component } from "react";
-import PubSub from 'pubsub-js';
 import Title from "../../components/FinishComponents/Title";
 import Body from "../../components/FinishComponents/Diagram";
 import Labelling from "../../components/FinishComponents/Input/Labelling";
@@ -9,36 +7,68 @@ import { State } from "./State";
 import ReactDOM from "react-dom";
 import { States } from "../State";
 
-type IProps = {
-};
+export class FinishPage implements Page {
+  private state: State;
+  private observers: PageController[] = [];
 
-export class FinishPage extends React.Component<IProps, State> implements Page {
-  state = new State();
-  observers: PageController[] = [];
+  constructor() {
+    this.state = new State();
+    this.update();
+  }
 
-  constructor(props: IProps) {
-    super(props);
-    this.setState({
-      dataRows: [
-        [{ sensorType: 1, value: [10, 20, 55], relativeTime: 0 }, { sensorType: 1, value: [55, 46, 22], relativeTime: 1, }],
-        [{ sensorType: 2, value: [16, 2, 72], relativeTime: 0 }, { sensorType: 1, value: [66, 61, 63], relativeTime: 1, }],
-      ]
-    });
+  private update() {
+    this.notify();
     const VDOM = (
       <div>
         <Title />
-        <Body />
+        <Body dataRows={this.state.dataRows} />
         <div className="label-container">
-          <Labelling />
+          <Labelling newLabel={this.newLabel.bind(this)} pagedeleteLabel={this.pagedeleteLabel.bind(this)} />
         </div>
+        <button type="submit" onSubmit={this.finish}>Finish</button>
       </div>
     );
-    ReactDOM.render(VDOM, document.getElementById("root"));
-    this.giveDiagram();
+    if (document.getElementById( 'root' ) !== null) {
+      ReactDOM.render( VDOM, document.getElementById( 'root' ) );
+  }
   }
 
+  //braucht nicht mehr
   giveDiagram() {
-    PubSub.publish('startDiagram', this.state.dataRows);
+    //Beispiel
+    /*var exrows = []
+    exrows.push([{ sensorType: 85124, value: [55, 66, 12], relativeTime: 0 },
+    { sensorType: 85124, value: [26, 21, 2], relativeTime: 1 },
+    { sensorType: 85124, value: [91, 83, 50], relativeTime: 2 },
+    { sensorType: 85124, value: [22, 71, 23], relativeTime: 3 },
+    { sensorType: 85124, value: [14, 8, 77], relativeTime: 4 },
+    ])
+    exrows.push([{ sensorType: 45157, value: [83, 44, 1], relativeTime: 0 },
+    { sensorType: 45157, value: [78, 55, 2], relativeTime: 1 },
+    { sensorType: 45157, value: [51, 66, 3], relativeTime: 2 },
+    { sensorType: 45157, value: [23, 81, 50], relativeTime: 3 },
+    { sensorType: 45157, value: [13, 20, 5], relativeTime: 4 },
+    ])
+
+    PubSub.publish('finishDiagram', exrows)*/
+  }
+
+  newLabel(label: { labelID: number, start: number, end: number, name: string; }) {
+    this.state.currentLabel = label;
+    this.state.currentState = States.NewLabel;
+    this.notify();
+  }
+
+  pagedeleteLabel(label: { start: number, end: number, name: string, labelID: number; }) {
+    var deleteLabel = { labelID: label.labelID, start: label.start, end: label.end, name: label.name };
+    this.state.currentLabel = deleteLabel;
+    this.state.currentState = States.DeleteLabel;
+    this.notify();
+  }
+
+  finish() {
+    this.state.currentState = States.ChangeToVisual;
+    this.notify();
   }
 
 
@@ -66,5 +96,9 @@ export class FinishPage extends React.Component<IProps, State> implements Page {
 
   getState() {
     return this.state;
+  }
+  setState(state: any) {
+    this.state = state;
+    this.update();
   }
 }

@@ -6,6 +6,7 @@
   "dependencies": {
     "@testing-library/react": "^11.2.3",
     "@testing-library/user-event": "^12.6.2",
+    "@types/enzyme": "^3.10.8",
     "@types/motion-sensors-polyfill": "^0.3.0",
     "@types/node": "^12.19.15",
     "@types/react": "^16.14.2",
@@ -21,6 +22,7 @@
     "react-chartjs-2": "^2.11.1",
     "react-dom": "^17.0.1",
     "react-new-window": "^0.1.2",
+    "react-notifications": "^1.7.2",
     "react-scripts": "^4.0.1",
     "ts-node": "^9.1.1",
     "web-vitals": "^0.2.4"
@@ -51,13 +53,20 @@
   },
   "devDependencies": {
     "@types/chart.js": "^2.9.30",
+    "@types/enzyme-adapter-react-16": "^1.0.6",
     "@types/jest": "^26.0.20",
     "@types/pubsub-js": "^1.8.2",
+    "enzyme": "^3.11.0",
+    "enzyme-adapter-react-16": "^1.15.6",
     "ts-jest": "^26.5.1",
     "ts-node": "^9.1.1",
     "typescript": "^4.1.5"
   },
   "jest": {
+    "moduleNameMapper": {
+      "\\.(jpg|jpeg|png|gif|eot|otf|webp|svg|ttf|woff|woff2|mp4|webm|wav|mp3|m4a|aac|oga)$": "<rootDir>/__mocks__/fileMock.js",
+      "\\.(css|less|scss|sass)$": "identity-obj-proxy"
+    },
     "transform": {
       ".(ts|tsx)": "<rootDir>/node_modules/ts-jest/preprocessor.js"
     }

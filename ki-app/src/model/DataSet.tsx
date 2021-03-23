@@ -74,8 +74,7 @@ export class DataSet {
   addDatapoint(dataRowID: number, datapoint: { value: number[], relativeTime: number; }): boolean {
     for (let i = 0; i < this.dataRow.length; i++) {
       if (this.dataRow[i].getID() === dataRowID) {
-        this.dataRow[i].addDatapoint(datapoint);
-        return true;
+        return this.dataRow[i].addDatapoint(datapoint);
       }
     }
     return false;
@@ -85,8 +84,8 @@ export class DataSet {
    * Gibt alle Datenreihen zurück.
    * @returns Ein zwei Dimensionales Array, die Erste Dimension wählt die Datenreihe und die zweite Dimension den Datenpunkt.
    */
-  public getDataRows(): { sensorType: number, value: number[], relativeTime: number; }[][] {
-    var dataRows: { sensorType: number, value: number[], relativeTime: number; }[][] = [];
+  public getDataRows(): { sensorType: number, datapoint: { value: number[], relativeTime: number; }[]; }[] {
+    var dataRows: { sensorType: number, datapoint: { value: number[], relativeTime: number; }[]; }[] = [];
     for (let i = 0; i < this.dataRow.length; i++) {
       dataRows.push(this.dataRow[i].getDataRow());
     }
@@ -101,13 +100,16 @@ export class DataSet {
    * @param end die Endzeit des Zeitfensters in Millisekunden
    * @returns falls das Label mit der ID schon existiert wird false zurück gegeben
    */
-  public createLabel(name: string, labelID: number, start: number, end: number): boolean {
+  public createLabel(labelID: number, span: { start: number, end: number; }, labelName: string): boolean {
+    if (labelID < 0 || span.start < 0 || span.end < span.start) {
+      return false;
+    }
     for (let i = 0; i < this.label.length; i++) {
       if (this.label[i].getID() === labelID) {
         return false;
       }
     }
-    this.label.push(new Label(name, labelID, start, end));
+    this.label.push(new Label(labelName, labelID, span.start, span.end));
     return true;
   }
 
@@ -118,11 +120,10 @@ export class DataSet {
    * @param labelName Ist bei Angabe der neue Name des Labels.
    * @returns falls das Label nicht existiert wird false zurück gegeben
    */
-  public setLabel(labelID: number, span?: { start: number, end: number; }, labelName?: string): boolean {
+  public setLabel(labelID: number, span: { start: number, end: number; }, labelName?: string): boolean {
     for (let i = 0; i < this.label.length; i++) {
       if (this.label[i].getID() === labelID) {
-        this.label[i].setLabel(span, labelName);
-        return true;
+        return this.label[i].setLabel(span, labelName);
       }
     }
     return false;
@@ -134,8 +135,8 @@ export class DataSet {
    */
   public deleteLabel(labelID: number): boolean {
     for (let i = 0; i < this.label.length; i++) {
-      if (this.label[i].getID() === labelID) {
-        delete this.label[i];
+      if (this.label[i].getID() == labelID) { //keine absolute gleichheit!
+        this.label.splice(i, 1);
         return true;
       }
     }

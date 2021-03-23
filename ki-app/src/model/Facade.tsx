@@ -4,7 +4,8 @@ import { Language } from "./Language";
 import { Admin, Dataminer, AIModelUser, User } from "./User";
 import { AIBuilder } from "./AIBuilder";
 import { AIDistributor } from "./AIDistributor";
-import { SensorData } from "./SensorData";
+import { AccelerometerData, GyroscopeData, SensorData } from "./SensorData";
+import { isBreakStatement } from "typescript";
 
 interface FacadeInterface {
   createDataSet(sensorTypes: string[], dataSetName: string): boolean;
@@ -40,7 +41,7 @@ interface FacadeInterface {
  * Die Facade stellt alle interaktionen mit dem Model zur Verfügung
  */
 export class Facade {
-  private language: Language; //Alle Nachrichten, in der geladenen Sprache
+  private language?: Language; //Alle Nachrichten, in der geladenen Sprache
   private dbCon: DatabaseConnector; //Die Verbindung zur Datenbank
   private user?: User; //Der Benutzer, entweder Admin, Datenerfasser oder AIModelUser
 
@@ -51,7 +52,7 @@ export class Facade {
    */
   constructor(languageCode: string) {
     this.dbCon = new DatabaseConnector();
-    this.language = new Language(this.dbCon.loadLanguage({ languageCode }));
+    this.dbCon.loadLanguage({ languageCode }).then((language: string[]) => { this.language = new Language(language); });
   }
 
   /**
@@ -63,22 +64,33 @@ export class Facade {
   async createDataSet(sensorTypeID: number[], dataSetName: string, datarowNames?: string[]): Promise<boolean> {
     if (this.user != null) {
       let sessionID: number = this.getSessionID();
-      let dataRowSensors: SensorData[] = this.user.getDeviceSensors(sensorTypeID);
-      if (dataRowSensors.length > 0 && dataRowSensors.length === sensorTypeID.length && sessionID >= 0) {
+      if (sessionID >= 0) {
         let projectID: number = this.user.getCurrentProjectID();
         let userID: number = this.user.getID();
         let dataRow: { sensorID: number, datarowName?: string; }[] = [];
-        for (let i = 0; i < dataRowSensors.length; i++) {
-          let sensordata = dataRowSensors[i].getSensorData();
+        for (let i = 0; i < sensorTypeID.length; i++) {
+          let sensorID = sensorTypeID[i];
           if (datarowNames != null && datarowNames.length >= i) {
-            dataRow.push({ sensorID: sensordata.id, datarowName: datarowNames[i] });
+            dataRow.push({ sensorID, datarowName: datarowNames[i] });
           } else {
-            dataRow.push({ sensorID: sensordata.id });
+            dataRow.push({ sensorID });
           }
         }
         let dataSetID: number = await this.dbCon.createDataSet({ sessionID, projectID, userID, dataSetName, dataRow });
-        if (dataSetID > 0) {
-          return this.user.createDataSet(dataRowSensors, dataSetID, dataSetName);
+        if (dataSetID >= 0) {
+          ///////////////////////////////DUMMY
+          var sensoren: SensorData[] = [];
+          for (let i = 0; i < sensorTypeID.length; i++) {
+            switch (sensorTypeID[i]) {
+              case 2:
+                sensoren.push(new AccelerometerData(-1, "", ""));
+                break;
+              case 3:
+                sensoren.push(new GyroscopeData(-1, "", ""));
+                break;
+            }
+          }
+          return this.user.createDataSet(sensoren, dataSetID, dataSetName);
         }
       }
     }
@@ -158,11 +170,11 @@ export class Facade {
    * @param dataSetID die Datensatz ID von der die Datenreihen gelesen werden sollen
    * @returns die Sensordaten von der Datenreihe
    */
-  getDataRows(dataSetID: number): { dataRows?: { sensorType: number, value: number[], relativeTime: number; }[][]; } {
+  getDataRows(dataSetID: number): { dataRows: { sensorType: number, datapoint: { value: number[], relativeTime: number; }[]; }[]; } {
     if (this.user != null) {
       return this.user.getDataRows(dataSetID);
     }
-    return {};
+    return { dataRows: [] };
   }
 
   /**
@@ -170,11 +182,11 @@ export class Facade {
    * @param dataSetID die Datensatz ID von der die Datenreihen gelesen werden sollen
    * @returns die Sensordaten von der Datenreihe
    */
-  getCurrentDataRows(): { dataRows?: { sensorType: number, value: number[], relativeTime: number; }[][]; } {
+  getCurrentDataRows(): { dataRows: { sensorType: number, datapoint: { value: number[], relativeTime: number; }[]; }[]; } {
     if (this.user != null) {
       return this.user.getCurrentDataRows();
     }
-    return {};
+    return { dataRows: [] };
   }
 
   /**
@@ -182,17 +194,20 @@ export class Facade {
    * @param messageID alle IDs, von denen die Sprachnachricht geladen werden soll
    * @returns alle Nachrichten, in der gleichen Reihenfolge wie angefordert
    */
-  getMessage(messageID: number[]): Promise<{ messageID: number, message: string; }[]> {
-    return this.language.getMessage(messageID);
+  getMessage(messageID: number[]): { messageID: number, message: string; }[] {
+    if (this.language != null) {
+      return this.language.getMessage(messageID);
+    }
+    return [];
   }
 
   /**
    * Gibt die auswählbaren Sensoren als ID mit ihrer Art in der Passenden Sprache zurück
    */
-  async getAvailableSensors(): Promise<{ sensorTypID: number, sensorType: string; }[]> {
-    if (this.user != null) {
+  getAvailableSensors(): { sensorTypID: number, sensorType: string; }[] {
+    if (this.user != null && this.language != null) {
       var sensors: { sensorTypID: number, sensorType: string; }[] = [];
-      let message: { messageID: number, message: string; }[] = await this.language.getMessage(this.user.getAvailableSensors());
+      let message: { messageID: number, message: string; }[] = this.language.getMessage(this.user.getAvailableSensors());
       for (let i = 0; i < message.length; i++) {
         sensors.push({ sensorTypID: message[i].messageID, sensorType: message[i].message });
       }
@@ -207,8 +222,9 @@ export class Facade {
    * @returns true, falls die Sprache erfolgreich geladen wurde
    */
   async setLanguage(languageCode: string): Promise<boolean> {
-    if (languageCode !== await this.language.getLanguageCode()) {
-      return this.language.setLanguagePromise(this.dbCon.loadLanguage({ languageCode }));
+    if (this.language != null && languageCode != this.language.getLanguageCode()) {
+      const language: string[] = await this.dbCon.loadLanguage({ languageCode });
+      return this.language.setLanguage(language);
     }
     return true;
   }
@@ -360,19 +376,19 @@ export class Facade {
       if (deleted) {
         let sessionID: number = this.getSessionID();
         let userID: number = this.user.getID();
-        let datasetID: number = this.user.getCurrentDataSetID();
-        return this.dbCon.deleteLabel({ sessionID, userID, datasetID, labelID });
+        let dataSetID: number = this.user.getCurrentDataSetID();
+        return this.dbCon.deleteLabel({ sessionID, userID, dataSetID, labelID });
       }
     }
     return false;
   }
 
 
-  getLabels(): { labels?: { name: string, id: number, start: number, end: number; }[]; } {
+  getLabels(): { labels: { name: string, id: number, start: number, end: number; }[]; } {
     if (this.user != null) {
       return this.user.getLabels();
     }
-    return {};
+    return { labels: [] };
   }
 
   classify(aiId: number, dataSetId: number, callBack: <R = unknown>(prediction: string | object) => R): void {
@@ -385,7 +401,7 @@ export class Facade {
     return aiDist.getAIModel();
   }
 
-  applyModel(trainingParameter: { sensors: number[], dataSets: number[], classifier: string, scaler: string, features: string[], trainingDataPercentage?: number, slidingWindowSize?: number, slidingWindowStep?: number; }): void {
+  applyModel(trainingParameter: { dataSets: number[], imputator: string, classifier: string, scaler: string, features: string[], trainingDataPercentage?: number, slidingWindowSize?: number, slidingWindowStep?: number; }): void {
     let aiBuilder = new AIBuilder(-1);
     aiBuilder.applyModel(trainingParameter);
   }

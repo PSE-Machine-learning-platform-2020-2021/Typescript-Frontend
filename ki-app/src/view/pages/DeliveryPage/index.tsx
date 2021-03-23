@@ -6,27 +6,31 @@ import { PageController } from "../../../controller/PageController";
 import { State } from "./State";
 import ReactDOM from 'react-dom';
 import { States } from '../State';
+import { NotificationContainer, NotificationManager } from 'react-notifications';
+import 'react-notifications/lib/notifications.css';
+export class DeliveryPage implements Page {
 
-type Props = {
-};
-
-export class DeliveryPage extends React.Component<Props, State> implements Page {
-
-	state = new State();
+	state = new State;
 	observers: PageController[] = [];
-	constructor(props: Props) {
-		super(props);
 
+	constructor() {
+		this.state = new State()
+	}
+
+
+	update() {
+		this.notify()
 		const VDOM = (
-			<div className="deliverypage">
-				<EmailList />
-				<DownloadButton />
+			<div>
+				<EmailList delivery={this.delivery.bind(this)} />
+				<DownloadButton download={this.download.bind(this)} />
 			</div>
 		);
-		ReactDOM.render(VDOM, document.getElementById('root'));
-		this.delivery()
-		this.download()
+		if (document.getElementById( 'root' ) !== null) {
+            ReactDOM.render( VDOM, document.getElementById( 'root' ) );
+        }
 	}
+
 
 	attach(observer: PageController) {
 		this.observers.push(observer);
@@ -50,22 +54,25 @@ export class DeliveryPage extends React.Component<Props, State> implements Page 
 		return this.state;
 	}
 
-	delivery() {
-		PubSub.subscribe('delivery', (_msg: any, data: string[]) => {
-			// eslint-disable-next-line
-			this.state.currentState = States.DeliverWeb
-			// eslint-disable-next-line
-			this.state.chosenEmails = data
-			this.notify()
-		})
+	setState(state: any) {
+		this.state = state
+		this.update()
+	}
+
+	delivery(chosenEmails: string[]) {
+
+		// eslint-disable-next-line
+		this.state.currentState = States.DeliverWeb
+		// eslint-disable-next-line
+		this.state.chosenEmails = chosenEmails
+		this.notify()
 	}
 
 	download() {
-		PubSub.subscribe('download', (_msg: any) => {
-			// eslint-disable-next-line
-			this.state.currentState = States.NeedDownload
-			this.notify()
-		})
+
+		// eslint-disable-next-line
+		this.state.currentState = States.NeedDownload
+		this.notify()
 	}
 
 

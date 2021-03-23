@@ -57,11 +57,11 @@ export abstract class User {
    * @param dataSetID die Datensatz ID von der die Datenreihen gelesen werden sollen
    * @returns die Sensordaten von der Datenreihe
    */
-  getDataRows(dataSetID: number): { dataRows?: { sensorType: number, value: number[], relativeTime: number; }[][]; } {
+  getDataRows(dataSetID: number): { dataRows: { sensorType: number, datapoint: { value: number[], relativeTime: number; }[]; }[]; } {
     if (this.currentProject != null) {
       return this.currentProject.getDataRows(dataSetID);
     } else {
-      return {};
+      return { dataRows: [] };
     }
   }
 
@@ -70,11 +70,12 @@ export abstract class User {
    * @param dataSetID die Datensatz ID von der die Datenreihen gelesen werden sollen
    * @returns die Sensordaten von der Datenreihe
    */
-  getCurrentDataRows(): { dataRows?: { sensorType: number, value: number[], relativeTime: number; }[][]; } {
+  getCurrentDataRows(): { dataRows: { sensorType: number, datapoint: { value: number[], relativeTime: number; }[]; }[]; } {
     if (this.currentProject != null) {
       return this.currentProject.getCurrentDataRows();
     } else {
-      return {};
+      console.log(this.currentProject);
+      return { dataRows: [] };
     }
   }
 
@@ -166,11 +167,11 @@ export abstract class User {
    * Gibt alle Daten von allen Labeln vom aktuellen Datensatz zurück.
    * @returns leer, falls kein aktueller Datensatz existiert
    */
-  getLabels(): { labels?: { name: string, id: number, start: number, end: number; }[]; } {
+  getLabels(): { labels: { name: string, id: number, start: number, end: number; }[]; } {
     if (this.currentProject != null) {
       return this.currentProject.getLabels();
     }
-    return {};
+    return { labels: [] };
   }
 
   /**
@@ -184,7 +185,7 @@ export abstract class User {
       dataSet?: {
         dataRowSensors: SensorData[], dataSetID: number, dataSetName: string, generateDate: number,
         dataRows: {
-          dataRowID: number, recordingStart: number,
+          dataRowID: number,
           dataRow: { value: number[], relativeTime: number; }[];
         }[],
         label: { name: string, labelID: number, start: number, end: number; }[];
@@ -291,27 +292,30 @@ export class Admin extends User {
   }
 
   /**
-    * Implementiert die abstrakte Methode von User
-    */
+   * Implementiert die abstrakte Methode von User
+   */
   loadProject(project: {
     projectID: number, sessionID: number, projectName: string, projectData?: {
       aiModelID?: number[],
-      dataSet?: {
+      dataSet: {
         dataRowSensors: SensorData[], dataSetID: number, dataSetName: string, generateDate: number,
         dataRows: {
-          dataRowID: number, recordingStart: number,
+          dataRowID: number,
           dataRow: { value: number[], relativeTime: number; }[];
         }[],
         label: { name: string, labelID: number, start: number, end: number; }[];
       }[];
     };
   }): boolean {
-    if (!this.existProject(project.projectID)) {
-      this.project.push(new Project(project.projectID, project.sessionID, project.projectName, project.projectData));
-      return true;
+    var id = this.existProject(project.projectID);
+    var newProject: Project = new Project(project.projectID, project.sessionID, project.projectName, project.projectData);
+    this.currentProject = newProject;
+    if (id == -1) {
+      this.project.push(newProject);
     } else {
-      return false;
+      this.project[id] = newProject;
     }
+    return true;
   }
 
   /**
@@ -322,7 +326,7 @@ export class Admin extends User {
    * @returns Bei angabe einer Project ID, die schon existiert wird false zurück gegeben
    */
   createProject(projectID: number, sessionID: number, projectName: string): boolean {
-    if (!this.existProject(projectID)) {
+    if (this.existProject(projectID) === -1) {
       var newproject: Project = new Project(projectID, sessionID, projectName);
       this.project.push(newproject);
       this.currentProject = newproject;
@@ -332,13 +336,18 @@ export class Admin extends User {
     }
   }
 
-  existProject(projectID: number): boolean {
+  /**
+   * 
+   * @param projectID 
+   * @returns -1 falls das Projekt nicht existiert oder die Array Position des Projekts
+   */
+  private existProject(projectID: number): number {
     for (let i = 0; i < this.project.length; i++) {
-      if (this.project[i].getID() === projectID) {
-        return true;
+      if (this.project[i].getID() == projectID) {
+        return i;
       }
     }
-    return false;
+    return -1;
   }
 
   /**
@@ -373,10 +382,10 @@ export class Dataminer extends User {
   loadProject(project: {
     projectID: number, sessionID: number, projectName: string, projectData?: {
       aiModelID?: number[],
-      dataSet?: {
+      dataSet: {
         dataRowSensors: SensorData[], dataSetID: number, dataSetName: string, generateDate: number,
         dataRows: {
-          dataRowID: number, recordingStart: number,
+          dataRowID: number,
           dataRow: { value: number[], relativeTime: number; }[];
         }[],
         label: { name: string, labelID: number, start: number, end: number; }[];
@@ -408,10 +417,10 @@ export class AIModelUser extends User {
   loadProject(project: {
     projectID: number, sessionID: number, projectName: string, projectData?: {
       aiModelID?: number[],
-      dataSet?: {
+      dataSet: {
         dataRowSensors: SensorData[], dataSetID: number, dataSetName: string, generateDate: number,
         dataRows: {
-          dataRowID: number, recordingStart: number,
+          dataRowID: number,
           dataRow: { value: number[], relativeTime: number; }[];
         }[],
         label: { name: string, labelID: number, start: number, end: number; }[];

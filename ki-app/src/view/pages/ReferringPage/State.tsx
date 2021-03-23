@@ -5,8 +5,8 @@ export class State implements IState {
   currentState: States = States.NeedMessage;
   languageCode: string = "de";
   messages: { text: string, id: number; }[] = [];
-  projectData?: { projectID: number; projectName: string; AIModelID: number[]; }[];
-  currentProject?: { projectID: number, projectName: string, choosenAIModelID: number; };
+  projectData?: { projectID: number; projectName: string; AIModelID: number[]; }[] = [];
+  currentProject?: { projectID: number, projectName: string, choosenAIModelID: number; } = {projectID: -1, projectName: "null", choosenAIModelID: -1 };
   // chosenModel?: string;
   adminData?: { name: string, email: string, password: string; };
   //minerData?:
@@ -14,6 +14,8 @@ export class State implements IState {
   labels?: { labelID: number, start: number, end: number; }[];
   sessionID?: string;
   //aiParameter?: 
-  qr?: string;
+  qr?: string = '';
   wait?: Promise<any>
+  islogedIn: boolean = false
+  link?: string = ''
 }

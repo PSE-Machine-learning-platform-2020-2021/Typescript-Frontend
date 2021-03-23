@@ -1,15 +1,29 @@
 import React, { Component, ChangeEvent } from 'react';
-import { nanoid } from 'nanoid';
 
 export default class Labelling extends Component {
     state = {
-        labels: [] as { id: string, start: string, end: string, name: string; }[],
-        newId: "", newStart: "", newEnd: '', newName: ""
+        labels: [] as { labelID: number, start: number, end: number, name: string; }[],
+        newStart: "", newEnd: '', newName: ""
     };
+
+    props = {
+        newLabel: function (label: {
+            labelID: number;
+            start: number;
+            end: number;
+            name: string;
+        }) { },
+        pagedeleteLabel: function (label: {
+            labelID: number;
+            start: number;
+            end: number;
+            name: string;
+        }) { }
+    };
+    IDcounter: number = 0;
 
     handleChangeLabel = (e: ChangeEvent<HTMLInputElement>) => {
         this.setState({ newName: e.target.value });
-        this.setState({ newId: nanoid() });
     };
     handleChangeStart = (e: ChangeEvent<HTMLInputElement>) => {
         this.setState({ newStart: e.target.value });
@@ -18,30 +32,37 @@ export default class Labelling extends Component {
         this.setState({ newEnd: e.target.value });
     };
     handleClick = () => {
-        const { newId, newStart, newEnd, newName } = this.state;
-
-        const labelObj = { id: newId, start: newStart, end: newEnd, name: newName };
+        const { newStart, newEnd, newName } = this.state;
+        const labelObj = { start: newStart, end: newEnd, name: newName };
         this.addLabel(labelObj);
-        this.setState({ newId: "", newStart: "", newEnd: '', newName: "" });
-    }
+        this.setState({ newStart: "", newEnd: '', newName: "" });
+    };
 
-    addLabel = (labelObj: { id: string, start: string, end: string, name: string; }) => {
-        const { labels } = this.state
-        const newLabels = [labelObj, ...labels]
+    addLabel = (labelObj: { start: string, end: string, name: string; }) => {
+        const label: { labelID: number, start: number, end: number, name: string; } = { labelID: this.IDcounter, start: this.formatFloatInString(labelObj.start), end: this.formatFloatInString(labelObj.end), name: labelObj.name }; //was ist bei fehlerfall?? keine Zahlen
+        this.props.newLabel(label);
+        const { labels } = this.state;
+        const newLabels = [label, ...labels];
         this.setState({ labels: newLabels });
     };
 
 
-    deleteLabel = (e: React.MouseEvent<HTMLButtonElement>, id: string) => {
+    deleteLabel = (e: React.MouseEvent<HTMLButtonElement>, id: number) => {
 
         const { labels } = this.state;
 
         let newLabels = labels.filter((label) => {
-            return label.id !== id;
+            if (label.labelID === id) {
+                this.props.pagedeleteLabel(label);
+            }
+            return label.labelID !== id;
         });
-
         this.setState({ labels: newLabels });
     };
+
+    private formatFloatInString(stringNumber: string): number {
+        return (parseInt((parseFloat(stringNumber) * 1000).toString()) / 1000);
+    }
 
 
     render() {
@@ -52,7 +73,7 @@ export default class Labelling extends Component {
                         return (
                             <li >
                                 Von {label.start}s bis {label.end}s:  {label.name}
-                                <button onClick={(e) => this.deleteLabel(e, label.id)}>Löschen</button>
+                                <button onClick={(e) => this.deleteLabel(e, label.labelID)}>Löschen</button>
                             </li>
                         );
                     })}

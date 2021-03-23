@@ -1,54 +1,53 @@
+import { runInThisContext } from "node:vm";
+
 /**
  * Diese Klasse repräsentiert ein Zeitfenster.
  * Mit start als Anfang und end als Ende des Zeitfensters.
  */
 export class TimeSpan {
-  private start: number; //Startpunkt des Zeitfensters in Millisekunden.
-  private end: number; //Enpunkt des Zeitfensters in Millisekunden.
+  private start: number; //Startpunkt des Zeitfensters in Sekunden.
+  private end: number; //Enpunkt des Zeitfensters in Sekunden.
 
   /**
    * Erstellt ein Zeitfenster.
-   * @param start Startpunkt in Millisekunden 
-   * @param end Endpunkt in Millisekunden
+   * @param start Startpunkt in Sekunden (start >= 0)
+   * @param end Endpunkt in Sekunden (end >= start)
    */
   public constructor(start: number, end: number) {
-    this.start = start;
-    this.end = end;
-  }
-
-  /**
-   * Setzt den übergebenen Startpunkt als Startpunkt, wenn dieser ein positiver Wert ist.
-   * @param start start: Startpunkt in Millisekunden
-   */
-  public setStart(start: number): boolean {
     if (start >= 0) {
       this.start = start;
-      return true;
+    } else {
+      this.start = 0;
     }
-    return false;
-  }
-
-  /**
-   * Setzt den übergebenen Endpunkt als Endpunkt, wenn dieser ein positiver Wert ist.
-   * @param end Endpunkt in Millisekunden
-   */
-  public setEnd(end: number): boolean {
-    if (end >= 0) {
+    if (end >= this.start) {
       this.end = end;
+    } else {
+      this.end = this.start;
+    }
+  }
+
+  /**
+   * Setzt das übergebene Zeitfenster als Zeitfenster, wenn dies den Anforderungen entspricht. (0 <= start <= end)
+   * @returns false, falls das Zeitfenster nicht gesetzt wurde
+   */
+  public setTimeSpan(span: { start: number, end: number; }): boolean {
+    if (span.end >= span.start && span.start >= 0) {
+      this.start = span.start;
+      this.end = span.end;
       return true;
     }
     return false;
   }
 
   /**
-   * Gibt den Startpunkt in Millisekunden zurück.
+   * Gibt den Startpunkt in Sekunden zurück.
    */
   public getStart(): number {
     return this.start;
   }
 
   /**
-   * Gibt den Enpunkt in Millisekunden zurück.
+   * Gibt den Enpunkt in Sekunden zurück.
    */
   public getEnd(): number {
     return this.end;

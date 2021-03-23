@@ -1,7 +1,12 @@
 import React, { Component } from 'react';
 import NewWindow from "react-new-window";
-
+import './LoginWindow.css'
 export default class LoginWindow extends Component {
+
+  props = {
+    pageRegister: function ( username: string, email: string, password: string ){} ,
+    pageLogin: function ( email: string, password: string ) {}
+  }
 
   state = {
     openNewWindow: false,
@@ -32,47 +37,23 @@ export default class LoginWindow extends Component {
 
   register = () => {
     this.setState({ openNewWindow: false });
-    /** mit controller weiter veraendern*/
-    var pattern = /^([A-Za-z0-9_\-.])+@([A-Za-z0-9_\-.])+\.([A-Za-z])+$/
-    if (!pattern.test(this.state.email)) {
-      alert('Sie müssen eine Emailadresse eingeben!');
-      return
-    } else {
-      PubSub.publish('register', { name: this.state.username, email: this.state.email, password: this.state.password })
-      PubSub.subscribe('registerstatus', (data: boolean) => {
-        if (data) {
-          PubSub.publish('login', { name: this.state.username, email: this.state.email, password: this.state.password })
-          PubSub.subscribe('loginstatus', (_msg: any, newdata: boolean) => {
-            if (newdata) {
-              alert('Register und Einloggen Erfolg!')
-            }
-          })
-        } else {
-          alert('Register Mißerfolg!')
-        }
-      })
-    }
+    this.props.pageRegister(this.state.username, this.state.email, this.state.password)
   }
+
   login = () => {
     /** nach submit newFenster schliessen */
     this.setState({ openNewWindow: false });
-    /** mit controller weiter veraendern*/
-    PubSub.publish('login', { name: this.state.username, email: this.state.email, password: this.state.password })
-    PubSub.subscribe('loginstatus', (_msg: any, data: boolean) => {
-      if (data) {
-        alert('Einloggen Erfolg!')
-      } else {
-        alert('Einloggen Mißrfolg!')
-      }
-    })
+    this.props.pageLogin(this.state.email, this.state.password)
   };
 
   render() {
     return (
-      <div className="login-button">
-        <button onClick={this.openNewWindow}> Einloggen Fenster </button>
+      <div>
+        <div className="right">
+          <button className="login-button" onClick={this.openNewWindow}>Einloggen</button>
+        </div>
         {this.state.openNewWindow && (
-          <NewWindow>
+          <NewWindow title="Login">
             <div className="login-window">
               <form>
                 <label>
@@ -88,8 +69,8 @@ export default class LoginWindow extends Component {
                   <input type="password" value={this.state.password} onChange={this.changePassword} />
                 </label>
                 <div>
-                  <button onClick={this.register}>Registrieren</button>
-                  <button onClick={this.login}>Loggen ein</button>
+                  <button className="register" onClick={this.register}>Registrieren</button>
+                  <button className="login" onClick={this.login}>Loggen ein</button>
                 </div>
               </form>
             </div>

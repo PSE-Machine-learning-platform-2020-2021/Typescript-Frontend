@@ -1,20 +1,20 @@
-import React, { Component } from 'react'
-import PubSub from 'pubsub-js';
+import React, { Component } from 'react';
 import NewWindow from 'react-new-window';
-
-
+import { NotificationContainer, NotificationManager } from 'react-notifications';
+import 'react-notifications/lib/notifications.css';
+import './Train.css'
 export default class Train extends Component {
+	props = {
+		dataSetMetas: [{ dataSetID: -1, dataSetName: 'ex' }],
+		train: function (dataSets: number[], imputator: string, classifier: string, scaler: string, features: string[]) { }
+	}
 	state = {
 		mouse: false,
 		openNewWindow: false,
 		value: '',
-		databaseList: [] as { dataSetID: number, dataSetName: string, chosen: boolean }[],
-		datasets: [{
-			dataSetID: 0,
-			dataSetName: 'exampledataset',
-			chosen: false
-		}],
-		imputations: [
+		databaseList: [] as { dataSetID: number, dataSetName: string, chosen: boolean; }[],
+		datasets: [] as { dataSetID: number, dataSetName: string, chosen: boolean; }[],
+		imputators: [
 			{ name: "Mittel", checked: false, tag: 'MEAN' },
 			{ name: "Letzer Wert fortgeführt", checked: false, tag: 'FORWARD' },
 			{ name: "Bewegter Durchschnitt", checked: false, tag: 'MOVING' },
@@ -28,7 +28,7 @@ export default class Train extends Component {
 			{ name: "Normalizer", checked: false, tag: 'NORMALIZER' },
 			{ name: "Anteilstrafo", checked: false, tag: 'SHARE' }
 		],
-		extractions: [
+		myfeatures: [
 			{ name: "Minimum", checked: false, tag: 'MIN' },
 			{ name: "Maximum", checked: false, tag: 'MAX' },
 			{ name: "Varianz", checked: false, tag: 'VARIANCE' },
@@ -47,18 +47,17 @@ export default class Train extends Component {
 			{ name: "Support Vector Machine", checked: false, tag: 'SVM' }
 		],
 		chosenScaler: 0,
-		chosenclassifier: 0
-	}
+		chosenclassifier: 0,
+		chosenImputator: 0
+	};
 
 	componentDidMount() {
-		PubSub.subscribe('getlist', (_msg: any, data: { dataSetID: number, dataSetName: string }[]) => {
-			let i: number
-			let newDatabaseList: { dataSetID: number, dataSetName: string, chosen: boolean }[] = []
-			for (i = 0; i < data.length; i++) {
-				newDatabaseList[i] = { dataSetID: data[i].dataSetID, dataSetName: data[i].dataSetName, chosen: false }
-			}
-			this.setState({ databaseList: newDatabaseList })
+		let newDatabaseList: { dataSetID: number, dataSetName: string, chosen: boolean; }[] = [];
+		this.props.dataSetMetas?.map((dataset) => {
+			newDatabaseList.push({ dataSetID: dataset.dataSetID, dataSetName: dataset.dataSetName, chosen: false });
 		})
+		this.setState({ databaseList: newDatabaseList });
+
 	}
 
 	handleMouse = (flag: boolean) => {
@@ -68,74 +67,78 @@ export default class Train extends Component {
 	};
 
 	handleCheck = (id: number, chosen: boolean) => {
-		const { datasets } = this.state
+		const { datasets } = this.state;
 		const newDatasets = datasets.map((dataset) => {
-			if (dataset.dataSetID === id) return { ...dataset, chosen };
+			// eslint-disable-next-line
+			if (dataset.dataSetID == id) return { ...dataset, chosen };
 			else return dataset;
-		})
-		this.setState({ datasets: newDatasets })
+		});
+		this.setState({ datasets: newDatasets });
 	};
 
 	handleDelete = (id: number) => {
 		if (window.confirm('Sind Sie sicher, die gewählt Emailadresse zu löschen?')) {
-			const { datasets } = this.state
+			const { datasets } = this.state;
 			const newDatasets = datasets.filter((dataset) => {
 				return dataset.dataSetID !== id;
 			});
 			//update emailList
-			this.setState({ datasets: newDatasets })
+			this.setState({ datasets: newDatasets });
 		}
 	};
 
 	//addDataset for add new Dataset
-	addDataset = (datasetObj: { dataSetID: number, dataSetName: string, chosen: boolean }) => {
+	addDataset = (datasetObj: { dataSetID: number, dataSetName: string, chosen: boolean; }) => {
 		//get orignal datasetList
-		const { datasets } = this.state
+		const { datasets } = this.state;
 		//add new one
-		const newDatasets = [datasetObj, ...datasets]
+		const newDatasets = [datasetObj, ...datasets];
 		//update datasetList
-		this.setState({ datasets: newDatasets })
-	}
+		this.setState({ datasets: newDatasets });
+	};
 
 	handleCreate = () => {
 		//if (this.state.databaseList == []) {
 		//	}
-		const flag = !this.state.openNewWindow
-		this.setState({ openNewWindow: flag })
-	}
+		const flag = !this.state.openNewWindow;
+		this.setState({ openNewWindow: flag });
+	};
+
 	handleChange = (e: React.ChangeEvent<HTMLSelectElement>) => {
 		this.setState({
 			value: e.target.value
-		})
-	}
-
+		});
+	};
 
 	handleChoose = () => {
 		/* wait to change load model*/
-		this.setState({ openNewWindow: false })
-		if (this.state.value === '') {
-			alert('no choice')
+		this.setState({ openNewWindow: false });
+		// eslint-disable-next-line
+		if (this.state.value == '') {
+			NotificationManager.error("Kein Wählen!", "", 3000);
 		} else {
-			const { databaseList } = this.state
+			const { databaseList } = this.state;
 			const newDatabaseList1 = databaseList.map((databaseObj) => {
-				if (databaseObj.dataSetName === this.state.value) {
-					databaseObj.chosen = true
-					const datasetObj = { dataSetID: databaseObj.dataSetID, dataSetName: databaseObj.dataSetName, chosen: false }
-					this.addDataset(datasetObj)
+				// eslint-disable-next-line
+				if (databaseObj.dataSetName == this.state.value) {
+					databaseObj.chosen = true;
+					const datasetObj = { dataSetID: databaseObj.dataSetID, dataSetName: databaseObj.dataSetName, chosen: false };
+					this.addDataset(datasetObj);
 				}
-				return databaseObj
+				return databaseObj;
 			}
-			)
+			);
 			const newDatabaseList2 = newDatabaseList1.filter((databaseObj) => {
-				return databaseObj.chosen === false
-			})
+				// eslint-disable-next-line
+				return databaseObj.chosen == false;
+			});
 			//update emailList
-			this.setState({ databaseList: newDatabaseList2 })
+			this.setState({ databaseList: newDatabaseList2 });
 		}
-	}
+	};
 
 	options = () => {
-		const { databaseList } = this.state
+		const { databaseList } = this.state;
 		/*way to add new into list
 		and wait to get databaseList
 		const newdatabase = {id:'003', name:'dataset3', chosen: false}
@@ -143,78 +146,89 @@ export default class Train extends Component {
 		*/
 		return databaseList.map(dataset =>
 			<option key={dataset.dataSetID} value={dataset.dataSetName}>{dataset.dataSetName}</option>);
-	}
+	};
+
 	handleImputation = (index: number) => {
-		var newList = [...this.state.imputations]
-		newList[index].checked = !newList[index].checked
-		this.setState({ imputations: newList })
-	}
+		var newList = [...this.state.imputators];
+		var newChosen = this.state.chosenImputator;
+		if (newList[index].checked) { newChosen--; }
+		else { newChosen++; }
+		if (newChosen <= 1) {
+			newList[index].checked = !newList[index].checked;
+			this.setState({ chosenImputator: newChosen, imputators: newList });
+		} else {
+			NotificationManager.error("Darf nicht mehrer Imputationen wählen!", "", 3000);
+			return;
+		}
+	};
+
 	handleScaler = (index: number) => {
 
-		var newList = [...this.state.scalers]
-		var newChosen = this.state.chosenScaler
-		if (newList[index].checked) { newChosen-- }
-		else { newChosen++ }
+		var newList = [...this.state.scalers];
+		var newChosen = this.state.chosenScaler;
+		if (newList[index].checked) { newChosen--; }
+		else { newChosen++; }
 		if (newChosen <= 1) {
-			newList[index].checked = !newList[index].checked
-			this.setState({ chosenScaler: newChosen })
-			this.setState({ scalers: newList })
+			newList[index].checked = !newList[index].checked;
+			this.setState({ chosenScaler: newChosen });
+			this.setState({ scalers: newList });
 		} else {
-			alert('Darf nicht mehrer Skaler wählen!')
-			return
+			NotificationManager.error("Darf nicht mehrer Scaler wählen!", "", 3000);
+			return;
 		}
 
-	}
+	};
+
 	handleExtraction = (index: number) => {
-		var newList = [...this.state.extractions]
-		newList[index].checked = !newList[index].checked
-		this.setState({ extractions: newList })
-	}
+		var newList = [...this.state.myfeatures];
+		newList[index].checked = !newList[index].checked;
+		this.setState({ features: newList });
+	};
+
 	handleClassifier = (index: number) => {
-		var newList = [...this.state.classifiers]
-		var newChosen = this.state.chosenclassifier
-		if (newList[index].checked) { newChosen-- }
-		else { newChosen++ }
+		var newList = [...this.state.classifiers];
+		var newChosen = this.state.chosenclassifier;
+		if (newList[index].checked) { newChosen--; }
+		else { newChosen++; }
 		if (newChosen <= 1) {
-			newList[index].checked = !newList[index].checked
-			this.setState({ chosenclassifier: newChosen })
-			this.setState({ classifiers: newList })
+			newList[index].checked = !newList[index].checked;
+			this.setState({ chosenclassifier: newChosen });
+			this.setState({ classifiers: newList });
 		} else {
-			alert('Darf nicht mehrer Classifier wählen!')
-			return
+			NotificationManager.error("Darf nicht mehrer Classifier wählen!", "", 3000);
+			return;
 		}
-	}
+	};
 
 	handleTrain = () => {
-		var chosendataSets: number[] = [], chosenimputations: string[] = [], chosenclassifier = '', chosenscaler = '', chosenextractions: string[] = [];
-		const { datasets, imputations, classifiers, scalers, extractions } = this.state
-		datasets.map((dataset) => {
-			if (dataset.chosen) chosendataSets.push(dataset.dataSetID)
-			return dataset
-		})
-		imputations.map((imputation) => {
-			if (imputation.checked) chosenimputations.push(imputation.tag)
-			return imputation
-		})
-		classifiers.map((classifier) => {
-			if (classifier.checked) chosenclassifier = classifier.tag
-			return classifier
-		})
-		scalers.map((scaler) => {
-			if (scaler.checked) chosenscaler = scaler.tag
-			return scaler
-		})
-		extractions.map((extraction) => {
-			if (extraction.checked) chosenextractions.push(extraction.tag)
-			return extraction
-		})
-		console.log(chosendataSets, chosenimputations, chosenclassifier, chosenscaler, chosenextractions)
-		PubSub.publish('train', { chosendataSets, chosenimputations, chosenclassifier, chosenscaler, chosenextractions })
-	}
+		var dataSets: number[] = [], imputator = "", classifier = '', scaler = '', features: string[] = [];
+		const { datasets, imputators, classifiers, scalers, myfeatures } = this.state;
+		datasets.map((datasetObj) => {
+			if (datasetObj.chosen) dataSets.push(datasetObj.dataSetID);
+			return datasetObj;
+		});
+		imputators.map((imputatorObj) => {
+			if (imputatorObj.checked) imputator = imputatorObj.tag;
+			return imputatorObj;
+		});
+		classifiers.map((classifierObj) => {
+			if (classifierObj.checked) classifier = classifierObj.tag;
+			return classifierObj;
+		});
+		scalers.map((scalerObj) => {
+			if (scalerObj.checked) scaler = scalerObj.tag;
+			return scalerObj;
+		});
+		myfeatures.map((featureObj) => {
+			if (featureObj.checked) features.push(featureObj.tag);
+			return featureObj;
+		});
+		//console.log(chosendataSets, chosenImputator, chosenclassifier, chosenscaler, chosenFeatures)
+		this.props.train(dataSets, imputator, classifier, scaler, features);
+	};
 
 	render() {
-		const { mouse, datasets, imputations, scalers, extractions, classifiers } = this.state
-
+		const { mouse, datasets, imputators, scalers, myfeatures, classifiers } = this.state;
 		return (
 			<div className="train">
 				<h3>Datasets</h3>
@@ -228,7 +242,7 @@ export default class Train extends Component {
 							</label>
 							<button onClick={() => this.handleDelete(dataset.dataSetID)} className="btn-item" style={{ display: mouse ? 'block' : 'none' }}>Löschen</button>
 						</li>
-					)
+					);
 				})}
 
 				<div className="adddatasetbutton">
@@ -244,17 +258,17 @@ export default class Train extends Component {
 							</div>
 						</NewWindow>
 					)}
-					<button onClick={() => this.handleCreate()} className="btn" >Add new Dataset</button>
+					<button onClick={() => this.handleCreate()} className="adddataset-btn" >Add new Dataset</button>
 				</div>
-				<div>
+				<div className="list">
 					<div className="imputationlist">
 						<h3>Imputation</h3>
-						{imputations.map((imputation, index) => {
+						{imputators.map((imputator, index) => {
 							return (
 								<div key={index}>
-									<input type="checkbox" value={index} checked={imputation.checked} onChange={() => this.handleImputation(index)} /><span>{imputation.name}</span>
+									<input type="checkbox" value={index} checked={imputator.checked} onChange={() => this.handleImputation(index)} /><span>{imputator.name}</span>
 								</div>
-							)
+							);
 						})}
 					</div>
 					<div className="scalerlist">
@@ -264,21 +278,21 @@ export default class Train extends Component {
 								<div key={index}>
 									<input type="checkbox" value={index} checked={scaler.checked} onChange={() => this.handleScaler(index)} /><span>{scaler.name}</span>
 								</div>
-							)
+							);
 						})
 						}
 					</div>
 				</div>
 
-				<div>
+				<div className="list">
 					<div className="extractionlist">
 						<h3>Merkmalextraktion</h3>
-						{extractions.map((extraction, index) => {
+						{myfeatures.map((extraction, index) => {
 							return (
 								<div key={index}>
 									<input type="checkbox" value={index} checked={extraction.checked} onChange={() => this.handleExtraction(index)} /><span>{extraction.name}</span>
 								</div>
-							)
+							);
 						})
 						}
 					</div>
@@ -289,18 +303,19 @@ export default class Train extends Component {
 								<div key={index}>
 									<input type="checkbox" value={index} checked={classifier.checked} onChange={() => this.handleClassifier(index)} /><span>{classifier.name}</span>
 								</div>
-							)
+							);
 						})}
 					</div>
 				</div>
+				<br></br>
 
-				<div className="trainbutton">
-					<button onClick={() => this.handleTrain()} className="btn" >Train Start!</button>
+				<div className="clearfloat">
+					<button onClick={() => this.handleTrain()} className="train-btn" >Train Start!</button>
 				</div>
 			</div>
 
 
-		)
+		);
 	}
 
 }

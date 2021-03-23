@@ -1,26 +1,36 @@
 import React, { Component } from 'react'
 import ProjectList from '../ProjectList'
+import './LoadModelButton.css'
 
 
 export default class LoadModelButton extends Component {
-  state = { click: false, disabled: true, }
+  props = {
+    disabled: true,
+    projectData: [{ projectID: -1, projectName: "null", AIModelID: [-1], }],
+    pageSetCurrentprojekt: function (currentProject: { projectID: number; projectName: string; choosenAIModelID: number; }) { },
+    pageLoadModel: function (chosenmodelID: number) { },
+    pageLoadProjekt: function (currentProject: { projectID: number; projectName: string; choosenAIModelID: number; }) { },
+    pageChangeToVisu: function () { },
+    qr: ''
+  }
+
+  state = { click: false }
   handleCreate = () => {
-    this.state.click = true
-    this.setState(this.state)
+    this.setState({ click: true })
   }
 
-  componentDidMount() {
-    PubSub.subscribe('disabled', (_msg: any, value: boolean) => {
-      this.state.disabled = false
-      this.setState({ disabled: false })
-    })
-
-  }
   render() {
     return (
-      <div>
-        <button onClick={() => this.handleCreate()} className="btn" disabled={this.state.disabled}>Projekt und Model Wählen</button>
-        {this.state.click ? <div><ProjectList /> </div> : null}
+      <div className="loadProject">
+        <button onClick={() => this.handleCreate()} className="lp-btn" disabled={this.props.disabled}>Projekt und Model Wählen</button>
+        {this.state.click ? <div><ProjectList
+          pageChangeToVisu={this.props.pageChangeToVisu}
+          pageLoadProjekt={this.props.pageLoadProjekt}
+          qr={this.props.qr}
+          pageLoadModel={this.props.pageLoadModel}
+          projectData={this.props.projectData}
+          pageSetCurrentprojekt={this.props.pageSetCurrentprojekt} />
+        </div> : null}
       </div>
     );
   }

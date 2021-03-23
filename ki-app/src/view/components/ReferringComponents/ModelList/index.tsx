@@ -1,47 +1,38 @@
 import React, { Component } from 'react'
 
 export default class ModelList extends Component {
-    state = {
-        value: null,
-        modelList: [1, 2],
-        currentProject: {
-            projectID: 1,
-            projectName: 'project1',
-            chosenmodelID: 0
-        }
+
+    props = {
+        currentProject: { projectID: -1, projectName: "null", AIModelID: [-1] },
+        pageLoadModel: function(chosenmodelID: number){}
     }
 
-    componentDidMount() {
-        PubSub.subscribe('getmodellist', (_msg: any, data: { projectID: number, projectName: string, AIModelID: number[]; }) => {
-            // this.state.modelList = data.AIModelID
-            const newmodelList = data.AIModelID
-            this.setState({ modelList: newmodelList })
-        })
+    state = {
+        chosenmodelID: -1
     }
+
     handleChange = (e: React.ChangeEvent<HTMLSelectElement>) => {
         this.setState({
-            value: e.target.value,
-            currentProject: { chosenmodelID: e.target.value }
+            chosenmodelID: e.target.value
         })
-
     }
+
     handleChoose() {
         /* wait to change load model*/
-        if (this.state.value == null) {
+        if (this.state.chosenmodelID == -1) {
             alert('Sie haben noch kein Modell gewählt!')
         } else {
-            const num = this.state.currentProject.chosenmodelID
-            alert('Laden Modell' + num)
-            PubSub.publish('loadmodel', this.state.currentProject)
+            this.props.pageLoadModel(this.state.chosenmodelID)
         }
     }
+
     render() {
         return (
             <section>
                 <label>ModellList</label>
                 <select onChange={this.handleChange}>
                     <option>Modell Wählen</option>
-                    {this.state.modelList.map((modelObj) => {
+                    {this.props.currentProject.AIModelID.map((modelObj) => {
                         return <option value={modelObj}>Modell{modelObj}</option>
                     })}
                 </select>

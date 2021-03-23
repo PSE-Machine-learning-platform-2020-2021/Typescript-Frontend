@@ -1,5 +1,3 @@
-import React from 'react';
-import PubSub from 'pubsub-js';
 import Title from '../../components/DataCollectionComponents/Title';
 import Countdown from '../../components/DataCollectionComponents/Countdown';
 import Diagram from '../../components/DataCollectionComponents/Diagram';
@@ -8,83 +6,93 @@ import { PageController } from "../../../controller/PageController";
 import { State } from "./State";
 import ReactDOM from 'react-dom';
 import { States } from '../State';
+import { NotificationContainer, NotificationManager } from 'react-notifications';
+import 'react-notifications/lib/notifications.css';
 
-type Props = {
-};
-
-export class DataCollectionPage extends React.Component<Props, State> implements Page {
+/**
+ * Darstellungsseite der Datenerfassungsseite
+ */
+export class DataCollectionPage implements Page {
     state = new State;
     observers: PageController[] = [];
 
-    constructor(props: Props) {
-        super(props);
-        this.finishCountdown();
+    /**
+    * Konstruktor der Darstellungsseite.
+    */
+    constructor () {
+        this.state = new State();
+    }
+
+    /**
+    * Update Methode der Darstellungsseite. Diese Methode wird nach jeder Änderung, die kein Seitenwechsel ist, aufgerufen. 
+    * Die Methode enthält den Aufbau der Seite und wird von ihr gerendert.
+    * Es werden durch notify() alle controller über ein Update informiert und alle Seiten Elemente werden aktualisiert und erneut gerendert. 
+    */
+    private update () {
+        this.notify();
         const VDOM = (
             <div>
                 <Title />
-                <Countdown />
-                <Diagram />
+                <Countdown countdownNumber={ this.state.recordingSettings?.waitTime! } chosenSensors={ this.state.recordingSettings?.usedSensorTypes! } />
+                <Diagram dataRows={ this.state.dataRows! } pageChangeToFinish={ this.changeToFinish.bind( this ) } />
+                <NotificationContainer />
             </div>
         );
-        ReactDOM.render(VDOM, document.getElementById('root'));
-    }
-
-
-    /**
-     * Diese Methode braucht nur einmal aufzurufen, Countdown geht automatisch.
-     * @param countdownNumber Die Countdownzahl zu zeigen.
-     */
-    showCountdownNumber(leadTime: number) {
-        this.setState({ leadTime: leadTime });
-        PubSub.publish('startCounting', this.state.leadTime);
-    }
-
-    /**
-     * Prüft ob Countdown fertig ist und ändert den Zustand.
-     */
-    finishCountdown() {
-        PubSub.subscribe('finishCountdwon', () => {
-            this.setState({ currentState: States.NeedInstantDiagram });
-            this.notify();
-        }
-        );
-    }
-
-    /**
-     * Diese Methode sollte während Datenerfassung jede Sekunde von Controller aufgerufen werden, um Bild zu updaten.
-     * @param countdownNumber Die Countdownzahl zu zeigen
-     */
-    showDiagram(dataRows: { value: number; relativeTime: number; }[][], usedSensorNames: string[]) {
-       // this.setState({ dataRows: dataRows });
-        this.setState({ usedSensorNames: usedSensorNames });
-        //PubSub.publish('startDiagram', this.state.dataRows);
-        PubSub.publish('giveLineLabels', this.state.usedSensorNames);
-    }
-
-    /**
-     * Die Methoden für Beobachtermuster
-     * @param observer Beobachter,nähmlich Controller
-     */
-    attach(observer: PageController) {
-        this.observers.push(observer);
-    }
-
-    detach(observer: PageController) {
-        const index = this.observers.indexOf(observer, 0);
-        if (index > -1) {
-            this.observers.splice(index, 1);
+        if (document.getElementById( 'root' ) !== null) {
+            ReactDOM.render( VDOM, document.getElementById( 'root' ) );
         }
     }
 
-    notify() {
-        for (let index = 0; index < this.observers.length; index++) {
-            const element = this.observers[index];
+    /**
+     * Wechsel der Seite zur Fertigungsseite.
+     */
+    private changeToFinish () {
+        this.state.currentState = States.ChangeToFinish;
+        this.notify(); // Kein Update, da sonst die Seite neu rendert und der Seitenwechsel fehlschlägt
+    }
+
+    /**
+    * Durch diese Methode kann sich ein Controller als Beobachter anmelden.
+    * @param oberver neuer Beobachter
+    */
+    attach ( observer: PageController ) {
+        this.observers.push( observer );
+    }
+
+    /**
+    * Durch diese Methode kann sich ein Controller als Beobachter abmelden.
+    * @param oberver Beobachter der zu entfernen ist
+    */
+    detach ( observer: PageController ) {
+        const index = this.observers.indexOf( observer, 0 );
+        if ( index > -1 ) {
+            this.observers.splice( index, 1 );
+        }
+    }
+
+    /**
+    * Durch diese Methode werden alle Beobachter über eine Änderung auf der Seite informiert.
+    */
+    notify () {
+        for ( let index = 0; index < this.observers.length; index++ ) {
+            const element = this.observers[ index ];
             element.update();
         }
     }
 
-    getState() {
-        return this.state;
+    /**
+    * Gibt den Status der Seite zurück
+    */
+    setState ( state: any ) {
+        this.state = state;
+        this.update();
     }
 
+    /**
+     * Setzt einen neuen Zustand für die Seite und aktualisiert sie
+     * @param state neuer Zustand für die Seite
+     */
+    getState () {
+        return this.state;
+    }
 }

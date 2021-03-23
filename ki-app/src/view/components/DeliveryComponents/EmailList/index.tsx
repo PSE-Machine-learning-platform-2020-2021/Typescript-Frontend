@@ -1,7 +1,12 @@
 import React, { Component } from 'react'
 import { nanoid } from 'nanoid';
-
+import { NotificationContainer, NotificationManager } from 'react-notifications';
+import 'react-notifications/lib/notifications.css';
 export default class EmailList extends Component {
+	props = {
+		delivery: function (chosenEmails: string[]) { }
+	}
+
 	state = {
 		mouse: false,
 		addButtonClick: false,
@@ -23,7 +28,8 @@ export default class EmailList extends Component {
 	};
 
 	inputchange = (e: React.ChangeEvent<HTMLInputElement>) => {
-		if (e.target.value === '') {
+		// eslint-disable-next-line
+		if (e.target.value == '') {
 			this.setState({ inputempty: true })
 		} else {
 			this.setState({ inputemail: { id: nanoid(), address: e.target.value, chosen: false }, inputempty: false })
@@ -38,23 +44,24 @@ export default class EmailList extends Component {
 		//cant add empty email
 		const { inputemail, inputempty, emails } = this.state
 		if (inputempty) {
-			alert('Eingabe darf nicht leer sein!');
+			NotificationManager.error("Eingabe darf nicht leer sein!", "", 3000);
 			return;
 		}
 		let exist = false
 		emails.map((emailObj) => {
-			if (emailObj.address === inputemail.address) exist = true
+			// eslint-disable-next-line
+			if (emailObj.address == inputemail.address) exist = true
 			return emailObj
 		})
 		if (exist) {
-			alert('Es gibt schon Emailadresse in List!');
+			NotificationManager.error("Es gibt schon Emailadresse in List!", "", 3000);
 			return;
 		}
 		var pattern = /^([A-Za-z0-9_\-.])+@([A-Za-z0-9_\-.])+\.([A-Za-z])+$/
 		if (pattern.test(inputemail.address)) {
 			this.addEmail(inputemail);
 		} else {
-			alert('Sie müssen eine Emailadresse eingeben!');
+			NotificationManager.error("Sie müssen eine Emailadresse eingeben!", "", 3000);
 			return;
 		}
 
@@ -72,7 +79,8 @@ export default class EmailList extends Component {
 	handleCheck = (id: string, chosen: boolean) => {
 		const { emails } = this.state
 		const newEmails = emails.map((emailObj) => {
-			if (emailObj.id === id) return { ...emailObj, chosen };
+			// eslint-disable-next-line
+			if (emailObj.id == id) return { ...emailObj, chosen };
 			else return emailObj;
 		})
 		this.setState({ emails: newEmails })
@@ -143,8 +151,8 @@ export default class EmailList extends Component {
 			if (emailObj.chosen) emailaddressList.push(emailObj.address)
 			return emailObj
 		});
-		console.log(emailaddressList)
-		PubSub.publish('delivery', emailaddressList)
+		//console.log(emailaddressList)
+		this.props.delivery(emailaddressList)
 	}
 	render() {
 		const { mouse, emails } = this.state
@@ -154,7 +162,7 @@ export default class EmailList extends Component {
 		return (
 			<div className="email-main">
 				<div className="addemailbutton">
-					<button onClick={() => this.handleCreate()} className="btn" >Addieren eine neue Emailadresse!(Addieren Eingaben mit 'Enter'-Taste)</button>
+					<button onClick={() => this.handleCreate()} className="addemail-btn" >Addieren eine neue Emailadresse!(Addieren Eingaben mit 'Enter'-Taste)</button>
 					{this.state.addButtonClick ?
 						<div className="inputbox">
 							<input onKeyUp={this.handleKeyUp} onChange={this.inputchange} type="text" placeholder="input email address with ENTER-key" />

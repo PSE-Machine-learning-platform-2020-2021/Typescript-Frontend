@@ -2,15 +2,21 @@ import React, { Component } from 'react';
 import QRImage from '../QRImage';
 import LinkText from '../LinkText';
 import ChangeToVisuBtn from '../ChangeToVisuBtn';
-
+import './NewProjectButton.css'
 
 export default class NewProjectButton extends Component {
 
+  props = {
+    pageNewProject: function(projectName: string){},
+    pageChangeToVisu: function() {},
+    disabled: true,
+    qr: '',
+    link: ''
+  }
 
   state = {
     click: false,
     projectName: '',
-    disabled: true
   };
 
   changeProjectName = (e: React.ChangeEvent<HTMLInputElement>) => {
@@ -21,24 +27,15 @@ export default class NewProjectButton extends Component {
 
   handleCreate = () => {
     this.setState({ click: true });
-    PubSub.publish('createnewproject', this.state.projectName)
-
+    this.props.pageNewProject(this.state.projectName)
   };
-
-  componentDidMount() {
-    PubSub.subscribe('disabled', (_msg: any, value: boolean) => {
-      // const disabled = value
-      const disabled = false
-      this.setState({ disabled: disabled })
-    })
-  }
 
   render() {
     return (
-      <div>
-        <input type="text" value={this.state.projectName} onChange={this.changeProjectName} placeholder='Neuen Projektnamen eingeben' disabled={this.state.disabled} />
-        <button onClick={() => this.handleCreate()} className="newProject" id="new" disabled={this.state.disabled}>Neues Projekt</button>
-        {this.state.click ? <div> <QRImage /><ChangeToVisuBtn /><LinkText /></div> : null}
+      <div className="newProject">
+        <input type="text" value={this.state.projectName} onChange={this.changeProjectName} placeholder='Neuen Projektnamen eingeben' disabled={this.props.disabled} />
+        <button onClick={() => this.handleCreate()} className="newProject-button" id="new" disabled={this.props.disabled}>Neues Projekt</button>
+        {this.state.click ? <div> <QRImage qr = {this.props.qr} /><ChangeToVisuBtn pageChangeToVisu = {this.props.pageChangeToVisu}/><LinkText link = {this.props.link}/></div> : null}
       </div>
     );
   }

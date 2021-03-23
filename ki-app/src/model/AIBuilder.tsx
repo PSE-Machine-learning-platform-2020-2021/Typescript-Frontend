@@ -5,8 +5,8 @@
 export class AIBuilder {
     private modelId: number;
     private static readonly url: string = "../";
-    private static readonly buildModel: string = "buildModel/";
-    private static readonly classify: string = "classify/";
+    private static readonly buildModel: string = "src/buildModel/";
+    private static readonly classify: string = "src/classify/";
 
     /**
      * Erstellt den AIBuilder und übergibt ihm die ID des zu bearbeitenden Modells.
@@ -40,7 +40,7 @@ export class AIBuilder {
      * ```
      * Die Reihenfolge ist unwichtig.
      */
-    applyModel(modelData: { sensors: number[], dataSets: number[], classifier: string, scaler: string, features: string[], trainingDataPercentage?: number, slidingWindowSize?: number, slidingWindowStep?: number; }): void {
+    applyModel(modelData: { dataSets: number[], imputator: string, classifier: string, scaler: string, features: string[], trainingDataPercentage?: number, slidingWindowSize?: number, slidingWindowStep?: number; }): void {
         this.sendRequest(JSON.stringify(modelData), AIBuilder.url + AIBuilder.buildModel, console.log);
     }
 

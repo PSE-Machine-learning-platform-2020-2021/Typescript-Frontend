@@ -6,6 +6,7 @@ export class State implements IState {
   languageCode: string = "de";
   messages: { text: string, id: number; }[] = [];
 
-  dataSetMetas!: { dataSetID: number; dataSetName: string; }[];
-  currentDataSet!: { dataSetID: number; rows: { sensorType: number; value: number[]; relativeTime: number; }[][]; }[];
+  dataSetMetas?: { dataSetID: number; dataSetName: string; }[] = [];
+  currentDataSet?: { dataSetID: number; rows: { sensorType: number; datapoint: { value: number[]; relativeTime: number; }[]; }[]; }[] = [];
+  //testDataSet?: { dataSetID: number; rows: { sensorType: number; datapoint: { value: number[]; relativeTime: number; }[]; }[]; }[] = [];
 }

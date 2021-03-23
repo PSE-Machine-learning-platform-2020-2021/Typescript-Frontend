@@ -94,6 +94,7 @@ export class MainController implements MainControllerInterface {
    * @returns Gibt alle texte zu den übergebenen ids zurück.
    */
   getMessage ( messages: { text: string, id: number; }[] ) {
+    return [{ text: "null", id: -1 }]
     let messageIDs: number[] = [];
     for ( let index = 0; index < messages.length; index++ ) {
       messageIDs.push( messages[ index ].id );
