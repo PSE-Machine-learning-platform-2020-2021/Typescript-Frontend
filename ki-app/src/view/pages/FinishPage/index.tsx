@@ -25,12 +25,12 @@ export class FinishPage implements Page {
         <div className="label-container">
           <Labelling newLabel={this.newLabel.bind(this)} pagedeleteLabel={this.pagedeleteLabel.bind(this)} />
         </div>
-        <button type="submit" onSubmit={this.finish}>Finish</button>
       </div>
     );
-    if (document.getElementById( 'root' ) !== null) {
-      ReactDOM.render( VDOM, document.getElementById( 'root' ) );
-  }
+    // <button type="submit" onSubmit={this.finish}>Finish</button>
+    if (document.getElementById('root') !== null) {
+      ReactDOM.render(VDOM, document.getElementById('root'));
+    }
   }
 
   //braucht nicht mehr
