@@ -21,7 +21,6 @@ export class DataRow {
    * Eine bereits existierende Datenreihe kann wie folgt in das Model geladen werden.
    * @param sensor der Sensor von dem die Daten gelesen wurden
    * @param dataRowID die ID, welche die Datenreihe bei der ersten Erstellung zugeteilt bekommen hat
-   * @param recordingStart der Aufnahmezeitpunkt in Millisekunden
    * @param dataRow die aufgenommenen Daten
    * @param dataRow.value der Sensor Messwert
    * @param dataRow.relativeTime die relative Zeit zum Aufnahmestart

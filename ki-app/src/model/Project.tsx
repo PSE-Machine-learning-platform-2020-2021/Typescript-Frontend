@@ -29,7 +29,7 @@ export class Project {
     dataSet: {
       dataRowSensors: SensorData[], dataSetID: number, dataSetName: string, generateDate: number,
       dataRows: {
-        dataRowID: number, recordingStart: number,
+        dataRowID: number,
         dataRow: { value: number[], relativeTime: number; }[];
       }[],
       label: { name: string, labelID: number, start: number, end: number; }[];
@@ -90,10 +90,19 @@ export class Project {
    * @param dataSetName der Datensatznamen
    * @param generateDate die Erstellungszeit von dem Datensatz
    */
-  createDataSet(dataRowSensors: SensorData[], dataSetID: number, dataSetName: string, generateDate?: number): void {
+  createDataSet(dataRowSensors: SensorData[], dataSetID: number, dataSetName: string, generateDate?: number): boolean {
+    if (dataRowSensors.length <= 0 || dataSetID < 0 || dataSetName.length <= 0 || generateDate != null && generateDate < 0) {
+      return false;
+    }
+    for (let i = 0; i < this.dataSet.length; i++) {
+      if (this.dataSet[i].getID() == dataSetID) {
+        return false;
+      }
+    }
     var dataSet: DataSet = new DataSet(dataRowSensors, dataSetID, dataSetName, generateDate);
     this.dataSet.push(dataSet);
     this.currentDataSet = dataSet;
+    return true;
   }
 
   /**

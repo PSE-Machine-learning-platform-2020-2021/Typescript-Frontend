@@ -185,7 +185,7 @@ export abstract class User {
       dataSet?: {
         dataRowSensors: SensorData[], dataSetID: number, dataSetName: string, generateDate: number,
         dataRows: {
-          dataRowID: number, recordingStart: number,
+          dataRowID: number,
           dataRow: { value: number[], relativeTime: number; }[];
         }[],
         label: { name: string, labelID: number, start: number, end: number; }[];
@@ -300,7 +300,7 @@ export class Admin extends User {
       dataSet: {
         dataRowSensors: SensorData[], dataSetID: number, dataSetName: string, generateDate: number,
         dataRows: {
-          dataRowID: number, recordingStart: number,
+          dataRowID: number,
           dataRow: { value: number[], relativeTime: number; }[];
         }[],
         label: { name: string, labelID: number, start: number, end: number; }[];
@@ -385,7 +385,7 @@ export class Dataminer extends User {
       dataSet: {
         dataRowSensors: SensorData[], dataSetID: number, dataSetName: string, generateDate: number,
         dataRows: {
-          dataRowID: number, recordingStart: number,
+          dataRowID: number,
           dataRow: { value: number[], relativeTime: number; }[];
         }[],
         label: { name: string, labelID: number, start: number, end: number; }[];
@@ -420,7 +420,7 @@ export class AIModelUser extends User {
       dataSet: {
         dataRowSensors: SensorData[], dataSetID: number, dataSetName: string, generateDate: number,
         dataRows: {
-          dataRowID: number, recordingStart: number,
+          dataRowID: number,
           dataRow: { value: number[], relativeTime: number; }[];
         }[],
         label: { name: string, labelID: number, start: number, end: number; }[];
