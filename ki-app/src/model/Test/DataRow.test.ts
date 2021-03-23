@@ -1,7 +1,6 @@
 import { DataRow } from "../DataRow";
 import { AccelerometerData } from "../SensorData";
 
-
 /**
  * Prüft die einfache Nutzung, erstellen und prüfen ob der getter dies wieder zurück gibt
  */
@@ -104,4 +103,3 @@ test("addDatapoint with empty value", () => {
   const relativeTime = 1;
   expect(datarow.addDatapoint({ value: value, relativeTime: relativeTime })).toBeFalsy();
 });
-
