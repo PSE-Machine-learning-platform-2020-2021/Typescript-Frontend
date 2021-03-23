@@ -100,6 +100,13 @@ test("create and setter", () => {
     projectData = projectData2;
     var currentDataRows = 0; //Da nichts geladen wurde
     checkAll(project, projectID, sessionID, projectName, currentDataRows, projectData);
+
+    //getDataRows von einem nicht existierenden Datensatz
+    expect(project.getDataRows(219).dataRows.length).toBe(0);
+});
+
+test("addDatapoint", () => {
+
 });
 
 /**
@@ -293,9 +300,10 @@ test("setLabel", () => {
     expect(project.setLabel(300, { start: -1, end: 22 })).toBeFalsy();
     expect(project.setLabel(300, { start: 19, end: 5 })).toBeFalsy();
     //ohne currentDataSet
+    project.getDataRows(dataSetID);
     expect(project.deleteDataSet(dataSetID)).toBeTruthy();
     projectData.dataSet.pop();
-    expect(project.createLabel(300, { start: 19, end: 22 }, "Me llamo")).toBeFalsy();
+    expect(project.setLabel(300, { start: 19, end: 5 })).toBeFalsy();
     currentDataRows = 0; //Da currentDataSet gelöscht wurde
     checkAll(project, projectID, sessionID, projectName, currentDataRows, projectData);
 });
