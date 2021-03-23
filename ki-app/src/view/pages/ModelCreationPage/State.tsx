@@ -6,7 +6,7 @@ export class State implements IState {
   languageCode: string = "de";
   messages: { text: string, id: number; }[] = [];
 
-  dataSetMetas?: { dataSetID: number; dataSetName: string; }[];
+  dataSetMetas?: { dataSetID: number; dataSetName: string; }[] = [];
   trainingParameter?: {
     dataSets: number[],
     imputator: string,

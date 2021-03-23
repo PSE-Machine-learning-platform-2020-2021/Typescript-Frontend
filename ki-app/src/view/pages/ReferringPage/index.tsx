@@ -1,51 +1,78 @@
-import React from 'react';
-import PubSub from 'pubsub-js';
 import ConstantsText from '../../components/ReferringComponents/ConstantsText';
 import NewProjectButton from '../../components/ReferringComponents/NewProjectButton';
 import LoadModelButton from '../../components/ReferringComponents/LoadModelButton';
 import { Page } from "../PageInterface";
 import { PageController } from "../../../controller/PageController";
 import { State } from "./State";
-import ReactDOM from 'react-dom';
 import { States } from '../State';
 import LoginWindow from '../../components/ReferringComponents/LoginWindow';
+import ReactDOM from 'react-dom';
 
-type Props = {
+import { NotificationContainer, NotificationManager } from 'react-notifications';
+import 'react-notifications/lib/notifications.css';
 
-};
 
-export class ReferringPage extends React.Component<Props, State> implements Page {
+/*
+*Darstellungsseite der Verweisseite.
+*/
+export class ReferringPage implements Page {
+    private state: State;
+    private observers: PageController[] = [];
 
-    state = new State();
-    observers: PageController[] = [];
-    constructor(props: Props) {
-        super(props);
+    /**
+    * Konstruktor der Darstellungsseite.
+    */
+    constructor() {
+        this.state = new State();
+        this.update();
+    }
 
+    /**
+    * Update Methode der Darstellungsseite. Diese Methode wird nach jeder Änderung, die kein Seitenwechsel ist, aufgerufen. 
+    * Die Methode enthält den Aufbau der Seite und wird von ihr gerendert.
+    * Es werden durch notify() alle controller über ein Update informiert und alle Seiten Elemente werden aktualisiert und erneut gerendert. 
+    */
+    private update() {
+        this.notify();
         const VDOM = (
             <div>
                 <ConstantsText />
-                <LoginWindow />
+                <LoginWindow pageRegister={this.register.bind(this)} pageLogin={this.login.bind(this)} />
                 <br /><br /><br /><br /><br />
-                <NewProjectButton />
+                <NewProjectButton disabled={!this.state.islogedIn!}
+                    pageNewProject={this.createNewProject.bind(this)}
+                    qr={this.state.qr!}
+                    link={this.state.link!}
+                    pageChangeToVisu={this.changetovisu.bind(this)}
+                />
                 <br />
-                <LoadModelButton />
+                <LoadModelButton pageLoadModel={this.loadmodel.bind(this)}
+                    disabled={!this.state.islogedIn!}
+                    projectData={this.state.projectData!}
+                    pageSetCurrentprojekt={this.setCurrentProjekt.bind(this)}
+                    qr={this.state.qr!}
+                    pageLoadProjekt={this.loadproject.bind(this)}
+                    pageChangeToVisu={this.changetovisu.bind(this)}
+                />
+
+                <NotificationContainer />
             </div>
         );
         ReactDOM.render(VDOM, document.getElementById('root'));
-        this.createNewProject();
-        this.register();
-        this.login();
-        this.getmodellist();
-        this.getProjectList();
-        this.loadproject();
-        this.changetovisu();
-        this.loadmodel();
     }
 
+    /**
+    * Durch diese Methode kann sich ein Controller als Beobachter anmelden.
+    * @param oberver neuer Beobachter
+    */
     attach(observer: PageController) {
         this.observers.push(observer);
     }
 
+    /**
+    * Durch diese Methode kann sich ein Controller als Beobachter abmelden.
+    * @param oberver Beobachter der zu entfernen ist
+    */
     detach(observer: PageController) {
         const index = this.observers.indexOf(observer, 0);
         if (index > -1) {
@@ -53,6 +80,9 @@ export class ReferringPage extends React.Component<Props, State> implements Page
         }
     }
 
+    /**
+    * Durch diese Methode werden alle Beobachter über eine Änderung auf der Seite informiert.
+    */
     notify() {
         for (let index = 0; index < this.observers.length; index++) {
             const element = this.observers[index];
@@ -60,123 +90,114 @@ export class ReferringPage extends React.Component<Props, State> implements Page
         }
     }
 
+    /**
+    * Gibt den Status der Seite zurück
+    */
     getState() {
         return this.state;
     }
 
-    createNewProject() {
-        PubSub.unsubscribe('createnewproject')
-        PubSub.subscribe('createnewproject', (_msg: any, data: string) => {
-            //console.log(this.state.currentState)
-            // eslint-disable-next-line
-            this.state.currentState = States.NewProjekt;
-            //console.log(this.state.currentState)
-            // eslint-disable-next-line
-            this.state.currentProject = { projectID: -10000, projectName: data, choosenAIModelID: -10000 };
-            //hier notifty for createnewProject
-            this.notify();
-        });
+    /**
+    * Der Benutzer möchte ein neues Projekt erstellen
+    * @param projectName Name des neuen Projekts
+    */
+    private createNewProject(projectName: string) {
+        this.state.currentProject!.projectName = projectName;
+        this.state.currentState = States.NewProjekt;
+        this.update();
     }
 
-    register() {
-        PubSub.unsubscribe('register')
-        PubSub.subscribe('register', (_msg: any, data: { name: string, email: string, password: string; }) => {
-            // eslint-disable-next-line
-            this.state.adminData = data;
-            // eslint-disable-next-line
+    /**
+     * Ein Benutzer möchte sich registrieren
+     * @param username Name des Benutzers
+     * @param email Email des Benutzers
+     * @param password Passwort des Benutzers
+     */
+    private register(username: string, email: string, password: string) {
+        var pattern = /^([A-Za-z0-9_\-.])+@([A-Za-z0-9_\-.])+\.([A-Za-z])+$/;
+        if (!pattern.test(email)) {
+            NotificationManager.error("Email-Adresse nicht gültig", "", 3000);
+        } else {
+            this.state.adminData! = { name: username, email: email, password: password };
             this.state.currentState = States.Register;
-            //console.log(this.state.currentState)
-            this.notify();
+            this.update();
             this.state.wait!.then(() => {
-                //console.log(this.state.currentState)
-                let flag: boolean;
-                // eslint-disable-next-line
-                if (this.state.currentState != States.Register) {
-                    flag = false;
-                } else {
-                    PubSub.publish('disabled', false);
-                    flag = true;
-                }
-                PubSub.publish('registerstatus', flag);
-            });
-        });
-    }
-
-    login() {
-        PubSub.unsubscribe('login')
-        PubSub.subscribe('login', (_msg: any, data: { name: string, email: string, password: string; }) => {
-            // console.log(this.state.currentState)
-            // eslint-disable-next-line
-            this.state.adminData = data;
-            // eslint-disable-next-line
-            this.state.currentState = States.Login;
-            this.notify();
-            let flag: boolean;
-            this.state.wait!.then(() => {
-                // eslint-disable-next-line
                 if (this.state.currentState as States == States.LoginFail as States) {
-                    flag = false;
-                } else {
-                    flag = true;
-                    PubSub.publish('disabled', false);
-                    PubSub.publish('getprojectlist', this.state.projectData);
-                }
-                PubSub.publish('loginstatus', flag);
-
-            });
-        });
-    }
-
-    getmodellist() {
-        PubSub.unsubscribe('needmodellist')
-        PubSub.subscribe('needmodellist', (msg: any, data: { projectID: number; }) => {
-            for (let index = 0; index < this.state.projectData!.length; index++) {
-                // eslint-disable-next-line
-                if (data.projectID == this.state.projectData![index].projectID) {
-                    PubSub.publish('getmodellist', this.state.projectData![index]);
+                    NotificationManager.error("Registrieren fehlgeschlagen!", "", 3000);
                     return;
                 }
+                NotificationManager.success("Wilkommen " + this.state.adminData?.email);
+                this.update();
+            });
+        }
+    }
+
+    /**
+     * Ein Benutzer möchte sich Anmelden
+     * @param email Email des Benutzers
+     * @param password Passwort des Benutzers
+     */
+    private login(email: string, password: string) {
+        // console.log(this.state.currentState)
+        // eslint-disable-next-line
+        this.state.adminData! = { name: "", email: email, password: password };
+        // eslint-disable-next-line
+        this.state.currentState = States.Login;
+        this.update();
+        this.state.wait!.then(() => {
+            // eslint-disable-next-line
+            if (this.state.currentState as States == States.LoginFail as States) {
+                NotificationManager.error("Login fehlgeschlagen!", "", 3000);
+                return;
             }
-
+            NotificationManager.success("Wilkommen " + this.state.adminData?.email);
+            this.update();
         });
     }
 
-    getProjectList() {
-        PubSub.unsubscribe('needprojectlist')
-        PubSub.subscribe('needprojectlist', () => {
-            PubSub.publish('getprojectlist', this.state.projectData!);
-        });
+    /**
+     * Ein Projekt soll geladen werden
+     * @param data Infomationen über das zu ladene Projekt
+     */
+    private loadproject(data: { projectID: number, projectName: string, choosenAIModelID: number; }) {
+        this.state.currentProject = data;
+        this.state.currentState = States.LoadProject;
+        this.update();
     }
 
-    loadproject() {
-        PubSub.unsubscribe('loadproject')
-        PubSub.subscribe('loadproject', (_msg: any, data: { projectID: number, projectName: string, choosenAIModelID: number; }) => {
-            // eslint-disable-next-line
-            this.state.currentProject = { projectID: data.projectID, projectName: data.projectName, choosenAIModelID: -10000 };
-            // eslint-disable-next-line
-            this.state.currentState = States.LoadProject;
-            //console.log(data.projectID);
-            this.notify();
-        });
+    /**
+     * Ein Projekt als momentanes Projekt setzen
+     * @param currentProject Infomationene über das momentane projekt
+     */
+    private setCurrentProjekt(currentProject: { projectID: number, projectName: string, choosenAIModelID: number; }) {
+        this.state.currentProject = currentProject;
+        this.update();
     }
 
-    changetovisu() {
-        PubSub.unsubscribe('changetovisu')
-        PubSub.subscribe('changetovisu', (_msg: any) => {
-            // eslint-disable-next-line
-            this.state.currentState = States.ChangeToVisual;
-            this.notify();
-        });
+    /**
+     * Wechsel der Seite zur Visualisierungseite.
+     */
+    private changetovisu() {
+        this.state.currentState = States.ChangeToVisual;
+        this.notify(); // Kein Update, da sonst die Seite neu rendert und der Seitenwechsel fehlschlägt
     }
 
-    loadmodel() {
-        PubSub.unsubscribe('loadmodel')
-        PubSub.subscribe('loadmodel', (_msg: any, data: { projectID: number, projectName: string, choosenAIModelID: number; }) => {
-            // eslint-disable-next-line
-            this.state.currentProject = data;
-            // eslint-disable-next-line
-            this.state.currentState = States.LoadModel;
-            this.notify();
-        });
+    /**
+     * Lade ein KI-Model
+     * @param chosenmodelID ID des Models
+     */
+    private loadmodel(chosenmodelID: number) {
+        this.state.currentProject!.choosenAIModelID = chosenmodelID;
+        this.state.currentState = States.LoadModel;
+        this.update();
+    }
+
+    /**
+     * Setzt einen neuen Zustand für die Seite und aktualisiert sie
+     * @param state neuer Zustand für die Seite
+     */
+    setState(state: any) {
+        this.state = state;
+        this.update();
     }
 }

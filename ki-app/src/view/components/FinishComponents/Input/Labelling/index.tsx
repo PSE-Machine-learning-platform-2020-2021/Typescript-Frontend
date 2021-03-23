@@ -5,7 +5,22 @@ export default class Labelling extends Component {
         labels: [] as { labelID: number, start: number, end: number, name: string; }[],
         newStart: "", newEnd: '', newName: ""
     };
-    lastID: number = 0;
+
+    props = {
+        newLabel: function (label: {
+            labelID: number;
+            start: number;
+            end: number;
+            name: string;
+        }) { },
+        pagedeleteLabel: function (label: {
+            labelID: number;
+            start: number;
+            end: number;
+            name: string;
+        }) { }
+    };
+    IDcounter: number = 0;
 
     handleChangeLabel = (e: ChangeEvent<HTMLInputElement>) => {
         this.setState({ newName: e.target.value });
@@ -24,17 +39,11 @@ export default class Labelling extends Component {
     };
 
     addLabel = (labelObj: { start: string, end: string, name: string; }) => {
-        const label: { labelID: number, start: number, end: number, name: string; } = { labelID: -1, start: this.formatFloatInString(labelObj.start), end: this.formatFloatInString(labelObj.end), name: labelObj.name }; //was ist bei fehlerfall?? keine Zahlen
-        PubSub.publish('newLabel', label);
-        PubSub.subscribe('newLabelWithID', (_msg: any, labelpar: { labelId: number, start: number, end: number, name: string, labelID: number; }) => {
-            const { labels } = this.state;
-            if (label.name === labelpar.name) {
-                const labelObjReal: { labelID: string, start: string, end: string, name: string; } = { labelID: labelpar.labelID.toString(), start: this.formatFloatInString(labelObj.start).toString(), end: this.formatFloatInString(labelObj.end).toString(), name: labelObj.name };
-                const newLabels = [labelObjReal, ...labels];
-                this.setState({ labels: newLabels });
-                PubSub.unsubscribe('newLabelWithID');
-            }
-        });
+        const label: { labelID: number, start: number, end: number, name: string; } = { labelID: this.IDcounter, start: this.formatFloatInString(labelObj.start), end: this.formatFloatInString(labelObj.end), name: labelObj.name }; //was ist bei fehlerfall?? keine Zahlen
+        this.props.newLabel(label);
+        const { labels } = this.state;
+        const newLabels = [label, ...labels];
+        this.setState({ labels: newLabels });
     };
 
 
@@ -44,7 +53,7 @@ export default class Labelling extends Component {
 
         let newLabels = labels.filter((label) => {
             if (label.labelID === id) {
-                PubSub.publish('deleteLabel', label);
+                this.props.pagedeleteLabel(label);
             }
             return label.labelID !== id;
         });
