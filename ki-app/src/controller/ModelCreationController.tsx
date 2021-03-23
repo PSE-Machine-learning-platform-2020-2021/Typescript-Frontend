@@ -22,11 +22,11 @@ export class ModelCreationController implements PageController {
      * Dieser Seitenverwalter benötigt einen SensorManager, welcher schon initilisiert wurde. 
      */
     constructor() {
-        this.page = new ModelCreationPage({});
+        this.page = new ModelCreationPage();
         this.page.attach(this);
         this.state = this.page.getState();
         this.state.dataSetMetas! = MainController.getInstance().getFacade().getDataSetMetas()!;
-        PubSub.publish("setlist", this.state.dataSetMetas!);
+        this.page.setState(this.state);
     }
 
     /**
@@ -67,6 +67,7 @@ export class ModelCreationController implements PageController {
         }
         //Benutzte Sensoren werden hinzugefügt
         this.state.trainingParameter!.sensors = sensors;*/
+        //console.log(this.state.trainingParameter)
         MainController.getInstance().getFacade().applyModel(this.state.trainingParameter!);
     }
 }

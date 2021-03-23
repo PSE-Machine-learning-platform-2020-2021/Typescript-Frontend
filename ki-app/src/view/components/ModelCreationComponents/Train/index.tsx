@@ -1,9 +1,13 @@
 import React, { Component } from 'react';
-import PubSub from 'pubsub-js';
 import NewWindow from 'react-new-window';
-
-
+import { NotificationContainer, NotificationManager } from 'react-notifications';
+import 'react-notifications/lib/notifications.css';
+import './Train.css'
 export default class Train extends Component {
+	props = {
+		dataSetMetas: [{ dataSetID: -1, dataSetName: 'ex' }],
+		train: function (dataSets: number[], imputator: string, classifier: string, scaler: string, features: string[]) { }
+	}
 	state = {
 		mouse: false,
 		openNewWindow: false,
@@ -48,15 +52,12 @@ export default class Train extends Component {
 	};
 
 	componentDidMount() {
-		PubSub.unsubscribe('setlist');
-		PubSub.subscribe('setlist', (_msg: any, data: { dataSetID: number, dataSetName: string; }[]) => {
-			let newDatabaseList: { dataSetID: number, dataSetName: string, chosen: boolean; }[] = [];
-			for (let i = 0; i < data.length; i++) {
-				newDatabaseList.push({ dataSetID: data[i].dataSetID, dataSetName: data[i].dataSetName, chosen: false });
-			}
-			this.state.databaseList = newDatabaseList;
-			this.setState({ databaseList: newDatabaseList });
-		});
+		let newDatabaseList: { dataSetID: number, dataSetName: string, chosen: boolean; }[] = [];
+		this.props.dataSetMetas?.map((dataset) => {
+			newDatabaseList.push({ dataSetID: dataset.dataSetID, dataSetName: dataset.dataSetName, chosen: false });
+		})
+		this.setState({ databaseList: newDatabaseList });
+
 	}
 
 	handleMouse = (flag: boolean) => {
@@ -114,7 +115,7 @@ export default class Train extends Component {
 		this.setState({ openNewWindow: false });
 		// eslint-disable-next-line
 		if (this.state.value == '') {
-			alert('no choice');
+			NotificationManager.error("Kein Wählen!", "", 3000);
 		} else {
 			const { databaseList } = this.state;
 			const newDatabaseList1 = databaseList.map((databaseObj) => {
@@ -156,7 +157,7 @@ export default class Train extends Component {
 			newList[index].checked = !newList[index].checked;
 			this.setState({ chosenImputator: newChosen, imputators: newList });
 		} else {
-			alert('Darf nicht mehrer Imputer wählen!');
+			NotificationManager.error("Darf nicht mehrer Imputationen wählen!", "", 3000);
 			return;
 		}
 	};
@@ -172,7 +173,7 @@ export default class Train extends Component {
 			this.setState({ chosenScaler: newChosen });
 			this.setState({ scalers: newList });
 		} else {
-			alert('Darf nicht mehrer Scaler wählen!');
+			NotificationManager.error("Darf nicht mehrer Scaler wählen!", "", 3000);
 			return;
 		}
 
@@ -194,7 +195,7 @@ export default class Train extends Component {
 			this.setState({ chosenclassifier: newChosen });
 			this.setState({ classifiers: newList });
 		} else {
-			alert('Darf nicht mehrer Classifier wählen!');
+			NotificationManager.error("Darf nicht mehrer Classifier wählen!", "", 3000);
 			return;
 		}
 	};
@@ -223,12 +224,11 @@ export default class Train extends Component {
 			return featureObj;
 		});
 		//console.log(chosendataSets, chosenImputator, chosenclassifier, chosenscaler, chosenFeatures)
-		PubSub.publish('train', { dataSets, imputator, classifier, scaler, features });
+		this.props.train(dataSets, imputator, classifier, scaler, features);
 	};
 
 	render() {
 		const { mouse, datasets, imputators, scalers, myfeatures, classifiers } = this.state;
-
 		return (
 			<div className="train">
 				<h3>Datasets</h3>
@@ -258,9 +258,9 @@ export default class Train extends Component {
 							</div>
 						</NewWindow>
 					)}
-					<button onClick={() => this.handleCreate()} className="btn" >Add new Dataset</button>
+					<button onClick={() => this.handleCreate()} className="adddataset-btn" >Add new Dataset</button>
 				</div>
-				<div>
+				<div className="list">
 					<div className="imputationlist">
 						<h3>Imputation</h3>
 						{imputators.map((imputator, index) => {
@@ -284,7 +284,7 @@ export default class Train extends Component {
 					</div>
 				</div>
 
-				<div>
+				<div className="list">
 					<div className="extractionlist">
 						<h3>Merkmalextraktion</h3>
 						{myfeatures.map((extraction, index) => {
@@ -307,9 +307,10 @@ export default class Train extends Component {
 						})}
 					</div>
 				</div>
+				<br></br>
 
-				<div className="trainbutton">
-					<button onClick={() => this.handleTrain()} className="btn" >Train Start!</button>
+				<div className="clearfloat">
+					<button onClick={() => this.handleTrain()} className="train-btn" >Train Start!</button>
 				</div>
 			</div>
 
