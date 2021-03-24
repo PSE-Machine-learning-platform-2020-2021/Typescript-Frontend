@@ -75,7 +75,7 @@ function clearStart() {
 }
 
 
-test("create and setter", () => {
+test("create and getter", () => {
     clearStart();
     //Einfache Erstellung ohne Daten (Projekt 1)
     var project = new Project(projectID1, sessionID1, projectName1);
@@ -105,8 +105,86 @@ test("create and setter", () => {
     expect(project.getDataRows(219).dataRows.length).toBe(0);
 });
 
-test("addDatapoint", () => {
+/**
+ * Prüft, ob addDatapoint ohne geladenem Datensatz fehlerfrei läuft
+ */
+test("addDatapoint without loaded Datasets", () => {
+    clearStart();
+    var project = new Project(projectID1, sessionID1, projectName1);
+    var projectID = projectID1;
+    var sessionID = sessionID1;
+    var projectName = projectName1;
+    var dataSetID = 219;
+    var dataSetName = "Alter Schwede";
+    //Normale Benutzung
+    expect(project.createDataSet(dataRowSensors2, dataSetID, dataSetName)).toBeTruthy();
+    projectData = { dataSet: [{ dataRowSensors: dataRowSensors2, dataSetID, dataSetName: dataSetName, dataRows: [{ dataRowID: 0, dataRow: [] }, { dataRowID: 1, dataRow: [] }] }] };
+    var currentDataRows = dataRowSensors2.length; //Da die Sensoren leere Datenreihen anlegen
+    expect(project.addDatapoint(0, { value: [1, 2, 3], relativeTime: 12 })).toBeTruthy();
+    projectData.dataSet[0].dataRows[0].dataRow.push({ value: [1, 2, 3], relativeTime: 12 });
+    expect(project.addDatapoint(1, { value: [7, 8, 9], relativeTime: 14 })).toBeTruthy();
+    projectData.dataSet[0].dataRows[1].dataRow.push({ value: [7, 8, 9], relativeTime: 14 });
+    checkAll(project, projectID, sessionID, projectName, currentDataRows, projectData);
+    //Mehrfache Anwendung
+    for (let i = 0; i < 20; i++) {
+        expect(project.addDatapoint(0, { value: [4 + i, 5 + 2 * i, 6 + 3 * i], relativeTime: 1 + i + i })).toBeTruthy();
+        projectData.dataSet[0].dataRows[0].dataRow.push({ value: [4 + i, 5 + 2 * i, 6 + 3 * i], relativeTime: 1 + i + i });
+    }
+    checkAll(project, projectID, sessionID, projectName, currentDataRows, projectData);
+    //Datensatz kann nicht erstellt werden
+    expect(project.addDatapoint(-1, { value: [1, 2, 3], relativeTime: 12 })).toBeFalsy();
+    expect(project.addDatapoint(3, { value: [1, 2, 3], relativeTime: 12 })).toBeFalsy();
+    expect(project.addDatapoint(0, { value: [], relativeTime: 12 })).toBeFalsy();
+    expect(project.addDatapoint(0, { value: [1], relativeTime: 12 })).toBeFalsy();
+    expect(project.addDatapoint(0, { value: [1, 2], relativeTime: 12 })).toBeFalsy();
+    expect(project.addDatapoint(0, { value: [1, 2, 3, 3], relativeTime: 2 })).toBeFalsy();
+    expect(project.addDatapoint(0, { value: [1, 2, 3], relativeTime: 12 })).toBeFalsy();
+    expect(project.addDatapoint(0, { value: [1, 2, 3], relativeTime: -1 })).toBeFalsy();
+    //Ohne aktuellen Datensatz
+    expect(project.deleteDataSet(dataSetID)).toBeTruthy();
+    projectData.dataSet.pop();
+    currentDataRows = 0; //Da gelöscht
+    expect(project.addDatapoint(0, { value: [1, 2, 3], relativeTime: 13 })).toBeFalsy();
+    //Test, dass keine falschen Änderungen aufkamen
+    checkAll(project, projectID, sessionID, projectName, currentDataRows, projectData);
+});
 
+/**
+ * Prüft, ob addDatapoint mit geladenem Datensatz fehlerfrei läuft
+ */
+test("addDatapoint with loaded Datasets", () => {
+    clearStart();
+    var project = new Project(projectID2, sessionID2, projectName2, projectData2);
+    var projectID = projectID2;
+    var sessionID = sessionID2;
+    var projectName = projectName2;
+    projectData = projectData2;
+    //Normale Benutzung
+    project.getDataRows(dataSetID1);//Läd richtigen Datensatz als aktuellen Datensatz
+    var currentDataRows = dataRowSensors2.length; //Da die Sensoren leere Datenreihen anlegen
+    expect(project.addDatapoint(12, { value: [1, 2, 3], relativeTime: 12 })).toBeTruthy();
+    projectData.dataSet[0].dataRows[0].dataRow.push({ value: [1, 2, 3], relativeTime: 12 });
+    expect(project.addDatapoint(77, { value: [7, 8, 9], relativeTime: 14 })).toBeTruthy();
+    projectData.dataSet[0].dataRows[1].dataRow.push({ value: [7, 8, 9], relativeTime: 14 });
+    checkAll(project, projectID, sessionID, projectName, currentDataRows, projectData);
+    //Mehrfache Anwendung
+    project.getDataRows(dataSetID1);//Läd richtigen Datensatz als aktuellen Datensatz
+    for (let i = 0; i < 20; i++) {
+        expect(project.addDatapoint(12, { value: [4 + i, 5 + 2 * i, 6 + 3 * i], relativeTime: 1 + i + i })).toBeTruthy();
+        projectData.dataSet[0].dataRows[0].dataRow.push({ value: [4 + i, 5 + 2 * i, 6 + 3 * i], relativeTime: 1 + i + i });
+    }
+    checkAll(project, projectID, sessionID, projectName, currentDataRows, projectData);
+    //Datensatz kann nicht erstellt werden
+    expect(project.addDatapoint(-1, { value: [1, 2, 3], relativeTime: 12 })).toBeFalsy();
+    expect(project.addDatapoint(3, { value: [1, 2, 3], relativeTime: 12 })).toBeFalsy();
+    expect(project.addDatapoint(0, { value: [], relativeTime: 12 })).toBeFalsy();
+    expect(project.addDatapoint(0, { value: [1], relativeTime: 12 })).toBeFalsy();
+    expect(project.addDatapoint(0, { value: [1, 2], relativeTime: 12 })).toBeFalsy();
+    expect(project.addDatapoint(0, { value: [1, 2, 3, 3], relativeTime: 2 })).toBeFalsy();
+    expect(project.addDatapoint(0, { value: [1, 2, 3], relativeTime: 12 })).toBeFalsy();
+    expect(project.addDatapoint(0, { value: [1, 2, 3], relativeTime: -1 })).toBeFalsy();
+    //Test, dass keine falschen Änderungen aufkamen
+    checkAll(project, projectID, sessionID, projectName, currentDataRows, projectData);
 });
 
 /**
@@ -150,13 +228,13 @@ test("deleteDataSet", () => {
  */
 test("createDataSet without loaded Datasets", () => {
     clearStart();
-    //Normale Benutzung
     var project = new Project(projectID1, sessionID1, projectName1);
     var projectID = projectID1;
     var sessionID = sessionID1;
     var projectName = projectName1;
     var dataSetID = 219;
     var dataSetName = "Alter Schwede";
+    //Normale Benutzung
     expect(project.createDataSet(dataRowSensors2, dataSetID, dataSetName)).toBeTruthy();
     var projectData = { dataSet: [{ dataRowSensors: dataRowSensors2, dataSetID, dataSetName: dataSetName, dataRows: [{ dataRowID: 0, dataRow: [] }, { dataRowID: 1, dataRow: [] }] }] };
     var currentDataRows = dataRowSensors2.length; //Da die Sensoren leere Datenreihen anlegen

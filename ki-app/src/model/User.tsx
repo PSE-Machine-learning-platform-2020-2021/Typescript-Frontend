@@ -195,17 +195,16 @@ export abstract class User {
 
   /**
    * Gibt alle Sensoren aus, die das Benutzergerät und das Programm unterstützt
-   */
+  
   getDeviceSensors(sensorTypeID: number[]): SensorData[] {
     return this.device.getSensors(sensorTypeID);
   }
 
   /**
    * Gibt die SensorTypID der auswählbaren Sensoren zurück
-   */
   getAvailableSensors(): number[] {
     return this.device.getAvailableSensors();
-  }
+  } */
 
   /**
    * Gibt von allen Datensätzen vom aktuellen Projekt Informationen zurück

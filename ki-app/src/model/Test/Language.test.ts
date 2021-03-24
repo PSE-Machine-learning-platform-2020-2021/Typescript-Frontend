@@ -3,7 +3,7 @@ import { Language } from "../Language";
 /**
  * Prüft die einfache Nutzung, erstellen und prüfen ob der getter dies wieder zurück gibt
  */
-test("create and setter", () => {
+test("create and getter", () => {
     const languageMessage: string[] = [
         "de-de",
         "Deutsch",

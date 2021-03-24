@@ -13,25 +13,35 @@ export class Session {
    * @param admin Der Admin, dem diese Session gehört
    */
   constructor(id: number) {
-    this.id = id;
+    if (id < 0) {
+      this.id = -1;
+    } else {
+      this.id = id;
+    }
   }
 
   /**
    * Fügt eine User als Verbundener User zu der Session hinzu
    * @param user Der User, der hinzugefügt wird
    */
-  connectUser(user: User): void {
+  connectUser(user: User): boolean {
+    for (let i = 0; i < this.connectedUser.length; i++) {
+      if (this.connectedUser[i].getID() == user.getID()) {
+        return false;
+      }
+    }
     this.connectedUser.push(user);
+    return true;
   }
 
   /**
    * Meldet einen User von der aktuellen Session ab
    * @param user Der User, der abgemeldet werdern soll
    */
-  disconnectUser(user: User): boolean {
+  disconnectUser(userID: number): boolean {
     for (let i = 0; i < this.connectedUser.length; i++) {
-      if (this.connectedUser[i].getID() === user.getID()) {
-        delete this.connectedUser[i];
+      if (this.connectedUser[i].getID() === userID) {
+        this.connectedUser.splice(i, 1);
         return true;
       }
     }

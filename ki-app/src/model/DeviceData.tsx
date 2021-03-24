@@ -7,10 +7,14 @@ export abstract class DeviceData {
   private firmware: string;
   private generation: string;
   protected abstract deviceType: string;
-  private availableSensors: SensorData[] = [];
+  //private availableSensors: SensorData[] = [];
 
   protected constructor(deviceID: number, MACADRESS: string, deviceName: string, firmware: string, generation: string) {
-    this.id = deviceID;
+    if (deviceID < 0) {
+      this.id = -1;
+    } else {
+      this.id = deviceID;
+    }
     this.MACADDRESS = MACADRESS;
     this.name = deviceName;
     this.firmware = firmware;
@@ -23,57 +27,76 @@ export abstract class DeviceData {
    */
   setDeviceID(deviceID: number): boolean {
 
-    if (this.id === -1 && deviceID >= 0) {
+    if (this.id == -1 && deviceID >= 0) {
       this.id = deviceID;
       return true;
     }
     return false;
   }
 
+  getID(): number {
+    return this.id;
+  }
+
   getName(): string {
     return this.name;
   }
+
   getMACADDRESS(): string {
     return this.MACADDRESS;
   }
+
   getFirmware(): string {
     return this.firmware;
   }
+
   getGeneration(): string {
     return this.generation;
   }
-  getSensors(sensorTypeID: number[]): SensorData[] {
+
+  /*getSensors(sensorTypeID: number[]): SensorData[] {
     return [];
   }
   getSensor(id: number): SensorData {
     return new AccelerometerData(this.id, this.MACADDRESS, this.name);
-  }
+  }*/
 
   /**
    * Gibt alle Sensoren aus, die das Benutzergerät und das Programm unterstützt
-   */
+   *
   getAvailableSensors(): number[] {
     return [];
-  }
+  }*/
 
   /**
-   * Prüft das aktuelle Gerät auf
+   * Prüft welches Gerät aktuell benutzt wird
    */
   static loadDevice(deviceID: number, device?: { MACADRESS: string, deviceName: string, firmware: string, generation: string, deviceType: string; }): DeviceData {
-    return new Smartphone(-1, "", "", "", "");
+    ////////////////////////////////////////////////////
+    //Noch herrausfinden Smartphone oder anderes Gerät//
+    ////////////////////////////////////////////////////
+    if (device != null) {
+      if (device.deviceType == "Smartphone") {
+        return new Smartphone(deviceID, device.MACADRESS, device.deviceName, device.firmware, device.generation);
+      } else if (device.deviceType == "Desktop") {
+        return new Desktop(deviceID, device.MACADRESS, device.deviceName, device.firmware, device.generation);
+      } else {
+        return new Smartphone(deviceID, device.MACADRESS, device.deviceName, device.firmware, device.generation);
+      }
+    } else {
+      //NUR DUMMY MUSS NOCH GEFÜLLT WERDEN
+      return new Smartphone(deviceID, "", "", "", "");
+    }
   }
-
-
-  protected abstract searchSensor(): void;
-
+  //protected abstract searchSensor(): void;
 }
 
 export class Smartphone extends DeviceData {
   protected deviceType: string = "Smartphone";
-  protected searchSensor(): void { }
+  //protected searchSensor(): void { }
 }
 
 export class Desktop extends DeviceData {
   protected deviceType: string = "Desktop";
-  protected searchSensor(): void { }
+  //protected searchSensor(): void { }
 }

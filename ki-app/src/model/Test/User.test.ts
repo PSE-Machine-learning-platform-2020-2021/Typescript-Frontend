@@ -1,6 +1,6 @@
 import { Language } from "../Language";
 
-test("create and setter", () => {
+test("create and getter", () => {
     const languageMessage: string[] = [
         "de-de",
         "Deutsch",

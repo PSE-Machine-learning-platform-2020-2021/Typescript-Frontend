@@ -40,7 +40,6 @@ test("addDatapoint many points", () => {
   const datarow = new DataRow(sensorData, 27);
   const length = 50;
   const value0 = [1, 1, 1];
-  const relativeTime0 = 1;
   const value1 = [22, 34, 17];
   const relativeTime1 = 999;
   const pos1 = 24;
@@ -53,7 +52,7 @@ test("addDatapoint many points", () => {
     } else if (i == pos2) {
       expect(datarow.addDatapoint({ value: value2, relativeTime: relativeTime2 })).toBeTruthy();
     } else {
-      expect(datarow.addDatapoint({ value: value0, relativeTime: relativeTime0 })).toBeTruthy();
+      expect(datarow.addDatapoint({ value: value0, relativeTime: i })).toBeTruthy();
     }
   }
   for (let i = 0; i < length; i++) {
@@ -71,7 +70,7 @@ test("addDatapoint many points", () => {
       for (let j = 0; j < value0.length; j++) {
         expect(datarow.getDataRow().datapoint[i].value[j]).toBe(value0[j]);
       }
-      expect(datarow.getDataRow().datapoint[i].relativeTime).toBe(relativeTime0);
+      expect(datarow.getDataRow().datapoint[i].relativeTime).toBe(i);
     }
   }
 });
@@ -101,5 +100,22 @@ test("addDatapoint with empty value", () => {
   const datarow = new DataRow(sensorData, 27);
   const value: number[] = [];
   const relativeTime = 1;
+  expect(datarow.addDatapoint({ value: value, relativeTime: relativeTime })).toBeFalsy();
+});
+
+test("addDatapoint with wrong value length", () => {
+  const sensorData = new AccelerometerData(1, "00-14-22-01-23-45", "Hubert");
+  const datarow = new DataRow(sensorData, 27);
+  var value: number[] = [1, 2, 3];
+  var relativeTime = 1;
+  expect(datarow.addDatapoint({ value: value, relativeTime: relativeTime })).toBeTruthy();
+  var value: number[] = [1];
+  var relativeTime = 2;
+  expect(datarow.addDatapoint({ value: value, relativeTime: relativeTime })).toBeFalsy();
+  var value: number[] = [1, 2];
+  var relativeTime = 3;
+  expect(datarow.addDatapoint({ value: value, relativeTime: relativeTime })).toBeFalsy();
+  var value: number[] = [1, 2, 3, 3];
+  var relativeTime = 4;
   expect(datarow.addDatapoint({ value: value, relativeTime: relativeTime })).toBeFalsy();
 });

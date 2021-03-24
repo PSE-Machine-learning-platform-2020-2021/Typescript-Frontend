@@ -1,4 +1,5 @@
 import { relative } from "node:path";
+import { useDebugValue } from "react";
 import { DataPoint } from "./DataPoint";
 import { AccelerometerData, GyroscopeData } from "./SensorData";
 
@@ -54,6 +55,11 @@ export class DataRow {
    * @returns false, falls datapoint.value leer ist oder datapoint.relativeTime < 0
    */
   public addDatapoint(datapoint: { value: number[], relativeTime: number; }): boolean {
+    for (let i = 0; i < this.datapoint.length; i++) {
+      if (this.datapoint[i].getValue().length != datapoint.value.length || this.datapoint[i].getRelativeTime() === datapoint.relativeTime) {
+        return false;
+      }
+    }
     if (datapoint.value.length == 0 || datapoint.relativeTime < 0) {
       return false;
     } else {

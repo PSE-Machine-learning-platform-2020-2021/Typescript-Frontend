@@ -203,7 +203,7 @@ export class Facade {
 
   /**
    * Gibt die auswählbaren Sensoren als ID mit ihrer Art in der Passenden Sprache zurück
-   */
+  
   getAvailableSensors(): { sensorTypID: number, sensorType: string; }[] {
     if (this.user != null && this.language != null) {
       var sensors: { sensorTypID: number, sensorType: string; }[] = [];
@@ -215,7 +215,7 @@ export class Facade {
     }
     return [];
   }
-
+ */
   /**
    * Lädt die Sprache aus der Datenbank mit dem übergebenen Sprachcode
    * @param languageCode Sprachcode
