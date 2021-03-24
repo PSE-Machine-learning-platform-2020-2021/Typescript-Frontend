@@ -32,70 +32,72 @@ export default class Diagram extends Component {
         this.diagrammData.showDiagram = true;
 
         var datavalues = [];
-        for (var i = 0; i < this.props.dataRows.length; i++) {
-            this.diagrammData.sensorRow.push(this.props.dataRows[i].sensorType);
-            for (var dataCoordinate = 0; dataCoordinate < 3; dataCoordinate++) {
-                for (var j = 0; j < this.props.dataRows[i].datapoint.length; j++) {
-                    datavalues.push(this.props.dataRows[i].datapoint[j].value[dataCoordinate]);
+        if (this.props.dataRows != undefined) {
+            for (var i = 0; i < this.props.dataRows.length; i++) {
+                this.diagrammData.sensorRow.push(this.props.dataRows[i].sensorType);
+                for (var dataCoordinate = 0; dataCoordinate < 3; dataCoordinate++) {
+                    for (var j = 0; j < this.props.dataRows[i].datapoint.length; j++) {
+                        datavalues.push(this.props.dataRows[i].datapoint[j].value[dataCoordinate]);
+                    }
+                    this.diagrammData.datavalue.push(datavalues);
+                    datavalues = [];
                 }
-                this.diagrammData.datavalue.push(datavalues);
-                datavalues = [];
             }
-        }
-        // eslint-disable-next-line
-        for (var j = 0; j < this.props.dataRows[0].datapoint.length; j++) {
-            this.diagrammData.time.push(this.props.dataRows[0].datapoint[j].relativeTime);
-        }
-
-        var newDatasets = [];
-        var lineLabels = [];
-        for (var i = 0; i < this.diagrammData.sensorRow.length * 3; i++) {
-            var coordinate = ".X";
-            var sensor = this.diagrammData.sensorRow[parseInt(i / 3)];
-            var sensorName = '';
-            switch (sensor) {
-                case 2:
-                    sensorName = 'Accelerometer';
-                    break;
-                case 3:
-                    sensorName = 'Gyroscope';
-                    break;
-                case 4:
-                    sensorName = 'Magnetometer';
-                    break;
-            }
-            if (i % 3 == 1) {
-                coordinate = ".Y";
-            }
-            if (i % 3 == 2) {
-                coordinate = ".Z";
+            // eslint-disable-next-line
+            for (var j = 0; j < this.props.dataRows[0].datapoint.length; j++) {
+                this.diagrammData.time.push(this.props.dataRows[0].datapoint[j].relativeTime);
             }
 
-            lineLabels.push(<font color={this.diagrammData.csscolor[i]}>■{sensorName + coordinate}<br /></font>);
-            //this.setState({ lineLabels: lineLabels })
-            newDatasets.push(
-                {
-                    label: sensor + coordinate,
-                    strokeColor: this.diagrammData.color[i],
-                    borderWidth: 1,
-                    data: this.diagrammData.datavalue[i],
+            var newDatasets = [];
+            var lineLabels = [];
+            for (var i = 0; i < this.diagrammData.sensorRow.length * 3; i++) {
+                var coordinate = ".X";
+                var sensor = this.diagrammData.sensorRow[parseInt(i / 3)];
+                var sensorName = '';
+                switch (sensor) {
+                    case 2:
+                        sensorName = 'Accelerometer';
+                        break;
+                    case 3:
+                        sensorName = 'Gyroscope';
+                        break;
+                    case 4:
+                        sensorName = 'Magnetometer';
+                        break;
                 }
-            );
+                if (i % 3 == 1) {
+                    coordinate = ".Y";
+                }
+                if (i % 3 == 2) {
+                    coordinate = ".Z";
+                }
+
+                lineLabels.push(<font color={this.diagrammData.csscolor[i]}>■{sensorName + coordinate}<br /></font>);
+                //this.setState({ lineLabels: lineLabels })
+                newDatasets.push(
+                    {
+                        label: sensor + coordinate,
+                        strokeColor: this.diagrammData.color[i],
+                        borderWidth: 1,
+                        data: this.diagrammData.datavalue[i],
+                    }
+                );
+            }
+            const data = {
+                labels: this.diagrammData.time,
+                datasets: newDatasets
+            };
+            const options = {
+                datasetFill: false,
+                pointDotRadius: 2,
+                pointHitDetectionRadius: 1,
+                offsetGridLines: false,
+                pointDot: false
+            };
+            this.diagrammData.diagramData = data;
+            this.diagrammData.lineLabels = lineLabels;
+            this.diagrammData.diagramOptions = options;
         }
-        const data = {
-            labels: this.diagrammData.time,
-            datasets: newDatasets
-        };
-        const options = {
-            datasetFill: false,
-            pointDotRadius: 2,
-            pointHitDetectionRadius: 1,
-            offsetGridLines: false,
-            pointDot: false
-        };
-        this.diagrammData.diagramData = data;
-        this.diagrammData.lineLabels = lineLabels;
-        this.diagrammData.diagramOptions = options;
     }
 
     render() {
