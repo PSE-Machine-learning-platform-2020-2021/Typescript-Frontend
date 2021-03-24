@@ -25,7 +25,6 @@ export class FinishController implements PageController {
         this.page.attach(this);
         this.state = this.page.getState();
         this.state.dataRows! = MainController.getInstance().getFacade().getCurrentDataRows()!.dataRows!;
-        PubSub.publish('finishDiagram', this.state.dataRows!);
         this.page.setState(this.state);
     }
 
