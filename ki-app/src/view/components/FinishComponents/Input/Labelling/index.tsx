@@ -79,10 +79,10 @@ export default class Labelling extends Component {
                     })}
                 <div>
                     Start:
-                        <input type="text" value={this.state.newStart} onChange={this.handleChangeStart} />
+                        <input type="text" value={this.state.newStart} onChange={this.handleChangeStart} /><br />
 
                     End:
-                        <input type="text" value={this.state.newEnd} onChange={this.handleChangeEnd} />
+                        <input type="text" value={this.state.newEnd} onChange={this.handleChangeEnd} /><br />
 
                     Label:
                         <input type="text" value={this.state.newName} onChange={this.handleChangeLabel} />

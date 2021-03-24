@@ -26,7 +26,9 @@ export class DeliveryPage implements Page {
 				<DownloadButton download={this.download.bind(this)} />
 			</div>
 		);
-		ReactDOM.render(VDOM, document.getElementById('root'));
+		if (document.getElementById( 'root' ) !== null) {
+            ReactDOM.render( VDOM, document.getElementById( 'root' ) );
+        }
 	}
 
 

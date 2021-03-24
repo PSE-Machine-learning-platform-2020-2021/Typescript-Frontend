@@ -21,14 +21,16 @@ export class FinishPage implements Page {
     const VDOM = (
       <div>
         <Title />
-        <Body dataRows={this.state.dataRows} />
+        <Body dataRows={this.state.dataRows!} />
         <div className="label-container">
           <Labelling newLabel={this.newLabel.bind(this)} pagedeleteLabel={this.pagedeleteLabel.bind(this)} />
         </div>
-        <button type="submit" onSubmit={this.finish}>Finish</button>
       </div>
     );
-    ReactDOM.render(VDOM, document.getElementById('root'));
+    // <button type="submit" onSubmit={this.finish}>Finish</button>
+    if (document.getElementById('root') !== null) {
+      ReactDOM.render(VDOM, document.getElementById('root'));
+    }
   }
 
   //braucht nicht mehr

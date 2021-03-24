@@ -28,7 +28,9 @@ export class ModelCreationPage implements Page {
 				<NotificationContainer />
 			</div>
 		);
-		ReactDOM.render(VDOM, document.getElementById('root'));
+		if (document.getElementById( 'root' ) !== null) {
+            ReactDOM.render( VDOM, document.getElementById( 'root' ) );
+        }
 	}
 
 	attach(observer: PageController) {
