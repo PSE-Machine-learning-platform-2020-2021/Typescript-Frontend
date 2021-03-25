@@ -476,10 +476,7 @@ function checkAll(project: Project, projectID: number, sessionID: number, projec
             if (dataSet[d].label != null) {
                 expect(loadedLabels.length).toBe(projectData.dataSet[d].label!.length);
                 for (let i = 0; i < dataSet[d].label!.length; i++) {
-                    expect(loadedLabels[i].name).toBe(dataSet[d].label![i].name);
-                    expect(loadedLabels[i].id).toBe(dataSet[d].label![i].labelID);
-                    expect(loadedLabels[i].start).toBe(dataSet[d].label![i].start);
-                    expect(loadedLabels[i].end).toBe(dataSet[d].label![i].end);
+                    expect(loadedLabels[i]).toStrictEqual(dataSet[d].label![i]);
                 }
             } else {
                 expect(loadedLabels.length).toBe(0);
