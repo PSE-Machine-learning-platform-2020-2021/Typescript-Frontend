@@ -1,14 +1,14 @@
 import React, { Component } from "react";
-import {NotificationContainer, NotificationManager} from 'react-notifications';
+import { NotificationContainer, NotificationManager } from 'react-notifications';
 import './Input.css'
 
 export default class Input extends Component {
 
   props = {
-    pageChangeSettings: function(recordingSettings: {
+    pageChangeSettings: function (recordingSettings: {
       newDataSetName: string, usedSensorTypes: number[], waitTime: number, readTime: number,
       availableSensorTypes: { sensorTypID: number, sensorType: string, chosen: boolean; }[]
-    }){},
+    }) { },
     availableSensorTypes: [] as { sensorTypID: number, sensorType: string, chosen: boolean; }[]
   }
 
@@ -25,7 +25,7 @@ export default class Input extends Component {
       leadTime: e.target.value,
     });
   };
-  
+
   changeCollectionTime = (e: React.ChangeEvent<HTMLInputElement>) => {
     this.setState({
       collectionTime: e.target.value,
@@ -71,7 +71,7 @@ export default class Input extends Component {
       }
       this.setState({ usedSensorTypes: usedSensorTypes });
 
-      if ( isNaN(+this.state.leadTime) || isNaN(+this.state.collectionTime)){
+      if (isNaN(+this.state.leadTime) || isNaN(+this.state.collectionTime)) {
         NotificationManager.error("Die Eingabe der Zeit ist ungültig. Nur Ganze Zahlen sind Erlaubt");
         return
       }

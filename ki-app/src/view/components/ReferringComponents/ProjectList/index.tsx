@@ -10,12 +10,12 @@ export default class ProjectList extends Component {
 
     props = {
         projectData: [{ projectID: -1, projectName: "null", AIModelID: [-1], }],
-        pageSetCurrentprojekt: function (currentProject: { projectID: number; projectName: string; choosenAIModelID: number; }) {},
-        pageLoadModel: function(chosenmodelID: number){},
-        pageLoadProjekt: function(currentProject: { projectID: number; projectName: string; choosenAIModelID: number; }){},
-        pageChangeToVisu: function() {},
+        pageSetCurrentprojekt: function (currentProject: { projectID: number; projectName: string; choosenAIModelID: number; }) { },
+        pageLoadModel: function (chosenmodelID: number) { },
+        pageLoadProjekt: function (currentProject: { projectID: number; projectName: string; choosenAIModelID: number; }) { },
+        pageChangeToVisu: function () { },
         qr: ''
-      }
+    }
 
     state = {
         value: null,
@@ -44,11 +44,11 @@ export default class ProjectList extends Component {
                         for (let index = 0; index < this.props.projectData!.length; index++) {
                             // eslint-disable-next-line
                             if (projectObj.projectID == this.props.projectData![index].projectID) {
-                                this.setState({currentProject: this.props.projectData[index]})
+                                this.setState({ currentProject: this.props.projectData[index] })
                                 break;
                             }
                         }
-                        
+
                         this.setState({ click: true })
                     } else {
                         this.setState({ click: false })
@@ -68,7 +68,7 @@ export default class ProjectList extends Component {
                 // eslint-disable-next-line
                 if (this.state.value == projectObj.projectID) {
                     let id: number = projectObj.projectID
-                    this.props.pageLoadProjekt({projectID: id, projectName: projectObj.projectName, choosenAIModelID: -1})
+                    this.props.pageLoadProjekt({ projectID: id, projectName: projectObj.projectName, choosenAIModelID: -1 })
                     this.setState({ loadclick: true })
                 }
             })
@@ -79,16 +79,16 @@ export default class ProjectList extends Component {
         return (
             <section className='projectlist'>
                 <label>ProjektList</label>
-                <select onChange={this.handleChange}>
+                <select onChange={this.handleChange} className='select'>
                     <option>Projekt Wählen</option>
                     {this.props.projectData.map((projectObj) => {
-                        return <option value={projectObj.projectID}>{projectObj.projectName}</option>
+                        return <option value={projectObj.projectID} >{projectObj.projectName}</option>
                     })}
                 </select>
-                <button onClick={() => this.handleChoose()} className="pl-btn" >Modellliste ladent </button>
-                <button onClick={() => this.handleLoad()} className="pl-btn" >Projekt laden</button>
-                {this.state.loadclick ? <div> <QRImage qr = {this.props.qr} /><ChangeToVisuBtn pageChangeToVisu = {this.props.pageChangeToVisu} /></div> : null}
-                {this.state.click ? <div> <ModelList pageLoadModel = {this.props.pageLoadModel} currentProject = {this.state.currentProject}/></div> : null}
+                <button onClick={() => this.handleChoose()} className="pl-btn" type="button" >Modellliste ladent </button>
+                <button onClick={() => this.handleLoad()} className="pl-btn" type="button" >Projekt laden</button>
+                {this.state.loadclick ? <div> <QRImage qr={this.props.qr} /><ChangeToVisuBtn pageChangeToVisu={this.props.pageChangeToVisu} /></div> : null}
+                {this.state.click ? <div> <ModelList pageLoadModel={this.props.pageLoadModel} currentProject={this.state.currentProject} /></div> : null}
             </section>
 
         )

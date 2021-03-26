@@ -17,10 +17,10 @@ export default class ChangeToVisuBtn extends Component {
      * Render Methode des Komponenten
      * @returns Aufbau des Komponenten
      */
-    render () {
+    render() {
         return (
             <div>
-                <button onClick={ () => this.props.pageChangeToVisu() } className="ctv-btn" >Wechseln auf die Visualisierungsseite</button>
+                <button onClick={() => this.props.pageChangeToVisu()} className="ctv-btn" type="button" >Wechseln auf die Visualisierungsseite</button>
             </div>
         );
     }
