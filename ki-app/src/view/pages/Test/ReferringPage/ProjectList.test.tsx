@@ -15,10 +15,10 @@ test('Rendert', () => {
     const wrapper = shallow<ProjectList>(<ProjectList projectData={projectData} qr={qr}
         pageSetCurrentprojekt={pageSetCurrentprojekt} pageLoadModel={pageLoadModel} pageLoadProjekt={pageLoadProjekt} pageChangeToVisu={pageChangeToVisu} />)
 
-    wrapper.state().value = null
-    wrapper.state().click = false
-    wrapper.state().loadclick = false
-    wrapper.state().currentProject = { projectID: -1, projectName: "", AIModelID: [] }
+    expect(wrapper.state().value).toBe(null)
+    expect(wrapper.state().click).toBe(false)
+    expect(wrapper.state().loadclick).toBe(false)
+    expect(wrapper.state().currentProject).toEqual({ projectID: -1, projectName: "", AIModelID: [] })
 
     const testNotificationManager1 = NotificationManager.info('test')
     const choose: any = wrapper.find("button").at(0);
@@ -43,18 +43,20 @@ test('Gültige eingabe', () => {
         pageSetCurrentprojekt={pageSetCurrentprojekt} pageLoadModel={pageLoadModel} pageLoadProjekt={pageLoadProjekt} pageChangeToVisu={pageChangeToVisu} />)
 
     const change = wrapper.find("select").at(0);
-
     change.simulate('change', { target: { value: projectData[0].projectID } });
     expect(wrapper.state().value).toBe(-1)
+
     const choose: any = wrapper.find("button").at(0);
     expect(wrapper.state().click).toBe(false)
     choose.simulate("click");
     expect(wrapper.state().click).toBe(true)
 
+    expect(pageLoadProjekt.mock.calls.length).toBe(0)
     const load: any = wrapper.find("button").at(1);
     expect(wrapper.state().loadclick).toBe(false)
     load.simulate("click");
     expect(wrapper.state().loadclick).toBe(true)
+    expect(pageLoadProjekt.mock.calls.length).toBe(1)
 });
 
 

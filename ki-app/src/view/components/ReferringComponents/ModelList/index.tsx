@@ -1,10 +1,11 @@
 import React, { Component } from 'react'
+import { NotificationManager } from 'react-notifications'
 
 export default class ModelList extends Component {
 
     props = {
         currentProject: { projectID: -1, projectName: "null", AIModelID: [-1] },
-        pageLoadModel: function(chosenmodelID: number){}
+        pageLoadModel: function (chosenmodelID: number) { }
     }
 
     state = {
@@ -20,7 +21,7 @@ export default class ModelList extends Component {
     handleChoose() {
         /* wait to change load model*/
         if (this.state.chosenmodelID == -1) {
-            alert('Sie haben noch kein Modell gewählt!')
+            NotificationManager.error('Sie haben noch kein Modell gewählt!', "", 3000)
         } else {
             this.props.pageLoadModel(this.state.chosenmodelID)
         }
@@ -33,7 +34,7 @@ export default class ModelList extends Component {
                 <select onChange={this.handleChange}>
                     <option>Modell Wählen</option>
                     {this.props.currentProject.AIModelID.map((modelObj) => {
-                        return <option value={modelObj}>Modell{modelObj}</option>
+                        return <option value={modelObj} key={modelObj} >Modell{modelObj}</option>
                     })}
                 </select>
                 <button onClick={() => this.handleChoose()} className="btn" >Laden das gewählte Modell(zu Auslieferungsseite)</button>
