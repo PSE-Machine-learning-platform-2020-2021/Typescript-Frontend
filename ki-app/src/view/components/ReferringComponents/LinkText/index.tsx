@@ -7,13 +7,12 @@ export default class LinkText extends Component {
 
     render() {
         return (
-
             <div className="linktext">
                 <div className="linktext1">
                     <p>QR-Code scannen oder Link folgen, um Daten zu erfassen</p>
                 </div>
 
-                <a href={this.props.link}>{this.props.link}</a>
+                <a href={this.props.link} type='link'>{this.props.link}</a>
             </div>
         )
     }

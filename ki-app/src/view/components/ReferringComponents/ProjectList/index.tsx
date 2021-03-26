@@ -10,12 +10,12 @@ export default class ProjectList extends Component {
 
     props = {
         projectData: [{ projectID: -1, projectName: "null", AIModelID: [-1], }],
-        pageSetCurrentprojekt: function (currentProject: { projectID: number; projectName: string; choosenAIModelID: number; }) {},
-        pageLoadModel: function(chosenmodelID: number){},
-        pageLoadProjekt: function(currentProject: { projectID: number; projectName: string; choosenAIModelID: number; }){},
-        pageChangeToVisu: function() {},
+        pageSetCurrentprojekt: function (currentProject: { projectID: number; projectName: string; choosenAIModelID: number; }) { },
+        pageLoadModel: function (chosenmodelID: number) { },
+        pageLoadProjekt: function (currentProject: { projectID: number; projectName: string; choosenAIModelID: number; }) { },
+        pageChangeToVisu: function () { },
         qr: ''
-      }
+    }
 
     state = {
         value: null,
@@ -39,7 +39,7 @@ export default class ProjectList extends Component {
                     if (projectObj.AIModelID.length != 0) {
                         for (let index = 0; index < this.props.projectData!.length; index++) {
                             if (projectObj.projectID == this.props.projectData![index].projectID) {
-                                this.setState({currentProject: this.props.projectData[index]})
+                                this.setState({ currentProject: this.props.projectData[index] })
                                 break;
                             }
                         }
@@ -60,7 +60,7 @@ export default class ProjectList extends Component {
             this.props.projectData.map((projectObj) => {
                 if (this.state.value == projectObj.projectID) {
                     let id: number = projectObj.projectID
-                    this.props.pageLoadProjekt({projectID: id, projectName: projectObj.projectName, choosenAIModelID: -1})
+                    this.props.pageLoadProjekt({ projectID: id, projectName: projectObj.projectName, choosenAIModelID: -1 })
                     this.setState({ loadclick: true })
                 }
             })
@@ -74,13 +74,13 @@ export default class ProjectList extends Component {
                 <select onChange={this.handleChange}>
                     <option>Projekt Wählen</option>
                     {this.props.projectData.map((projectObj) => {
-                        return <option value={projectObj.projectID}>{projectObj.projectName}</option>
+                        return <option value={projectObj.projectID} key={projectObj.projectID}>{projectObj.projectName}</option>
                     })}
                 </select>
-                <button onClick={() => this.handleChoose()} className="pl-btn" >Modellliste ladent </button>
-                <button onClick={() => this.handleLoad()} className="pl-btn" >Projekt laden</button>
-                {this.state.loadclick ? <div> <QRImage qr = {this.props.qr} /><ChangeToVisuBtn pageChangeToVisu = {this.props.pageChangeToVisu} /></div> : null}
-                {this.state.click ? <div> <ModelList pageLoadModel = {this.props.pageLoadModel} currentProject = {this.state.currentProject}/></div> : null}
+                <button onClick={() => this.handleChoose()} className="pl-btn" type="button" >Modellliste ladent </button>
+                <button onClick={() => this.handleLoad()} className="pl-btn" type="button" >Projekt laden</button>
+                {this.state.loadclick ? <div> <QRImage qr={this.props.qr} /><ChangeToVisuBtn pageChangeToVisu={this.props.pageChangeToVisu} /></div> : null}
+                {this.state.click ? <div> <ModelList pageLoadModel={this.props.pageLoadModel} currentProject={this.state.currentProject} /></div> : null}
             </section>
 
         )
