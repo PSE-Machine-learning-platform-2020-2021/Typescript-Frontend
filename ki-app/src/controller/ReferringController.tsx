@@ -51,7 +51,7 @@ export class RefferingController implements PageController {
                 this.loadModel();
                 break;
             case States.SetLanguage:
-                MainController.getInstance().setLanguage(this.state.languageCode);
+                console.log(MainController.getInstance().setLanguage(this.state.languageCode));
                 break;
             case States.NeedMessage:
                 this.state.messages = MainController.getInstance().getMessage(this.state.messages)!;
