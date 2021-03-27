@@ -203,26 +203,63 @@ export default class Train extends Component {
 	handleTrain = () => {
 		var dataSets: number[] = [], imputator = "", classifier = '', scaler = '', features: string[] = [];
 		const { datasets, imputators, classifiers, scalers, myfeatures } = this.state;
+		let datasetsflag, imputatorsflag, classifiersflag, scalersflag, featuresflag = true
 		datasets.map((datasetObj) => {
-			if (datasetObj.chosen) dataSets.push(datasetObj.dataSetID);
+			if (datasetObj.chosen) {
+				datasetsflag = false
+				dataSets.push(datasetObj.dataSetID);
+			}
 			return datasetObj;
 		});
 		imputators.map((imputatorObj) => {
-			if (imputatorObj.checked) imputator = imputatorObj.tag;
+			if (imputatorObj.checked) {
+				imputatorsflag = false
+				imputator = imputatorObj.tag;
+			}
 			return imputatorObj;
 		});
 		classifiers.map((classifierObj) => {
-			if (classifierObj.checked) classifier = classifierObj.tag;
+			if (classifierObj.checked) {
+				classifiersflag = false
+				classifier = classifierObj.tag;
+			}
 			return classifierObj;
 		});
 		scalers.map((scalerObj) => {
-			if (scalerObj.checked) scaler = scalerObj.tag;
+			if (scalerObj.checked) {
+				scalersflag = false
+				scaler = scalerObj.tag;
+			}
 			return scalerObj;
 		});
 		myfeatures.map((featureObj) => {
-			if (featureObj.checked) features.push(featureObj.tag);
+			if (featureObj.checked) {
+				featuresflag = false
+				features.push(featureObj.tag);
+			}
 			return featureObj;
 		});
+		if (datasetsflag) {
+			NotificationManager.error("Keinen Datensatz wählen!", "", 3000);
+			return
+		}
+		if (imputatorsflag) {
+			NotificationManager.error("Keine Imputation wählen!", "", 3000);
+			return
+		}
+		if (classifiersflag) {
+			NotificationManager.error("Kein Classifier wählen!", "", 3000);
+			return
+		}
+		if (scalersflag) {
+			NotificationManager.error("Kein Scaler wählen!", "", 3000);
+			return
+		}
+		if (featuresflag) {
+			NotificationManager.error("Keine Merkmalextraktion wählen!", "", 3000);
+			return
+		}
+
 		//console.log(chosendataSets, chosenImputator, chosenclassifier, chosenscaler, chosenFeatures)
 		this.props.train(dataSets, imputator, classifier, scaler, features);
 	};
@@ -235,12 +272,12 @@ export default class Train extends Component {
 				{datasets.map(dataset => {
 					return (
 
-						<li style={{ backgroundColor: mouse ? '#ddd' : 'white' }} onMouseEnter={this.handleMouse(true)} onMouseLeave={this.handleMouse(false)}>
+						<li style={{ backgroundColor: mouse ? '#ddd' : 'white' }} onMouseEnter={this.handleMouse(true)} onMouseLeave={this.handleMouse(false)} className='list' >
 							<label>
 								<input type="checkbox" checked={dataset.chosen} onChange={(e: React.ChangeEvent<HTMLInputElement>): void => this.handleCheck(dataset.dataSetID, e.target.checked)} />
 								<span>{dataset.dataSetName}</span>
 							</label>
-							<button onClick={() => this.handleDelete(dataset.dataSetID)} className="btn-item" style={{ display: mouse ? 'block' : 'none' }}>Löschen</button>
+							<button onClick={() => this.handleDelete(dataset.dataSetID)} type='button' className="btn-item" style={{ display: mouse ? 'block' : 'none' }}>Löschen</button>
 						</li>
 					);
 				})}
@@ -251,14 +288,14 @@ export default class Train extends Component {
 							<div className="login-window">
 								<h1>DatabaseList</h1>
 								<select onChange={this.handleChange}>
-									<option value="choose dataset">choose dataset</option>
+									<option value="">choose dataset</option>
 									{this.options()}
 								</select>
-								<button onClick={this.handleChoose} className="btn" >Add!</button>
+								<button onClick={this.handleChoose} className="choose-btn" type='button' >Add!</button>
 							</div>
 						</NewWindow>
 					)}
-					<button onClick={() => this.handleCreate()} className="adddataset-btn" >Add new Dataset</button>
+					<button onClick={() => this.handleCreate()} className="create-btn" type='button' >Add new Dataset</button>
 				</div>
 				<div className="list">
 					<div className="imputationlist">
@@ -266,7 +303,7 @@ export default class Train extends Component {
 						{imputators.map((imputator, index) => {
 							return (
 								<div key={index}>
-									<input type="checkbox" value={index} checked={imputator.checked} onChange={() => this.handleImputation(index)} /><span>{imputator.name}</span>
+									<input className='imputationcheck' type="checkbox" value={index} checked={imputator.checked} onChange={() => this.handleImputation(index)} /><span>{imputator.name}</span>
 								</div>
 							);
 						})}
@@ -276,7 +313,7 @@ export default class Train extends Component {
 						{scalers.map((scaler, index) => {
 							return (
 								<div key={index}>
-									<input type="checkbox" value={index} checked={scaler.checked} onChange={() => this.handleScaler(index)} /><span>{scaler.name}</span>
+									<input className='scalercheck' type="checkbox" value={index} checked={scaler.checked} onChange={() => this.handleScaler(index)} /><span>{scaler.name}</span>
 								</div>
 							);
 						})
@@ -290,7 +327,7 @@ export default class Train extends Component {
 						{myfeatures.map((extraction, index) => {
 							return (
 								<div key={index}>
-									<input type="checkbox" value={index} checked={extraction.checked} onChange={() => this.handleExtraction(index)} /><span>{extraction.name}</span>
+									<input className='featurecheck' type="checkbox" value={index} checked={extraction.checked} onChange={() => this.handleExtraction(index)} /><span>{extraction.name}</span>
 								</div>
 							);
 						})
@@ -301,7 +338,7 @@ export default class Train extends Component {
 						{classifiers.map((classifier, index) => {
 							return (
 								<div key={index}>
-									<input type="checkbox" value={index} checked={classifier.checked} onChange={() => this.handleClassifier(index)} /><span>{classifier.name}</span>
+									<input className='classifiercheck' type="checkbox" value={index} checked={classifier.checked} onChange={() => this.handleClassifier(index)} /><span>{classifier.name}</span>
 								</div>
 							);
 						})}
@@ -310,7 +347,7 @@ export default class Train extends Component {
 				<br></br>
 
 				<div className="clearfloat">
-					<button onClick={() => this.handleTrain()} className="train-btn" >Train Start!</button>
+					<button onClick={() => this.handleTrain()} className="train-btn" type='button' >Train Start!</button>
 				</div>
 			</div>
 
