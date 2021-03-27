@@ -24,31 +24,25 @@ export default class ProjectList extends Component {
         currentProject: { projectID: -1, projectName: "", AIModelID: [] }
     }
 
-    handleChange = (e: React.ChangeEvent<HTMLSelectElement>) => {
+    private handleChange = (e: React.ChangeEvent<HTMLSelectElement>) => {
         this.setState({
             value: e.target.value
         })
     }
 
-    handleChoose() {
-        /* wait to change load model*/
+    private handleChoose() {
         if (this.state.value == null) {
             NotificationManager.error("Sie haben noch kein Projekt gewählt", "", 3000)
         } else {
-            // eslint-disable-next-line
             this.props.projectData.map((projectObj) => {
-                // eslint-disable-next-line
                 if (this.state.value == projectObj.projectID) {
-                    // eslint-disable-next-line
                     if (projectObj.AIModelID.length != 0) {
                         for (let index = 0; index < this.props.projectData!.length; index++) {
-                            // eslint-disable-next-line
                             if (projectObj.projectID == this.props.projectData![index].projectID) {
                                 this.setState({ currentProject: this.props.projectData[index] })
                                 break;
                             }
                         }
-
                         this.setState({ click: true })
                     } else {
                         this.setState({ click: false })
@@ -57,15 +51,13 @@ export default class ProjectList extends Component {
                 }
             })
         }
-
     }
-    handleLoad() {
+
+    private handleLoad() {
         if (this.state.value == null) {
             NotificationManager.error("Sie haben noch kein Projekt gewählt", "", 3000)
         } else {
-            // eslint-disable-next-line
             this.props.projectData.map((projectObj) => {
-                // eslint-disable-next-line
                 if (this.state.value == projectObj.projectID) {
                     let id: number = projectObj.projectID
                     this.props.pageLoadProjekt({ projectID: id, projectName: projectObj.projectName, choosenAIModelID: -1 })

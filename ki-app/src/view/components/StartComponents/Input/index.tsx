@@ -2,6 +2,10 @@ import React, { Component } from "react";
 import { NotificationContainer, NotificationManager } from 'react-notifications';
 import './Input.css'
 
+
+/**
+ * Komponent der Startseite. 
+ */
 export default class Input extends Component {
 
   props = {
