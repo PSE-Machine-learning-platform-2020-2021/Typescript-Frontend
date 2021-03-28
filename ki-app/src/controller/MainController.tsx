@@ -5,6 +5,8 @@ import { States } from "../view/pages/State";
 import { Facade } from "../model/Facade";
 import { StartController } from "./StartController";
 
+import dataDE from '../model/language/de.json';
+
 /**
 * Hauptverwalter der Anwendung. Enthält momentane Seite, die Fassade und verwaltet die Sprache.
 */
@@ -30,6 +32,8 @@ export class MainController implements MainControllerInterface {
   constructor () {
     this.facade = new Facade( "de-de" );
   }
+
+  languageCode: string = "de-de"
 
   /**
    * Gibt sich selber zurück und sorgt dafür das nur ein MainController besteht.
@@ -103,6 +107,18 @@ export class MainController implements MainControllerInterface {
     for ( let index = 0; index < messages.length; index++ ) {
       messages[ index ].text = texts[ index ];
       return messages;
+    }
+  }
+
+  getText() {
+    switch (this.languageCode) {
+      case "de-de":
+        return dataDE
+        break;
+    
+      default:
+        return dataDE
+        break;
     }
   }
 
