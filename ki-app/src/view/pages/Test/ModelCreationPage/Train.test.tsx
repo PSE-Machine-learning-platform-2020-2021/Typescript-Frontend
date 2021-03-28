@@ -153,6 +153,7 @@ test('train', () => {
     const create: any = wrapper.find({ className: "create-btn" })
     create.simulate("click");
     const change: any = wrapper.find('select')
+    change.simulate('change', { target: { value: 'ex' } });
     const choose: any = wrapper.find({ className: "choose-btn" })
     choose.simulate("click");
     const datasetcheck1: any = wrapper.find("input").at(0);

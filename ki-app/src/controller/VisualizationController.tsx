@@ -53,7 +53,7 @@ export class VisualizationController implements PageController {
         for (let index = 0; index < dataSets.length; index++) {
             let data = MainController.getInstance().getFacade().getDataRows(dataSets[index].dataSetID).dataRows!;
             this.state.currentDataSets!.push({ dataSetID: dataSets[index].dataSetID, rows: data });
-            PubSub.publish('visualizationDiagram', { dataSetID: dataSets[index].dataSetID, dataRows: data });
+            //PubSub.publish('visualizationDiagram', { dataSetID: dataSets[index].dataSetID, dataRows: data });
         }
         this.state.currentState = States.SetDataRows;
         this.page.setState(this.state);
@@ -71,7 +71,7 @@ export class VisualizationController implements PageController {
             for (let index = 0; index < dataSets.length; index++) {
                 let data = MainController.getInstance().getFacade().getDataRows(dataSets[index].dataSetID).dataRows!;
                 this.state.currentDataSets!.push({ dataSetID: dataSets[index].dataSetID, rows: data });
-                PubSub.publish('visualizationDiagram', { dataSetID: dataSets[index].dataSetID, dataRows: data });
+                // PubSub.publish('visualizationDiagram', { dataSetID: dataSets[index].dataSetID, dataRows: data });
             }
             this.state.currentState = States.SetDataRows;
             this.page.setState(this.state);

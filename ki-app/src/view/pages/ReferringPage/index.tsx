@@ -1,3 +1,6 @@
+import ReactDOM from 'react-dom';
+import { NotificationContainer, NotificationManager } from 'react-notifications';
+import 'react-notifications/lib/notifications.css';
 import ConstantsText from '../../components/ReferringComponents/ConstantsText';
 import NewProjectButton from '../../components/ReferringComponents/NewProjectButton';
 import LoadModelButton from '../../components/ReferringComponents/LoadModelButton';
@@ -6,11 +9,6 @@ import { PageController } from "../../../controller/PageController";
 import { State } from "./State";
 import { States } from '../State';
 import LoginWindow from '../../components/ReferringComponents/LoginWindow';
-import ReactDOM from 'react-dom';
-
-import { NotificationContainer, NotificationManager } from 'react-notifications';
-import 'react-notifications/lib/notifications.css';
-
 
 /*
 *Darstellungsseite der Verweisseite.
@@ -32,7 +30,7 @@ export class ReferringPage implements Page {
     * Die Methode enthält den Aufbau der Seite und wird von ihr gerendert.
     * Es werden durch notify() alle controller über ein Update informiert und alle Seiten Elemente werden aktualisiert und erneut gerendert. 
     */
-    private update() {
+    update() {
         this.notify();
         const VDOM = (
             <div>
@@ -58,8 +56,8 @@ export class ReferringPage implements Page {
                 <NotificationContainer />
             </div>
         );
-        if (document.getElementById( 'root' ) !== null) {
-            ReactDOM.render( VDOM, document.getElementById( 'root' ) );
+        if (document.getElementById('root') !== null) {
+            ReactDOM.render(VDOM, document.getElementById('root'));
         }
     }
 

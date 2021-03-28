@@ -203,7 +203,7 @@ export default class Train extends Component {
 	handleTrain = () => {
 		var dataSets: number[] = [], imputator = "", classifier = '', scaler = '', features: string[] = [];
 		const { datasets, imputators, classifiers, scalers, myfeatures } = this.state;
-		let datasetsflag, imputatorsflag, classifiersflag, scalersflag, featuresflag = true
+		let datasetsflag = true, imputatorsflag = true, classifiersflag = true, scalersflag = true, featuresflag = true, nochoice = false
 		datasets.map((datasetObj) => {
 			if (datasetObj.chosen) {
 				datasetsflag = false
@@ -241,25 +241,25 @@ export default class Train extends Component {
 		});
 		if (datasetsflag) {
 			NotificationManager.error("Keinen Datensatz wählen!", "", 3000);
-			return
+			nochoice = true
 		}
 		if (imputatorsflag) {
 			NotificationManager.error("Keine Imputation wählen!", "", 3000);
-			return
+			nochoice = true
 		}
 		if (classifiersflag) {
 			NotificationManager.error("Kein Classifier wählen!", "", 3000);
-			return
+			nochoice = true
 		}
 		if (scalersflag) {
 			NotificationManager.error("Kein Scaler wählen!", "", 3000);
-			return
+			nochoice = true
 		}
 		if (featuresflag) {
 			NotificationManager.error("Keine Merkmalextraktion wählen!", "", 3000);
-			return
+			nochoice = true
 		}
-
+		if (nochoice) return
 		//console.log(chosendataSets, chosenImputator, chosenclassifier, chosenscaler, chosenFeatures)
 		this.props.train(dataSets, imputator, classifier, scaler, features);
 	};

@@ -66,7 +66,7 @@ export class VisualizationPage implements Page {
         this.update()
     }
 
-    changetoCreation() {
+    private changetoCreation() {
         this.state.currentState = States.ChangeToCreation
         this.notify()
     }

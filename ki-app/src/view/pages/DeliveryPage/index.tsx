@@ -26,9 +26,9 @@ export class DeliveryPage implements Page {
 				<DownloadButton download={this.download.bind(this)} />
 			</div>
 		);
-		if (document.getElementById( 'root' ) !== null) {
-            ReactDOM.render( VDOM, document.getElementById( 'root' ) );
-        }
+		if (document.getElementById('root') !== null) {
+			ReactDOM.render(VDOM, document.getElementById('root'));
+		}
 	}
 
 
@@ -59,7 +59,7 @@ export class DeliveryPage implements Page {
 		this.update()
 	}
 
-	delivery(chosenEmails: string[]) {
+	private delivery(chosenEmails: string[]) {
 
 		// eslint-disable-next-line
 		this.state.currentState = States.DeliverWeb
@@ -68,7 +68,7 @@ export class DeliveryPage implements Page {
 		this.notify()
 	}
 
-	download() {
+	private download() {
 
 		// eslint-disable-next-line
 		this.state.currentState = States.NeedDownload

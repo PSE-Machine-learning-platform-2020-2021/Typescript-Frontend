@@ -28,9 +28,9 @@ export class ModelCreationPage implements Page {
 				<NotificationContainer />
 			</div>
 		);
-		if (document.getElementById( 'root' ) !== null) {
-            ReactDOM.render( VDOM, document.getElementById( 'root' ) );
-        }
+		if (document.getElementById('root') !== null) {
+			ReactDOM.render(VDOM, document.getElementById('root'));
+		}
 	}
 
 	attach(observer: PageController) {
@@ -60,7 +60,7 @@ export class ModelCreationPage implements Page {
 		this.update()
 	}
 
-	train(dataSets: number[], imputator: string, classifier: string, scaler: string, features: string[]) {
+	private train(dataSets: number[], imputator: string, classifier: string, scaler: string, features: string[]) {
 		// eslint-disable-next-line
 		this.state.currentState = States.NeedKiTraining;
 		// eslint-disable-next-line
