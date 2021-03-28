@@ -42,10 +42,10 @@ export class Label {
    * Gibt das Label als Objekt zurück.
    * In diesem Objekt werden die Start- und Endzeit als "start" und "end", der Label Name als "name" sowie die Label ID als "id" übergeben.
    */
-  getLabel(): { name: string, id: number, start: number, end: number; } {
+  getLabel(): { name: string, labelID: number, start: number, end: number; } {
     var label = {
       name: this.name,
-      id: this.labelID,
+      labelID: this.labelID,
       start: this.timeSpan.getStart(),
       end: this.timeSpan.getEnd()
     };

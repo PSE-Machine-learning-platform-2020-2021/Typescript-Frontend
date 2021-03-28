@@ -43,7 +43,7 @@ test("creat and getter", () => {
     }
     for (let i = 0; i < labels.length; i++) {
         expect(dataSet.getLabels()[i].name).toBe(labels[i].name);
-        expect(dataSet.getLabels()[i].id).toBe(labels[i].labelID);
+        expect(dataSet.getLabels()[i].labelID).toBe(labels[i].labelID);
         expect(dataSet.getLabels()[i].start).toBe(labels[i].start);
         expect(dataSet.getLabels()[i].end).toBe(labels[i].end);
     }
@@ -154,7 +154,7 @@ test("addDatapoint with a loaded Datarow and Labels", () => {
     expect(dataSet.getLabels().length).toBe(labels.length);
     for (let i = 0; i < labels.length; i++) {
         expect(dataSet.getLabels()[i].name).toBe(labels[i].name);
-        expect(dataSet.getLabels()[i].id).toBe(labels[i].labelID);
+        expect(dataSet.getLabels()[i].labelID).toBe(labels[i].labelID);
         expect(dataSet.getLabels()[i].start).toBe(labels[i].start);
         expect(dataSet.getLabels()[i].end).toBe(labels[i].end);
     }
@@ -183,7 +183,7 @@ test("createLabel without loaded Labels", () => {
     //laden getestet in getter und setter test
     //Normale Nutzung
     expect(dataSet.createLabel(1, { start: 200, end: 500 }, "Treppen laufen")).toBeTruthy();
-    expect(dataSet.getLabels()[0].id).toBe(1);
+    expect(dataSet.getLabels()[0].labelID).toBe(1);
     expect(dataSet.getLabels()[0].start).toBe(200);
     expect(dataSet.getLabels()[0].end).toBe(500);
     expect(dataSet.getLabels()[0].name).toBe("Treppen laufen");
@@ -197,7 +197,7 @@ test("createLabel without loaded Labels", () => {
     expect(dataSet.getDataRows()[0].sensorType).toBe(2);
     expect(dataSet.getDataRows()[1].sensorType).toBe(3);
     expect(dataSet.getLabels().length).toBe(1);
-    expect(dataSet.getLabels()[0].id).toBe(1);
+    expect(dataSet.getLabels()[0].labelID).toBe(1);
     expect(dataSet.getLabels()[0].start).toBe(200);
     expect(dataSet.getLabels()[0].end).toBe(500);
     expect(dataSet.getLabels()[0].name).toBe("Treppen laufen");
@@ -228,7 +228,7 @@ test("createLabel with loaded Labels", () => {
     //laden getestet in getter und setter test
     //Normale Nutzung
     expect(dataSet.createLabel(3, { start: 200, end: 500 }, "Treppen laufen")).toBeTruthy();
-    expect(dataSet.getLabels()[2].id).toBe(3);
+    expect(dataSet.getLabels()[2].labelID).toBe(3);
     expect(dataSet.getLabels()[2].start).toBe(200);
     expect(dataSet.getLabels()[2].end).toBe(500);
     expect(dataSet.getLabels()[2].name).toBe("Treppen laufen");
@@ -251,14 +251,14 @@ test("createLabel with loaded Labels", () => {
     }
     for (let i = 0; i < labels.length; i++) {
         expect(dataSet.getLabels()[i].name).toBe(labels[i].name);
-        expect(dataSet.getLabels()[i].id).toBe(labels[i].labelID);
+        expect(dataSet.getLabels()[i].labelID).toBe(labels[i].labelID);
         expect(dataSet.getLabels()[i].start).toBe(labels[i].start);
         expect(dataSet.getLabels()[i].end).toBe(labels[i].end);
     }
     expect(dataSet.getDataRows()[0].sensorType).toBe(2);
     expect(dataSet.getDataRows()[1].sensorType).toBe(3);
     expect(dataSet.getLabels().length).toBe(3);
-    expect(dataSet.getLabels()[2].id).toBe(3);
+    expect(dataSet.getLabels()[2].labelID).toBe(3);
     expect(dataSet.getLabels()[2].start).toBe(200);
     expect(dataSet.getLabels()[2].end).toBe(500);
     expect(dataSet.getLabels()[2].name).toBe("Treppen laufen");
@@ -289,13 +289,13 @@ test("setLabel", () => {
     //laden getestet in getter und setter test
     //Normale Nutzung mit neuem Labelnamen
     expect(dataSet.setLabel(17, { start: 200, end: 500 }, "Treppen laufen")).toBeTruthy();
-    expect(dataSet.getLabels()[0].id).toBe(17);
+    expect(dataSet.getLabels()[0].labelID).toBe(17);
     expect(dataSet.getLabels()[0].start).toBe(200);
     expect(dataSet.getLabels()[0].end).toBe(500);
     expect(dataSet.getLabels()[0].name).toBe("Treppen laufen");
     //Normale Nutzung ohne neuem Labelnamen
     expect(dataSet.setLabel(18, { start: 28, end: 55 })).toBeTruthy();
-    expect(dataSet.getLabels()[1].id).toBe(18);
+    expect(dataSet.getLabels()[1].labelID).toBe(18);
     expect(dataSet.getLabels()[1].start).toBe(28);
     expect(dataSet.getLabels()[1].end).toBe(55);
     expect(dataSet.getLabels()[1].name).toBe("unterhoben");
@@ -320,11 +320,11 @@ test("setLabel", () => {
     expect(dataSet.getDataRows()[0].sensorType).toBe(2);
     expect(dataSet.getDataRows()[1].sensorType).toBe(3);
     expect(dataSet.getLabels().length).toBe(2);
-    expect(dataSet.getLabels()[0].id).toBe(17);
+    expect(dataSet.getLabels()[0].labelID).toBe(17);
     expect(dataSet.getLabels()[0].start).toBe(200);
     expect(dataSet.getLabels()[0].end).toBe(500);
     expect(dataSet.getLabels()[0].name).toBe("Treppen laufen");
-    expect(dataSet.getLabels()[1].id).toBe(18);
+    expect(dataSet.getLabels()[1].labelID).toBe(18);
     expect(dataSet.getLabels()[1].start).toBe(28);
     expect(dataSet.getLabels()[1].end).toBe(55);
     expect(dataSet.getLabels()[1].name).toBe("unterhoben");
@@ -374,10 +374,7 @@ test("deleteLabel", () => {
         }
     }
     for (let i = 0; i < labels.length - 1; i++) {
-        expect(dataSet.getLabels()[i].name).toBe(labels[i].name);
-        expect(dataSet.getLabels()[i].id).toBe(labels[i].labelID);
-        expect(dataSet.getLabels()[i].start).toBe(labels[i].start);
-        expect(dataSet.getLabels()[i].end).toBe(labels[i].end);
+        expect(dataSet.getLabels()[i]).toStrictEqual(labels[i]);
     }
     expect(dataSet.getDataRows()[0].sensorType).toBe(2);
     expect(dataSet.getDataRows()[1].sensorType).toBe(3);

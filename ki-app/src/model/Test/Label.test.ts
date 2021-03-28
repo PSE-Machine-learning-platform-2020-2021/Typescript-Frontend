@@ -7,7 +7,7 @@ test("creat and getter", () => {
     const label = new Label("Name", 17, 0.2345, 2.4521);
     expect(label.getID()).toBe(17);
     expect(label.getLabel().name).toBe("Name");
-    expect(label.getLabel().id).toBe(17);
+    expect(label.getLabel().labelID).toBe(17);
     expect(label.getLabel().start).toBe(0.2345);
     expect(label.getLabel().end).toBe(2.4521);
 });
@@ -21,14 +21,14 @@ test("setLabel", () => {
     expect(label.setLabel({ start: 7.42, end: 19 })).toBeTruthy();
     expect(label.getID()).toBe(28);
     expect(label.getLabel().name).toBe("Laufen");
-    expect(label.getLabel().id).toBe(28);
+    expect(label.getLabel().labelID).toBe(28);
     expect(label.getLabel().start).toBe(7.42);
     expect(label.getLabel().end).toBe(19);
     //setLabel mit neuem Namen und validem Zeitfenster
     expect(label.setLabel({ start: 19.25, end: 19.26 }, "Treppen steigen")).toBeTruthy();
     expect(label.getID()).toBe(28);
     expect(label.getLabel().name).toBe("Treppen steigen");
-    expect(label.getLabel().id).toBe(28);
+    expect(label.getLabel().labelID).toBe(28);
     expect(label.getLabel().start).toBe(19.25);
     expect(label.getLabel().end).toBe(19.26);
     //setLabel mit invalidem Zeitfenster
@@ -38,7 +38,7 @@ test("setLabel", () => {
     //Test, dass keine falschen Änderungen aufkamen
     expect(label.getID()).toBe(28);
     expect(label.getLabel().name).toBe("Treppen steigen");
-    expect(label.getLabel().id).toBe(28);
+    expect(label.getLabel().labelID).toBe(28);
     expect(label.getLabel().start).toBe(19.25);
     expect(label.getLabel().end).toBe(19.26);
 });
