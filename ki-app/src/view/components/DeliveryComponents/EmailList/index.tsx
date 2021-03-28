@@ -165,7 +165,7 @@ export default class EmailList extends Component {
 					<button onClick={() => this.handleCreate()} className="addemail-btn" >Addieren eine neue Emailadresse!(Addieren Eingaben mit 'Enter'-Taste)</button>
 					{this.state.addButtonClick ?
 						<div className="inputbox">
-							<input onKeyUp={this.handleKeyUp} onChange={this.inputchange} type="text" placeholder="input email address with ENTER-key" />
+							<input value={this.state.inputemail.address} onKeyUp={this.handleKeyUp} onChange={this.inputchange} type="text" placeholder="input email address with ENTER-key" className="emailinput" />
 						</div>
 						: null}
 
@@ -175,7 +175,7 @@ export default class EmailList extends Component {
 					return (
 						<li style={{ backgroundColor: mouse ? '#ddd' : 'white' }} onMouseEnter={this.handleMouse(true)} onMouseLeave={this.handleMouse(false)}>
 							<label>
-								<input type="checkbox" checked={emailObj.chosen} onChange={(e: React.ChangeEvent<HTMLInputElement>): void => this.handleCheck(emailObj.id, e.target.checked)} />
+								<input className='emailitemcheck' type="checkbox" checked={emailObj.chosen} onChange={(e: React.ChangeEvent<HTMLInputElement>): void => this.handleCheck(emailObj.id, e.target.checked)} />
 								<span>{emailObj.address}</span>
 							</label>
 							<button onClick={() => this.handleDelete(emailObj.id)} className="btn-item" style={{ display: mouse ? 'block' : 'none' }}>Löschen</button>
@@ -185,7 +185,7 @@ export default class EmailList extends Component {
 
 				<div className="handleallemail">
 					<label>
-						<input type="checkbox" onChange={this.chooseAllEmail} checked={chosenCount === total && total !== 0 ? true : false} />
+						<input className='chooseall' type="checkbox" onChange={this.chooseAllEmail} checked={chosenCount === total && total !== 0 ? true : false} />
 					</label>
 					<span>
 						<span>Gewählt: {chosenCount}</span> / Insegesamt: {total}
@@ -194,7 +194,7 @@ export default class EmailList extends Component {
 				</div>
 
 				<div className="deliverybutton">
-					<button onClick={() => this.delivery()} className="btn" >Liefern Aus!</button>
+					<button onClick={() => this.delivery()} className="delivery-btn" >Liefern Aus!</button>
 				</div>
 			</div>
 		)

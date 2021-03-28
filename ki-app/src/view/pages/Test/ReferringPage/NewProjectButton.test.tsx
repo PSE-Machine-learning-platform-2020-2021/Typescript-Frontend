@@ -1,6 +1,5 @@
 import Enzyme, { shallow } from 'enzyme';
 import Adapter from '@wojtekmaj/enzyme-adapter-react-17';
-import { NotificationManager } from 'react-notifications';
 import NewProjectButton from '../../../components/ReferringComponents/NewProjectButton';
 
 test('Rendert', () => {

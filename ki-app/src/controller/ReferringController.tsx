@@ -6,6 +6,7 @@ import { DeliveryController } from "./DeliveryController";
 import { VisualizationController } from "./VisualizationController";
 import { ReferringPage } from "../view/pages/ReferringPage/index";
 import { FinishPage } from "../view/pages/FinishPage/index";
+import { DataCollectionPage } from "../view/pages/DataCollectionPage/index";
 import { QRCode, ErrorCorrectLevel, QRNumber, QRAlphaNum, QR8BitByte, QRKanji } from 'qrcode-generator-ts/js';
 
 /**
