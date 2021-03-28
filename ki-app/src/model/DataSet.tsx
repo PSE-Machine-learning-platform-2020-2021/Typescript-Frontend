@@ -146,8 +146,8 @@ export class DataSet {
   /**
    * Gibt alle Daten von allen Labeln zurück.
    */
-  public getLabels(): { name: string, id: number, start: number, end: number; }[] {
-    var labelList: { name: string, id: number, start: number, end: number; }[] = [];
+  public getLabels(): { name: string, labelID: number, start: number, end: number; }[] {
+    var labelList: { name: string, labelID: number, start: number, end: number; }[] = [];
     for (let i = 0; i < this.label.length; i++) {
       labelList.push(this.label[i].getLabel());
     }

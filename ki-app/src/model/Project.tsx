@@ -202,7 +202,7 @@ export class Project {
    * Gibt alle Daten von allen Labeln vom aktuellen Datensatz zurück.
    * @returns leer, falls kein aktueller Datensatz existiert
    */
-  getLabels(): { labels: { name: string, id: number, start: number, end: number; }[]; } {
+  getLabels(): { labels: { name: string, labelID: number, start: number, end: number; }[]; } {
     if (this.currentDataSet != null) {
       return { labels: this.currentDataSet.getLabels() };
     }

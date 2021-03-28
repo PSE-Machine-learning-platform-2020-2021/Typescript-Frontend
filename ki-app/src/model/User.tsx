@@ -17,7 +17,11 @@ export abstract class User {
    * @param name Name des Benutzer
    */
   constructor(id: number, device: DeviceData, name?: string) {
-    this.id = id;
+    if (id < 0) {
+      this.id = -1;
+    } else {
+      this.id = id;
+    }
     this.device = device;
     if (name != null) {
       this.name = name;
@@ -74,7 +78,6 @@ export abstract class User {
     if (this.currentProject != null) {
       return this.currentProject.getCurrentDataRows();
     } else {
-      console.log(this.currentProject);
       return { dataRows: [] };
     }
   }
@@ -167,7 +170,7 @@ export abstract class User {
    * Gibt alle Daten von allen Labeln vom aktuellen Datensatz zurück.
    * @returns leer, falls kein aktueller Datensatz existiert
    */
-  getLabels(): { labels: { name: string, id: number, start: number, end: number; }[]; } {
+  getLabels(): { labels: { name: string, labelID: number, start: number, end: number; }[]; } {
     if (this.currentProject != null) {
       return this.currentProject.getLabels();
     }
@@ -355,10 +358,6 @@ export class Admin extends User {
   getEmail(): string {
     return this.email;
   }
-
-  getProjects(): Project[] {
-    return this.project;
-  }
 }
 
 /**
@@ -391,7 +390,6 @@ export class Dataminer extends User {
       }[];
     };
   }): boolean {
-
     this.currentProject = new Project(project.projectID, project.sessionID, project.projectName, project.projectData);
     return true;
   }
@@ -426,7 +424,6 @@ export class AIModelUser extends User {
       }[];
     };
   }): boolean {
-
     this.currentProject = new Project(project.projectID, project.sessionID, project.projectName, project.projectData);
     return true;
   }

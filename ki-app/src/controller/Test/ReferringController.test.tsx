@@ -17,12 +17,12 @@ const setState = jest.fn()
 const Facade = {
   registerDataminer : jest.fn(),
   registerAIModelUser : jest.fn(),
-  loginAdmin : jest.fn((() => Promise.resolve({ value: true }))),
+  loginAdmin : jest.fn(),
 }
 const Main = {
   setLanguage : jest.fn().mockReturnValue("TEST") , // mockReturnValue funktioniert hier nicht?
   getMessage : jest.fn().mockReturnValue([{ text: "TEST", id: 5 }]), // mockReturnValue funktioniert hier nicht?
-  getFacade : jest.fn().mockReturnValue(Facade)
+  getFacade : jest.fn().mockReturnValue(Facade) // mockReturnValue funktioniert hier nicht?
 }
 
 beforeEach(() => {
@@ -47,6 +47,9 @@ test('NeedMessage test', () => {
 test('Login test', () => {
   state.currentState = States.Login
   state.adminData = { name: "string", email: "string", password: "string" }
+  Facade.loginAdmin = jest.fn(() => {
+    return Promise.resolve(true);
+  });
   controller = new RefferingController()
 
 });

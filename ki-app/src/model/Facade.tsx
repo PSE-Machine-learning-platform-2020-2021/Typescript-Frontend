@@ -384,7 +384,7 @@ export class Facade {
   }
 
 
-  getLabels(): { labels: { name: string, id: number, start: number, end: number; }[]; } {
+  getLabels(): { labels: { name: string, labelID: number, start: number, end: number; }[]; } {
     if (this.user != null) {
       return this.user.getLabels();
     }
