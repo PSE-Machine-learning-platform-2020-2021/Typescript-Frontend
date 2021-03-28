@@ -73,7 +73,7 @@ export default class Labelling extends Component {
                         return (
                             <li >
                                 Von {label.start}s bis {label.end}s:  {label.name}
-                                <button onClick={(e) => this.deleteLabel(e, label.labelID)}>Löschen</button>
+                                <button className='delete' onClick={(e) => this.deleteLabel(e, label.labelID)}>Löschen</button>
                             </li>
                         );
                     })}
@@ -88,7 +88,7 @@ export default class Labelling extends Component {
                         <input type="text" value={this.state.newName} onChange={this.handleChangeLabel} />
                     <br />
 
-                    <button type="button" onClick={() => this.handleClick()}>Add Label</button>
+                    <button className='add' type="button" onClick={() => this.handleClick()}>Add Label</button>
                 </div>
 
             </div>
