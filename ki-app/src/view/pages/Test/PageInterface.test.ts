@@ -4,12 +4,13 @@ import { ModelCreationPage } from "../ModelCreationPage/index"
 import { FinishPage } from "../FinishPage/index"
 import { DeliveryPage } from "../DeliveryPage/index"
 import { DataCollectionPage } from "../DataCollectionPage/index"
+import { VisualizationPage } from "../VisualizationPage/index"
 import { Page } from "../PageInterface"
 import { States } from "../State";
 import { PageController } from "../../../controller/PageController"
 
 test('State Test', () => {
-  let pages = [new StartPage("TEST"), new ReferringPage(), new ModelCreationPage(), new FinishPage(), new DeliveryPage(), new DataCollectionPage()]
+  let pages = [new StartPage("TEST"), new ReferringPage(), new ModelCreationPage(), new FinishPage(), new DeliveryPage(), new DataCollectionPage(), new VisualizationPage()]
   let page: Page
   for (page of pages) {
     let state = page.getState()
@@ -23,7 +24,7 @@ test('State Test', () => {
 });
 
 test('Test des Beobachter Musters', () => {
-  let pages = [new StartPage("TEST"), new ReferringPage(), new ModelCreationPage(), new FinishPage(), new DeliveryPage(), new DataCollectionPage()]
+  let pages = [new StartPage("TEST"), new ReferringPage(), new ModelCreationPage(), new FinishPage(), new DeliveryPage(), new DataCollectionPage(), new VisualizationPage()]
   let page: Page
   for (page of pages) {
     const controller = jest.mock("../../../controller/PageController") as unknown as PageController;
