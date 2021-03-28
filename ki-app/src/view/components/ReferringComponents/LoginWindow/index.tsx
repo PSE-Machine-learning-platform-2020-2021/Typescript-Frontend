@@ -4,8 +4,8 @@ import './LoginWindow.css'
 export default class LoginWindow extends Component {
 
   props = {
-    pageRegister: function ( username: string, email: string, password: string ){} ,
-    pageLogin: function ( email: string, password: string ) {}
+    pageRegister: function (username: string, email: string, password: string) { },
+    pageLogin: function (email: string, password: string) { }
   }
 
   state = {
@@ -50,7 +50,7 @@ export default class LoginWindow extends Component {
     return (
       <div>
         <div className="right">
-          <button className="login-button" onClick={this.openNewWindow}>Einloggen</button>
+          <button className="login-button" onClick={this.openNewWindow} type='button'>Einloggen</button>
         </div>
         {this.state.openNewWindow && (
           <NewWindow title="Login">
@@ -69,8 +69,8 @@ export default class LoginWindow extends Component {
                   <input type="password" value={this.state.password} onChange={this.changePassword} />
                 </label>
                 <div>
-                  <button className="register" onClick={this.register}>Registrieren</button>
-                  <button className="login" onClick={this.login}>Loggen ein</button>
+                  <button className="register" onClick={this.register} type='button'>Registrieren</button>
+                  <button className="login" onClick={this.login} type='button'>Loggen ein</button>
                 </div>
               </form>
             </div>

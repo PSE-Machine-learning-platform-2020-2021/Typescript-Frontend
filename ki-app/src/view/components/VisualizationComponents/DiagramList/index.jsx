@@ -17,6 +17,7 @@ export default class DiagramList extends Component {
     };
     diagramList = []
     state = {
+        showDiagramIndex: 0,
         diagramList: [],
     };
 

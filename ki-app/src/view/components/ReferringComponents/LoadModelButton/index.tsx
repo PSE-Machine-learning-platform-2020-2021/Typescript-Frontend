@@ -22,7 +22,7 @@ export default class LoadModelButton extends Component {
   render() {
     return (
       <div className="loadProject">
-        <button onClick={() => this.handleCreate()} className="lp-btn" disabled={this.props.disabled}>Projekt und Model Wählen</button>
+        <button onClick={() => this.handleCreate()} className="lp-btn" disabled={this.props.disabled} type='button'>Projekt und Model Wählen</button>
         {this.state.click ? <div><ProjectList
           pageChangeToVisu={this.props.pageChangeToVisu}
           pageLoadProjekt={this.props.pageLoadProjekt}

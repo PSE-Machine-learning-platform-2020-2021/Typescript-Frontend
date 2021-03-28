@@ -1,68 +1,70 @@
-import React, { Component } from 'react';
+import { Component } from 'react';
 
 export default class Diagram extends Component {
 
     props = {
         dataRows: [{ sensorType: 1, datapoint: [{ value: [5], relativeTime: 5 }] }],
         pageChangeToFinish: function () { }
-    }
+    };
 
-    diagrammData = {
-        lineLabels: [],
-        sensorRow: [],
-        datavalue: [],
-        time: [],
-        showDiagram: false,
-        diagram: {},
-        diagramLineLabels: {},
-        diagramData: {},
-        diagramOptions: {},
-        color: ['rgba(46,190,87,1)', 'rgba(68,24,232,1)', 'rgba(238,173,14,1)', 'rgba(178,34,34,1)', 'rgba(238, 130, 238,1)', 'rgba(0, 0, 0,1)',
-            'rgba(106, 90, 205,1)', 'rgba(238, 118, 0,1)', 'rgba(105, 105, 105,1)'],
-        csscolor: ['2EBE57', 'CC00FF', 'EEAD0E', 'B22222', 'EE82EE', '000000',
-            '6A5ACD', 'EE7600', '696969'],
+    state = {
+        diagrammData: {
+            lineLabels: [],
+            sensorRow: [],
+            datavalue: [],
+            time: [],
+            showDiagram: false,
+            diagram: {},
+            diagramLineLabels: {},
+            diagramData: {},
+            diagramOptions: {},
+            color: ['rgba(46,190,87,1)', 'rgba(68,24,232,1)', 'rgba(238,173,14,1)', 'rgba(178,34,34,1)', 'rgba(238, 130, 238,1)', 'rgba(0, 0, 0,1)',
+                'rgba(106, 90, 205,1)', 'rgba(238, 118, 0,1)', 'rgba(105, 105, 105,1)'],
+            csscolor: ['2EBE57', 'CC00FF', 'EEAD0E', 'B22222', 'EE82EE', '000000',
+                '6A5ACD', 'EE7600', '696969'],
+        }
     };
 
     updateDiagramm() {
         //PubSub.unsubscribe("startDiagram")
         //put each value Array in State
-        this.diagrammData.lineLabels = []
-        this.diagrammData.sensorRow = []
-        this.diagrammData.datavalue = []
-        this.diagrammData.time = []
-        this.diagrammData.showDiagram = true
+        this.state.diagrammData.lineLabels = [];
+        this.state.diagrammData.sensorRow = [];
+        this.state.diagrammData.datavalue = [];
+        this.state.diagrammData.time = [];
+        this.state.diagrammData.showDiagram = true;
 
         var datavalues = [];
         for (var i = 0; i < this.props.dataRows.length; i++) {
-            this.diagrammData.sensorRow.push(this.props.dataRows[i].sensorType);
+            this.state.diagrammData.sensorRow.push(this.props.dataRows[i].sensorType);
             for (var dataCoordinate = 0; dataCoordinate < 3; dataCoordinate++) {
                 for (var j = 0; j < this.props.dataRows[i].datapoint.length; j++) {
                     datavalues.push(this.props.dataRows[i].datapoint[j].value[dataCoordinate]);
                 }
-                this.diagrammData.datavalue.push(datavalues);
+                this.state.diagrammData.datavalue.push(datavalues);
                 datavalues = [];
             }
         }
         // eslint-disable-next-line
         for (var j = 0; j < this.props.dataRows[0].datapoint.length; j++) {
-            this.diagrammData.time.push(this.props.dataRows[0].datapoint[j].relativeTime);
+            this.state.diagrammData.time.push(this.props.dataRows[0].datapoint[j].relativeTime);
         }
 
         var newDatasets = [];
         var lineLabels = [];
-        for (var i = 0; i < this.diagrammData.sensorRow.length * 3; i++) {
+        for (var i = 0; i < this.state.diagrammData.sensorRow.length * 3; i++) {
             var coordinate = ".X";
-            var sensor = this.diagrammData.sensorRow[parseInt(i / 3)];
-            var sensorName = ''
+            var sensor = this.state.diagrammData.sensorRow[parseInt(i / 3)];
+            var sensorName = '';
             switch (sensor) {
                 case 2:
-                    sensorName = 'Accelerometer'
+                    sensorName = 'Accelerometer';
                     break;
                 case 3:
-                    sensorName = 'Gyroscope'
+                    sensorName = 'Gyroscope';
                     break;
                 case 4:
-                    sensorName = 'Magnetometer'
+                    sensorName = 'Magnetometer';
                     break;
             }
             if (i % 3 == 1) {
@@ -72,19 +74,18 @@ export default class Diagram extends Component {
                 coordinate = ".Z";
             }
 
-            lineLabels.push(<font color={this.diagrammData.csscolor[i]}>■{sensorName + coordinate}<br /></font>);
-            //this.setState({ lineLabels: lineLabels })
+            lineLabels.push(<font color={this.state.diagrammData.csscolor[i]}>■{sensorName + coordinate}<br /></font>);
             newDatasets.push(
                 {
                     label: sensor + coordinate,
-                    strokeColor: this.diagrammData.color[i],
+                    strokeColor: this.state.diagrammData.color[i],
                     borderWidth: 1,
-                    data: this.diagrammData.datavalue[i],
+                    data: this.state.diagrammData.datavalue[i],
                 }
             );
         }
         const data = {
-            labels: this.diagrammData.time,
+            labels: this.state.diagrammData.time,
             datasets: newDatasets
         };
         const options = {
@@ -94,22 +95,23 @@ export default class Diagram extends Component {
             offsetGridLines: false,
             pointDot: false
         };
-        this.diagrammData.diagramData = data
-        this.diagrammData.lineLabels = lineLabels
-        this.diagrammData.diagramOptions = options
+        this.state.diagrammData.diagramData = data;
+        this.state.diagrammData.lineLabels = lineLabels;
+        this.state.diagrammData.diagramOptions = options;
     }
 
     submit = () => {
-        this.props.pageChangeToFinish()
+        this.props.pageChangeToFinish();
     };
 
     render() {
         var LineChart = require("react-chartjs").Line;
-        this.updateDiagramm()
+        this.updateDiagramm();
+        console.log(this.state.diagrammData);
         return (
             <div>
-                {this.diagrammData.lineLabels}
-                <LineChart data={this.diagrammData.diagramData} options={this.diagrammData.diagramOptions} width="400" height="200" redraw />
+                {this.state.diagrammData.lineLabels}
+                <LineChart data={this.state.diagrammData.diagramData} options={this.state.diagrammData.diagramOptions} width="400" height="200" redraw />
                 <button type="button" onClick={this.submit}>ChangeToFinish</button>
             </div>
         );
