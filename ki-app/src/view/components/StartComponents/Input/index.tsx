@@ -1,6 +1,6 @@
 import React, { Component } from "react";
 import { NotificationContainer, NotificationManager } from 'react-notifications';
-import './Input.css'
+import './Input.css';
 
 
 /**
@@ -11,10 +11,10 @@ export default class Input extends Component {
   props = {
     pageChangeSettings: function (recordingSettings: {
       newDataSetName: string, usedSensorTypes: number[], waitTime: number, readTime: number,
-      availableSensorTypes: { sensorTypID: number, sensorType: string, chosen: boolean; }[]
+      availableSensorTypes: { sensorTypID: number, sensorType: string, chosen: boolean; }[];
     }) { },
     availableSensorTypes: [] as { sensorTypID: number, sensorType: string, chosen: boolean; }[]
-  }
+  };
 
   state = {
     name: "",
@@ -36,11 +36,6 @@ export default class Input extends Component {
     });
   };
 
-  changeSensors = (e: React.ChangeEvent<HTMLSelectElement>) => {
-    this.setState({
-      chosenSensors: e.target.value,
-    });
-  };
 
   changeName = (e: React.ChangeEvent<HTMLInputElement>) => {
     this.setState({
@@ -77,7 +72,7 @@ export default class Input extends Component {
 
       if (isNaN(+this.state.leadTime) || isNaN(+this.state.collectionTime)) {
         NotificationManager.error("Die Eingabe der Zeit ist ungültig. Nur Ganze Zahlen sind Erlaubt");
-        return
+        return;
       }
 
       const newDataSetName = this.state.name;
@@ -122,7 +117,7 @@ export default class Input extends Component {
           {
             this.props.availableSensorTypes.map((type: { sensorTypID: number, sensorType: string, chosen: boolean; }) => {
               return (<div>
-                <input type="checkbox" value={type.sensorTypID} checked={type.chosen} onChange={(e: React.ChangeEvent<HTMLInputElement>): void => this.handleCheckBoxChange(e)} />
+                <input className='checkbox' type="checkbox" value={type.sensorTypID} checked={type.chosen} onChange={(e: React.ChangeEvent<HTMLInputElement>): void => this.handleCheckBoxChange(e)} />
                 {type.sensorType}
               </div>);
             })

@@ -6,6 +6,7 @@ import { DeliveryController } from "./DeliveryController";
 import { VisualizationController } from "./VisualizationController";
 import { ReferringPage } from "../view/pages/ReferringPage/index";
 import { FinishPage } from "../view/pages/FinishPage/index";
+import { DataCollectionPage } from "../view/pages/DataCollectionPage/index";
 import { QRCode, ErrorCorrectLevel, QRNumber, QRAlphaNum, QR8BitByte, QRKanji } from 'qrcode-generator-ts/js';
 
 /**
@@ -51,7 +52,7 @@ export class RefferingController implements PageController {
                 this.loadModel();
                 break;
             case States.SetLanguage:
-                MainController.getInstance().setLanguage(this.state.languageCode);
+                console.log(MainController.getInstance().setLanguage(this.state.languageCode));
                 break;
             case States.NeedMessage:
                 this.state.messages = MainController.getInstance().getMessage(this.state.messages)!;
