@@ -44,7 +44,7 @@ var projectData: { aiModelID?: number[], dataSet: { dataRowSensors: SensorData[]
 
 var device = { deviceID: 7, deviceName: "SamsungS5", deviceType: "Smartphone", firmware: "Lollipop", generation: "7.3", MACADRESS: "abcdefg", sensorInformation: [] };
 //ohne Projektdaten
-var project1: { projectID: number, sessionID: number, projectName: string; };
+var project1: { projectID: number, sessionID: number, projectName: string; projectData?: { aiModelID?: number[], dataSet: { dataRowSensors: SensorData[], dataSetID: number, dataSetName: string, generateDate: number, dataRows: { dataRowID: number, dataRow: { value: number[], relativeTime: number; }[]; }[], label: { name: string, labelID: number, start: number, end: number; }[]; }[]; }; };
 //Ohne Ki Modelle
 var project2: { projectID: number, sessionID: number, projectName: string, projectData: { dataSet: { dataRowSensors: SensorData[], dataSetID: number, dataSetName: string, generateDate: number, dataRows: { dataRowID: number, dataRow: { value: number[], relativeTime: number; }[]; }[], label: { name: string, labelID: number, start: number, end: number; }[]; }[]; }; };
 //Mit Projektdaten
@@ -94,6 +94,9 @@ function clearProjectStart() {
     project3 = { projectID: projectID3, projectName: projectName3, sessionID: sessionID3, projectData: projectData2 };
 }
 
+/**
+ * Prüft die einfache Nutzung als Admin
+ */
 test("create and getter Admin", () => {
     //Ohne device
     var admin = new Admin(1, 2, "Rudi", "rudi@g.d");
@@ -119,6 +122,9 @@ test("create and getter Admin", () => {
     getterEmpty(admin);
 });
 
+/**
+ * Prüft die einfache Nutzung als Dataminer
+ */
 test("create and getter Dataminer", () => {
     //Mit Name
     var dataminer = new Dataminer(3, 4, "Rudolf");
@@ -146,6 +152,9 @@ test("create and getter Dataminer", () => {
     getterEmpty(dataminer);
 });
 
+/**
+ * Prüft die einfache Nutzung als AIModelUser
+ */
 test("create and getter AIModelUser", () => {
     //Mit Name
     var aiModelUser = new AIModelUser(5, 6, "Rüdiger");
@@ -173,6 +182,10 @@ test("create and getter AIModelUser", () => {
     getterEmpty(aiModelUser);
 });
 
+/**
+ * Prüft die einfache Nutzung als User
+ * @param user neu erstellter User
+ */
 function getterEmpty(user: User) {
     expect(user.getCurrentProjectID()).toBe(-1);
     expect(user.getCurrentDataSetID()).toBe(-1);
@@ -183,6 +196,9 @@ function getterEmpty(user: User) {
     expect(user.getDataSetMetas()).toStrictEqual([]);
 }
 
+/**
+ * Prüft, ob loadProject als Admin fehlerfrei läuft
+ */
 test("loadProject Admin", () => {
     clearProjectStart();
     var admin = new Admin(12, 2, "Rudi", "rudi@g.d", device);
@@ -196,6 +212,9 @@ test("loadProject Admin", () => {
     checkProject(admin, project2);
 });
 
+/**
+ * Prüft, ob loadProject als Dataminer fehlerfrei läuft
+ */
 test("loadProject Dataminer", () => {
     clearProjectStart();
     var dataminer = new Dataminer(3, 4, "Rudolf");
@@ -207,6 +226,9 @@ test("loadProject Dataminer", () => {
     checkProject(dataminer, project3);
 });
 
+/**
+ * Prüft, ob loadProject als AiBuilder fehlerfrei läuft
+ */
 test("loadProject AiBuilder", () => {
     clearProjectStart();
     var aiModelUser = new AIModelUser(3, 4, "Rudolf");
@@ -218,6 +240,9 @@ test("loadProject AiBuilder", () => {
     checkProject(aiModelUser, project3);
 });
 
+/**
+ * Prüft, ob createProject als Admin fehlerfrei läuft
+ */
 test("createProject Admin", () => {
     clearProjectStart();
     var admin = new Admin(12, 2, "Rudi", "rudi@g.d", device);
@@ -240,7 +265,7 @@ test("addDatapoint", () => {
     var admin = new Admin(12, 2, "Rudi", "rudi@g.d", device);
     expect(admin.addDatapoint(1, { value: [1, 2, 3], relativeTime: 12 })).toBeFalsy();
     expect(admin.createDataSet(dataRowSensors1, 2, "asd")).toBeFalsy();
-    expect(admin.deleteDataSet(2)).toBe(-1);
+    expect(admin.deleteDataSet(2)).toBeFalsy();
     expect(admin.createLabel(2, { start: 12, end: 18 }, "label")).toBeFalsy();
     expect(admin.deleteLabel(2)).toBeFalsy();
     expect(admin.setLabel(2, { start: 12, end: 18 }, "label")).toBeFalsy();
@@ -250,7 +275,7 @@ test("addDatapoint", () => {
     var dataminer = new Dataminer(12, 2, "Rudi");
     expect(dataminer.addDatapoint(1, { value: [1, 2, 3], relativeTime: 12 })).toBeFalsy();
     expect(dataminer.createDataSet(dataRowSensors1, 2, "asd")).toBeFalsy();
-    expect(dataminer.deleteDataSet(2)).toBe(-1);
+    expect(dataminer.deleteDataSet(2)).toBeFalsy();
     expect(dataminer.createLabel(2, { start: 12, end: 18 }, "label")).toBeFalsy();
     expect(dataminer.deleteLabel(2)).toBeFalsy();
     expect(dataminer.setLabel(2, { start: 12, end: 18 }, "label")).toBeFalsy();
@@ -259,7 +284,7 @@ test("addDatapoint", () => {
     clearProjectStart();
     var aiModelUser = new AIModelUser(12, 2, "Rudi");
     expect(aiModelUser.createDataSet(dataRowSensors1, 2, "asd")).toBeFalsy();
-    expect(aiModelUser.deleteDataSet(2)).toBe(-1);
+    expect(aiModelUser.deleteDataSet(2)).toBeFalsy();
     expect(aiModelUser.createLabel(2, { start: 12, end: 18 }, "label")).toBeFalsy();
     expect(aiModelUser.deleteLabel(2)).toBeFalsy();
     expect(aiModelUser.setLabel(2, { start: 12, end: 18 }, "label")).toBeFalsy();
@@ -309,7 +334,108 @@ function addDataPointTest(user: User, projectPar: any) {
     //Test, dass keine falschen Änderungen aufkamen
     checkProject(user, project);
 }
+///////////////////////////////////////////////////////////////////////////////////
+/**
+ * Prüft, ob deleteDataSet fehlerfrei läuft
+ */
+test("deleteDataSet", () => {
+    clearProjectStart();
+    var admin = new Admin(12, 2, "Rudi", "rudi@g.d", device);
+    expect(admin.loadProject(project3)).toBeTruthy();
+    var dataSet = projectData2.dataSet;
+    //Normale Benutzung
+    expect(admin.getDataSetMetas().length).toBe(2);
+    expect(admin.deleteDataSet(dataSet[0].dataSetID)).toBeTruthy();
+    expect(admin.getDataSetMetas().length).toBe(1);
+    //DatensatzID existiert nicht
+    expect(admin.deleteDataSet(dataSet[0].dataSetID)).toBeFalsy();
+    expect(admin.deleteDataSet(-1)).toBeFalsy();
+    expect(admin.deleteDataSet(512)).toBeFalsy();
+    expect(admin.getDataSetMetas().length).toBe(1);
+    //Neu erstellten Datensatz löschen
+    expect(admin.createDataSet(dataRowSensors2, 712, "Schwedisch")).toBeTruthy();
+    expect(admin.deleteDataSet(712)).toBeTruthy();
+    expect(admin.getDataSetMetas().length).toBe(1);
+    //Kein Datensatz geladen
+    expect(admin.deleteDataSet(dataSet[1].dataSetID)).toBeTruthy();
+    expect(admin.getDataSetMetas().length).toBe(0);
+    expect(admin.deleteDataSet(-1)).toBeFalsy();
+    expect(admin.deleteDataSet(512)).toBeFalsy();
+    expect(admin.getDataSetMetas().length).toBe(0);
+    //Test, dass keine falschen Änderungen aufkamen
+    project3.projectData.dataSet = [];
+    checkProject(admin, project3);
+});
 
+/**
+ * Prüft, ob createDataSet ohne geladenem Datensatz fehlerfrei läuft
+ */
+test("createDataSet without loaded Datasets", () => {
+    clearProjectStart();
+    var admin = new Admin(12, 2, "Rudi", "rudi@g.d", device);
+    admin.loadProject(project1);
+    var dataSetID = 219;
+    var dataSetName = "Alter Schwede";
+    //Normale Benutzung
+    expect(admin.createDataSet(dataRowSensors2, dataSetID, dataSetName)).toBeTruthy();
+    project1.projectData = { dataSet: [{ dataRowSensors: dataRowSensors2, dataSetID, dataSetName: dataSetName, generateDate: 19, dataRows: [{ dataRowID: 0, dataRow: [] }, { dataRowID: 1, dataRow: [] }], label: [] }], };
+    checkProject(admin, project1);
+    //Mehrfache Anwendung
+    var dataSetIDArr = [36, 37, 38, 39];
+    var dataSetNameArr = ["Hi", "Mein", "Name", "ist"];
+    for (let i = 0; i < dataSetIDArr.length; i++) {
+        expect(admin.createDataSet(dataRowSensors2, dataSetIDArr[i], dataSetNameArr[i])).toBeTruthy();
+        project1.projectData!.dataSet.push({ dataRowSensors: dataRowSensors2, dataSetID: dataSetIDArr[i], dataSetName: dataSetNameArr[i], generateDate: 19, dataRows: [{ dataRowID: 0, dataRow: [] }, { dataRowID: 1, dataRow: [] }], label: [] });
+    }
+    checkProject(admin, project1);
+    //Datensatz kann nicht erstellt werden
+    expect(admin.createDataSet([], 21, "Alter Schwede")).toBeFalsy();
+    expect(admin.createDataSet([], 21, "Alter Schwede", 187222)).toBeFalsy();
+    expect(admin.createDataSet(dataRowSensors2, dataSetID, "Alter Schwede")).toBeFalsy();
+    expect(admin.createDataSet(dataRowSensors2, dataSetID, "Alter Schwede", 187222)).toBeFalsy();
+    expect(admin.createDataSet(dataRowSensors2, -1, "Alter Schwede")).toBeFalsy();
+    expect(admin.createDataSet(dataRowSensors2, -1, "Alter Schwede", 187222)).toBeFalsy();
+    expect(admin.createDataSet(dataRowSensors2, 21, "")).toBeFalsy();
+    expect(admin.createDataSet(dataRowSensors2, 21, "", 187222)).toBeFalsy();
+    expect(admin.createDataSet(dataRowSensors2, 21, "Alter Schwede", -1)).toBeFalsy();
+    //Test, dass keine falschen Änderungen aufkamen
+    checkProject(admin, project1);
+});
+
+/**
+ * Prüft, ob createDataSet mit geladenem Datensatz fehlerfrei läuft
+ */
+test("createDataSet with loaded Datasets", () => {
+    clearProjectStart();
+    //Normale Benutzung
+    var admin = new Admin(12, 2, "Rudi", "rudi@g.d", device);
+    expect(admin.loadProject(project3)).toBeTruthy();
+    var dataSetID = 29;
+    var dataSetName = "Mamma mia!";
+    expect(admin.createDataSet(dataRowSensors2, dataSetID, dataSetName)).toBeTruthy();
+    project3.projectData.dataSet.push({ dataRowSensors: dataRowSensors2, dataSetID, dataSetName, generateDate: 12, dataRows: [{ dataRowID: 0, dataRow: [] }, { dataRowID: 1, dataRow: [] }], label: [] });
+    checkProject(admin, project3);
+    //Mehrfache Anwendung
+    var dataSetIDArr = [36, 37, 38, 39];
+    var dataSetNameArr = ["Hi", "Mein", "Name", "ist"];
+    for (let i = 0; i < dataSetIDArr.length; i++) {
+        expect(admin.createDataSet(dataRowSensors2, dataSetIDArr[i], dataSetNameArr[i])).toBeTruthy();
+        project3.projectData.dataSet.push({ dataRowSensors: dataRowSensors2, dataSetID: dataSetIDArr[i], dataSetName: dataSetNameArr[i], generateDate: 12, dataRows: [{ dataRowID: 0, dataRow: [] }, { dataRowID: 1, dataRow: [] }], label: [] });
+    }
+    checkProject(admin, project3);
+    //Datensatz kann nicht erstellt werden
+    expect(admin.createDataSet([], 219, "Alter Schwede")).toBeFalsy();
+    expect(admin.createDataSet([], 219, "Alter Schwede", 187222)).toBeFalsy();
+    expect(admin.createDataSet(dataRowSensors2, -1, "Alter Schwede")).toBeFalsy();
+    expect(admin.createDataSet(dataRowSensors2, -1, "Alter Schwede", 187222)).toBeFalsy();
+    expect(admin.createDataSet(dataRowSensors2, 219, "")).toBeFalsy();
+    //Test, dass keine falschen Änderungen aufkamen
+    checkProject(admin, project3);
+});
+
+/**
+ * Prüft, ob setName fehlerfrei läuft
+ */
 test("setName", () => {
     var admin = new Admin(-233, 2, "Rudi", "rudi@g.d", device);
     admin.setName("Berta");
@@ -322,6 +448,9 @@ test("setName", () => {
     expect(aiModelUser.getName()).toBe("Berta");
 });
 
+/**
+ * Prüft, ob setDevice fehlerfrei läuft
+ */
 test("setDevice", () => {
     var admin = new Admin(-233, 2, "Rudi", "rudi@g.d", device);
     admin.setDevice(DeviceData.loadDevice(12));
@@ -340,18 +469,93 @@ test("setDevice", () => {
     expect(aiModelUser.getDevice().device!.getID()).toBe(15);
 });
 
-test("createLabel", () => {
+/**
+ * Prüft, ob createLabel, setLabel und deleteLabel fehlerfrei läuft
+ */
+test("Label", () => {
+    clearProjectStart();
+    var admin = new Admin(12, 2, "Rudi", "rudi@g.d", device);
+    labelMethodCheck(admin);
+    clearProjectStart();
+    var dataminer = new Dataminer(12, 2, "Rudi");
+    labelMethodCheck(dataminer);
+    clearProjectStart();
+    var aiModelUser = new AIModelUser(12, 2, "Rudi");
+    labelMethodCheck(aiModelUser);
+
 
 });
 
-test("setLabel", () => {
+/**
+ * Prüft alle Label Methoden der Klasse User
+ * @param user neu erstellter User
+ */
+function labelMethodCheck(user: User) {
+    expect(user.createLabel(2, { start: 12, end: 18 }, "label")).toBeFalsy();
+    expect(user.deleteLabel(2)).toBeFalsy();
+    expect(user.setLabel(2, { start: 12, end: 18 }, "label")).toBeFalsy();
+    expect(user.loadProject(project3)).toBeTruthy();
+    user.getDataRows(dataSetID1);
+    //createLabel
+    expect(user.createLabel(14, { start: 0, end: 18 }, "cool")).toBeTruthy();
+    project3.projectData.dataSet[0].label.push({ name: "cool", labelID: 14, start: 0, end: 18 });
+    checkProject(user, project3);
+    user.getDataRows(dataSetID1);
+    expect(user.createLabel(14, { start: 0, end: 18 }, "cool")).toBeFalsy();
+    expect(user.createLabel(15, { start: 7, end: 8 }, "cola")).toBeTruthy();
+    project3.projectData.dataSet[0].label.push({ name: "cola", labelID: 15, start: 7, end: 8 });
+    checkProject(user, project3);
+    user.getDataRows(dataSetID1);
+    //createLabel bei fehlerhaften übergabe
+    expect(user.createLabel(15, { start: 12, end: 18 }, "label")).toBeFalsy();
+    expect(user.createLabel(2, { start: -23, end: 18 }, "label")).toBeFalsy();
+    expect(user.createLabel(2, { start: 23, end: 18 }, "label")).toBeFalsy();
+    expect(user.createLabel(2, { start: 1, end: -2 }, "label")).toBeFalsy();
+    //setLabel
+    expect(user.setLabel(labels1[0].labelID, { start: 999, end: 1000 })).toBeTruthy();
+    project3.projectData.dataSet[0].label[0] = { name: labels1[0].name, labelID: labels1[0].labelID, start: 999, end: 1000 };
+    checkProject(user, project3);
+    user.getDataRows(dataSetID1);
+    expect(user.setLabel(labels1[1].labelID, { start: 99, end: 100 }, "Banana")).toBeTruthy();
+    project3.projectData.dataSet[0].label[1] = { name: "Banana", labelID: labels1[1].labelID, start: 99, end: 100 };
+    checkProject(user, project3);
+    user.getDataRows(dataSetID1);
+    //setLabel bei fehlerhaften übergabe
+    expect(user.setLabel(99, { start: 1, end: 2 }, "label")).toBeFalsy();
+    expect(user.setLabel(14, { start: -1, end: 2 }, "label")).toBeFalsy();
+    expect(user.setLabel(14, { start: 1, end: -1 }, "label")).toBeFalsy();
+    expect(user.setLabel(99, { start: 1, end: 2 })).toBeFalsy();
+    expect(user.setLabel(14, { start: -1, end: 2 })).toBeFalsy();
+    expect(user.setLabel(14, { start: 1, end: -1 })).toBeFalsy();
+    checkProject(user, project3);
+    user.getDataRows(dataSetID1);
+    //deleteLabel
+    labels1[2].labelID = 14;
+    for (let j = 0; j < labels1.length; j++) {
+        expect(user.deleteLabel(labels1[j].labelID)).toBeTruthy();
+        for (let i = 0; i < project3.projectData.dataSet[0].label.length; i++) {
+            if (project3.projectData.dataSet[0].label[i].labelID === labels1[j].labelID) {
+                project3.projectData.dataSet[0].label.splice(i, 1);
+            }
+        }
+        checkProject(user, project3);
+        user.getDataRows(dataSetID1);
+    }
+    expect(user.setLabel(14, { start: 1, end: 2 }, "label")).toBeFalsy();
+    expect(user.createLabel(14, { start: 0, end: 18 }, "cool")).toBeTruthy();
+    expect(user.setLabel(14, { start: 1, end: 2 }, "label")).toBeTruthy();
+    expect(user.deleteLabel(14)).toBeTruthy();
+    checkProject(user, project3);
+    user.getDataRows(dataSetID1);
+    expect(user.deleteLabel(14)).toBeFalsy();
+    expect(user.deleteLabel(222)).toBeFalsy();
+}
 
-});
-
-test("deleteLabel", () => {
-
-});
-
+/**
+ * Prüft ob der übergebene User das übergebene Projekt geladen hat
+ * @param user User der überprüft werden soll
+ * @param project Das zu erwartende Projekt in user
+ */
 function checkProject(user: User, project: { projectID: number, sessionID: number, projectName: string, projectData?: { aiModelID?: number[], dataSet: { dataRowSensors: SensorData[], dataSetID: number, dataSetName: string, generateDate: number, dataRows: { dataRowID: number, dataRow: { value: number[], relativeTime: number; }[]; }[], label: { name: string, labelID: number, start: number, end: number; }[]; }[]; }; }) {
     expect(user.getCurrentProjectID()).toBe(project.projectID);
     expect(user.getSessionID()).toBe(project.sessionID);
