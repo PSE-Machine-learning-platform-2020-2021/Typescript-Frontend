@@ -2,6 +2,7 @@ import Enzyme, { shallow } from 'enzyme';
 import Adapter from '@wojtekmaj/enzyme-adapter-react-17';
 import Countdown from '../../../components/DataCollectionComponents/Countdown';
 
+
 test('Rendert', () => {
     Enzyme.configure({ adapter: new Adapter() });
     let countdownNumber = 5;

@@ -1,4 +1,4 @@
-import { DataCollectionPage } from "../../../pages/DataCollectionPage/index";
+import { DataCollectionPage } from "../../DataCollectionPage/index";
 import { States } from "../../State";
 
 test('ChangetoFinish', () => {

@@ -1,5 +1,5 @@
 import { StartPage } from "../StartPage/index"
-import { ReferringPage } from "../ReferringPage/index"
+import { ReferringPage } from "../ReferringPage"
 import { ModelCreationPage } from "../ModelCreationPage/index"
 import { FinishPage } from "../FinishPage/index"
 import { DeliveryPage } from "../DeliveryPage/index"
@@ -8,6 +8,7 @@ import { VisualizationPage } from "../VisualizationPage/index"
 import { Page } from "../PageInterface"
 import { States } from "../State";
 import { PageController } from "../../../controller/PageController"
+
 
 test('State Test', () => {
   let pages = [new StartPage("TEST"), new ReferringPage(), new ModelCreationPage(), new FinishPage(), new DeliveryPage(), new DataCollectionPage(), new VisualizationPage()]

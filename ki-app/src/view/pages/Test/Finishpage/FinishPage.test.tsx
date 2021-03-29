@@ -1,4 +1,4 @@
-import { FinishPage } from "../../../pages/FinishPage/index";
+import { FinishPage } from "../../FinishPage/index";
 import { States } from "../../State";
 
 
