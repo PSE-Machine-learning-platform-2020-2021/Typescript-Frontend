@@ -103,8 +103,7 @@ export abstract class User {
      */
   createDataSet(dataRowSensors: SensorData[], dataSetID: number, dataSetName: string, generateDate?: number): boolean {
     if (this.currentProject != null) {
-      this.currentProject.createDataSet(dataRowSensors, dataSetID, dataSetName, generateDate);
-      return true;
+      return this.currentProject.createDataSet(dataRowSensors, dataSetID, dataSetName, generateDate);
     } else {
       return false;
     }
@@ -113,16 +112,13 @@ export abstract class User {
   /**
    * Löscht vom aktuellen Projekt den Datensatz, mit der übergebenen Datensatz ID
    * @param dataSetID die Datensatz ID
-   * @returns false, falls der Datensatz mit der ID nicht existiert oder kein aktuelles Projekt existiert
+   * @returns gibt die ProjektID zurück, zu dem der Datensatz gehörte, -1 falls der Datensatz nicht existiert hat
    */
-  deleteDataSet(dataSetID: number): number {
+  deleteDataSet(dataSetID: number): boolean {
     if (this.currentProject != null) {
-      let datasetExist: boolean = this.currentProject.deleteDataSet(dataSetID);
-      if (datasetExist) {
-        return this.currentProject.getID();
-      }
+      return this.currentProject.deleteDataSet(dataSetID);
     }
-    return -1;
+    return false;
   }
 
   /**

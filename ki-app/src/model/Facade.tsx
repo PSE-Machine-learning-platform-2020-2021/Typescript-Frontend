@@ -252,8 +252,8 @@ export class Facade {
    * @returns true, wenn das löschen erfolgreich ist
    */
   async deleteDataSet(dataSetID: number): Promise<boolean> {
-    if (this.user != null) {
-      let projectID: number = this.user.deleteDataSet(dataSetID);
+    if (this.user != null && this.user.deleteDataSet(dataSetID)) {
+      let projectID: number = this.user.getCurrentProjectID();
       if (projectID >= 0) {
         let adminEmail: string = this.getAdminEmail();
         let userID = this.user.getID();
