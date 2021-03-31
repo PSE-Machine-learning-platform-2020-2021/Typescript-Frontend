@@ -44,8 +44,6 @@ beforeEach( () => {
   Main.setLanguage.mockResolvedValue( "Test" );
   Main.getMessage.mockReturnValue( [ { text: "TEST", id: 5 } ] );
   Main.getFacade.mockReturnValue( Facade );
-
-  let sensorManager = new SensorManager();
 } );
 
 test( 'NeedMessage test', () => {
