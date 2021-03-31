@@ -33,7 +33,7 @@ export class State implements IState {
     slidingWindowSize?: number,      // optional
     slidingWindowStep?: number;        // optional
   };
-  islogedIn?: boolean;
+  islogedIn?: boolean = false;
 
   chosenEmails?: string[];
   wait?: Promise<any>;

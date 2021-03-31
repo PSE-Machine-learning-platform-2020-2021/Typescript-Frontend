@@ -1,11 +1,8 @@
 import { RefferingController } from "../ReferringController";
-
 import { ReferringPage } from "../../view/pages/ReferringPage/index";
-
 import { MainController } from "../MainController";
 import { State } from "./testState";
 import { States } from "../../view/pages/State";
-import { SensorManager } from "../SensorManager";
 
 let state = new State();
 let controller: RefferingController;
@@ -13,7 +10,6 @@ let controller: RefferingController;
 const setState = jest.fn( ( newState ) => {
   state = newState;
 } );
-
 const Facade = {
   registerDataminer: jest.fn(),
   registerAIModelUser: jest.fn(),
@@ -24,7 +20,6 @@ const Facade = {
   createProject: jest.fn(),
   getSessionID: jest.fn()
 };
-
 const Main = {
   setLanguage: jest.fn().mockReturnValue( "TEST" ), // mockReturnValue funktioniert hier nicht?
   getMessage: jest.fn().mockReturnValue( [ { text: "TEST", id: 5 } ] ), // mockReturnValue funktioniert hier nicht?
@@ -64,6 +59,18 @@ test( 'Login test', async () => {
   await resolve2;
   expect( state.islogedIn ).toBe( true );
   expect( state.projectData ).toStrictEqual( [ { projectID: 1, projectName: "TestName", AIModelID: [ 1 ] } ] );
+} );
+
+test( 'Login fehler test', async () => {
+  state.currentState = States.Login;
+  state.adminData = { name: "string", email: "string", password: "string" };
+  let resolve = Promise.resolve( false );
+  Facade.loginAdmin = jest.fn( () => {
+    return resolve;
+  } );
+  controller = new RefferingController();
+  await resolve;
+  expect( state.islogedIn ).toBe( false );
 } );
 
 test( 'LoadProject test', async () => {
