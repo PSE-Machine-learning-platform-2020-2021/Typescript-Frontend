@@ -54,5 +54,5 @@ test( 'ChangeToDataCollection test', async () => {
     state.currentState = States.ChangeToDataCollection;
     controller = new StartController();
     await sensorPromise;
-
+    expect( Main.changeTo.mock.calls.length ).toBe( 1 );
 } );
