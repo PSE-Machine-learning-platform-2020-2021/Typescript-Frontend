@@ -6,10 +6,6 @@ import { MainController } from "../MainController";
 import { State } from "./testState";
 import { States } from "../../view/pages/State";
 import { SensorManager } from "../SensorManager";
-import { exception } from "node:console";
-
-jest.mock( '../MainController' );
-jest.mock( '../../view/pages/ReferringPage/index' );
 
 let state = new State();
 let controller: RefferingController;
@@ -28,6 +24,7 @@ const Facade = {
   createProject: jest.fn(),
   getSessionID: jest.fn()
 };
+
 const Main = {
   setLanguage: jest.fn().mockReturnValue( "TEST" ), // mockReturnValue funktioniert hier nicht?
   getMessage: jest.fn().mockReturnValue( [ { text: "TEST", id: 5 } ] ), // mockReturnValue funktioniert hier nicht?

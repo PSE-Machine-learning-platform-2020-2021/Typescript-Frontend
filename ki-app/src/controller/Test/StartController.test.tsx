@@ -6,11 +6,6 @@ import { MainController } from "../MainController";
 import { State } from "./testState";
 import { States } from "../../view/pages/State";
 import { SensorManager } from "../SensorManager";
-import { exception } from "node:console";
-
-jest.mock( '../MainController' );
-jest.mock( '../../view/pages/StartPage/index' );
-jest.mock( "../SensorManager" );
 
 let state = new State();
 let controller: StartController;
@@ -28,7 +23,8 @@ const Facade = {
 const Main = {
     setLanguage: jest.fn().mockReturnValue( "TEST" ), // mockReturnValue funktioniert hier nicht?
     getMessage: jest.fn().mockReturnValue( [ { text: "TEST", id: 5 } ] ), // mockReturnValue funktioniert hier nicht?
-    getFacade: jest.fn().mockReturnValue( Facade ) // mockReturnValue funktioniert hier nicht?
+    getFacade: jest.fn().mockReturnValue( Facade ), // mockReturnValue funktioniert hier nicht?
+    changeTo: jest.fn()
 };
 
 beforeEach( () => {
@@ -49,8 +45,14 @@ beforeEach( () => {
 } );
 
 test( 'Constructor test', async () => {
-    state.currentState = States.ChangeToDataCollection;
     controller = new StartController();
     await sensorPromise;
     expect( state.recordingSettings?.availableSensorTypes ).toStrictEqual( [ { sensorTypID: 1, sensorType: "TEST", chosen: false } ] );
+} );
+
+test( 'ChangeToDataCollection test', async () => {
+    state.currentState = States.ChangeToDataCollection;
+    controller = new StartController();
+    await sensorPromise;
+
 } );

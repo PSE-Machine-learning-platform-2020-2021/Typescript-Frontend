@@ -35,6 +35,7 @@ export class StartController implements PageController {
                 }
                 this.page.setState( this.state );
             } );
+        this.update();
     }
 
     /**
@@ -64,6 +65,7 @@ export class StartController implements PageController {
      * die Datenaufnahme initialisiert. Zum Schluss wird der Seitenwechsel zur Erfassungseite durchgeführt. 
      */
     private start () {
+        console.log( "AAAAA" );
         let sensorTypes: number[] = this.state.recordingSettings!.usedSensorTypes;
         let dataSetName: string = this.state.recordingSettings!.newDataSetName;
         let waitTime: number = this.state.recordingSettings!.waitTime;
