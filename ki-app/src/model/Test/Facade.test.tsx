@@ -129,3 +129,18 @@ test( "login  und sendDataPoint", async () => {
     expect( inputUser ).toStrictEqual( { dataRowID: 64, datapoint: { value: [ 5 ], relativeTime: 1 } } );
     expect( inputDB ).toStrictEqual( { sessionID: 1, userID: 5, dataSetID: 99, dataRowID: 64, datapoint: { value: [ 5 ], relativeTime: 1 } } );
 } );
+
+test( "login  und getProjectMetas", async () => {
+    let inputDB;
+    DatabaseConnector.prototype.getProjectMetas = jest.fn( ( { userID, adminEmail } ) => {
+        inputDB = { userID, adminEmail };
+        return Promise.resolve( [ { projectID: 44, projectName: "TEST", AIModelID: [ 8 ] } ] );
+    } );
+    let facade = new Facade( "de-de" );
+    let promise = facade.loginAdmin( "TEST", "TEST" );
+    let sucsess = await promise;
+    expect( sucsess ).toBeTruthy();
+    let specialPromise = facade.getProjectMetas();
+    let specialSucsess = await specialPromise;
+    expect( specialSucsess ).toStrictEqual( [ { projectID: 44, projectName: "TEST", AIModelID: [ 8 ] } ] );
+} );
