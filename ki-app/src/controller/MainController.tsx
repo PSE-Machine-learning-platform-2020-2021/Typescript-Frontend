@@ -33,7 +33,7 @@ export class MainController implements MainControllerInterface {
     this.facade = new Facade( "de-de" );
   }
 
-  languageCode: string = "de-de"
+  private languageCode: string = "de-de";
 
   /**
    * Gibt sich selber zurück und sorgt dafür das nur ein MainController besteht.
@@ -77,13 +77,11 @@ export class MainController implements MainControllerInterface {
   startApp () {
     const queryString = window.location.search;
     let urlParams = new URLSearchParams( queryString );
-    var controller: PageController;
     if ( urlParams.get( "isMiner" ) === "true" ) {
-      controller = new StartController();
+      this.currentPageController = new StartController();
     } else {
-      controller = new RefferingController();
+      this.currentPageController = new RefferingController();
     }
-    this.changeTo( controller );
   }
 
   /**
@@ -98,7 +96,7 @@ export class MainController implements MainControllerInterface {
    * @returns Gibt alle texte zu den übergebenen ids zurück.
    */
   getMessage ( messages: { text: string, id: number; }[] ) {
-    return [{ text: "null", id: -1 }]
+    return [ { text: "null", id: -1 } ];
     let messageIDs: number[] = [];
     for ( let index = 0; index < messages.length; index++ ) {
       messageIDs.push( messages[ index ].id );
@@ -110,14 +108,14 @@ export class MainController implements MainControllerInterface {
     }
   }
 
-  getText() {
-    switch (this.languageCode) {
+  getText () {
+    switch ( this.languageCode ) {
       case "de-de":
-        return dataDE
+        return dataDE;
         break;
-    
+
       default:
-        return dataDE
+        return dataDE;
         break;
     }
   }
@@ -127,13 +125,10 @@ export class MainController implements MainControllerInterface {
    * @returns Gibt true zurück falls der wechsel erfolgt ist, sonst false.
    */
   setLanguage ( languageCode: string ) {
-    let nextState: States;
-    let success = this.getFacade().setLanguage( languageCode );
-    if ( success ) {
-      nextState = States.NeedMessage;
-    } else {
-      nextState = States.LoadError;
-    }
-    return nextState;
+    this.languageCode = languageCode;
+  }
+
+  getLanguageCode () {
+    return this.languageCode;
   }
 }

@@ -1,9 +1,13 @@
 import { MainController } from "../MainController";
 
-let controller: MainController;
+test( 'Singleton test', () => {
+    let ins1 = MainController.getInstance();
+    let ins2 = MainController.getInstance();
+    ins1.setLanguage( "ru-ru" );
+    expect( ins2.getLanguageCode() ).toStrictEqual( "ru-ru" );
+} );
 
-test( 'start test', () => {
-    let controller1 = jest.mock( "../ReferringController" );
-    let controller2 = jest.mock( "../StartController" );
-    MainController.getInstance();
+test( 'Connection Test', () => {
+    console.log( MainController.getInstance().checkConnection() );
+
 } );
