@@ -47,13 +47,6 @@ export class MainController implements MainControllerInterface {
     return this.mainController;
   }
 
-  /**
-   * Prüft ob das Gerät auf das Internet zugreifen kann.
-   * @returns Gibt true zurück falls eine Internetverbindung besteht, sonst wird false zurück gegeben.
-   */
-  checkConnection () {
-    return window.navigator.onLine;
-  }
 
   /**
    * Prüft ob der Benutzer angemeldet ist.

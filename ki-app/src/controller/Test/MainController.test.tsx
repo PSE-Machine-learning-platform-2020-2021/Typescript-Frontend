@@ -6,8 +6,3 @@ test( 'Singleton test', () => {
     ins1.setLanguage( "ru-ru" );
     expect( ins2.getLanguageCode() ).toStrictEqual( "ru-ru" );
 } );
-
-test( 'Connection Test', () => {
-    console.log( MainController.getInstance().checkConnection() );
-
-} );
