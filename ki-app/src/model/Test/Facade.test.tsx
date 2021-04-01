@@ -52,6 +52,9 @@ beforeEach( () => {
     Admin.prototype.createDataSet = jest.fn( () => {
         return true;
     } );
+    Admin.prototype.getCurrentDataSetID = jest.fn( () => {
+        return 99;
+    } );
 } );
 
 test( "Login", async () => {
@@ -100,4 +103,29 @@ test( "Login, load Project, createDataSet", async () => {
     expect( sucsess ).toBeTruthy();
     expect( inputDB ).toStrictEqual( { sessionID: 1, projectID: 1, userID: loginData.admin.adminID, dataSetName: "TEST", dataRow: [ { sensorID: 2, datarowName: "TEST_ROW" } ] } );
     expect( inputUser ).toStrictEqual( { sensoren: [ new AccelerometerData( -1, "", "" ) ], dataSetID: 99, dataSetName: "TEST" } );
+} );
+
+test( "login  und sendDataPoint", async () => {
+    let inputUser;
+    Admin.prototype.addDatapoint = jest.fn( ( dataRowID, datapoint ) => {
+        inputUser = { dataRowID, datapoint };
+        return true;
+    } );
+    let inputDB;
+    DatabaseConnector.prototype.sendDataPoint = jest.fn( ( { sessionID, userID, dataSetID, dataRowID, datapoint } ) => {
+        inputDB = { sessionID, userID, dataSetID, dataRowID, datapoint };
+        return Promise.resolve( true );
+    } );
+    let facade = new Facade( "de-de" );
+    let promise = facade.loginAdmin( "TEST", "TEST" );
+    let sucsess = await promise;
+    expect( sucsess ).toBeTruthy();
+    promise = facade.loadProject( 1 );
+    sucsess = await promise;
+    expect( sucsess ).toBeTruthy();
+    promise = facade.sendDataPoint( 64, { value: [ 5 ], relativeTime: 1 } );
+    sucsess = await promise;
+    expect( sucsess ).toBeTruthy();
+    expect( inputUser ).toStrictEqual( { dataRowID: 64, datapoint: { value: [ 5 ], relativeTime: 1 } } );
+    expect( inputDB ).toStrictEqual( { sessionID: 1, userID: 5, dataSetID: 99, dataRowID: 64, datapoint: { value: [ 5 ], relativeTime: 1 } } );
 } );
