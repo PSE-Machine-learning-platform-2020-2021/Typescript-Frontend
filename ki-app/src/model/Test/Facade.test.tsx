@@ -1,6 +1,6 @@
 import { Facade } from "../Facade";
 import { DatabaseConnector } from "../DatabaseConnector";
-import { SensorData } from "../SensorData";
+import { AccelerometerData, SensorData } from "../SensorData";
 import { Admin, User } from "../User";
 
 facade: Facade;
@@ -95,8 +95,9 @@ test( "Login, load Project, createDataSet", async () => {
     promise = facade.loadProject( 1 );
     sucsess = await promise;
     expect( sucsess ).toBeTruthy();
-    promise = facade.createDataSet( [ 1 ], "TEST", [ "TEST_ROW" ] );
+    promise = facade.createDataSet( [ 2 ], "TEST", [ "TEST_ROW" ] );
     sucsess = await promise;
     expect( sucsess ).toBeTruthy();
-    expect( inputDB ).toStrictEqual( { sessionID: 1, projectID: 1, userID: loginData.admin.adminID, dataSetName: "TEST", dataRow: [ { sensorID: 1, datarowName: "TEST_ROW" } ] } );
+    expect( inputDB ).toStrictEqual( { sessionID: 1, projectID: 1, userID: loginData.admin.adminID, dataSetName: "TEST", dataRow: [ { sensorID: 2, datarowName: "TEST_ROW" } ] } );
+    expect( inputUser ).toStrictEqual( { sensoren: [ new AccelerometerData( -1, "", "" ) ], dataSetID: 99, dataSetName: "TEST" } );
 } );
