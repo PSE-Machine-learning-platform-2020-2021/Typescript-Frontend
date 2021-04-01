@@ -5,9 +5,7 @@ import { MainController } from "./MainController";
 import { DeliveryController } from "./DeliveryController";
 import { VisualizationController } from "./VisualizationController";
 import { ReferringPage } from "../view/pages/ReferringPage/index";
-import { FinishPage } from "../view/pages/FinishPage/index";
-import { DataCollectionPage } from "../view/pages/DataCollectionPage/index";
-import { QRCode, ErrorCorrectLevel, QRNumber, QRAlphaNum, QR8BitByte, QRKanji } from 'qrcode-generator-ts/js';
+import { QRCode, ErrorCorrectLevel } from 'qrcode-generator-ts/js';
 
 /**
 * Controller für die Verweisseite
@@ -70,7 +68,7 @@ export class RefferingController implements PageController {
     /**
      * Logt den Benutzer ein
      */
-    login () {
+    private login () {
         let adminData: { name: string, email: string, password: string; } = this.state.adminData!;
         let loginSucess: Promise<boolean> = MainController.getInstance().getFacade().loginAdmin( adminData.email, adminData.password );
         this.state.wait! = loginSucess;
@@ -100,7 +98,7 @@ export class RefferingController implements PageController {
     /**
      * Registriert den Benutzer
      */
-    register () {
+    private register () {
         let adminData: { name: string, email: string, password: string; } = this.state.adminData!;
         let loginSucess: Promise<boolean> = MainController.getInstance().getFacade().registerAdmin( adminData.name, adminData.email, adminData.password );
         this.state.wait! = loginSucess;
@@ -125,7 +123,7 @@ export class RefferingController implements PageController {
     /**
      * Erstellt ein QRCode und übergibt in an die Seite
      */
-    createQR () {
+    private createQR () {
         const url = new URL( document.URL );
         url.searchParams.append( "SessionID", MainController.getInstance().getFacade().getSessionID().toString() );
         url.searchParams.append( "isMiner", "true" );
@@ -144,7 +142,7 @@ export class RefferingController implements PageController {
     /**
      * Erstelle ein neues Projekt, welches auch als momentanes Projekt gesetzt wird.
      */
-    createNewProject () {
+    private createNewProject () {
         let sucess: Promise<boolean> = MainController.getInstance().getFacade().createProject( this.state.currentProject!.projectName );
         this.state.wait! = sucess;
         this.state.currentState = States.waitForDB;
@@ -168,7 +166,7 @@ export class RefferingController implements PageController {
     /**
      * Setzt ein Projekt als momentanes Projekt
      */
-    loadProject () {
+    private loadProject () {
         let projectId: number = this.state.currentProject!.projectID!;
         let sucess: Promise<boolean> = MainController.getInstance().getFacade().loadProject( projectId );
         this.state.wait! = sucess;
@@ -192,7 +190,7 @@ export class RefferingController implements PageController {
     /**
      * Läde ein Modell und wechselt zur delivery Seite
      */
-    loadModel () {
+    private loadModel () {
         let projectId: number = this.state.currentProject!.projectID;
         let sucess: Promise<boolean> = MainController.getInstance().getFacade().loadProject( projectId );
         this.state.wait! = sucess;

@@ -21,25 +21,25 @@ export class ModelCreationController implements PageController {
      * Konstruktor des Seitenverwalters. Registriert sich als Beobachter auf seiner Seite und setzt den start Status.
      * Dieser Seitenverwalter benötigt einen SensorManager, welcher schon initilisiert wurde. 
      */
-    constructor() {
+    constructor () {
         this.page = new ModelCreationPage();
-        this.page.attach(this);
+        this.page.attach( this );
         this.state = this.page.getState();
         this.state.dataSetMetas! = MainController.getInstance().getFacade().getDataSetMetas()!;
-        this.page.setState(this.state);
+        this.page.setState( this.state );
     }
 
     /**
      * Die Update Methode des Seitenverwalters.
      */
-    update() {
+    update () {
         this.state = this.page.getState();
-        switch (this.state.currentState) {
+        switch ( this.state.currentState ) {
             case States.NeedKiTraining:
                 this.startTraining();
                 break;
             case States.NeedMessage:
-                this.page.setState(MainController.getInstance().getMessage(this.state.messages));
+                this.page.setState( MainController.getInstance().getMessage( this.state.messages ) );
                 break;
             default:
                 break;
@@ -50,7 +50,7 @@ export class ModelCreationController implements PageController {
     * Startet das Training mit den ausgewählten Einstellungen in der View. 
     * Holt sich aus den ausgewählten Datensätzen die benutzten Sensoren.
     */
-    startTraining() {
+    private startTraining () {
         /*
         // Auf Sensorenarten wird geprüft
         let sensors: number[] = [];
@@ -68,6 +68,6 @@ export class ModelCreationController implements PageController {
         //Benutzte Sensoren werden hinzugefügt
         this.state.trainingParameter!.sensors = sensors;*/
         //console.log(this.state.trainingParameter)
-        MainController.getInstance().getFacade().applyModel(this.state.trainingParameter!);
+        MainController.getInstance().getFacade().applyModel( this.state.trainingParameter! );
     }
 }
