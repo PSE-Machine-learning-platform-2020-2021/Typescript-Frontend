@@ -124,8 +124,8 @@ export class SensorManager {
             this.page.setState( state );
         }
 
-        PubSub.publish( 'startDiagram', this.dataRows );
-        PubSub.publish( 'finishDiagram', this.dataRows );
+        //PubSub.publish( 'startDiagram', this.dataRows );
+        //PubSub.publish( 'finishDiagram', this.dataRows );
     }
 
     /**
