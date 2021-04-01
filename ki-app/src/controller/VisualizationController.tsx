@@ -54,6 +54,7 @@ export class VisualizationController implements PageController {
             let data = MainController.getInstance().getFacade().getDataRows( dataSets[ index ].dataSetID ).dataRows!;
             this.state.currentDataSets!.push( { dataSetID: dataSets[ index ].dataSetID, rows: data } );
             //PubSub.publish('visualizationDiagram', { dataSetID: dataSets[index].dataSetID, dataRows: data });
+            this.page.setState( this.state );
         }
         this.state.currentState = States.SetDataRows;
         this.page.setState( this.state );

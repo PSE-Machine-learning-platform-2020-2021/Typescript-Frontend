@@ -144,3 +144,16 @@ test( "login  und getProjectMetas", async () => {
     let specialSucsess = await specialPromise;
     expect( specialSucsess ).toStrictEqual( [ { projectID: 44, projectName: "TEST", AIModelID: [ 8 ] } ] );
 } );
+
+test( "login, loadProject und delete DataSet", async () => {
+    Admin.prototype.deleteDataSet = jest.fn( () => {
+        return true;
+    } );
+    let facade = new Facade( "de-de" );
+    let promise = facade.loginAdmin( "TEST", "TEST" );
+    let sucsess = await promise;
+    expect( sucsess ).toBeTruthy();
+    promise = facade.loadProject( 1 );
+    sucsess = await promise;
+    expect( sucsess ).toBeTruthy();
+} );
