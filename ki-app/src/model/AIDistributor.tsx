@@ -5,6 +5,7 @@ import { DeliveryFormat } from './DeliveryFormat';
  */
 export class AIDistributor {
     private static readonly url: string = "../deliverance/";
+    private static readonly headers = { 'ContentType': 'application/json' };
     private format: DeliveryFormat;
     private id: number;
 
@@ -22,35 +23,88 @@ export class AIDistributor {
      * Gibt in Abhängigkeit vom Auslieferungsformat entweder das fertige KI-Modell als 
      * ausführbare Datei zurück, oder sämtliche Daten, die nötig sind, um das KI-Modell 
      * später als Web-Anwendung auszuführen.
+     * 
+     * Der Return-Typ ist einzig aus dem Grund "any", weil sich so das Problem löst, dass
+     * man von einem blanken Objekt keine spezifischen Eigenschaften erwarten kann.
      */
-    getAIModel(): object {
-        let xhr = new XMLHttpRequest(); // XHR ist kurz für XmlHttpRequest
-        let data: { url: string; };
-        xhr.open("POST", AIDistributor.url, true);
-        xhr.onreadystatechange = () => {
-            if (xhr.readyState === 4) {
-                if (xhr.status === 200) {
-                    data = JSON.parse(xhr.responseText);
-                    switch (this.format) {
-                        case DeliveryFormat.EXE:
-                            //location.href = data.url;
-                            return data;
-                        case DeliveryFormat.WEB_APP:
-                            return data;
-                        default:
-                            throw new Error("Illegal delivery format.");
+    getAIModel(): any {
+        let data = this.sendRequest({ "id": this.id, "format": this.format, "job": "get" });
+        let success : boolean;
+        try {
+            success = Object.keys(data).includes("url");
+        }
+        catch (e) {
+            success = false;
+        }
+        if (!success) {
+            throw new Error("Connection issue: " + data.status + ": " + data.statusText);
+        }
+        switch (this.format) {
+            case DeliveryFormat.EXE:
+                throw new Error("Not implemented.")
+                //location.href = data.url;
+                //return dataX;
+            case DeliveryFormat.WEB_APP:
+                return {"url": data.url};
+            default:
+                throw new Error("Illegal delivery format.");
+        }
+    }
+
+    /**
+     * Diese Methode reicht die übergebenen E-Mail-Adressen an den Server weiter, damit dieser 
+     * einen Link zum KI-Modell, dessen laufende Nummer im Objekt hinterlegt ist, 
+     * an sämtliche dieser Adressen versendet.
+     * 
+     * @param emailList Die E-Mail-Adressen, an die der Server den Nutzungslink zum Modell versenden soll.
+     * @returns True, wenn die Anfrage an den Server erfolgreich war, False andernfalls.
+     */
+    sendAIModel(... emailList: string[]): boolean {
+        let data = this.sendRequest({"recipients": emailList, "id": this.id, "job": "send"});
+        let success : boolean;
+        try {
+            success = Object.keys(data).includes("result");
+        }
+        catch (e) {
+            success = false;
+        }
+        if (success) {
+            return data.result;
+        }
+        return false;
+    }
+
+    /**
+     * Diese Methode schickt die Anfrage an den Server raus.
+     * 
+     * @param data Die Daten, die mit der Anfrage zu versenden sind.
+     */
+    private sendRequest(data: object): any {
+        return new Promise(function(resolve, reject){
+            let xhr = new XMLHttpRequest(); // XHR ist kurz für XmlHttpRequest
+            xhr.open("POST", AIDistributor.url, true);
+            xhr.onreadystatechange = () => {
+                if (xhr.readyState === 4) {
+                    if (xhr.status === 200) {
+                        resolve(JSON.parse(xhr.responseText))
                     }
-                }
-                else {
-                    console.log("Connection to server failed. Please try again.");
+                    reject({
+                        status: xhr.status, 
+                        statusText: xhr.statusText
+                    });
                 }
             }
-        };
-        xhr.setRequestHeader("Content-Type", "application/json");
-        xhr.send(JSON.stringify({ "id": this.id, "format": this.format }));
-
-
-        return {};
+            xhr.onerror = function () {
+                reject({
+                    status: this.status,
+                    statusText: xhr.statusText
+                });
+            };
+            for (const [header, content] of Object.entries(AIDistributor.headers)) {
+                xhr.setRequestHeader(header, content);
+            }
+            xhr.send(JSON.stringify(data));
+        }).then((resolve) => resolve, (reject) => reject);
     }
 
     /**
