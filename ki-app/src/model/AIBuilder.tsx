@@ -22,9 +22,6 @@ export class AIBuilder {
      * Diese müssen das folgende Format haben, wenn zu JSON gepackt:
      * ```
      * {
-     *     "sensors": [
-     *         "sensorname#i"
-     *     ],
      *     "dataSets": [
      *         42
      *     ],
