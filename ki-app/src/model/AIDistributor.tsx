@@ -60,7 +60,9 @@ export class AIDistributor {
      * @returns True, wenn die Anfrage an den Server erfolgreich war, False andernfalls.
      */
     sendAIModel(... emailList: string[]): boolean {
-        let data = this.sendRequest({"recipients": emailList, "id": this.id, "job": "send"});
+        let recipients: {"email": string}[] = [];
+        emailList.forEach((address) => recipients[recipients.length] = {"email": address});
+        let data = this.sendRequest({"recipients": JSON.stringify(recipients), "id": this.id, "job": "send"});
         let success : boolean;
         try {
             success = Object.keys(data).includes("result");
