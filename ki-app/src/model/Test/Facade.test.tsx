@@ -2,6 +2,10 @@ import { Facade } from "../Facade";
 import { DatabaseConnector } from "../DatabaseConnector";
 import { AccelerometerData, SensorData } from "../SensorData";
 import { Admin, User } from "../User";
+import { AIBuilder } from "../AIBuilder";
+import { DeliveryFormat } from "../DeliveryFormat";
+import { AIDistributor } from "../AIDistributor";
+import { Language } from "../Language";
 
 facade: Facade;
 
@@ -105,7 +109,7 @@ test( "Login, load Project, createDataSet", async () => {
     expect( inputUser ).toStrictEqual( { sensoren: [ new AccelerometerData( -1, "", "" ) ], dataSetID: 99, dataSetName: "TEST" } );
 } );
 
-test( "login  und sendDataPoint", async () => {
+test( "login und sendDataPoint", async () => {
     let inputUser;
     Admin.prototype.addDatapoint = jest.fn( ( dataRowID, datapoint ) => {
         inputUser = { dataRowID, datapoint };
@@ -130,7 +134,7 @@ test( "login  und sendDataPoint", async () => {
     expect( inputDB ).toStrictEqual( { sessionID: 1, userID: 5, dataSetID: 99, dataRowID: 64, datapoint: { value: [ 5 ], relativeTime: 1 } } );
 } );
 
-test( "login  und getProjectMetas", async () => {
+test( "login und getProjectMetas", async () => {
     let inputDB;
     DatabaseConnector.prototype.getProjectMetas = jest.fn( ( { userID, adminEmail } ) => {
         inputDB = { userID, adminEmail };
@@ -149,11 +153,179 @@ test( "login, loadProject und delete DataSet", async () => {
     Admin.prototype.deleteDataSet = jest.fn( () => {
         return true;
     } );
+    DatabaseConnector.prototype.deleteDataSet = jest.fn( () => {
+        return Promise.resolve( true );
+    } );
     let facade = new Facade( "de-de" );
     let promise = facade.loginAdmin( "TEST", "TEST" );
     let sucsess = await promise;
     expect( sucsess ).toBeTruthy();
     promise = facade.loadProject( 1 );
+    sucsess = await promise;
+    expect( sucsess ).toBeTruthy();
+    promise = facade.deleteDataSet( 1 );
+    sucsess = await promise;
+    expect( sucsess ).toBeTruthy();
+} );
+
+test( "register Admin", async () => {
+    let inputDB;
+    DatabaseConnector.prototype.registerAdmin = jest.fn( ( newInputDB ) => {
+        inputDB = newInputDB;
+        return Promise.resolve( { adminID: 2, device: { deviceID: 2, sensorID: [ 2 ] } } );
+    } );
+    let facade = new Facade( "de-de" );
+    let promise = facade.registerAdmin( "TEST", "TEST", "TEST" );
+    let sucsess = await promise;
+    expect( sucsess ).toBeTruthy();
+    expect( inputDB ).toStrictEqual( { adminName: "TEST", adminEmail: "TEST", password: "TEST", device: { deviceID: -1, deviceName: "", deviceType: "", firmware: "", generation: "", MACADRESS: "", sensorInformation: [] } } );
+} );
+
+test( "register Miner", async () => {
+    let inputDB;
+    DatabaseConnector.prototype.registerDataminer = jest.fn( ( newInputDB ) => {
+        inputDB = newInputDB;
+        return Promise.resolve( { dataminerID: 5, device: { deviceID: 2, sensorID: [ 2 ] }, project: { projectID: 99, projectName: "TEST", sessionID: 5 } } );
+    } );
+    let facade = new Facade( "de-de" );
+    let promise = facade.registerDataminer( "TESTNAME", 5 );
+    let sucsess = await promise;
+    expect( sucsess ).toBeTruthy();
+} );
+
+test( "register Modeluser", async () => {
+    let inputDB;
+    DatabaseConnector.prototype.registerAIModelUser = jest.fn( ( newInputDB ) => {
+        inputDB = newInputDB;
+        return Promise.resolve( { aiModelUserID: 1, device: { deviceID: 4, sensorID: [ 2 ] }, project: { projectID: 99, projectName: "TEST", sessionID: -1 } } );
+    } );
+    let facade = new Facade( "de-de" );
+    let promise = facade.registerAIModelUser( "TESTNAME", 5 );
+    let sucsess = await promise;
+    expect( sucsess ).toBeTruthy();
+} );
+
+test( "Projekt erstellen", async () => {
+    DatabaseConnector.prototype.createProject = jest.fn( () => {
+        return Promise.resolve( { projectID: 5, sessionID: 5 } );
+    } );
+    let facade = new Facade( "de-de" );
+    let promise = facade.loginAdmin( "TEST", "TEST" );
+    let sucsess = await promise;
+    expect( sucsess ).toBeTruthy();
+    promise = facade.createProject( "TEST" );
+    sucsess = await promise;
+    expect( sucsess ).toBeTruthy();
+} );
+
+test( "Label erstellen", async () => {
+    DatabaseConnector.prototype.createDataSet = jest.fn( () => {
+        return Promise.resolve( 4 );
+    } );
+    Admin.prototype.getCurrentDataSetID = jest.fn( () => {
+        return 4;
+    } );
+    Admin.prototype.createLabel = jest.fn( () => {
+        return true;
+    } );
+    let facade = new Facade( "de-de" );
+    let promise = facade.loginAdmin( "TEST", "TEST" );
+    let sucsess = await promise;
+    expect( sucsess ).toBeTruthy();
+    let result = facade.createLabel( { start: 1, end: 2 }, "TEST" );
+    expect( result ).toBeTruthy();
+} );
+
+test( "Label setzen", async () => {
+    DatabaseConnector.prototype.setLabel = jest.fn( () => {
+        return Promise.resolve( true );
+    } );
+    Admin.prototype.getCurrentDataSetID = jest.fn( () => {
+        return 4;
+    } );
+    Admin.prototype.setLabel = jest.fn( () => {
+        return true;
+    } );
+    let facade = new Facade( "de-de" );
+    let promise = facade.loginAdmin( "TEST", "TEST" );
+    let sucsess = await promise;
+    expect( sucsess ).toBeTruthy();
+    let result = facade.setLabel( 5, { start: 1, end: 2 }, "TEST" );
+    expect( result ).toBeTruthy();
+} );
+
+test( "Label loeschen", async () => {
+    DatabaseConnector.prototype.deleteLabel = jest.fn( () => {
+        return Promise.resolve( true );
+    } );
+    Admin.prototype.getCurrentDataSetID = jest.fn( () => {
+        return 4;
+    } );
+    Admin.prototype.deleteLabel = jest.fn( () => {
+        return true;
+    } );
+    let facade = new Facade( "de-de" );
+    let promise = facade.loginAdmin( "TEST", "TEST" );
+    let sucsess = await promise;
+    expect( sucsess ).toBeTruthy();
+    let result = facade.deleteLabel( 5 );
+    expect( result ).toBeTruthy();
+} );
+
+test( "Label erlangen", async () => {
+    Admin.prototype.getLabels = jest.fn( () => {
+        return {
+            labels: [ {
+                name: "TEST",
+                labelID: 5,
+                start: 1,
+                end: 4
+            } ]
+        };
+    } );
+    let facade = new Facade( "de-de" );
+    let promise = facade.loginAdmin( "TEST", "TEST" );
+    let sucsess = await promise;
+    expect( sucsess ).toBeTruthy();
+    let result = facade.getLabels();
+    expect( result ).toBeTruthy();
+} );
+
+test( "klassifizieren", async () => {
+    AIBuilder.prototype.classify = jest.fn( () => { } );
+    let facade = new Facade( "de-de" );
+    let promise = facade.loginAdmin( "TEST", "TEST" );
+    let sucsess = await promise;
+    expect( sucsess ).toBeTruthy();
+    facade.classify( 4, 2, jest.fn() );
+} );
+
+test( "hole KI Model", async () => {
+    AIDistributor.prototype.getAIModel = jest.fn( () => { } );
+    let facade = new Facade( "de-de" );
+    let promise = facade.loginAdmin( "TEST", "TEST" );
+    let sucsess = await promise;
+    expect( sucsess ).toBeTruthy();
+    facade.getAIModel( 4, 2 );
+} );
+
+test( "Model Erstellen", async () => {
+    AIBuilder.prototype.applyModel = jest.fn( () => { } );
+    let facade = new Facade( "de-de" );
+    let promise = facade.loginAdmin( "TEST", "TEST" );
+    let sucsess = await promise;
+    expect( sucsess ).toBeTruthy();
+    facade.applyModel( { dataSets: [ 5 ], imputator: "TEST", classifier: "TEST", scaler: "TEST", features: [ "TEST" ], trainingDataPercentage: 100, slidingWindowSize: 0, slidingWindowStep: 0 } );
+} );
+
+test( "setze Sprache", async () => {
+    DatabaseConnector.prototype.loadLanguage = jest.fn( () => { return Promise.resolve( [ "TEST" ] ); } );
+    Language.prototype.setLanguage = jest.fn( () => { return true; } );
+    let facade = new Facade( "de-de" );
+    let promise = facade.loginAdmin( "TEST", "TEST" );
+    let sucsess = await promise;
+    expect( sucsess ).toBeTruthy();
+    promise = facade.setLanguage( "ru-ru" );
     sucsess = await promise;
     expect( sucsess ).toBeTruthy();
 } );
