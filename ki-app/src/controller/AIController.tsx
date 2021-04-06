@@ -12,6 +12,7 @@ import { MainController } from "./MainController";
 * Controller welcher für die Klassifizierung verantworlich ist.
 */
 export class AIController implements PageController {
+    private modelID: number = -1;
     /**
     * Für die Verwaltung der Sensoren verantwortlich
     */
@@ -32,7 +33,7 @@ export class AIController implements PageController {
     /**
     * Der Constructor des Controllers verarbeitet die URL bereitet den Sensormanager vor und setzt die startpage auf.
     */
-    constructor () {
+    constructor ( modelID: number ) {
         const queryString = window.location.search;
         this.urlParams = new URLSearchParams( queryString );
         this.sensorManager = new SensorManager();
@@ -40,6 +41,7 @@ export class AIController implements PageController {
         this.state = this.page.getState();
         //TODO Beim Registrieren des AIModelUsers sollte der Name weg oder eine Möglichkeit bestehen den Namen zu beziehen
         MainController.getInstance().getFacade().registerAIModelUser( "Gustav", +this.urlParams.get( "aiID" )! );
+        this.modelID = modelID;
     }
 
     /**
