@@ -18,12 +18,12 @@ export class ModelCreationPage implements Page {
 	}
 
 	update() {
-		this.notify()
+		this.notify();
 		const VDOM = (
 			<div>
 				<Train
-					dataSetMetas={this.state.dataSetMetas!}
-					train={this.train.bind(this)}
+					dataSetMetas = {this.state.dataSetMetas!}
+					train        = {this.train.bind(this)}
 				/>
 				<NotificationContainer />
 			</div>

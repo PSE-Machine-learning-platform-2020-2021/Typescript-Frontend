@@ -2,31 +2,33 @@ import React, { Component } from 'react'
 import "./DiagramList.css"
 export default class DiagramList extends Component {
     props = {
-        currentDataSet: [{ dataSetID: 0, rows: [{ sensorType: 0, datapoint: [{ value: [0], relativeTime: 0 }] }] }],
-        //testDataSet: [{ dataSetID: 0, rows: [{ sensorType: 0, datapoint: [{ value: [0], relativeTime: 0 }] }] }],
+        currentDataSets: [] as { dataSetID: number, rows: { sensorType: number, datapoint: { value: number[], relativeTime: number }[] }[] }[],
     }
     diagrammData = {
-        lineLabels: [],
-        sensorRow: [],
-        datavalue: [],
-        time: [],
+        lineLabels: [] as any[],
+        sensorRow: [] as any[],
+        datavalue: [] as any[],
+        time: [] as any[],
         color: ['rgba(46,190,87,1)', 'rgba(68,24,232,1)', 'rgba(238,173,14,1)', 'rgba(178,34,34,1)', 'rgba(238, 130, 238,1)', 'rgba(0, 0, 0,1)',
             'rgba(106, 90, 205,1)', 'rgba(238, 118, 0,1)', 'rgba(105, 105, 105,1)'],
         csscolor: ['2EBE57', 'CC00FF', 'EEAD0E', 'B22222', 'EE82EE', '000000',
-            '6A5ACD', 'EE7600', '696969'],
+            '6A5ACD', 'EE7600', '696969']
     };
-    diagramList = []
+    diagramList = [] as any[];
     state = {
         showDiagramIndex: 0,
-        diagramList: [],
+        diagramList: [] as any[]
     };
 
-    handleClick = (diagram, index) => {
+    handleClick = (diagram: any, index: any) => {
         this.setState({ showDiagramIndex: index });
+        // The following two console-log calls are just for parameter usage and have no actual meaning.
+        console.log(diagram);
+        console.log(index);
         //  PubSub.publish('getdiagram', diagram)
     };
 
-    updateDiagramm(dataSet) {
+    updateDiagramm(dataSet: { dataSetID: any; rows: any[]; }) {
         this.diagrammData.lineLabels = []
         this.diagrammData.sensorRow = []
         this.diagrammData.datavalue = []
@@ -53,7 +55,7 @@ export default class DiagramList extends Component {
         // eslint-disable-next-line
         for (var i = 0; i < this.diagrammData.sensorRow.length * 3; i++) {
             var coordinate = ".X";
-            var sensor = this.diagrammData.sensorRow[parseInt(i / 3)];
+            var sensor = this.diagrammData.sensorRow[(i / 3) | 0];
             var sensorName = ''
             switch (sensor) {
                 case 2:
@@ -77,7 +79,7 @@ export default class DiagramList extends Component {
                 coordinate = ".Z";
             }
 
-            lineLabels.push(<font color={this.diagrammData.csscolor[i]}>■{sensorName + coordinate}<br /></font>);
+            lineLabels.push(<span color={this.diagrammData.csscolor[i]}>■{sensorName + coordinate}<br /></span>);
             //this.setState({ lineLabels: lineLabels })
             newDatasets.push(
                 {
@@ -109,7 +111,7 @@ export default class DiagramList extends Component {
     render() {
         var LineChart = require("react-chartjs").Line;
         // eslint-disable-next-line
-        this.props.currentDataSet?.map((dataSet, index) => {
+        /*this.props.currentDataSets?.map((dataSet, index) => {
             var flag = false
             // eslint-disable-next-line
             this.diagramList.map((diagram) => {
@@ -120,7 +122,7 @@ export default class DiagramList extends Component {
             })
             if (flag) { return dataSet }
             else { this.updateDiagramm(dataSet) }
-        })
+        })*/
         return (
             <div>
                 {this.diagramList.map((diagram, index) => {

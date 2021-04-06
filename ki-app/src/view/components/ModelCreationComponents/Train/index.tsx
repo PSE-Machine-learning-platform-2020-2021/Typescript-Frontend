@@ -56,9 +56,9 @@ export default class Train extends Component {
 	 * mit den Daten aus der props-Variable dataSetMetas.
 	 */
 	private fillState(): void {
+		this.state.databaseList = [];
 		for (const x of this.props.dataSetMetas) {
-			this.state.databaseList.push({dataSetName: x.dataSetName, dataSetID: x.dataSetID, chosen: false})
-			this.state.datasets.push({dataSetName: x.dataSetName, dataSetID: x.dataSetID, chosen: false})
+			this.state.databaseList.push({dataSetName: x.dataSetName, dataSetID: x.dataSetID, chosen: false});
 		}
 	}
 
@@ -81,7 +81,7 @@ export default class Train extends Component {
 		const { datasets } = this.state;
 		const newDatasets = datasets.map((dataset) => {
 			// eslint-disable-next-line
-			if (dataset.dataSetID == id) return { ...dataset, chosen };
+			if (dataset.dataSetID === id) return { ...dataset, chosen };
 			else return dataset;
 		});
 		this.setState({ datasets: newDatasets });
