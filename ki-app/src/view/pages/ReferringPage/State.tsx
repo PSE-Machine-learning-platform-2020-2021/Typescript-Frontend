@@ -6,7 +6,7 @@ export class State implements IState {
   languageCode: string = "de";
   messages: { text: string, id: number; }[] = [];
   projectData?: { projectID: number; projectName: string; AIModelID: number[]; }[] = [];
-  currentProject?: { projectID: number, projectName: string, choosenAIModelID: number; } = {projectID: -1, projectName: "null", choosenAIModelID: -1 };
+  currentProject?: { projectID: number, projectName: string, AIModelID: number[]; } = { projectID: -1, projectName: "null", AIModelID: [] };
   // chosenModel?: string;
   adminData?: { name: string, email: string, password: string; };
   //minerData?:
@@ -15,7 +15,7 @@ export class State implements IState {
   sessionID?: string;
   //aiParameter?: 
   qr?: string = '';
-  wait?: Promise<any>
-  islogedIn: boolean = false
-  link?: string = ''
+  wait?: Promise<any>;
+  islogedIn: boolean = false;
+  link?: string = '';
 }

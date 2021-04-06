@@ -13,7 +13,7 @@ export class VisualizationController implements PageController {
      * Konstruktor des Seitenverwalters. Registriert sich als Beobachter auf seiner Seite und setzt den start Status.
      * Dieser Seitenverwalter benötigt einen SensorManager, welcher schon initilisiert wurde. 
      */
-    constructor ( currentProjekt: { projectID: number, projectName: string, choosenAIModelID: number; } ) {
+    constructor ( currentProjekt: { projectID: number, projectName: string, AIModelID: number[]; } ) {
         this.page = new VisualizationPage();
         this.page.attach( this );
         this.state = this.page.getState();

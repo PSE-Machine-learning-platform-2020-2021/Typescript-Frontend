@@ -7,7 +7,8 @@ export interface IState {
   //ReferringPage
   projectData?: { projectID: number; projectName: string; AIModelID: number[]; }[];
   // Das Projekt welches in der view ausgewählt wurde
-  currentProject?: { projectID: number, projectName: string, choosenAIModelID: number; };
+  currentProject?: { projectID: number, projectName: string, AIModelID: number[]; };
+  chosenAIModel?: number;
   adminData?: { name: string, email: string, password: string; };
   aiUserData?: { name: string, result: string; };
   currentLabel?: { labelID: number, start: number, end: number; name: string; };
@@ -32,11 +33,11 @@ export interface IState {
     slidingWindowSize?: number,      // optional
     slidingWindowStep?: number;        // optional
   };
-  islogedIn?: boolean
+  islogedIn?: boolean;
 
   chosenEmails?: string[];
   wait?: Promise<any>;
-  link?: string
+  link?: string;
   //Beispiel fuer Visu
   //testDataSet?: { dataSetID: number; rows: { sensorType: number; datapoint: { value: number[]; relativeTime: number; }[]; }[]; }[];
 }

@@ -22,7 +22,7 @@ export class DeliveryController implements PageController {
     * Konstruktor des Seitenverwalters. Registriert sich als Beobachter auf seiner Seite und setzt den start Status.
     * @param currentProject Die momentanen Projectdaten für welches man ein Model ausliefern möchte. 
     */
-    constructor ( currentProject: { projectID: number, projectName: string, choosenAIModelID: number; } ) {
+    constructor ( currentProject: { projectID: number, projectName: string, AIModelID: number[]; }, chosenAiModel: number ) {
         this.page = new DeliveryPage();
         this.page.attach( this );
         this.state = this.page.getState();

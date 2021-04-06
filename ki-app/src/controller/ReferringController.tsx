@@ -198,7 +198,7 @@ export class RefferingController implements PageController {
         this.page.setState( this.state );
         sucess.then( ( value: boolean ) => {
             if ( value ) {
-                let deliveryConroller: DeliveryController = new DeliveryController( this.state.currentProject! );
+                let deliveryConroller: DeliveryController = new DeliveryController( this.state.currentProject!, this.state.chosenAIModel! );
                 MainController.getInstance().changeTo( deliveryConroller );
             } else {
                 this.state.currentState = States.LoadError;
