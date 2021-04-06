@@ -48,7 +48,9 @@ export class DataCollectionController implements PageController {
                 this.sensorManager.readData( this.page );
                 break;
             case States.NeedMessage:
-                this.page.setState( MainController.getInstance().getMessage( this.state.messages ) );
+                this.state.messages = MainController.getInstance().getMessage( this.state.messages )!;
+                this.state.currentState = States.waitForDB;
+                this.page.setState( this.state );
                 break;
             case States.NeedInstantDiagram:
                 break;

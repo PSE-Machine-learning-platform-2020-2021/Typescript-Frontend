@@ -40,7 +40,9 @@ export class DeliveryController implements PageController {
                 this.deliverAsWebApp();
                 break;
             case States.NeedMessage:
-                this.page.setState( MainController.getInstance().getMessage( this.state.messages ) );
+                this.state.messages = MainController.getInstance().getMessage( this.state.messages )!;
+                this.state.currentState = States.waitForDB;
+                this.page.setState( this.state );
                 break;
             default:
                 break;

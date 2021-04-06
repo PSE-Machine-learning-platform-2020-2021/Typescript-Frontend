@@ -57,7 +57,9 @@ export class AIController implements PageController {
                 this.page.setState( MainController.getInstance().setLanguage( this.state.languageCode ) );
                 break;
             case States.NeedMessage:
-                this.page.setState( MainController.getInstance().getMessage( this.state.messages ) );
+                this.state.messages = MainController.getInstance().getMessage( this.state.messages )!;
+                this.state.currentState = States.waitForDB;
+                this.page.setState( this.state );
                 break;
             case States.StartDataRead:
                 this.sensorManager.readData( this.page );
