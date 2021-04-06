@@ -15,30 +15,30 @@ export default class Train extends Component {
 		databaseList: [] as { dataSetID: number, dataSetName: string, chosen: boolean; }[],
 		datasets: [] as { dataSetID: number, dataSetName: string, chosen: boolean; }[],
 		imputators: [
-			{ name: "Mittel", checked: false, tag: 'MEAN' },
+			{ name: "Mittel", checked: true, tag: 'MEAN' },
+/*			NOT IMPLEMENTED
 			{ name: "Letzer Wert fortgeführt", checked: false, tag: 'FORWARD' },
 			{ name: "Bewegter Durchschnitt", checked: false, tag: 'MOVING' },
 			{ name: "Lineare Interpolation", checked: false, tag: 'LINEAR' },
-			{ name: "Spline Interpolation", checked: false, tag: 'SPLINE' }
+			{ name: "Spline Interpolation", checked: false, tag: 'SPLINE' }*/
 		],
 		scalers: [
 			{ name: "Standard Scaler", checked: false, tag: 'STANDARD' },
 			{ name: "Robust Scaler", checked: false, tag: 'ROBUST' },
 			{ name: "Min-Max Scaler", checked: false, tag: 'MIN_MAX' },
 			{ name: "Normalizer", checked: false, tag: 'NORMALIZER' },
-			{ name: "Anteilstrafo", checked: false, tag: 'SHARE' }
+			{ name: "Anteilstransformator", checked: false, tag: 'SHARE' }
 		],
 		myfeatures: [
 			{ name: "Minimum", checked: false, tag: 'MIN' },
 			{ name: "Maximum", checked: false, tag: 'MAX' },
 			{ name: "Varianz", checked: false, tag: 'VARIANCE' },
 			{ name: "Energie", checked: false, tag: 'ENERGY' },
-			{ name: "Fourier-T", checked: false, tag: 'FOURIER_TRANSFORM' },
+			{ name: "Fourier-Transformation", checked: false, tag: 'FOURIER_TRANSFORM' },
 			{ name: "Mittelwert", checked: false, tag: 'MEAN' },
 			{ name: "Autoregressiv", checked: false, tag: 'AUTOREGRESSIVE' },
 			{ name: "Abweichung", checked: false, tag: 'SKEWNESS' },
 			{ name: "Wölbung", checked: false, tag: 'KURTOSIS' },
-			{ name: "IQR", checked: false, tag: 'IQR' }
 		],
 		classifiers: [
 			{ name: "MLPClassifier", checked: false, tag: 'MLP' },
@@ -88,7 +88,7 @@ export default class Train extends Component {
 	};
 
 	handleDelete = (id: number) => {
-		if (window.confirm('Sind Sie sicher, die gewählt Emailadresse zu löschen?')) {
+		if (window.confirm('Sind Sie sicher, die gewählt Emailadresse löschen zu wollen?')) {
 			const { datasets } = this.state;
 			const newDatasets = datasets.filter((dataset) => {
 				return dataset.dataSetID !== id;
@@ -126,7 +126,7 @@ export default class Train extends Component {
 		this.setState({ openNewWindow: false });
 		// eslint-disable-next-line
 		if (this.state.value == '') {
-			NotificationManager.error("Kein Wählen!", "", 3000);
+			NotificationManager.error("Keine Option ausgewählt!", "", 3000);
 		} else {
 			const { databaseList } = this.state;
 			const newDatabaseList1 = databaseList.map((databaseObj) => {
@@ -168,7 +168,7 @@ export default class Train extends Component {
 			newList[index].checked = !newList[index].checked;
 			this.setState({ chosenImputator: newChosen, imputators: newList });
 		} else {
-			NotificationManager.error("Darf nicht mehrer Imputationen wählen!", "", 3000);
+			NotificationManager.error("Es darf nur ein Imputer ausgewählt werden.", "", 3000);
 			return;
 		}
 	};
@@ -184,7 +184,7 @@ export default class Train extends Component {
 			this.setState({ chosenScaler: newChosen });
 			this.setState({ scalers: newList });
 		} else {
-			NotificationManager.error("Darf nicht mehrer Scaler wählen!", "", 3000);
+			NotificationManager.error("Es darf nur ein Scaler ausgewählt werden.", "", 3000);
 			return;
 		}
 
@@ -206,7 +206,7 @@ export default class Train extends Component {
 			this.setState({ chosenclassifier: newChosen });
 			this.setState({ classifiers: newList });
 		} else {
-			NotificationManager.error("Darf nicht mehrer Classifier wählen!", "", 3000);
+			NotificationManager.error("Es darf nur ein Klassifizierer ausgewählt werden", "", 3000);
 			return;
 		}
 	};
@@ -251,23 +251,23 @@ export default class Train extends Component {
 			return featureObj;
 		});
 		if (datasetsflag) {
-			NotificationManager.error("Keinen Datensatz wählen!", "", 3000);
+			NotificationManager.error("Kein Datensatz ausgewählt!", "", 3000);
 			nochoice = true
 		}
 		if (imputatorsflag) {
-			NotificationManager.error("Keine Imputation wählen!", "", 3000);
+			NotificationManager.error("Kein Imputer ausgewählt!", "", 3000);
 			nochoice = true
 		}
 		if (classifiersflag) {
-			NotificationManager.error("Kein Classifier wählen!", "", 3000);
+			NotificationManager.error("Kein Klassifizierer ausgewählt!", "", 3000);
 			nochoice = true
 		}
 		if (scalersflag) {
-			NotificationManager.error("Kein Scaler wählen!", "", 3000);
+			NotificationManager.error("Kein Scaler ausgewählt!", "", 3000);
 			nochoice = true
 		}
 		if (featuresflag) {
-			NotificationManager.error("Keine Merkmalextraktion wählen!", "", 3000);
+			NotificationManager.error("Keine Merkmale zur Extraktion ausgewählt!", "", 3000);
 			nochoice = true
 		}
 		if (nochoice) return
