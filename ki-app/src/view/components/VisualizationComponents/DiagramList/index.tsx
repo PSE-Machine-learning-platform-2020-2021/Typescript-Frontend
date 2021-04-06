@@ -25,7 +25,7 @@ export default class DiagramList extends Component {
         // The following two console-log calls are just for parameter usage and have no actual meaning.
         console.log(diagram);
         console.log(index);
-        //  PubSub.publish('getdiagram', diagram)
+
     };
 
     updateDiagramm(dataSet: { dataSetID: any; rows: any[]; }) {
