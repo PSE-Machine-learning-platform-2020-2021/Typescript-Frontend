@@ -9,10 +9,10 @@ export default class Diagram extends Component {
 
     state = {
         diagrammData: {
-            lineLabels: [],
-            sensorRow: [],
-            datavalue: [],
-            time: [],
+            lineLabels: [] as any[],
+            sensorRow: [] as any[],
+            datavalue: [] as any[],
+            time: [] as any[],
             showDiagram: false,
             diagram: {},
             diagramLineLabels: {},
@@ -54,7 +54,7 @@ export default class Diagram extends Component {
         var lineLabels = [];
         for (var i = 0; i < this.state.diagrammData.sensorRow.length * 3; i++) {
             var coordinate = ".X";
-            var sensor = this.state.diagrammData.sensorRow[parseInt(i / 3)];
+            var sensor = this.state.diagrammData.sensorRow[(i / 3) | 0];
             var sensorName = '';
             switch (sensor) {
                 case 2:
@@ -74,7 +74,7 @@ export default class Diagram extends Component {
                 coordinate = ".Z";
             }
 
-            lineLabels.push(<font color={this.state.diagrammData.csscolor[i]}>■{sensorName + coordinate}<br /></font>);
+            lineLabels.push(<span color={this.state.diagrammData.csscolor[i]}>■{sensorName + coordinate}<br /></span>);
             newDatasets.push(
                 {
                     label: sensor + coordinate,
