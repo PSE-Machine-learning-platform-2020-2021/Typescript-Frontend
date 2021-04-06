@@ -4,15 +4,15 @@ import { Page } from "../PageInterface";
 import { PageController } from "../../../controller/PageController";
 import { State } from "./State";
 import ReactDOM from 'react-dom';
-import { States } from '../State';
+import { IState, States } from '../State';
 import FinishButton from '../../components/VisualizationComponents/FinishButton';
 import DiagramList from '../../components/VisualizationComponents/DiagramList';
-import { NotificationContainer, NotificationManager } from 'react-notifications';
+import { NotificationContainer } from 'react-notifications';
 import 'react-notifications/lib/notifications.css';
 
 
 export class VisualizationPage implements Page {
-    private state: State
+    private state: IState
     private observers: PageController[] = [];
 
     constructor() {
@@ -20,16 +20,16 @@ export class VisualizationPage implements Page {
         this.update()
     }
 
-    update() {
+    update(): void {
         this.notify()
         const VDOM = (
             <div className="visualizationpage">
 
                 <DiagramList
-                    currentDataSet={this.state.currentDataSet!}
+                    currentDataSet = {this.state.currentDataSets!}
                 //testDataSet={this.state.testDataSet!}
                 />
-                <FinishButton pageChangeToCreation={this.changetoCreation.bind(this)} />
+                <FinishButton pageChangeToCreation = {this.changetoCreation.bind(this)} />
 
                 <NotificationContainer />
             </div>
@@ -40,33 +40,33 @@ export class VisualizationPage implements Page {
     }
 
 
-    attach(observer: PageController) {
+    attach(observer: PageController): void {
         this.observers.push(observer);
     }
 
-    detach(observer: PageController) {
+    detach(observer: PageController): void {
         const index = this.observers.indexOf(observer, 0);
         if (index > -1) {
             this.observers.splice(index, 1);
         }
     }
 
-    notify() {
-        for (let index = 0; index < this.observers.length; index++) {
-            const element = this.observers[index];
-            element.update();
+    notify(): void {
+        for (const observer of this.observers) {
+            observer.update();
         }
     }
 
-    getState() {
+    getState(): IState {
         return this.state;
     }
-    setState(state: any) {
-        this.state = state
+
+    setState(state: IState): void {
+        this.state = state;
         this.update()
     }
 
-    private changetoCreation() {
+    private changetoCreation(): void {
         this.state.currentState = States.ChangeToCreation
         this.notify()
     }

@@ -13,12 +13,12 @@ export class VisualizationController implements PageController {
      * Konstruktor des Seitenverwalters. Registriert sich als Beobachter auf seiner Seite und setzt den start Status.
      * Dieser Seitenverwalter benötigt einen SensorManager, welcher schon initilisiert wurde. 
      */
-    constructor ( currentProjekt: { projectID: number, projectName: string, AIModelID: number[]; } ) {
+    constructor ( currentProject: { projectID: number, projectName: string, AIModelID: number[]; } ) {
         this.page = new VisualizationPage();
         this.page.attach( this );
         this.state = this.page.getState();
-        this.state.currentProject = currentProjekt;
-        this.page.setState( this.state );
+        this.state.currentProject = currentProject;
+        this.page.setState( this.state ); // <--- DAS IST DAS PROBLEM!
         //Beispiel
         //this.getDatarows()
         this.SetDataRows();
@@ -31,7 +31,9 @@ export class VisualizationController implements PageController {
         this.state = this.page.getState();
         switch ( this.state.currentState ) {
             case States.NeedMessage:
-                this.page.setState( MainController.getInstance().getMessage( this.state.messages ) );
+                this.state.messages = MainController.getInstance().getMessage( this.state.messages )!;
+                this.state.currentState = States.waitForDB;
+                this.page.setState( this.state );
                 break;
             case States.ChangeToCreation:
                 MainController.getInstance().changeTo( new ModelCreationController() );

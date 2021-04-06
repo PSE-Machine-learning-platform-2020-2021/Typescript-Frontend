@@ -7,7 +7,7 @@ export class State implements IState {
   messages: { text: string, id: number; }[] = [];
   projectData?: { projectID: number; projectName: string; AIModelID: number[]; }[] = [];
   currentProject?: { projectID: number, projectName: string, AIModelID: number[]; } = { projectID: -1, projectName: "null", AIModelID: [] };
-  // chosenModel?: string;
+  chosenAIModel?: number;
   adminData?: { name: string, email: string, password: string; };
   //minerData?:
   aiUserData?: { name: string, result: string; };

@@ -121,7 +121,7 @@ export class ReferringPage implements Page {
             this.state.currentState = States.Register;
             this.update();
             this.state.wait!.then(() => {
-                if (this.state.currentState as States == States.LoginFail as States) {
+                if (this.state.currentState as States === States.LoginFail as States) {
                     NotificationManager.error("Registrieren fehlgeschlagen!", "", 3000);
                     return;
                 }
