@@ -44,14 +44,13 @@ export class ReferringPage implements Page {
                     pageChangeToVisu={this.changetovisu.bind(this)}
                 />
                 <br />
-                <LoadModelButton pageLoadModel={this.loadmodel.bind(this)}
-                    disabled={!this.state.islogedIn!}
-                    projectData={this.state.projectData!}
-                    pageSetCurrentprojekt={this.setCurrentProjekt.bind(this)}
-                    qr={this.state.qr!}
-                    pageLoadProjekt={this.loadproject.bind(this)}
-                    pageChangeToVisu={this.changetovisu.bind(this)}
-                />
+                <LoadModelButton disabled              = {!this.state.islogedIn!}
+                                 projectData           = {this.state.projectData!}
+                                 pageSetCurrentprojekt = {this.setCurrentProjekt.bind(this)}
+                                 pageLoadModel         = {this.loadmodel.bind(this)}
+                                 pageLoadProjekt       = {this.loadproject.bind(this)}
+                                 pageChangeToVisu      = {this.changetovisu.bind(this)}
+                                 qr                    = {this.state.qr!} />
 
                 <NotificationContainer />
             </div>
@@ -159,7 +158,7 @@ export class ReferringPage implements Page {
      * Ein Projekt soll geladen werden
      * @param data Infomationen über das zu ladene Projekt
      */
-    private loadproject(data: { projectID: number, projectName: string, choosenAIModelID: number; }) {
+    private loadproject(data: { projectID: number, projectName: string, AIModelID: number[]; }) {
         this.state.currentProject = data;
         this.state.currentState = States.LoadProject;
         this.update();
@@ -169,7 +168,7 @@ export class ReferringPage implements Page {
      * Ein Projekt als momentanes Projekt setzen
      * @param currentProject Infomationene über das momentane projekt
      */
-    private setCurrentProjekt(currentProject: { projectID: number, projectName: string, choosenAIModelID: number; }) {
+    private setCurrentProjekt(currentProject: { projectID: number, projectName: string, AIModelID: number[]; }) {
         this.state.currentProject = currentProject;
         this.update();
     }
@@ -187,7 +186,7 @@ export class ReferringPage implements Page {
      * @param chosenmodelID ID des Models
      */
     private loadmodel(chosenmodelID: number) {
-        this.state.currentProject!.choosenAIModelID = chosenmodelID;
+        this.state.chosenAIModel = chosenmodelID;
         this.state.currentState = States.LoadModel;
         this.update();
     }

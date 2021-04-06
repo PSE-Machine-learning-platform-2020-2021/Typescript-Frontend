@@ -6,10 +6,10 @@ import './LoadModelButton.css'
 export default class LoadModelButton extends Component {
   props = {
     disabled: true,
-    projectData: [{ projectID: -1, projectName: "null", AIModelID: [-1], }],
-    pageSetCurrentprojekt: function (currentProject: { projectID: number; projectName: string; choosenAIModelID: number; }) { },
+    projectData: [] as { projectID: number, projectName: string, AIModelID: number[], }[],
+    pageSetCurrentprojekt: function (currentProject: { projectID: number; projectName: string; AIModelID: number[]; }) { },
     pageLoadModel: function (chosenmodelID: number) { },
-    pageLoadProjekt: function (currentProject: { projectID: number; projectName: string; choosenAIModelID: number; }) { },
+    pageLoadProjekt: function (currentProject: { projectID: number; projectName: string; AIModelID: number[]; }) { },
     pageChangeToVisu: function () { },
     qr: ''
   }
