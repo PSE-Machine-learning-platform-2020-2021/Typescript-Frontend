@@ -329,3 +329,22 @@ test( "setze Sprache", async () => {
     sucsess = await promise;
     expect( sucsess ).toBeTruthy();
 } );
+
+test( "hole Sprache", async () => {
+    Language.prototype.getMessage = jest.fn( () => {
+        return [ {
+            messageID: 5,
+            message: "TEST"
+        } ]
+            ;
+    } );
+    let facade = new Facade( "de-de" );
+    let promise = facade.loginAdmin( "TEST", "TEST" );
+    let sucsess = await promise;
+    expect( sucsess ).toBeTruthy();
+    let result = facade.getMessage( [ 5 ] );
+    expect( result ).toStrictEqual( [ {
+        messageID: 5,
+        message: "TEST"
+    } ] );
+} );
