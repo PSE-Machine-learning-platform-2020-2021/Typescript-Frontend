@@ -8,7 +8,7 @@ export class State implements IState {
   //ReferringPage
   projectData?: { projectID: number; projectName: string; AIModelID: number[]; }[];
   // Das Projekt welches in der view ausgewählt wurde
-  currentProject?: { projectID: number, projectName: string, choosenAIModelID: number; };
+  currentProject?: { projectID: number, projectName: string, AIModelID: number[]; };
   adminData?: { name: string, email: string, password: string; };
   aiUserData?: { name: string, result: string; };
   currentLabel?: { labelID: number, start: number, end: number; name: string; };
