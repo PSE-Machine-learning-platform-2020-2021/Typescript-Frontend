@@ -6,61 +6,61 @@ import ReactDOM from 'react-dom';
 import './ModelCreationPage.css';
 import { States } from '../State';
 import Train from '../../components/ModelCreationComponents/Train';
-import { NotificationContainer, NotificationManager } from 'react-notifications';
+import { NotificationContainer } from 'react-notifications';
 import 'react-notifications/lib/notifications.css';
 
 export class ModelCreationPage implements Page {
-	state = new State;
+	state: State;
 	observers: PageController[] = [];
 
-	constructor() {
-		this.state = new State()
+	constructor () {
+		this.state = new State();
 	}
 
-	update() {
+	update () {
 		this.notify();
 		const VDOM = (
 			<div>
 				<Train
-					dataSetMetas = {this.state.dataSetMetas!}
-					train        = {this.train.bind(this)}
+					dataSetMetas={ this.state.dataSetMetas! }
+					train={ this.train.bind( this ) }
 				/>
 				<NotificationContainer />
 			</div>
 		);
-		if (document.getElementById('root') !== null) {
-			ReactDOM.render(VDOM, document.getElementById('root'));
+		if ( document.getElementById( 'root' ) !== null ) {
+			ReactDOM.render( VDOM, document.getElementById( 'root' ) );
 		}
 	}
 
-	attach(observer: PageController) {
-		this.observers.push(observer);
+	attach ( observer: PageController ) {
+		this.observers.push( observer );
 	}
 
-	detach(observer: PageController) {
-		const index = this.observers.indexOf(observer, 0);
-		if (index > -1) {
-			this.observers.splice(index, 1);
+	detach ( observer: PageController ) {
+		const index = this.observers.indexOf( observer, 0 );
+		if ( index > -1 ) {
+			this.observers.splice( index, 1 );
 		}
 	}
 
-	notify() {
-		for (let index = 0; index < this.observers.length; index++) {
-			const element = this.observers[index];
+	notify () {
+		for ( let index = 0; index < this.observers.length; index++ ) {
+			const element = this.observers[ index ];
 			element.update();
 		}
 	}
 
-	getState() {
+	getState () {
 		return this.state;
 	}
 
-	setState(state: any) {
-		this.state = state
-		this.update()
+	setState ( state: any ) {
+		this.state = state;
+		this.update();
 	}
 
-	private train(dataSets: number[], imputator: string, classifier: string, scaler: string, features: string[]) {
+	private train ( dataSets: number[], imputator: string, classifier: string, scaler: string, features: string[] ) {
 		// eslint-disable-next-line
 		this.state.currentState = States.NeedKiTraining;
 		// eslint-disable-next-line

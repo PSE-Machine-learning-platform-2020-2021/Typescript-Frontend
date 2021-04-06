@@ -118,7 +118,7 @@ export class SensorManager {
         this.dataRows[ dataPoint.rowId ].sensorType = dataPoint.sensorType;
         this.dataRows[ dataPoint.rowId ].datapoint.push( { value: dataPoint.value, relativeTime: dataPoint.relativeTime } );
 
-        if ( this.page != undefined ) {
+        if ( this.page !== undefined ) {
             let state = this.page.getState();
             state.dataRows = this.dataRows;
             this.page.setState( state );

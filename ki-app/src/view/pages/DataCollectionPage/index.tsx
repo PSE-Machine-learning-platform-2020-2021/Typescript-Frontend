@@ -6,14 +6,14 @@ import { PageController } from "../../../controller/PageController";
 import { State } from "./State";
 import ReactDOM from 'react-dom';
 import { States } from '../State';
-import { NotificationContainer, NotificationManager } from 'react-notifications';
+import { NotificationContainer } from 'react-notifications';
 import 'react-notifications/lib/notifications.css';
 
 /**
  * Darstellungsseite der Datenerfassungsseite
  */
 export class DataCollectionPage implements Page {
-    state = new State;
+    state: State;
     observers: PageController[] = [];
 
     /**
@@ -38,7 +38,7 @@ export class DataCollectionPage implements Page {
                 <NotificationContainer />
             </div>
         );
-        if (document.getElementById( 'root' ) !== null) {
+        if ( document.getElementById( 'root' ) !== null ) {
             ReactDOM.render( VDOM, document.getElementById( 'root' ) );
         }
     }

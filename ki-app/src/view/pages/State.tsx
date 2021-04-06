@@ -43,6 +43,9 @@ export interface IState {
 }
 
 export enum States {
+
+  setUpSensorManager = "setUpSensorManager",
+
   waitForDB = "waitForDB",
   /**
    * Seite benötigt texte

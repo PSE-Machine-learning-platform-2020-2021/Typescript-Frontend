@@ -1,7 +1,6 @@
 import { PageController } from "./PageController";
 import { RefferingController } from "./ReferringController";
 import { MainControllerInterface } from "./MainControllerInterface";
-import { States } from "../view/pages/State";
 import { Facade } from "../model/Facade";
 import { StartController } from "./StartController";
 
@@ -96,6 +95,7 @@ export class MainController implements MainControllerInterface {
    */
   getMessage ( messages: { text: string, id: number; }[] ) {
     return [ { text: "null", id: -1 } ];
+    /** 
     let messageIDs: number[] = [];
     for ( let index = 0; index < messages.length; index++ ) {
       messageIDs.push( messages[ index ].id );
@@ -104,18 +104,16 @@ export class MainController implements MainControllerInterface {
     for ( let index = 0; index < messages.length; index++ ) {
       messages[ index ].text = texts[ index ];
       return messages;
-    }
+    } */
   }
 
   getText () {
     switch ( this.languageCode ) {
       case "de-de":
         return dataDE;
-        break;
 
       default:
         return dataDE;
-        break;
     }
   }
 

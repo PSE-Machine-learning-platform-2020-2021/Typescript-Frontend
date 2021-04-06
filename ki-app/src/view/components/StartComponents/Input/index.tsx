@@ -1,5 +1,5 @@
 import React, { Component } from "react";
-import { NotificationContainer, NotificationManager } from 'react-notifications';
+import { NotificationManager } from 'react-notifications';
 import './Input.css';
 
 
@@ -9,10 +9,10 @@ import './Input.css';
 export default class Input extends Component {
 
   props = {
-    pageChangeSettings: function (recordingSettings: {
+    pageChangeSettings: function ( recordingSettings: {
       newDataSetName: string, usedSensorTypes: number[], waitTime: number, readTime: number,
       availableSensorTypes: { sensorTypID: number, sensorType: string, chosen: boolean; }[];
-    }) { },
+    } ) { },
     availableSensorTypes: [] as { sensorTypID: number, sensorType: string, chosen: boolean; }[]
   };
 
@@ -24,32 +24,32 @@ export default class Input extends Component {
     //wait: new Promise(resolve => setTimeout(resolve, 1000))
   };
 
-  changeLeadtime = (e: React.ChangeEvent<HTMLInputElement>) => {
-    this.setState({
+  changeLeadtime = ( e: React.ChangeEvent<HTMLInputElement> ) => {
+    this.setState( {
       leadTime: e.target.value,
-    });
+    } );
   };
 
-  changeCollectionTime = (e: React.ChangeEvent<HTMLInputElement>) => {
-    this.setState({
+  changeCollectionTime = ( e: React.ChangeEvent<HTMLInputElement> ) => {
+    this.setState( {
       collectionTime: e.target.value,
-    });
+    } );
   };
 
 
-  changeName = (e: React.ChangeEvent<HTMLInputElement>) => {
-    this.setState({
+  changeName = ( e: React.ChangeEvent<HTMLInputElement> ) => {
+    this.setState( {
       name: e.target.value,
-    });
+    } );
   };
 
-  handleCheckBoxChange = (e: React.ChangeEvent<HTMLInputElement>) => {
+  handleCheckBoxChange = ( e: React.ChangeEvent<HTMLInputElement> ) => {
     let newAvailableSensorTypes = this.props.availableSensorTypes;
-    for (var i = 0; i < newAvailableSensorTypes.length; i++) {
+    for ( var i = 0; i < newAvailableSensorTypes.length; i++ ) {
       // eslint-disable-next-line
-      if (newAvailableSensorTypes[i].sensorTypID == +e.target.value) {
-        newAvailableSensorTypes[i].chosen = !newAvailableSensorTypes[i].chosen;
-        this.setState({ availableSensorTypes: newAvailableSensorTypes, });
+      if ( newAvailableSensorTypes[ i ].sensorTypID == +e.target.value ) {
+        newAvailableSensorTypes[ i ].chosen = !newAvailableSensorTypes[ i ].chosen;
+        this.setState( { availableSensorTypes: newAvailableSensorTypes, } );
         return;
       }
     }
@@ -57,37 +57,37 @@ export default class Input extends Component {
 
   submit = () => {
     if (
-      parseInt(this.state.leadTime) >= 0 &&
-      parseInt(this.state.collectionTime) >= 0
+      parseInt( this.state.leadTime ) >= 0 &&
+      parseInt( this.state.collectionTime ) >= 0
     ) {
       let availableSensorTypes = this.props.availableSensorTypes;
       var usedSensorTypes: number[] = [];
-      for (var i = 0; i < availableSensorTypes.length; i++) {
+      for ( var i = 0; i < availableSensorTypes.length; i++ ) {
         // eslint-disable-next-line
-        if (availableSensorTypes[i].chosen == true) {
-          usedSensorTypes.push(availableSensorTypes[i].sensorTypID);
+        if ( availableSensorTypes[ i ].chosen == true ) {
+          usedSensorTypes.push( availableSensorTypes[ i ].sensorTypID );
         }
       }
-      this.setState({ usedSensorTypes: usedSensorTypes });
+      this.setState( { usedSensorTypes: usedSensorTypes } );
 
-      if (isNaN(+this.state.leadTime) || isNaN(+this.state.collectionTime)) {
-        NotificationManager.error("Die Eingabe der Zeit ist ungültig. Nur Ganze Zahlen sind Erlaubt");
+      if ( isNaN( +this.state.leadTime ) || isNaN( +this.state.collectionTime ) ) {
+        NotificationManager.error( "Die Eingabe der Zeit ist ungültig. Nur Ganze Zahlen sind Erlaubt" );
         return;
       }
 
       const newDataSetName = this.state.name;
       const waitTime = +this.state.leadTime;
       const readTime = +this.state.collectionTime;
-      this.props.pageChangeSettings({
+      this.props.pageChangeSettings( {
         newDataSetName: newDataSetName, usedSensorTypes: usedSensorTypes, waitTime: waitTime, readTime: readTime,
         availableSensorTypes: availableSensorTypes
-      });
+      } );
     } else {
-      NotificationManager.error("Die Eingabe ist ungültig");
+      NotificationManager.error( "Die Eingabe ist ungültig" );
     }
   };
 
-  render() {
+  render () {
     return (
       <div className="input">
         <form>
@@ -96,35 +96,35 @@ export default class Input extends Component {
           Vorlaufzeit:
           <input
             type="leadTime"
-            value={this.state.leadTime}
-            onChange={this.changeLeadtime.bind(this)}
+            value={ this.state.leadTime }
+            onChange={ this.changeLeadtime.bind( this ) }
           />
           s<br />
           Aufnahmedauer:
           <input
             type="collectionTime"
-            value={this.state.collectionTime}
-            onChange={this.changeCollectionTime.bind(this)}
+            value={ this.state.collectionTime }
+            onChange={ this.changeCollectionTime.bind( this ) }
           />
           s<br />
           Datenname:
           <input
             type="datenname"
-            value={this.state.name}
-            onChange={this.changeName.bind(this)}
+            value={ this.state.name }
+            onChange={ this.changeName.bind( this ) }
           /><br />
           Sensoren:
           {
-            this.props.availableSensorTypes.map((type: { sensorTypID: number, sensorType: string, chosen: boolean; }) => {
-              return (<div>
-                <input className='checkbox' type="checkbox" value={type.sensorTypID} checked={type.chosen} onChange={(e: React.ChangeEvent<HTMLInputElement>): void => this.handleCheckBoxChange(e)} />
-                {type.sensorType}
-              </div>);
-            })
+            this.props.availableSensorTypes.map( ( type: { sensorTypID: number, sensorType: string, chosen: boolean; } ) => {
+              return ( <div>
+                <input className='checkbox' type="checkbox" value={ type.sensorTypID } checked={ type.chosen } onChange={ ( e: React.ChangeEvent<HTMLInputElement> ): void => this.handleCheckBoxChange( e ) } />
+                {type.sensorType }
+              </div> );
+            } )
           }
 
           <br />
-          <button type="button" onClick={this.submit} className="submit-btn">
+          <button type="button" onClick={ this.submit } className="submit-btn">
             Start
           </button>
         </form>
