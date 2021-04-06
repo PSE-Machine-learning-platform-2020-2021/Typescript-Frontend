@@ -5,7 +5,7 @@ import 'react-notifications/lib/notifications.css';
 import './Train.css'
 export default class Train extends Component {
 	props = {
-		dataSetMetas: [{ dataSetID: -1, dataSetName: 'ex' }],
+		dataSetMetas: [] as { dataSetID: number, dataSetName: string }[],
 		train: function (dataSets: number[], imputator: string, classifier: string, scaler: string, features: string[]) { }
 	}
 	state = {
@@ -50,6 +50,17 @@ export default class Train extends Component {
 		chosenclassifier: 0,
 		chosenImputator: 0
 	};
+
+	/**
+	 * Befüllt die beiden state-Variablen, die so aussehen, als müssten da die Datensätze des aktuellen Projekts rein, 
+	 * mit den Daten aus der props-Variable dataSetMetas.
+	 */
+	private fillState(): void {
+		for (const x of this.props.dataSetMetas) {
+			this.state.databaseList.push({dataSetName: x.dataSetName, dataSetID: x.dataSetID, chosen: false})
+			this.state.datasets.push({dataSetName: x.dataSetName, dataSetID: x.dataSetID, chosen: false})
+		}
+	}
 
 	componentDidMount() {
 		let newDatabaseList: { dataSetID: number, dataSetName: string, chosen: boolean; }[] = [];
@@ -265,6 +276,7 @@ export default class Train extends Component {
 	};
 
 	render() {
+		this.fillState();
 		const { mouse, datasets, imputators, scalers, myfeatures, classifiers } = this.state;
 		return (
 			<div className="train">
