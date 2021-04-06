@@ -222,7 +222,11 @@ export class Facade {
    * @returns true, falls die Sprache erfolgreich geladen wurde
    */
   async setLanguage(languageCode: string): Promise<boolean> {
-    if (this.language != null && languageCode != this.language.getLanguageCode()) {
+    if (this.language == null) {
+      const language: string[] = await this.dbCon.loadLanguage({ languageCode });
+      this.language = new Language(language);
+      return true;
+    } else if (languageCode != this.language.getLanguageCode()) {
       const language: string[] = await this.dbCon.loadLanguage({ languageCode });
       return this.language.setLanguage(language);
     }
