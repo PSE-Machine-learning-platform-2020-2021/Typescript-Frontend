@@ -30,6 +30,7 @@ export class AIBuilder {
      *     "features": [
      *         "featurename#13"
      *     ],
+     *     "projectID": 1
      *     "trainingDataPercentage": 0.8, // optional
      *     "slidingWindowSize": 128,      // optional
      *     "slidingWindowStep": 64        // optional
