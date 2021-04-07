@@ -74,6 +74,7 @@ export class SensorManager {
     * Wartet zuerst für die angegebene Wartezeit und nimmt dann für die angegeben Lesezeit daten auf.
     */
     readData ( page: Page ) {
+        let checkList: Promise<boolean>[];
         this.page = page;
         let state: IState = page.getState();
         state.recordingSettings!.usedSensorTypes = this.sensorTypes;
@@ -97,7 +98,7 @@ export class SensorManager {
                     while ( this.dataPoints.length > 0 ) {
                         let newDataPoint = this.dataPoints.shift()!;
                         state.dataPoints!.push( newDataPoint );
-                        MainController.getInstance().getFacade().sendDataPoint( newDataPoint.rowId, { value: newDataPoint.value, relativeTime: newDataPoint.relativeTime } );
+                        checkList.push( MainController.getInstance().getFacade().sendDataPoint( newDataPoint.rowId, { value: newDataPoint.value, relativeTime: newDataPoint.relativeTime } ) );
                         page.setState( state );
                     }
                     if ( this.readTime === 0 ) {
@@ -106,6 +107,14 @@ export class SensorManager {
                             this.currentSensors[ index ].stop();
                         }
                     }
+                    checkList.forEach( element => {
+                        element.then( ( errorWhenSend: Boolean ) => {
+                            if ( errorWhenSend ) {
+                                state.currentState = States.LoadError;
+                                page.setState( state );
+                            }
+                        } );
+                    } );
                 }, 1000 );
             }
         }, 1000 );
