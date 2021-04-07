@@ -31,16 +31,16 @@ export default class ProjectList extends Component {
     };
 
     private handleChoose() {
-        if (this.state.value == null) {
+        if (this.state.value === null) {
             NotificationManager.error("Sie haben noch kein Projekt gewählt", "", 3000);
         } else {
             this.props.projectData.map((projectObj) => {
-                if (this.state.value == projectObj.projectID) {
-                    if (projectObj.AIModelID.length != 0) {
+                if (Number(this.state.value) === projectObj.projectID) {
+                    if (projectObj.AIModelID.length !== 0) {
                         for (let index = 0; index < this.props.projectData!.length; index++) {
-                            if (projectObj.projectID == this.props.projectData![index].projectID) {
+                            if (projectObj.projectID === this.props.projectData![index].projectID) {
                                 ;
-                                this.setState(projectObj);
+                                this.setState({ currentProject: projectObj });
                                 this.props.pageSetCurrentprojekt(projectObj);
                                 break;
                             }
@@ -57,7 +57,7 @@ export default class ProjectList extends Component {
     }
 
     private handleLoad() {
-        if (this.state.value == null) {
+        if (this.state.value === null) {
             NotificationManager.error("Sie haben noch kein Projekt gewählt", "", 3000);
         } else {
             this.props.projectData.map((projectObj) => {
