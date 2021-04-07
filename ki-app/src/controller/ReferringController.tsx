@@ -17,23 +17,28 @@ export class RefferingController implements PageController {
     /**
      * Konstruktor des Seitenverwalters. Registriert sich als Beobachter auf seiner Seite und setzt den Start Status. 
      */
-    constructor() {
+    constructor ( isloggedIn?: boolean ) {
         this.page = new ReferringPage();
         //this.page = new StartPage({});
         //this.page = new ModelCreationPage({});
         // this.page = new VisualizationPage({});
-        this.page.attach(this);
+        this.page.attach( this );
         this.state = this.page.getState();
         this.update();
+
+        if ( isloggedIn ) {
+            this.state.islogedIn = true;
+            this.page.setState( this.state );
+        }
     }
 
     /**
      * Die Update Methode des Seitenverwalters.
      */
-    update() {
+    update () {
         this.state = this.page.getState();
-        console.log("controller update: " + this.state.currentState.toString());
-        switch (this.state.currentState) {
+        console.log( "controller update: " + this.state.currentState.toString() );
+        switch ( this.state.currentState ) {
             case States.LoadProject:
                 this.loadProject();
                 break;
@@ -50,20 +55,20 @@ export class RefferingController implements PageController {
                 this.loadModel();
                 break;
             case States.SetLanguage:
-                console.log(MainController.getInstance().setLanguage(this.state.languageCode));
+                console.log( MainController.getInstance().setLanguage( this.state.languageCode ) );
                 break;
             case States.NeedMessage:
-                this.state.messages = MainController.getInstance().getMessage(this.state.messages)!;
+                this.state.messages = MainController.getInstance().getMessage( this.state.messages )!;
                 this.state.currentState = States.waitForDB;
-                this.page.setState(this.state);
+                this.page.setState( this.state );
                 break;
             case States.ChangeToVisual:
-                MainController.getInstance().changeTo(new VisualizationController(this.state.currentProject!));
+                MainController.getInstance().changeTo( new VisualizationController( this.state.currentProject! ) );
                 break;
             //nur für testdeliveryPage
             case States.ChangeToDelivery:
-                MainController.getInstance().changeTo(new DeliveryController(
-                    { projectID: -100, projectName: 'test', AIModelID: [-2, -3] }, -2));
+                MainController.getInstance().changeTo( new DeliveryController(
+                    { projectID: -100, projectName: 'test', AIModelID: [ -2, -3 ] }, -2 ) );
                 break;
             default:
                 break;
@@ -73,29 +78,29 @@ export class RefferingController implements PageController {
     /**
      * Logt den Benutzer ein
      */
-    private login() {
+    private login () {
         let adminData: { name: string, email: string, password: string; } = this.state.adminData!;
-        let loginSucess: Promise<boolean> = MainController.getInstance().getFacade().loginAdmin(adminData.email, adminData.password);
+        let loginSucess: Promise<boolean> = MainController.getInstance().getFacade().loginAdmin( adminData.email, adminData.password );
         this.state.wait! = loginSucess;
         this.state.currentState = States.waitForDB;
-        this.page.setState(this.state);
-        loginSucess.then((value: boolean) => {
-            if (value) {
+        this.page.setState( this.state );
+        loginSucess.then( ( value: boolean ) => {
+            if ( value ) {
                 this.state.projectData! = [];
                 let projectData: Promise<{ projectID: number; projectName: string; AIModelID: number[]; }[]> = MainController.getInstance().getFacade().getProjectMetas();
-                projectData.then((data: { projectID: number; projectName: string; AIModelID: number[]; }[]) => {
+                projectData.then( ( data: { projectID: number; projectName: string; AIModelID: number[]; }[] ) => {
                     this.state.projectData! = data;
-                    this.page.setState(this.state);
-                });
+                    this.page.setState( this.state );
+                } );
                 this.state.islogedIn! = true;
             } else {
                 this.state.currentState = States.LoginFail;
             }
-            this.page.setState(this.state);
-        });
-        loginSucess.catch((value: boolean) => {
-            console.log(value);
-        });
+            this.page.setState( this.state );
+        } );
+        loginSucess.catch( ( value: boolean ) => {
+            console.log( value );
+        } );
         //this.state.projectData! = [{ projectID: 1, projectName: "string", AIModelID: [1,2] }]
         //this.page.setState(this.state)
     }
@@ -103,41 +108,41 @@ export class RefferingController implements PageController {
     /**
      * Registriert den Benutzer
      */
-    private register() {
+    private register () {
         let adminData: { name: string, email: string, password: string; } = this.state.adminData!;
-        let loginSucess: Promise<boolean> = MainController.getInstance().getFacade().registerAdmin(adminData.name, adminData.email, adminData.password);
+        let loginSucess: Promise<boolean> = MainController.getInstance().getFacade().registerAdmin( adminData.name, adminData.email, adminData.password );
         this.state.wait! = loginSucess;
         this.state.currentState = States.waitForDB;
-        this.page.setState(this.state);
-        loginSucess.then((value: boolean) => {
-            if (value) {
+        this.page.setState( this.state );
+        loginSucess.then( ( value: boolean ) => {
+            if ( value ) {
                 this.state.projectData! = [];
                 let projectData: Promise<{ projectID: number; projectName: string; AIModelID: number[]; }[]> = MainController.getInstance().getFacade().getProjectMetas();
-                projectData.then((data: { projectID: number; projectName: string; AIModelID: number[]; }[]) => {
+                projectData.then( ( data: { projectID: number; projectName: string; AIModelID: number[]; }[] ) => {
                     this.state.projectData! = data;
-                    this.page.setState(this.state);
-                });
+                    this.page.setState( this.state );
+                } );
                 this.state.islogedIn! = true;
             } else {
                 this.state.currentState = States.LoginFail;
             }
-            this.page.setState(this.state);
-        });
+            this.page.setState( this.state );
+        } );
     }
 
     /**
      * Erstellt ein QRCode und übergibt in an die Seite
      */
-    private createQR() {
-        const url = new URL(document.URL);
-        url.searchParams.append("SessionID", MainController.getInstance().getFacade().getSessionID().toString());
-        url.searchParams.append("isMiner", "true");
-        url.searchParams.append("Admin", this.state.adminData?.email!);
+    private createQR () {
+        const url = new URL( document.URL );
+        url.searchParams.append( "SessionID", MainController.getInstance().getFacade().getSessionID().toString() );
+        url.searchParams.append( "isMiner", "true" );
+        url.searchParams.append( "Admin", this.state.adminData?.email! );
         let link: string = url.toString();
         var qr = new QRCode();
-        qr.setTypeNumber(5);
-        qr.setErrorCorrectLevel(ErrorCorrectLevel.L);
-        qr.addData(link);
+        qr.setTypeNumber( 5 );
+        qr.setErrorCorrectLevel( ErrorCorrectLevel.L );
+        qr.addData( link );
         qr.make();
         this.state.qr = qr.toDataURL();
         this.state.link = link;
@@ -147,38 +152,38 @@ export class RefferingController implements PageController {
     /**
      * Erstelle ein neues Projekt, welches auch als momentanes Projekt gesetzt wird.
      */
-    private createNewProject() {
-        let sucess: Promise<boolean> = MainController.getInstance().getFacade().createProject(this.state.currentProject!.projectName);
+    private createNewProject () {
+        let sucess: Promise<boolean> = MainController.getInstance().getFacade().createProject( this.state.currentProject!.projectName );
         this.state.wait! = sucess;
         this.state.currentState = States.waitForDB;
-        this.page.setState(this.state);
-        sucess.then((value: boolean) => {
-            if (value) {
+        this.page.setState( this.state );
+        sucess.then( ( value: boolean ) => {
+            if ( value ) {
                 this.createQR();
                 let projectData: Promise<{ projectID: number; projectName: string; AIModelID: number[]; }[]> = MainController.getInstance().getFacade().getProjectMetas();
-                projectData.then((data: { projectID: number; projectName: string; AIModelID: number[]; }[]) => {
+                projectData.then( ( data: { projectID: number; projectName: string; AIModelID: number[]; }[] ) => {
                     this.state.projectData! = data;
-                    this.page.setState(this.state);
-                });
+                    this.page.setState( this.state );
+                } );
             } else {
                 this.state.currentState = States.LoadError;
             }
-            this.page.setState(this.state);
-        });
+            this.page.setState( this.state );
+        } );
 
     }
 
     /**
      * Setzt ein Projekt als momentanes Projekt
      */
-    private loadProject() {
+    private loadProject () {
         let projectId: number = this.state.currentProject!.projectID!;
-        let sucess: Promise<boolean> = MainController.getInstance().getFacade().loadProject(projectId);
+        let sucess: Promise<boolean> = MainController.getInstance().getFacade().loadProject( projectId );
         this.state.wait! = sucess;
         this.state.currentState = States.waitForDB;
-        this.page.setState(this.state);
-        sucess.then((value: boolean) => {
-            if (value) {
+        this.page.setState( this.state );
+        sucess.then( ( value: boolean ) => {
+            if ( value ) {
                 this.createQR();
                 //Kann das unere Weg? Schon durch login geladen
                 //let projectData: Promise<{ projectID: number; projectName: string; AIModelID: number[]; }[]> = MainController.getInstance().getFacade().getProjectMetas();
@@ -188,27 +193,27 @@ export class RefferingController implements PageController {
             } else {
                 this.state.currentState = States.LoadError;
             }
-            this.page.setState(this.state);
-        });
+            this.page.setState( this.state );
+        } );
     }
 
     /**
      * Läde ein Modell und wechselt zur delivery Seite
      */
-    private loadModel() {
+    private loadModel () {
         let projectId: number = this.state.currentProject!.projectID;
-        let sucess: Promise<boolean> = MainController.getInstance().getFacade().loadProject(projectId);
+        let sucess: Promise<boolean> = MainController.getInstance().getFacade().loadProject( projectId );
         this.state.wait! = sucess;
         this.state.currentState = States.waitForDB;
-        this.page.setState(this.state);
-        sucess.then((value: boolean) => {
-            if (value) {
-                let deliveryConroller: DeliveryController = new DeliveryController(this.state.currentProject!, this.state.chosenAIModel!);
-                MainController.getInstance().changeTo(deliveryConroller);
+        this.page.setState( this.state );
+        sucess.then( ( value: boolean ) => {
+            if ( value ) {
+                let deliveryConroller: DeliveryController = new DeliveryController( this.state.currentProject!, this.state.chosenAIModel! );
+                MainController.getInstance().changeTo( deliveryConroller );
             } else {
                 this.state.currentState = States.LoadError;
             }
-        });
-        this.page.setState(this.state);
+        } );
+        this.page.setState( this.state );
     }
 }
