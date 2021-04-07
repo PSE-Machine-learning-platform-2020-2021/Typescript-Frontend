@@ -1,4 +1,4 @@
-import { Component } from 'react';
+import { Component, CSSProperties } from 'react';
 
 export default class Diagram extends Component {
 
@@ -76,7 +76,8 @@ export default class Diagram extends Component {
                 coordinate = ".Z";
             }
 
-            lineLabels.push(<span color={this.state.diagrammData.csscolor[i]}>■{sensorName + coordinate}<br /></span>);
+            let color: CSSProperties = { "color": this.state.diagrammData.csscolor[i] };
+            lineLabels.push(<span style={color}>■{sensorName + coordinate}<br /></span>);
             newDatasets.push(
                 {
                     label: sensor + coordinate,

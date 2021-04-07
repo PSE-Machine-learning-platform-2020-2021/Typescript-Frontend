@@ -13,54 +13,55 @@ export class ModelCreationPage implements Page {
 	state: State;
 	observers: PageController[] = [];
 
-	constructor () {
+	constructor() {
 		this.state = new State();
 	}
 
-	update () {
+	update() {
 		this.notify();
 		const VDOM = (
 			<div>
 				<Train
-					dataSetMetas={ this.state.dataSetMetas! }
-					train={ this.train.bind( this ) }
+					dataSetMetas={this.state.dataSetMetas!}
+					train={this.train.bind(this)}
+					changeToReferring={this.changeToReferring.bind(this)}
 				/>
 				<NotificationContainer />
 			</div>
 		);
-		if ( document.getElementById( 'root' ) !== null ) {
-			ReactDOM.render( VDOM, document.getElementById( 'root' ) );
+		if (document.getElementById('root') !== null) {
+			ReactDOM.render(VDOM, document.getElementById('root'));
 		}
 	}
 
-	attach ( observer: PageController ) {
-		this.observers.push( observer );
+	attach(observer: PageController) {
+		this.observers.push(observer);
 	}
 
-	detach ( observer: PageController ) {
-		const index = this.observers.indexOf( observer, 0 );
-		if ( index > -1 ) {
-			this.observers.splice( index, 1 );
+	detach(observer: PageController) {
+		const index = this.observers.indexOf(observer, 0);
+		if (index > -1) {
+			this.observers.splice(index, 1);
 		}
 	}
 
-	notify () {
-		for ( let index = 0; index < this.observers.length; index++ ) {
-			const element = this.observers[ index ];
+	notify() {
+		for (let index = 0; index < this.observers.length; index++) {
+			const element = this.observers[index];
 			element.update();
 		}
 	}
 
-	getState () {
+	getState() {
 		return this.state;
 	}
 
-	setState ( state: any ) {
+	setState(state: any) {
 		this.state = state;
 		this.update();
 	}
 
-	private train ( dataSets: number[], imputator: string, classifier: string, scaler: string, features: string[] ) {
+	private train(dataSets: number[], imputator: string, classifier: string, scaler: string, features: string[]) {
 		// eslint-disable-next-line
 		this.state.currentState = States.NeedKiTraining;
 		// eslint-disable-next-line
@@ -72,4 +73,8 @@ export class ModelCreationPage implements Page {
 		this.notify();
 	}
 
+	private changeToReferring() {
+		this.state.currentState = States.ChangeToRefferring
+		this.notify()
+	}
 }

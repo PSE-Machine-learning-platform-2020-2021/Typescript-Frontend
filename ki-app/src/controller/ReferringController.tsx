@@ -15,9 +15,10 @@ export class RefferingController implements PageController {
     private state: IState;
 
     /**
-     * Konstruktor des Seitenverwalters. Registriert sich als Beobachter auf seiner Seite und setzt den Start Status. 
+     * Konstruktor des Seitenverwalters. Registriert sich als Beobachter auf seiner Seite und setzt den Start Status.
+     * @param isloggedIn Wurde sich zuvor erfolgreich Eingeloggt und wird nun zurück auf die ReferringPage geleitet muss dies true sein. Ohne richtigen Login entstehen fehler.
      */
-    constructor () {
+    constructor ( isloggedIn?: boolean ) {
         this.page = new ReferringPage();
         //this.page = new StartPage({});
         //this.page = new ModelCreationPage({});
@@ -25,6 +26,17 @@ export class RefferingController implements PageController {
         this.page.attach( this );
         this.state = this.page.getState();
         this.update();
+
+        if ( isloggedIn ) {
+            this.state.projectData! = [];
+            let projectData: Promise<{ projectID: number; projectName: string; AIModelID: number[]; }[]> = MainController.getInstance().getFacade().getProjectMetas();
+            projectData.then( ( data: { projectID: number; projectName: string; AIModelID: number[]; }[] ) => {
+                this.state.projectData! = data;
+                this.page.setState( this.state );
+            } );
+            this.state.islogedIn! = true;
+            this.page.setState( this.state );
+        }
     }
 
     /**
@@ -59,6 +71,11 @@ export class RefferingController implements PageController {
                 break;
             case States.ChangeToVisual:
                 MainController.getInstance().changeTo( new VisualizationController( this.state.currentProject! ) );
+                break;
+            //nur für testdeliveryPage
+            case States.ChangeToDelivery:
+                MainController.getInstance().changeTo( new DeliveryController(
+                    { projectID: -100, projectName: 'test', AIModelID: [ -2, -3 ] }, -2 ) );
                 break;
             default:
                 break;

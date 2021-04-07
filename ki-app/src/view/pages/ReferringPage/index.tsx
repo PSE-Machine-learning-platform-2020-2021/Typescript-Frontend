@@ -34,7 +34,10 @@ export class ReferringPage implements Page {
         this.notify();
         const VDOM = (
             <div>
-                <ConstantsText />
+                <ConstantsText
+                    //nur für test
+                    changeToDelivery={this.changeToDelivery.bind(this)}
+                />
                 <LoginWindow pageRegister={this.register.bind(this)} pageLogin={this.login.bind(this)} />
                 <br /><br /><br /><br /><br />
                 <NewProjectButton disabled={!this.state.islogedIn!}
@@ -44,13 +47,13 @@ export class ReferringPage implements Page {
                     pageChangeToVisu={this.changetovisu.bind(this)}
                 />
                 <br />
-                <LoadModelButton disabled              = {!this.state.islogedIn!}
-                                 projectData           = {this.state.projectData!}
-                                 pageSetCurrentprojekt = {this.setCurrentProjekt.bind(this)}
-                                 pageLoadModel         = {this.loadmodel.bind(this)}
-                                 pageLoadProjekt       = {this.loadproject.bind(this)}
-                                 pageChangeToVisu      = {this.changetovisu.bind(this)}
-                                 qr                    = {this.state.qr!} />
+                <LoadModelButton disabled={!this.state.islogedIn!}
+                    projectData={this.state.projectData!}
+                    pageSetCurrentprojekt={this.setCurrentProjekt.bind(this)}
+                    pageLoadModel={this.loadmodel.bind(this)}
+                    pageLoadProjekt={this.loadproject.bind(this)}
+                    pageChangeToVisu={this.changetovisu.bind(this)}
+                    qr={this.state.qr!} />
 
                 <NotificationContainer />
             </div>
@@ -189,6 +192,12 @@ export class ReferringPage implements Page {
         this.state.chosenAIModel = chosenmodelID;
         this.state.currentState = States.LoadModel;
         this.update();
+    }
+
+    //nur für test DeliveryPage
+    private changeToDelivery() {
+        this.state.currentState = States.ChangeToDelivery;
+        this.notify();
     }
 
     /**

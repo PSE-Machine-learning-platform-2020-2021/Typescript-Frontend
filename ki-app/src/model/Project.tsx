@@ -24,7 +24,7 @@ export class Project {
      * @param aiModelID Die schon existierenden AIModel IDs
      * @param dataSet Die schon existierenden Datensätze
      */
-  constructor ( projectID: number, sessionID: number, projectName: string, projectData?: {
+  constructor(projectID: number, sessionID: number, projectName: string, projectData?: {
     aiModelID?: number[],
     dataSet: {
       dataRowSensors: SensorData[], dataSetID: number, dataSetName: string, generateDate: number,
@@ -34,27 +34,34 @@ export class Project {
       }[],
       label: { name: string, labelID: number, start: number, end: number; }[];
     }[];
-  } ) {
+  }) {
     this.id = projectID;
     this.name = projectName;
-    this.session = new Session( sessionID );
-    if ( projectData != null ) {
-      if ( projectData.aiModelID != null ) {
-        for ( let i = 0; i < projectData.aiModelID.length; i++ ) {
-          this.aiModel.push( new AIModel( projectData.aiModelID[ i ] ) );
+    this.session = new Session(sessionID);
+    if (projectData !== undefined) {
+      if (projectData.aiModelID !== undefined) {
+        for (const id of projectData.aiModelID) {
+          this.aiModel.push(new AIModel(id));
         }
       }
-      for ( let i = 0; i < projectData.dataSet.length; i++ ) {
-        this.dataSet.push( new DataSet( projectData.dataSet[ i ].dataRowSensors, projectData.dataSet[ i ].dataSetID, projectData.dataSet[ i ].dataSetName, projectData.dataSet[ i ].generateDate, projectData.dataSet[ i ].dataRows, projectData.dataSet[ i ].label ) );
+      for (const entry of projectData.dataSet) {
+        let dataSet = new DataSet(
+          entry.dataRowSensors,
+          entry.dataSetID,
+          entry.dataSetName,
+          entry.generateDate,
+          entry.dataRows,
+          entry.label
+        );
+        this.dataSet.push(dataSet);
       }
     }
-
   }
 
   /**
    * Gibt den Projektnamen zurück
    */
-  getName (): string {
+  getName(): string {
     return this.name;
   }
 
@@ -62,11 +69,11 @@ export class Project {
    * Löscht den Datensatz mit der DatensatzID
    * @param dataSetID die Datensatz ID
    */
-  deleteDataSet ( dataSetID: number ): boolean {
-    for ( let i = 0; i < this.dataSet.length; i++ ) {
-      if ( this.dataSet[ i ].getID() === dataSetID ) {
-        this.dataSet.splice( i, 1 );
-        if ( this.currentDataSet != null && this.currentDataSet.getID() === dataSetID ) {
+  deleteDataSet(dataSetID: number): boolean {
+    for (let i = 0; i < this.dataSet.length; i++) {
+      if (this.dataSet[i].getID() === dataSetID) {
+        this.dataSet.splice(i, 1);
+        if (this.currentDataSet != null && this.currentDataSet.getID() === dataSetID) {
           delete this.currentDataSet;
         }
         return true;
@@ -78,7 +85,7 @@ export class Project {
   /**
    * Gibt die Projekt ID zurück.
    */
-  getID (): number {
+  getID(): number {
     return this.id;
   }
 
@@ -90,17 +97,17 @@ export class Project {
    * @param dataSetName der Datensatznamen
    * @param generateDate die Erstellungszeit von dem Datensatz
    */
-  createDataSet ( dataRowSensors: SensorData[], dataSetID: number, dataSetName: string, generateDate?: number ): boolean {
-    if ( dataRowSensors.length <= 0 || dataSetID < 0 || dataSetName.length <= 0 || ( generateDate != null && generateDate < 0 ) ) {
+  createDataSet(dataRowSensors: SensorData[], dataSetID: number, dataSetName: string, generateDate?: number): boolean {
+    if (dataRowSensors.length <= 0 || dataSetID < 0 || dataSetName.length <= 0 || (generateDate != null && generateDate < 0)) {
       return false;
     }
-    for ( let i = 0; i < this.dataSet.length; i++ ) {
-      if ( this.dataSet[ i ].getID() === dataSetID ) {
+    for (let i = 0; i < this.dataSet.length; i++) {
+      if (this.dataSet[i].getID() === dataSetID) {
         return false;
       }
     }
-    var dataSet: DataSet = new DataSet( dataRowSensors, dataSetID, dataSetName, generateDate );
-    this.dataSet.push( dataSet );
+    var dataSet: DataSet = new DataSet(dataRowSensors, dataSetID, dataSetName, generateDate);
+    this.dataSet.push(dataSet);
     this.currentDataSet = dataSet;
     return true;
   }
@@ -108,17 +115,17 @@ export class Project {
   /**
    * Gibt die aktuelle Datensatz ID zurück, falls diese nicht existiert wird -1 zurück gegeben
    */
-  getCurrentDataSetID (): number {
-    if ( this.currentDataSet != null ) {
+  getCurrentDataSetID(): number {
+    if (this.currentDataSet != null) {
       return this.currentDataSet.getID();
     }
     return -1;
 
   }
 
-  addDatapoint ( dataRowID: number, datapoint: { value: number[], relativeTime: number; } ): boolean {
-    if ( this.currentDataSet != null ) {
-      return this.currentDataSet.addDatapoint( dataRowID, datapoint );
+  addDatapoint(dataRowID: number, datapoint: { value: number[], relativeTime: number; }): boolean {
+    if (this.currentDataSet != null) {
+      return this.currentDataSet.addDatapoint(dataRowID, datapoint);
     }
     return false;
   }
@@ -127,10 +134,10 @@ export class Project {
    * Gibt von allen Datensätzen Informationen zurück
    * @returns dataSetID ist die DatensatzID und dataSetName ist der Datensatzname
    */
-  getDataSetMetas (): { dataSetID: number, dataSetName: string; }[] {
-    var dataSetMetas: { dataSetID: number, dataSetName: string; }[] = [];
-    for ( let i = 0; i < this.dataSet.length; i++ ) {
-      dataSetMetas.push( { dataSetID: this.dataSet[ i ].getID(), dataSetName: this.dataSet[ i ].getName() } );
+  getDataSetMetas(): { dataSetID: number, dataSetName: string; }[] {
+    let dataSetMetas: { dataSetID: number, dataSetName: string; }[] = [];
+    for (const dataSet of this.dataSet) {
+      dataSetMetas.push({ "dataSetID": dataSet.getID(), "dataSetName": dataSet.getName() });
     }
     return dataSetMetas;
   }
@@ -140,11 +147,11 @@ export class Project {
    * @param dataSetID die Datensatz ID von der die Datenreihen gelesen werden sollen
    * @returns die Sensordaten von der Datenreihe
    */
-  getDataRows ( dataSetID: number ): { dataRows: { sensorType: number, datapoint: { value: number[], relativeTime: number; }[]; }[]; } {
-    for ( let i = 0; i < this.dataSet.length; i++ ) {
-      if ( this.dataSet[ i ].getID() === dataSetID ) {
-        this.currentDataSet = this.dataSet[ i ];
-        return { dataRows: this.dataSet[ i ].getDataRows() };
+  getDataRows(dataSetID: number): { dataRows: { sensorType: number, datapoint: { value: number[], relativeTime: number; }[]; }[]; } {
+    for (let i = 0; i < this.dataSet.length; i++) {
+      if (this.dataSet[i].getID() === dataSetID) {
+        this.currentDataSet = this.dataSet[i];
+        return { dataRows: this.dataSet[i].getDataRows() };
       }
     }
     return { dataRows: [] };
@@ -154,8 +161,8 @@ export class Project {
    * Gibt die Datenreihen der aktuellen Datenreihe zurück
    * @returns die Sensordaten von der Datenreihe
    */
-  getCurrentDataRows (): { dataRows: { sensorType: number, datapoint: { value: number[], relativeTime: number; }[]; }[]; } {
-    if ( this.currentDataSet != null ) {
+  getCurrentDataRows(): { dataRows: { sensorType: number, datapoint: { value: number[], relativeTime: number; }[]; }[]; } {
+    if (this.currentDataSet != null) {
       return { dataRows: this.currentDataSet.getDataRows() };
     }
     return { dataRows: [] };
@@ -164,7 +171,7 @@ export class Project {
   /**
    * Gibt die Session ID zurück
    */
-  getSessionID (): number {
+  getSessionID(): number {
     return this.session.getId();
   }
 
@@ -176,23 +183,23 @@ export class Project {
    * @param labelName Ist bei Angabe der neue Name des Labels.
    * @returns falls das Label nicht existiert oder es kein aktuellen Datensatz gibt wird false zurück gegeben
    */
-  createLabel ( labelID: number, span: { start: number, end: number; }, labelName: string ): boolean {
-    if ( this.currentDataSet != null ) {
-      return this.currentDataSet.createLabel( labelID, span, labelName );
+  createLabel(labelID: number, span: { start: number, end: number; }, labelName: string): boolean {
+    if (this.currentDataSet != null) {
+      return this.currentDataSet.createLabel(labelID, span, labelName);
     }
     return false;
   }
 
-  setLabel ( labelID: number, span: { start: number, end: number; }, labelName?: string ): boolean {
-    if ( this.currentDataSet != null ) {
-      return this.currentDataSet.setLabel( labelID, span, labelName );
+  setLabel(labelID: number, span: { start: number, end: number; }, labelName?: string): boolean {
+    if (this.currentDataSet != null) {
+      return this.currentDataSet.setLabel(labelID, span, labelName);
     }
     return false;
   }
 
-  deleteLabel ( labelID: number ): boolean {
-    if ( this.currentDataSet != null ) {
-      return this.currentDataSet.deleteLabel( labelID );
+  deleteLabel(labelID: number): boolean {
+    if (this.currentDataSet != null) {
+      return this.currentDataSet.deleteLabel(labelID);
     } else {
       return false;
     }
@@ -202,8 +209,8 @@ export class Project {
    * Gibt alle Daten von allen Labeln vom aktuellen Datensatz zurück.
    * @returns leer, falls kein aktueller Datensatz existiert
    */
-  getLabels (): { labels: { name: string, labelID: number, start: number, end: number; }[]; } {
-    if ( this.currentDataSet != null ) {
+  getLabels(): { labels: { name: string, labelID: number, start: number, end: number; }[]; } {
+    if (this.currentDataSet != null) {
       return { labels: this.currentDataSet.getLabels() };
     }
     return { labels: [] };
