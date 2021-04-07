@@ -3,6 +3,7 @@ import { SensorData } from "./SensorData";
 //Die Schnittstelle zur Datenbank.
 export class DatabaseConnector {
   private static readonly databasePHPURL: string = "/src/database/index.php";
+  private static lastProjectUpdate: number = 0;
 
   /**
    * Gibt Name und Code jeder verfügbaren Sprache zurück
@@ -60,6 +61,19 @@ export class DatabaseConnector {
    */
   async sendDataPoint(requestData: { sessionID: number, userID: number, dataSetID: number, dataRowID: number, datapoint: { value: number[], relativeTime: number; }; }): Promise<boolean> {
     const result: boolean = await this.sendRequest("send_data_point", requestData);
+    return result;
+  }
+
+  /**
+   * Sendet die Datenpunkte mit den übergebenen Parametern, falls die Verbindung abgebrochen ist um alle Datenpunkte auf einmal zu senden
+   * @param sessionID die Session ID
+   * @param userID zur Sicherheit, muss zur SessionID und zur DatensatzID übereinstimmen
+   * @param datSetID 
+   * @param dataRowID 
+   * @param datapoints alle zu sendenden Datenpunkten 
+   */
+  async sendDataPointsAgain(requestData: { sessionID: number, userID: number, dataSetID: number, dataRowID: number, datapoints: { value: number[], relativeTime: number; }[]; }): Promise<boolean> {
+    const result: boolean = await this.sendRequest("send_data_points_again", requestData);
     return result;
   }
 
@@ -211,7 +225,9 @@ export class DatabaseConnector {
   private async sendRequest(action: string, requestData?: object): Promise<any> {
     const headers = { 'Content-Type': 'application/json' };
     var obj;
-    await fetch(DatabaseConnector.databasePHPURL + "?action=" + action, { method: 'POST', headers, body: JSON.stringify(requestData) }).then(response => response.json()).then(data => { obj = data; });
+    await fetch(DatabaseConnector.databasePHPURL + "?action=" + action, { method: 'POST', headers, body: JSON.stringify(requestData) }).then(response => response.json()).then(data => { obj = data; }).catch(function () {
+      obj = false;
+    });
     return obj;
   }
 }
