@@ -29,5 +29,5 @@ beforeEach( () => {
 } );
 
 test( 'Aufbau test', () => {
-    controller = new DeliveryController( { projectID: 1, projectName: "TEST", choosenAIModelID: 1 } );
+    controller = new DeliveryController( { projectID: 1, projectName: "TEST", AIModelID: [ 1 ] }, 1 );
 } );
