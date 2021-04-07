@@ -61,7 +61,7 @@ export default class ProjectList extends Component {
             NotificationManager.error("Sie haben noch kein Projekt gewählt", "", 3000);
         } else {
             this.props.projectData.map((projectObj) => {
-                if (this.state.value == projectObj.projectID) {
+                if (Number(this.state.value) === projectObj.projectID) {
                     //let id: number = projectObj.projectID;
                     this.props.pageLoadProjekt(projectObj);
                     this.setState({ loadclick: true });
