@@ -211,7 +211,9 @@ export class DatabaseConnector {
   private async sendRequest(action: string, requestData?: object): Promise<any> {
     const headers = { 'Content-Type': 'application/json' };
     var obj;
-    await fetch(DatabaseConnector.databasePHPURL + "?action=" + action, { method: 'POST', headers, body: JSON.stringify(requestData) }).then(response => response.json()).then(data => { obj = data; });
+    await fetch(DatabaseConnector.databasePHPURL + "?action=" + action, { method: 'POST', headers, body: JSON.stringify(requestData) }).then(response => response.json()).then(data => { obj = data; }).catch(function () {
+      obj = false;
+    });
     return obj;
   }
 }
