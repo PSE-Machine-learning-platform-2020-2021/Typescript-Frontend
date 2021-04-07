@@ -210,7 +210,7 @@ export abstract class User {
    * @returns dataSetID ist die DatensatzID und dataSetName ist der Datensatzname
    */
   getDataSetMetas (): { dataSetID: number, dataSetName: string; }[] {
-    if ( this.currentProject != null ) {
+    if ( this.currentProject !== undefined ) {
       return this.currentProject.getDataSetMetas();
     } else {
       return [];

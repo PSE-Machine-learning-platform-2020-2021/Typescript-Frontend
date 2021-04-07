@@ -149,7 +149,7 @@ export class Facade {
    * Gibt vom aktuellen Projekt von allen Datensätzen die Datensatz ID und der Datensatz Name zurück
    */
   getDataSetMetas (): { dataSetID: number, dataSetName: string; }[] {
-    if ( this.user != null ) {
+    if (this.user !== undefined) {
       return this.user.getDataSetMetas();
     }
     return [];
