@@ -149,7 +149,7 @@ export class Facade {
    * Gibt vom aktuellen Projekt von allen Datensätzen die Datensatz ID und der Datensatz Name zurück
    */
   getDataSetMetas (): { dataSetID: number, dataSetName: string; }[] {
-    if ( this.user != null ) {
+    if (this.user !== undefined) {
       return this.user.getDataSetMetas();
     }
     return [];
@@ -405,9 +405,36 @@ export class Facade {
     return aiDist.getAIModel();
   }
 
-  applyModel ( trainingParameter: { dataSets: number[], imputator: string, classifier: string, scaler: string, features: string[], trainingDataPercentage?: number, slidingWindowSize?: number, slidingWindowStep?: number; } ): void {
-    let aiBuilder = new AIBuilder( -1 );
-    aiBuilder.applyModel( trainingParameter );
+  /**
+   * Erzeugt eine Anfrage an den Server, an jede übergebene E-Mail-Adresse eine E-Mail zu versenden,
+   * die einen Link zur Startseite des mit übergebenen KI-Modells enthält.
+   * 
+   * @param model      - Die ID des zu verteilenden KI-Modells.
+   * @param recipients - Die Liste der E-Mail-Adressen, an die das KI-Modell verteilt werden soll.
+   * @returns True, wenn die Anfrage an den Server erfolgreich durchgeführt werden konnte, False sonst.
+   */
+  sendAIModel(model: number, ... recipients: string[]): boolean {
+    const distributor = new AIDistributor(model, DeliveryFormat.WEB_APP);
+    return distributor.sendAIModel(recipients);
+  }
+
+  /**
+   * Diese Methode erzeugt eine Anfrage an den Server, die ihn damit beauftragt, ein KI-Modell mit den 
+   * angegebenen Parametern zu erzeugen und zu trainieren. 
+   * 
+   * @param dataSets               - Die zum Training zu verwendenden Datensätze.
+   * @param imputator              - Der zur Vervollständigung der Daten zu verwendende Imputer.
+   * @param classifier             - Der Klassifizierer, der das Herzstück des zu erstellenden KI-Modells darstellt.
+   * @param scaler                 - Der Scaler, der die Daten für den Klassifizierer aufbereitet.
+   * @param features               - Die Merkmale, die aus den gegebenen Datensätzen herausgearbeitet werden sollen.
+   * @param trainingDataPercentage - Optional. Der Anteil der Daten, der zum Training des KI-Modells verwendet werden soll. Standardmäßig sind das alle übergebenen Daten, da wir noch kein serverseitiges Testen der KI-Modell-Qualität durchführen.
+   * @param slidingWindowSize      - Optional. Die Größe der Datenblöcke, die jeweils verwertet werden. Standardwert ist 128 Datenpunkte.
+   * @param slidingWindowStep      - Optional. Die Schrittweite von einem Datenblock zum nächsten. Standardwert ist 64 Datenpunkte. 
+   */
+  applyModel(dataSets: number[], imputator: string, classifier: string, scaler: string, features: string[], trainingDataPercentage: number = 1, slidingWindowSize: number = 128, slidingWindowStep: number = 64): void {
+    const aiBuilder = new AIBuilder( -1 );
+    const projectID = this.user!.getCurrentProjectID();
+    aiBuilder.applyModel(dataSets, imputator, classifier, scaler, features, projectID, trainingDataPercentage, slidingWindowSize, slidingWindowStep);
   }
 
 }

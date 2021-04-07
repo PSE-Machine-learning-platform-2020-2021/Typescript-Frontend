@@ -3,7 +3,7 @@ import { MainController } from "./MainController";
 import { Page } from "../view/pages/PageInterface";
 import { IState, States } from "../view/pages/State";
 import { ModelCreationPage } from "../view/pages/ModelCreationPage/index";
-import { RefferingController } from './ReferringController'
+import { RefferingController } from './ReferringController';
 /**
 * Controller welcher die Modellerstellung behandelt
 */
@@ -21,30 +21,30 @@ export class ModelCreationController implements PageController {
      * Konstruktor des Seitenverwalters. Registriert sich als Beobachter auf seiner Seite und setzt den start Status.
      * Dieser Seitenverwalter benötigt einen SensorManager, welcher schon initilisiert wurde. 
      */
-    constructor() {
+    constructor () {
         this.page = new ModelCreationPage();
-        this.page.attach(this);
+        this.page.attach( this );
         this.state = this.page.getState();
         this.state.dataSetMetas! = MainController.getInstance().getFacade().getDataSetMetas();
-        this.page.setState(this.state);
+        this.page.setState( this.state );
     }
 
     /**
      * Die Update Methode des Seitenverwalters.
      */
-    update() {
+    update () {
         this.state = this.page.getState();
-        switch (this.state.currentState) {
+        switch ( this.state.currentState ) {
             case States.NeedKiTraining:
                 this.startTraining();
                 break;
             case States.NeedMessage:
-                this.state.messages = MainController.getInstance().getMessage(this.state.messages)!;
+                this.state.messages = MainController.getInstance().getMessage( this.state.messages )!;
                 this.state.currentState = States.waitForDB;
-                this.page.setState(this.state);
+                this.page.setState( this.state );
                 break;
             case States.ChangeToRefferring:
-                MainController.getInstance().changeTo(new RefferingController());
+                MainController.getInstance().changeTo( new RefferingController( true ) );
                 break;
             default:
                 break;
@@ -55,24 +55,19 @@ export class ModelCreationController implements PageController {
     * Startet das Training mit den ausgewählten Einstellungen in der View. 
     * Holt sich aus den ausgewählten Datensätzen die benutzten Sensoren.
     */
-    private startTraining() {
-        /*
-        // Auf Sensorenarten wird geprüft
-        let sensors: number[] = [];
-        for ( let index = 0; index < this.state.trainingParameter!.dataSets.length; index++ ) {
-            //Jede Datenreihe wird durchgegangen
-            let rows = MainController.getInstance().getFacade().getDataRows( this.state.trainingParameter!.dataSets[ index ] ).dataRows!;
-            for ( let index2 = 0; index2 < rows.length; index2++ ) {
-                for ( let index3 = 0; index3 < rows[ index2 ].length; index3++ ) {
-                    if ( sensors.indexOf( rows[ index2 ][ index3 ].sensorType ) === -1 ) {
-                        sensors.push( rows[ index2 ][ index3 ].sensorType );
-                    }
-                }
-            }
+    private startTraining () {
+        const params = this.state.trainingParameter!;
+        if ( params.slidingWindowStep === undefined && params.slidingWindowSize === undefined && params.trainingDataPercentage === undefined ) {
+            MainController.getInstance().getFacade().applyModel( params.dataSets, params.imputator, params.classifier, params.scaler, params.features );
         }
-        //Benutzte Sensoren werden hinzugefügt
-        this.state.trainingParameter!.sensors = sensors;*/
-        //console.log(this.state.trainingParameter)
-        MainController.getInstance().getFacade().applyModel(this.state.trainingParameter!);
+        else if ( params.slidingWindowStep === undefined && params.slidingWindowSize === undefined ) {
+            MainController.getInstance().getFacade().applyModel( params.dataSets, params.imputator, params.classifier, params.scaler, params.features, params.trainingDataPercentage );
+        }
+        else if ( params.slidingWindowStep === undefined ) {
+            MainController.getInstance().getFacade().applyModel( params.dataSets, params.imputator, params.classifier, params.scaler, params.features, params.trainingDataPercentage, params.slidingWindowSize );
+        }
+        else {
+            MainController.getInstance().getFacade().applyModel( params.dataSets, params.imputator, params.classifier, params.scaler, params.features, params.trainingDataPercentage, params.slidingWindowSize, params.slidingWindowStep );
+        }
     }
 }

@@ -277,7 +277,7 @@ export default class Train extends Component {
 	};
 
 	handleChangePage() {
-		this.props.changeToReferring()
+		this.props.changeToReferring();
 	}
 
 	render() {
