@@ -6,7 +6,8 @@ import './Train.css';
 export default class Train extends Component {
 	props = {
 		dataSetMetas: [] as { dataSetID: number, dataSetName: string; }[],
-		train: function (dataSets: number[], imputator: string, classifier: string, scaler: string, features: string[]) { }
+		train: function (dataSets: number[], imputator: string, classifier: string, scaler: string, features: string[]) { },
+		changeToReferring: function () { }
 	};
 	state = {
 		mouse: false,
@@ -275,6 +276,10 @@ export default class Train extends Component {
 		this.props.train(dataSets, imputator, classifier, scaler, features);
 	};
 
+	handleChangePage() {
+		this.props.changeToReferring()
+	}
+
 	render() {
 		this.fillState();
 		const { mouse, datasets, imputators, scalers, myfeatures, classifiers } = this.state;
@@ -360,11 +365,13 @@ export default class Train extends Component {
 
 				<div className="clearfloat">
 					<button onClick={() => this.handleTrain()} className="train-btn" type='button' >Train Start!</button>
+					<button onClick={() => this.handleChangePage()} className="train-btn" type='button' >Zur Verweisseite zurück</button>
 				</div>
 			</div>
 
 
 		);
 	}
+
 
 }

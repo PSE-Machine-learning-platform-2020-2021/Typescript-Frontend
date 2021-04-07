@@ -35,10 +35,10 @@ export default class ProjectList extends Component {
             NotificationManager.error("Sie haben noch kein Projekt gewählt", "", 3000);
         } else {
             this.props.projectData.map((projectObj) => {
-                if (this.state.value === projectObj.projectID) {
-                    if (projectObj.AIModelID.length !== 0) {
+                if (this.state.value == projectObj.projectID) {
+                    if (projectObj.AIModelID.length != 0) {
                         for (let index = 0; index < this.props.projectData!.length; index++) {
-                            if (projectObj.projectID === this.props.projectData![index].projectID) {
+                            if (projectObj.projectID == this.props.projectData![index].projectID) {
                                 ;
                                 this.setState(projectObj);
                                 this.props.pageSetCurrentprojekt(projectObj);
@@ -51,7 +51,7 @@ export default class ProjectList extends Component {
                         NotificationManager.error('Es gibt keine Model in diesem Projekt!', "", 3000);
                     }
                 }
-                return null;
+                return projectObj;
             });
         }
     }
@@ -61,12 +61,12 @@ export default class ProjectList extends Component {
             NotificationManager.error("Sie haben noch kein Projekt gewählt", "", 3000);
         } else {
             this.props.projectData.map((projectObj) => {
-                if (this.state.value === projectObj.projectID) {
+                if (this.state.value == projectObj.projectID) {
                     //let id: number = projectObj.projectID;
                     this.props.pageLoadProjekt(projectObj);
                     this.setState({ loadclick: true });
                 }
-                return null;
+                return projectObj;
             });
         }
     }
