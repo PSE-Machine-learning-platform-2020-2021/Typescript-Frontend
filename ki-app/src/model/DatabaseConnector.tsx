@@ -97,6 +97,7 @@ export class DatabaseConnector {
       }[];
     };
   }> {
+    let time: number = new Date().getMilliseconds();
     const result: {
       projectID: number, sessionID: number, projectName: string, projectData?: {
         aiModelID?: number[],
@@ -110,6 +111,51 @@ export class DatabaseConnector {
         }[];
       };
     } = await this.sendRequest("load_project", requestData);
+    if (result.projectID != null) {
+      DatabaseConnector.lastProjectUpdate = time;
+    }
+    return result;
+  }
+
+  /**
+   * Lädt das Projekt mit der ensprechenden userID und ProjektID.
+   * @param userID 
+   * @param adminEmail zur Sicherheit, muss zur UserID übereinstimmen
+   * @param projectID 
+   * @returns Gibt die Daten zurück, als Fehler werden alle IDs auf -1 gesetzt
+   */
+  async updateProject(requestData1: { userID: number, adminEmail: string, projectID: number; }): Promise<{
+    projectID: number, sessionID: number, projectName: string, projectData?: {
+      aiModelID?: number[],
+      dataSet: {
+        dataRowSensors: SensorData[], dataSetID: number, dataSetName: string, generateDate: number,
+        dataRows: {
+          dataRowID: number, recordingStart: number,
+          dataRow: { value: number[], relativeTime: number; }[];
+        }[],
+        label: { name: string, labelID: number, start: number, end: number; }[];
+      }[];
+    };
+  }> {
+    const requestData: { userID: number, adminEmail: string, projectID: number, lastUpdate?: number; } = requestData1;
+    requestData.lastUpdate = DatabaseConnector.lastProjectUpdate;
+    let time: number = new Date().getMilliseconds();
+    const result: {
+      projectID: number, sessionID: number, projectName: string, projectData?: {
+        aiModelID?: number[],
+        dataSet: {
+          dataRowSensors: SensorData[], dataSetID: number, dataSetName: string, generateDate: number,
+          dataRows: {
+            dataRowID: number, recordingStart: number,
+            dataRow: { value: number[], relativeTime: number; }[];
+          }[],
+          label: { name: string, labelID: number, start: number, end: number; }[];
+        }[];
+      };
+    } = await this.sendRequest("update_project", requestData);
+    if (result.projectID != null) {
+      DatabaseConnector.lastProjectUpdate = time;
+    }
     return result;
   }
 

@@ -158,6 +158,22 @@ export class Facade {
   }
 
   /**
+     * Aktuallisiert aus der Datenbank das aktuelle Projekt, hierfür muss der Admin angemeldet sein und ein Projekt geladen sein
+     * @returns true, wenn das Projekt erfolgreich geladen wurde dies tritt nur ein, wenn eine Verbindung zur Datenbank besteht,
+     *          ein geladenes Projekt existiert und der Admin dafür angemeldet ist
+     */
+  async updateCurrentProject(): Promise<boolean> {
+    if (this.user != null && this.user instanceof Admin) {
+      let projectID = this.user.getCurrentProjectID();
+      let adminEmail: string = this.user.getEmail();
+      let userID: number = this.user.getID();
+      return this.user.updateProject(await this.dbCon.updateProject({ userID, adminEmail, projectID }));
+    }
+    return false;
+  }
+
+
+  /**
    * Lädt vom aktuell angemeldeten Admin von seinen Projekten den Namen, die Projekt ID und die AIModelIDs
    * @returns Von allen Projekten des Admins Projekt ID und Projektname und die AIModelIDs
    */

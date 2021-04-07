@@ -6,9 +6,9 @@ import { Admin, AIModelUser, Dataminer } from "../User";
  */
 test("create and getter", () => {
     var session = new Session(18);
-    expect(session.getId()).toBe(18);
+    expect(session.getID()).toBe(18);
     session = new Session(-29);
-    expect(session.getId()).toBe(-1);
+    expect(session.getID()).toBe(-1);
 });
 
 /**
@@ -47,5 +47,5 @@ test("connectUser & disconnectUser", () => {
     expect(session.disconnectUser(user1.getID())).toBeFalsy();
     expect(session.disconnectUser(user2.getID())).toBeFalsy();
     expect(session.getConnectedUsers().length).toBe(0);
-    expect(session.getId()).toBe(33);
+    expect(session.getID()).toBe(33);
 });
