@@ -38,17 +38,24 @@ export class Project {
     this.id = projectID;
     this.name = projectName;
     this.session = new Session(sessionID);
-    if (projectData != null) {
-      if (projectData.aiModelID != null) {
-        for (let i = 0; i < projectData.aiModelID.length; i++) {
-          this.aiModel.push(new AIModel(projectData.aiModelID[i]));
+    if (projectData !== undefined) {
+      if (projectData.aiModelID !== undefined) {
+        for (const id of projectData.aiModelID) {
+          this.aiModel.push(new AIModel(id));
         }
       }
-      for (let i = 0; i < projectData.dataSet.length; i++) {
-        this.dataSet.push(new DataSet(projectData.dataSet[i].dataRowSensors, projectData.dataSet[i].dataSetID, projectData.dataSet[i].dataSetName, projectData.dataSet[i].generateDate, projectData.dataSet[i].dataRows, projectData.dataSet[i].label));
+      for (const entry of projectData.dataSet) {
+        let dataSet = new DataSet(
+          entry.dataRowSensors,
+          entry.dataSetID,
+          entry.dataSetName,
+          entry.generateDate,
+          entry.dataRows,
+          entry.label
+        );
+        this.dataSet.push(dataSet);
       }
     }
-
   }
 
   /**
@@ -91,11 +98,11 @@ export class Project {
    * @param generateDate die Erstellungszeit von dem Datensatz
    */
   createDataSet(dataRowSensors: SensorData[], dataSetID: number, dataSetName: string, generateDate?: number): boolean {
-    if (dataRowSensors.length <= 0 || dataSetID < 0 || dataSetName.length <= 0 || generateDate != null && generateDate < 0) {
+    if (dataRowSensors.length <= 0 || dataSetID < 0 || dataSetName.length <= 0 || (generateDate != null && generateDate < 0)) {
       return false;
     }
     for (let i = 0; i < this.dataSet.length; i++) {
-      if (this.dataSet[i].getID() == dataSetID) {
+      if (this.dataSet[i].getID() === dataSetID) {
         return false;
       }
     }
@@ -128,9 +135,9 @@ export class Project {
    * @returns dataSetID ist die DatensatzID und dataSetName ist der Datensatzname
    */
   getDataSetMetas(): { dataSetID: number, dataSetName: string; }[] {
-    var dataSetMetas: { dataSetID: number, dataSetName: string; }[] = [];
-    for (let i = 0; i < this.dataSet.length; i++) {
-      dataSetMetas.push({ dataSetID: this.dataSet[i].getID(), dataSetName: this.dataSet[i].getName() });
+    let dataSetMetas: { dataSetID: number, dataSetName: string; }[] = [];
+    for (const dataSet of this.dataSet) {
+      dataSetMetas.push({ "dataSetID": dataSet.getID(), "dataSetName": dataSet.getName() });
     }
     return dataSetMetas;
   }

@@ -76,8 +76,8 @@ export class FinishController implements PageController {
      * Modell geleitet. Die ID des neuen Labels wird darauf an die momentane Seite übergeben.
      */
     private newDataLabel () {
-        let start: number = this.state.currentLabel!.start;
-        let end: number = this.state.currentLabel!.end;
+        let start: number = +( this.state.currentLabel!.start + ".0" );
+        let end: number = +( this.state.currentLabel!.end + ".0" );
         let name: string = this.state.currentLabel!.name;
         let promise: Promise<number> = MainController.getInstance().getFacade().createLabel( { start, end }, name );
         this.state.wait! = promise;

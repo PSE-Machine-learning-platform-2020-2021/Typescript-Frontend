@@ -42,7 +42,11 @@ export interface IState {
   //testDataSet?: { dataSetID: number; rows: { sensorType: number; datapoint: { value: number[]; relativeTime: number; }[]; }[]; }[];
 }
 
+
 export enum States {
+
+  setUpSensorManager = "setUpSensorManager",
+
   waitForDB = "waitForDB",
   /**
    * Seite benötigt texte
@@ -183,4 +187,5 @@ export enum States {
 
   NeedLeadTime = "NeedLeadTime",
 
+  ChangeToDelivery = "ChangeToDelivery"
 }

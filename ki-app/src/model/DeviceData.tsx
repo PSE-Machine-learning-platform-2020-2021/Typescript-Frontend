@@ -1,4 +1,4 @@
-import { AccelerometerData, SensorData } from "./SensorData";
+//import { AccelerometerData, SensorData } from "./SensorData";
 
 export abstract class DeviceData {
   private id: number;
@@ -9,8 +9,8 @@ export abstract class DeviceData {
   protected abstract deviceType: string;
   //private availableSensors: SensorData[] = [];
 
-  protected constructor(deviceID: number, MACADRESS: string, deviceName: string, firmware: string, generation: string) {
-    if (deviceID < 0) {
+  protected constructor ( deviceID: number, MACADRESS: string, deviceName: string, firmware: string, generation: string ) {
+    if ( deviceID < 0 ) {
       this.id = -1;
     } else {
       this.id = deviceID;
@@ -25,32 +25,32 @@ export abstract class DeviceData {
    * Setzt nur die DeviceID falls beim erstellen des Gerätes die ID -1 übergeben wurde
    * @param deviceID 
    */
-  setDeviceID(deviceID: number): boolean {
+  setDeviceID ( deviceID: number ): boolean {
 
-    if (this.id == -1 && deviceID >= 0) {
+    if ( this.id === -1 && deviceID >= 0 ) {
       this.id = deviceID;
       return true;
     }
     return false;
   }
 
-  getID(): number {
+  getID (): number {
     return this.id;
   }
 
-  getName(): string {
+  getName (): string {
     return this.name;
   }
 
-  getMACADDRESS(): string {
+  getMACADDRESS (): string {
     return this.MACADDRESS;
   }
 
-  getFirmware(): string {
+  getFirmware (): string {
     return this.firmware;
   }
 
-  getGeneration(): string {
+  getGeneration (): string {
     return this.generation;
   }
 
@@ -71,21 +71,21 @@ export abstract class DeviceData {
   /**
    * Prüft welches Gerät aktuell benutzt wird
    */
-  static loadDevice(deviceID: number, device?: { MACADRESS: string, deviceName: string, firmware: string, generation: string, deviceType: string; }): DeviceData {
+  static loadDevice ( deviceID: number, device?: { MACADRESS: string, deviceName: string, firmware: string, generation: string, deviceType: string; } ): DeviceData {
     ////////////////////////////////////////////////////
     //Noch herrausfinden Smartphone oder anderes Gerät//
     ////////////////////////////////////////////////////
-    if (device != null) {
-      if (device.deviceType == "Smartphone") {
-        return new Smartphone(deviceID, device.MACADRESS, device.deviceName, device.firmware, device.generation);
-      } else if (device.deviceType == "Desktop") {
-        return new Desktop(deviceID, device.MACADRESS, device.deviceName, device.firmware, device.generation);
+    if ( device != null ) {
+      if ( device.deviceType === "Smartphone" ) {
+        return new Smartphone( deviceID, device.MACADRESS, device.deviceName, device.firmware, device.generation );
+      } else if ( device.deviceType === "Desktop" ) {
+        return new Desktop( deviceID, device.MACADRESS, device.deviceName, device.firmware, device.generation );
       } else {
-        return new Smartphone(deviceID, device.MACADRESS, device.deviceName, device.firmware, device.generation);
+        return new Smartphone( deviceID, device.MACADRESS, device.deviceName, device.firmware, device.generation );
       }
     } else {
       //NUR DUMMY MUSS NOCH GEFÜLLT WERDEN
-      return new Smartphone(deviceID, "", "", "", "");
+      return new Smartphone( deviceID, "", "", "", "" );
     }
   }
   //protected abstract searchSensor(): void;

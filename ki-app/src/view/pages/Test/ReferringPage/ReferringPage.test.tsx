@@ -67,6 +67,6 @@ test('loadmodel', () => {
     let page = new ReferringPage()
     //@ts-ignore
     page.loadmodel(-10)
-    expect(page.getState().currentProject?.choosenAIModelID).toEqual(-10)
+    expect(page.getState().chosenAIModel).toEqual(-10)
     expect(page.getState().currentState).toEqual(States.LoadModel)
 });

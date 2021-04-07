@@ -19,30 +19,30 @@ test('Rendert', () => {
     }])
     expect(wrapper.state().datasets).toEqual([])
     expect(wrapper.state().imputators).toEqual([
-        { name: "Mittel", checked: false, tag: 'MEAN' },
+        { name: "Mittel", checked: true, tag: 'MEAN' },
+        /** 
         { name: "Letzer Wert fortgeführt", checked: false, tag: 'FORWARD' },
         { name: "Bewegter Durchschnitt", checked: false, tag: 'MOVING' },
         { name: "Lineare Interpolation", checked: false, tag: 'LINEAR' },
-        { name: "Spline Interpolation", checked: false, tag: 'SPLINE' }
+        { name: "Spline Interpolation", checked: false, tag: 'SPLINE' }*/
     ])
     expect(wrapper.state().scalers).toEqual([
         { name: "Standard Scaler", checked: false, tag: 'STANDARD' },
         { name: "Robust Scaler", checked: false, tag: 'ROBUST' },
         { name: "Min-Max Scaler", checked: false, tag: 'MIN_MAX' },
         { name: "Normalizer", checked: false, tag: 'NORMALIZER' },
-        { name: "Anteilstrafo", checked: false, tag: 'SHARE' }
+        { name: "Anteilstransformator", checked: false, tag: 'SHARE' }
     ])
     expect(wrapper.state().myfeatures).toEqual([
         { name: "Minimum", checked: false, tag: 'MIN' },
         { name: "Maximum", checked: false, tag: 'MAX' },
         { name: "Varianz", checked: false, tag: 'VARIANCE' },
         { name: "Energie", checked: false, tag: 'ENERGY' },
-        { name: "Fourier-T", checked: false, tag: 'FOURIER_TRANSFORM' },
+        { name: "Fourier-Transformation", checked: false, tag: 'FOURIER_TRANSFORM' },
         { name: "Mittelwert", checked: false, tag: 'MEAN' },
         { name: "Autoregressiv", checked: false, tag: 'AUTOREGRESSIVE' },
         { name: "Abweichung", checked: false, tag: 'SKEWNESS' },
-        { name: "Wölbung", checked: false, tag: 'KURTOSIS' },
-        { name: "IQR", checked: false, tag: 'IQR' }
+        { name: "Wölbung", checked: false, tag: 'KURTOSIS' }
     ])
     expect(wrapper.state().classifiers).toEqual([
         { name: "MLPClassifier", checked: false, tag: 'MLP' },
@@ -88,7 +88,7 @@ test('add dataset and choose', () => {
     const choose: any = wrapper.find({ className: "choose-btn" })
     choose.simulate("click");
     expect(wrapper.state().datasets).toEqual([{ dataSetID: -1, dataSetName: "ex", chosen: false }])
-    expect(wrapper.state().databaseList).toEqual([])
+    expect(wrapper.state().databaseList).toEqual([{ dataSetID: -1, dataSetName: "ex", chosen: false }])
 
     const datasetcheck1: any = wrapper.find("input").at(0);
     datasetcheck1.simulate('change', { target: { checked: true } })
@@ -162,14 +162,16 @@ test('train', () => {
     trainbtn.simulate('click')
     expect(testNotificationManager).toBe(NotificationManager.error("Keine Imputation wählen!", "", 3000))
     //choose imputation
-    const imputationcheck: any = wrapper.find("input").at(1)
-    imputationcheck.simulate('change', { target: { value: 0 } })
+
+    //const imputationcheck: any = wrapper.find("input").at(1)
+    //imputationcheck.simulate('change', { target: { value: 0 } })
     expect(wrapper.state().imputators).toEqual([
         { name: "Mittel", checked: true, tag: 'MEAN' },
+        /** 
         { name: "Letzer Wert fortgeführt", checked: false, tag: 'FORWARD' },
         { name: "Bewegter Durchschnitt", checked: false, tag: 'MOVING' },
         { name: "Lineare Interpolation", checked: false, tag: 'LINEAR' },
-        { name: "Spline Interpolation", checked: false, tag: 'SPLINE' }
+        { name: "Spline Interpolation", checked: false, tag: 'SPLINE' }*/
     ])
     trainbtn.simulate('click')
 
@@ -195,7 +197,7 @@ test('train', () => {
         { name: "Robust Scaler", checked: false, tag: 'ROBUST' },
         { name: "Min-Max Scaler", checked: false, tag: 'MIN_MAX' },
         { name: "Normalizer", checked: false, tag: 'NORMALIZER' },
-        { name: "Anteilstrafo", checked: false, tag: 'SHARE' }
+        { name: "Anteilstransformator", checked: false, tag: 'SHARE' }
     ])
     trainbtn.simulate('click')
     expect(testNotificationManager).toBe(NotificationManager.error("Keine Merkmalextraktion wählen!", "", 3000))

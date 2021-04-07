@@ -50,7 +50,7 @@ export class AIController implements PageController {
     update () {
         this.state = this.page.getState();
         switch ( this.state.currentState ) {
-            case States.StartDataRead:
+            case States.setUpSensorManager:
                 this.start();
                 break;
             case States.SetLanguage:

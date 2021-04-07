@@ -6,24 +6,25 @@ import ReactDOM from 'react-dom';
 import './ModelCreationPage.css';
 import { States } from '../State';
 import Train from '../../components/ModelCreationComponents/Train';
-import { NotificationContainer, NotificationManager } from 'react-notifications';
+import { NotificationContainer } from 'react-notifications';
 import 'react-notifications/lib/notifications.css';
 
 export class ModelCreationPage implements Page {
-	state = new State;
+	state: State;
 	observers: PageController[] = [];
 
 	constructor() {
-		this.state = new State()
+		this.state = new State();
 	}
 
 	update() {
-		this.notify()
+		this.notify();
 		const VDOM = (
 			<div>
 				<Train
 					dataSetMetas={this.state.dataSetMetas!}
 					train={this.train.bind(this)}
+					changeToReferring={this.changeToReferring.bind(this)}
 				/>
 				<NotificationContainer />
 			</div>
@@ -56,8 +57,8 @@ export class ModelCreationPage implements Page {
 	}
 
 	setState(state: any) {
-		this.state = state
-		this.update()
+		this.state = state;
+		this.update();
 	}
 
 	private train(dataSets: number[], imputator: string, classifier: string, scaler: string, features: string[]) {
@@ -72,4 +73,8 @@ export class ModelCreationPage implements Page {
 		this.notify();
 	}
 
+	private changeToReferring() {
+		this.state.currentState = States.ChangeToRefferring
+		this.notify()
+	}
 }

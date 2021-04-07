@@ -315,8 +315,17 @@ test( "Model Erstellen", async () => {
     let promise = facade.loginAdmin( "TEST", "TEST" );
     let sucsess = await promise;
     expect( sucsess ).toBeTruthy();
-    facade.applyModel( { dataSets: [ 5 ], imputator: "TEST", classifier: "TEST", scaler: "TEST", features: [ "TEST" ], trainingDataPercentage: 100, slidingWindowSize: 0, slidingWindowStep: 0 } );
+    facade.applyModel([ 5 ], "TEST", "TEST", "TEST", [ "TEST" ], 1, 0, 0);
 } );
+
+test("Modell verteilen", async () => {
+    AIDistributor.prototype.sendAIModel = jest.fn( () => { return true} );
+    const facade = new Facade("de-de");
+    const promise = facade.loginAdmin("TEST", "Test");
+    const success = await promise;
+    expect(success).toBeTruthy();
+    expect(facade.sendAIModel(4, "test-1@example.com", "test-2@example.com")).toBeTruthy();
+});
 
 test( "setze Sprache", async () => {
     DatabaseConnector.prototype.loadLanguage = jest.fn( () => { return Promise.resolve( [ "TEST" ] ); } );

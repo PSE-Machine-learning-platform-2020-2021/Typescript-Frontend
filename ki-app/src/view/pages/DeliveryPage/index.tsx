@@ -6,24 +6,25 @@ import { PageController } from "../../../controller/PageController";
 import { State } from "./State";
 import ReactDOM from 'react-dom';
 import { States } from '../State';
-import { NotificationContainer, NotificationManager } from 'react-notifications';
+import { NotificationContainer } from 'react-notifications';
 import 'react-notifications/lib/notifications.css';
 export class DeliveryPage implements Page {
 
-	state = new State;
+	state: State;
 	observers: PageController[] = [];
 
 	constructor() {
-		this.state = new State()
+		this.state = new State();
 	}
 
 
 	update() {
-		this.notify()
+		this.notify();
 		const VDOM = (
 			<div>
 				<EmailList delivery={this.delivery.bind(this)} />
 				<DownloadButton download={this.download.bind(this)} />
+				<NotificationContainer />
 			</div>
 		);
 		if (document.getElementById('root') !== null) {
@@ -55,24 +56,24 @@ export class DeliveryPage implements Page {
 	}
 
 	setState(state: any) {
-		this.state = state
-		this.update()
+		this.state = state;
+		this.update();
 	}
 
 	private delivery(chosenEmails: string[]) {
 
 		// eslint-disable-next-line
-		this.state.currentState = States.DeliverWeb
+		this.state.currentState = States.DeliverWeb;
 		// eslint-disable-next-line
-		this.state.chosenEmails = chosenEmails
-		this.notify()
+		this.state.chosenEmails = chosenEmails;
+		this.notify();
 	}
 
 	private download() {
 
 		// eslint-disable-next-line
-		this.state.currentState = States.NeedDownload
-		this.notify()
+		this.state.currentState = States.NeedDownload;
+		this.notify();
 	}
 
 

@@ -14,7 +14,7 @@ export class AIDistributor {
      * Dieses sorgt an verschiedenen Stellen im Programmablauf für unterschiedliche Vorgehensweisen.
      * @param format Das Auslieferungsformat.
      */
-    constructor(id: number, format: DeliveryFormat) {
+    constructor ( id: number, format: DeliveryFormat ) {
         this.format = format;
         this.id = id;
     }
@@ -27,27 +27,27 @@ export class AIDistributor {
      * Der Return-Typ ist einzig aus dem Grund "any", weil sich so das Problem löst, dass
      * man von einem blanken Objekt keine spezifischen Eigenschaften erwarten kann.
      */
-    getAIModel(): any {
-        let data = this.sendRequest({ "id": this.id, "format": this.format, "job": "get" });
-        let success : boolean;
+    getAIModel (): any {
+        let data = this.sendRequest( { "id": this.id, "format": this.format, "job": "get" } );
+        let success: boolean;
         try {
-            success = Object.keys(data).includes("url");
+            success = Object.keys( data ).includes( "url" );
         }
-        catch (e) {
+        catch ( e ) {
             success = false;
         }
-        if (!success) {
-            throw new Error("Connection issue: " + data.status + ": " + data.statusText);
+        if ( !success ) {
+            throw new Error( "Connection issue: " + data.status + ": " + data.statusText );
         }
-        switch (this.format) {
+        switch ( this.format ) {
             case DeliveryFormat.EXE:
-                throw new Error("Not implemented.")
-                //location.href = data.url;
-                //return dataX;
+                throw new Error( "Not implemented." );
+            //location.href = data.url;
+            //return dataX;
             case DeliveryFormat.WEB_APP:
-                return {"url": data.url};
+                return { "url": data.url };
             default:
-                throw new Error("Illegal delivery format.");
+                throw new Error( "Illegal delivery format." );
         }
     }
 
@@ -59,18 +59,18 @@ export class AIDistributor {
      * @param emailList Die E-Mail-Adressen, an die der Server den Nutzungslink zum Modell versenden soll.
      * @returns True, wenn die Anfrage an den Server erfolgreich war, False andernfalls.
      */
-    sendAIModel(... emailList: string[]): boolean {
-        let recipients: {"email": string}[] = [];
-        emailList.forEach((address) => recipients[recipients.length] = {"email": address});
-        let data = this.sendRequest({"recipients": JSON.stringify(recipients), "id": this.id, "job": "send"});
-        let success : boolean;
+    sendAIModel ( emailList: string[] ): boolean {
+        let recipients: { "email": string; }[] = [];
+        emailList.forEach( ( address ) => recipients[ recipients.length ] = { "email": address } );
+        let data = this.sendRequest( { "recipients": JSON.stringify( recipients ), "id": this.id, "job": "send" } );
+        let success: boolean;
         try {
-            success = Object.keys(data).includes("result");
+            success = Object.keys( data ).includes( "result" );
         }
-        catch (e) {
+        catch ( e ) {
             success = false;
         }
-        if (success) {
+        if ( success ) {
             return data.result;
         }
         return false;
@@ -81,32 +81,32 @@ export class AIDistributor {
      * 
      * @param data Die Daten, die mit der Anfrage zu versenden sind.
      */
-    private sendRequest(data: object): any {
-        return new Promise(function(resolve, reject){
+    private sendRequest ( data: object ): any {
+        return new Promise( function ( resolve, reject ) {
             let xhr = new XMLHttpRequest(); // XHR ist kurz für XmlHttpRequest
-            xhr.open("POST", AIDistributor.url, true);
+            xhr.open( "POST", AIDistributor.url, true );
             xhr.onreadystatechange = () => {
-                if (xhr.readyState === 4) {
-                    if (xhr.status === 200) {
-                        resolve(JSON.parse(xhr.responseText))
+                if ( xhr.readyState === 4 ) {
+                    if ( xhr.status === 200 ) {
+                        resolve( JSON.parse( xhr.responseText ) );
                     }
-                    reject({
-                        status: xhr.status, 
+                    reject( {
+                        status: xhr.status,
                         statusText: xhr.statusText
-                    });
+                    } );
                 }
-            }
+            };
             xhr.onerror = function () {
-                reject({
+                reject( {
                     status: this.status,
                     statusText: xhr.statusText
-                });
+                } );
             };
-            for (const [header, content] of Object.entries(AIDistributor.headers)) {
-                xhr.setRequestHeader(header, content);
+            for ( const [ header, content ] of Object.entries( AIDistributor.headers ) ) {
+                xhr.setRequestHeader( header, content );
             }
-            xhr.send(JSON.stringify(data));
-        }).then((resolve) => resolve, (reject) => reject);
+            xhr.send( JSON.stringify( data ) );
+        } ).then( ( resolve ) => resolve, ( reject ) => reject );
     }
 
     /**
@@ -115,7 +115,7 @@ export class AIDistributor {
      * 
      * Diese Methode ist sinnlos, da eine Datei auf dem Server liegen muss, um heruntergeladen werden zu können.
      */
-    private buildExecutable(): boolean {
-        throw new Error("Not Implemented");
+    private buildExecutable (): boolean {
+        throw new Error( "Not Implemented" );
     }
 }
