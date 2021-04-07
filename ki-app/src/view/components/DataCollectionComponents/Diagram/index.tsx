@@ -20,8 +20,8 @@ export default class Diagram extends Component {
             diagramOptions: {},
             color: [ 'rgba(46,190,87,1)', 'rgba(68,24,232,1)', 'rgba(238,173,14,1)', 'rgba(178,34,34,1)', 'rgba(238, 130, 238,1)', 'rgba(0, 0, 0,1)',
                 'rgba(106, 90, 205,1)', 'rgba(238, 118, 0,1)', 'rgba(105, 105, 105,1)' ],
-            csscolor: [ '2EBE57', 'CC00FF', 'EEAD0E', 'B22222', 'EE82EE', '000000',
-                '6A5ACD', 'EE7600', '696969' ],
+            csscolor: [ '#2EBE57', '#CC00FF', '#EEAD0E', '#B22222', '#EE82EE', '#000000',
+                '#6A5ACD', '#EE7600', '#696969' ],
         }
     };
 
