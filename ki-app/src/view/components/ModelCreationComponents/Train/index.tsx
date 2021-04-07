@@ -57,20 +57,20 @@ export default class Train extends Component {
 	 * mit den Daten aus der props-Variable dataSetMetas.
 	 */
 	private fillState(): void {
-		this.state.databaseList = [];
+		this.setState({ databaseList: [] })
 		for (const x of this.props.dataSetMetas) {
 			this.state.databaseList.push({ dataSetName: x.dataSetName, dataSetID: x.dataSetID, chosen: false });
 		}
 	}
-
-	componentDidMount() {
-		let newDatabaseList: { dataSetID: number, dataSetName: string, chosen: boolean; }[] = [];
-		this.props.dataSetMetas?.map((dataset) => {
-			newDatabaseList.push({ dataSetID: dataset.dataSetID, dataSetName: dataset.dataSetName, chosen: false });
-			return null;
-		});
-		this.setState({ databaseList: newDatabaseList });
-	}
+	/** 
+		componentDidMount() {
+			let newDatabaseList: { dataSetID: number, dataSetName: string, chosen: boolean; }[] = [];
+			this.props.dataSetMetas?.map((dataset) => {
+				newDatabaseList.push({ dataSetID: dataset.dataSetID, dataSetName: dataset.dataSetName, chosen: false });
+				return dataset;
+			});
+			this.setState({ databaseList: newDatabaseList });
+		}*/
 
 	handleMouse = (flag: boolean) => {
 		return () => {
