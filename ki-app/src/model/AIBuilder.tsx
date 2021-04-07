@@ -30,7 +30,7 @@ export class AIBuilder {
      *     "features": [
      *         "featurename#13"
      *     ],
-     *     "projectID": 1
+     *     "projectID": 1,
      *     "trainingDataPercentage": 0.8, // optional
      *     "slidingWindowSize": 128,      // optional
      *     "slidingWindowStep": 64        // optional
@@ -38,7 +38,18 @@ export class AIBuilder {
      * ```
      * Die Reihenfolge ist unwichtig.
      */
-    applyModel(modelData: { dataSets: number[], imputator: string, classifier: string, scaler: string, features: string[], trainingDataPercentage?: number, slidingWindowSize?: number, slidingWindowStep?: number; }): void {
+    applyModel(dataSets: number[], imputator: string, classifier: string, scaler: string, features: string[], projectID: number, trainingDataPercentage: number = 1, slidingWindowSize: number = 128, slidingWindowStep: number = 64): void {
+        const modelData = {
+            "dataSets":               dataSets,
+            "imputator":              imputator,
+            "classifier":             classifier,
+            "scaler":                 scaler,
+            "features":               features,
+            "projectID":              projectID,
+            "trainingDataPercentage": trainingDataPercentage,
+            "slidingWindowSize":      slidingWindowSize,
+            "slidingWindowStep":      slidingWindowStep
+        }
         this.sendRequest(JSON.stringify(modelData), AIBuilder.url + AIBuilder.buildModel, console.log);
     }
 
