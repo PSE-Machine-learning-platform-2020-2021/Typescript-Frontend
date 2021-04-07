@@ -117,13 +117,14 @@ export class DatabaseConnector {
     return result;
   }
 
+  /* Methode die noch nicht benutzt wird aber eventuell das laufgeschehen verbessern
   /**
    * Lädt das Projekt mit der ensprechenden userID und ProjektID.
    * @param userID 
    * @param adminEmail zur Sicherheit, muss zur UserID übereinstimmen
    * @param projectID 
    * @returns Gibt die Daten zurück, als Fehler werden alle IDs auf -1 gesetzt
-   */
+   
   async updateProject(requestData1: { userID: number, adminEmail: string, projectID: number; }): Promise<{
     projectID: number, sessionID: number, projectName: string, projectData?: {
       aiModelID?: number[],
@@ -158,6 +159,7 @@ export class DatabaseConnector {
     }
     return result;
   }
+  */
 
   //Gibt von allen Projekten des angemeldeten Ad-mins, mit der Email adminEmail, die Projekt ID und den Projekt Namen zurück
   /**

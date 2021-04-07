@@ -110,9 +110,7 @@ export class Facade {
       let userID: number = this.user.getID();
       let dataSetID: number = this.user.getCurrentDataSetID();
       this.user.addDatapoint(dataRowID, datapoint);
-      var result = this.dbCon.sendDataPoint({ sessionID, userID, dataSetID, dataRowID, datapoint });
-      console.log(result);
-      return result;
+      return this.dbCon.sendDataPoint({ sessionID, userID, dataSetID, dataRowID, datapoint });
     }
     return false;
   }
@@ -157,11 +155,12 @@ export class Facade {
     return false;
   }
 
+  /* Methode die noch nicht benutzt wird aber eventuell das laufgeschehen verbessern
   /**
      * Aktuallisiert aus der Datenbank das aktuelle Projekt, hierfür muss der Admin angemeldet sein und ein Projekt geladen sein
      * @returns true, wenn das Projekt erfolgreich geladen wurde dies tritt nur ein, wenn eine Verbindung zur Datenbank besteht,
      *          ein geladenes Projekt existiert und der Admin dafür angemeldet ist
-     */
+     
   async updateCurrentProject(): Promise<boolean> {
     if (this.user != null && this.user instanceof Admin) {
       let projectID = this.user.getCurrentProjectID();
@@ -170,7 +169,7 @@ export class Facade {
       return this.user.updateProject(await this.dbCon.updateProject({ userID, adminEmail, projectID }));
     }
     return false;
-  }
+  }*/
 
 
   /**
