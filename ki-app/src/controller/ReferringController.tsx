@@ -15,7 +15,8 @@ export class RefferingController implements PageController {
     private state: IState;
 
     /**
-     * Konstruktor des Seitenverwalters. Registriert sich als Beobachter auf seiner Seite und setzt den Start Status. 
+     * Konstruktor des Seitenverwalters. Registriert sich als Beobachter auf seiner Seite und setzt den Start Status.
+     * @param isloggedIn Wurde sich zuvor erfolgreich Eingeloggt und wird nun zurück auf die ReferringPage geleitet muss dies true sein. Ohne richtigen Login entstehen fehler.
      */
     constructor ( isloggedIn?: boolean ) {
         this.page = new ReferringPage();
@@ -27,7 +28,13 @@ export class RefferingController implements PageController {
         this.update();
 
         if ( isloggedIn ) {
-            this.state.islogedIn = true;
+            this.state.projectData! = [];
+            let projectData: Promise<{ projectID: number; projectName: string; AIModelID: number[]; }[]> = MainController.getInstance().getFacade().getProjectMetas();
+            projectData.then( ( data: { projectID: number; projectName: string; AIModelID: number[]; }[] ) => {
+                this.state.projectData! = data;
+                this.page.setState( this.state );
+            } );
+            this.state.islogedIn! = true;
             this.page.setState( this.state );
         }
     }
