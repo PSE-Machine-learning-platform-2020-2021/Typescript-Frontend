@@ -138,11 +138,11 @@ export class AIController implements PageController {
     /**
      * Die Methode wird durch das Model aufgerufen falls ein Ergebnis der Klassifiziereung vorhanden ist.
      */
-    public callback ( prediction: any, ) {
+    public callback ( prediction: any): any {
         this.state.aiUserData!.result = prediction;
         this.state.currentState = States.ClassifyResult;
         this.page.setState( this.state );
-        let R: any;
-        return R;
+        const x: any = undefined;
+        return x
     }
 }
