@@ -2,6 +2,9 @@ import React from 'react';
 import { MainController } from '../../../../controller/MainController';
 import './ConstantsText.css';
 
+/**
+ * Überschrift
+ */
 export default class ConstantsText extends React.Component {
     //nur für test button auch
     props = {
@@ -11,7 +14,11 @@ export default class ConstantsText extends React.Component {
     handleCreate() {
         this.props.changeToDelivery()
     }
-    //
+
+    /**
+     * Render Methode des Komponenten
+     * @returns Aufbau des Komponenten
+     */
     render() {
         console.log(MainController.getInstance().getText()!.title);
         return (

@@ -2,7 +2,7 @@ import { Component } from 'react';
 import './ChangeToVisuBtn.css';
 
 /**
- * Stellt die funktion eines Knopfes zum wechsel auf die Visualisierungsseite da
+ * Stellt die funktion eines Knopfes zum wechsel auf die Visualisierungsseite dar
  */
 export default class ChangeToVisuBtn extends Component {
 
