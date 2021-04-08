@@ -47,8 +47,7 @@ export abstract class User {
   setCurrentDataSetID(newID: number): void {
     if (this.name === AIController.AI_MODEL_USER_NAME) {
       this.dataSetID = newID;
-    }
-    else {
+    } else {
       this.dataSetID = -1;
     }
   }
@@ -374,7 +373,7 @@ export class Admin extends User {
   }
 
   /**
-   * 
+   * Prüft ob ein Projekt mit der ID existiert und gibt die Stelle im Projekt array zurück an dem das Projekt liegt
    * @param projectID 
    * @returns -1 falls das Projekt nicht existiert oder die Array Position des Projekts
    */
@@ -443,6 +442,7 @@ export class AIModelUser extends User {
   constructor(id: number, deviceID: number, name?: string) {
     super(id, DeviceData.loadDevice(deviceID), name);
   }
+
   /**
    * Implementiert die abstrakte Methode von User
    */

@@ -6,7 +6,6 @@ import { AIBuilder } from "./AIBuilder";
 import { AIDistributor } from "./AIDistributor";
 import { AccelerometerData, GyroscopeData, SensorData } from "./SensorData";
 import { AIController } from "../controller/AIController";
-//import { isBreakStatement } from "typescript";
 
 interface FacadeInterface {
   createDataSet(sensorTypes: string[], dataSetName: string): boolean;
@@ -268,6 +267,7 @@ export class Facade {
     return [];
   }
  */
+
   /**
    * Lädt die Sprache aus der Datenbank mit dem übergebenen Sprachcode
    * @param languageCode Sprachcode
@@ -318,7 +318,6 @@ export class Facade {
     }
     return false;
   }
-
 
   //wann Device erstellen ??? + constructor in User anpassen mit neuem Device parameter 
   async registerAdmin(adminName: string, adminEmail: string, password: string): Promise<boolean> {
@@ -438,6 +437,10 @@ export class Facade {
     return false;
   }
 
+  /**
+   * Löscht das bestehende Label mit der LabelID
+   * @param labelID die LabelID, die schon exisitert
+   */
   async deleteLabel(labelID: number): Promise<boolean> {
     if (this.user != null) {
       let deleted: boolean = this.user.deleteLabel(labelID);
@@ -451,7 +454,10 @@ export class Facade {
     return false;
   }
 
-
+  /**
+   * Gibt die geladenen Labels zurück von dem aktuellen Datensatz
+   * @returns 
+   */
   getLabels(): { labels: { name: string, labelID: number, start: number, end: number; }[]; } {
     if (this.user != null) {
       return this.user.getLabels();
@@ -500,5 +506,4 @@ export class Facade {
     const projectID = this.user!.getCurrentProjectID();
     aiBuilder.applyModel(dataSets, imputator, classifier, scaler, features, projectID, trainingDataPercentage, slidingWindowSize, slidingWindowStep);
   }
-
 }

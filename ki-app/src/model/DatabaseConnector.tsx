@@ -160,9 +160,8 @@ export class DatabaseConnector {
   }
   */
 
-  //Gibt von allen Projekten des angemeldeten Ad-mins, mit der Email adminEmail, die Projekt ID und den Projekt Namen zurück
   /**
-   * Gibt von allen Projekten des Admins
+   * Gibt von allen Projekten des angemeldeten Admins, mit der Email adminEmail, die Projekt ID und den Projekt Namen zurück
    * @param userID
    * @param adminEmail zur Sicherheit, muss zur UserID übereinstimmen
    */
@@ -184,15 +183,14 @@ export class DatabaseConnector {
     return result;
   }
 
-  //Der Parameter adminName bestimmt den Namen des Projektleiters, email bestimmt die E-Mail des Projektleiters und password bestimmt das Passwort des Projektleiters.
   /**
-   * Registriert einen neuen Projektleiter. 
-   * @param adminName 
-   * @param adminEmail 
-   * @param password 
-   * @param device 
-   * @returns Gibt die Daten zurück, als Fehler werden alle IDs auf -1 gesetzt
-   */
+     * Registriert einen neuen Projektleiter. 
+     * @param adminName 
+     * @param adminEmail 
+     * @param password 
+     * @param device 
+     * @returns Gibt die Daten zurück, als Fehler werden alle IDs auf -1 gesetzt
+     */
   async registerAdmin(requestData: { adminName: string, adminEmail: string, password: string, device: { deviceID?: number, deviceName: string, deviceType: string, firmware: string, generation: string, MACADRESS: string, sensorInformation: { sensorTypeID: number, sensorName: string, sensorUniqueID: number; }[]; }; }): Promise<{ adminID: number, device: { deviceID: number, sensorID: number[]; }; }> {
     const result: { adminID: number, device: { deviceID: number, sensorID: number[]; }; } = await this.sendRequest("register_admin", requestData);
     return result;

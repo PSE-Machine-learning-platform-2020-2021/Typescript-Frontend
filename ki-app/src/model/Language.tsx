@@ -15,7 +15,6 @@ export class Language {
     this.language = language;
   }
 
-
   /**
    * Gibt den Sprachen Code zurück
    */

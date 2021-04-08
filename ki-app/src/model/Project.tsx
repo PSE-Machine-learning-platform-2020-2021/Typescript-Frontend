@@ -166,9 +166,14 @@ export class Project {
       return this.currentDataSet.getID();
     }
     return -1;
-
   }
 
+  /**
+   * Fügt den übergebenen Datenpunkt dem aktuellen Datensatz hinzu
+   * @param dataRowID die DatenreihenID
+   * @param datapoint der Datenpunkt
+   * @returns true, wenn der Datenpunkt zur Datenreihe hinzugefügt werden konnte
+   */
   addDatapoint(dataRowID: number, datapoint: { value: number[], relativeTime: number; }): boolean {
     if (this.currentDataSet != null) {
       return this.currentDataSet.addDatapoint(dataRowID, datapoint);
@@ -236,6 +241,13 @@ export class Project {
     return false;
   }
 
+  /**
+   * Überschreibt ein bestehendes Label 
+   * @param labelID die LabelID von dem zu überschreibenden Label
+   * @param span das neue Zeitfenster
+   * @param labelName falls das Label neu benannt werden soll
+   * @returns 
+   */
   setLabel(labelID: number, span: { start: number, end: number; }, labelName?: string): boolean {
     if (this.currentDataSet != null) {
       return this.currentDataSet.setLabel(labelID, span, labelName);
@@ -243,6 +255,11 @@ export class Project {
     return false;
   }
 
+  /**
+   * Löscht ein bestehendes Label mit der LabelID
+   * @param labelID die LabelID, von dem Label das gelöscht werden soll
+   * @returns 
+   */
   deleteLabel(labelID: number): boolean {
     if (this.currentDataSet != null) {
       return this.currentDataSet.deleteLabel(labelID);

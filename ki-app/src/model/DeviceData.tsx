@@ -1,5 +1,6 @@
-//import { AccelerometerData, SensorData } from "./SensorData";
-
+/**
+ * Die Klasse DeviceData speichert Informationen über das Gerät
+ */
 export abstract class DeviceData {
   private id: number;
   private MACADDRESS: string;
@@ -7,10 +8,17 @@ export abstract class DeviceData {
   private firmware: string;
   private generation: string;
   protected abstract deviceType: string;
-  //private availableSensors: SensorData[] = [];
 
-  protected constructor ( deviceID: number, MACADRESS: string, deviceName: string, firmware: string, generation: string ) {
-    if ( deviceID < 0 ) {
+  /**
+   * Erstellt ein neues Gerät
+   * @param deviceID die globale GeräteID
+   * @param MACADRESS 
+   * @param deviceName 
+   * @param firmware 
+   * @param generation 
+   */
+  protected constructor(deviceID: number, MACADRESS: string, deviceName: string, firmware: string, generation: string) {
+    if (deviceID < 0) {
       this.id = -1;
     } else {
       this.id = deviceID;
@@ -25,67 +33,52 @@ export abstract class DeviceData {
    * Setzt nur die DeviceID falls beim erstellen des Gerätes die ID -1 übergeben wurde
    * @param deviceID 
    */
-  setDeviceID ( deviceID: number ): boolean {
-
-    if ( this.id === -1 && deviceID >= 0 ) {
+  setDeviceID(deviceID: number): boolean {
+    if (this.id === -1 && deviceID >= 0) {
       this.id = deviceID;
       return true;
     }
     return false;
   }
 
-  getID (): number {
+  getID(): number {
     return this.id;
   }
 
-  getName (): string {
+  getName(): string {
     return this.name;
   }
 
-  getMACADDRESS (): string {
+  getMACADDRESS(): string {
     return this.MACADDRESS;
   }
 
-  getFirmware (): string {
+  getFirmware(): string {
     return this.firmware;
   }
 
-  getGeneration (): string {
+  getGeneration(): string {
     return this.generation;
   }
 
-  /*getSensors(sensorTypeID: number[]): SensorData[] {
-    return [];
-  }
-  getSensor(id: number): SensorData {
-    return new AccelerometerData(this.id, this.MACADDRESS, this.name);
-  }*/
-
   /**
-   * Gibt alle Sensoren aus, die das Benutzergerät und das Programm unterstützt
-   *
-  getAvailableSensors(): number[] {
-    return [];
-  }*/
-
-  /**
-   * Prüft welches Gerät aktuell benutzt wird
+   * Prüft welches Gerät aktuell benutzt wird und gibt dazu die Passende Klasse zurück
    */
-  static loadDevice ( deviceID: number, device?: { MACADRESS: string, deviceName: string, firmware: string, generation: string, deviceType: string; } ): DeviceData {
+  static loadDevice(deviceID: number, device?: { MACADRESS: string, deviceName: string, firmware: string, generation: string, deviceType: string; }): DeviceData {
     ////////////////////////////////////////////////////
     //Noch herrausfinden Smartphone oder anderes Gerät//
     ////////////////////////////////////////////////////
-    if ( device != null ) {
-      if ( device.deviceType === "Smartphone" ) {
-        return new Smartphone( deviceID, device.MACADRESS, device.deviceName, device.firmware, device.generation );
-      } else if ( device.deviceType === "Desktop" ) {
-        return new Desktop( deviceID, device.MACADRESS, device.deviceName, device.firmware, device.generation );
+    if (device != null) {
+      if (device.deviceType === "Smartphone") {
+        return new Smartphone(deviceID, device.MACADRESS, device.deviceName, device.firmware, device.generation);
+      } else if (device.deviceType === "Desktop") {
+        return new Desktop(deviceID, device.MACADRESS, device.deviceName, device.firmware, device.generation);
       } else {
-        return new Smartphone( deviceID, device.MACADRESS, device.deviceName, device.firmware, device.generation );
+        return new Smartphone(deviceID, device.MACADRESS, device.deviceName, device.firmware, device.generation);
       }
     } else {
       //NUR DUMMY MUSS NOCH GEFÜLLT WERDEN
-      return new Smartphone( deviceID, "", "", "", "" );
+      return new Smartphone(deviceID, "", "", "", "");
     }
   }
   //protected abstract searchSensor(): void;

@@ -4,7 +4,6 @@ export abstract class SensorData {
   abstract SensorTypeID: number = -1; //Dies ist die global eindeutige ID für die Sensorart
   MACADDRESS: string; //Ist die MAC-adresse des Gerätes um es später wieder zuweisen zu können
   deviceName: string; //Der Name vom Erfassungsgerät
-  //abstract sensor: Sensor;
 
   constructor(id: number, MACADDRESS: string, deviceName: string) {
     this.id = id;
