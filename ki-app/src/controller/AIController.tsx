@@ -1,11 +1,11 @@
 import { Page } from "../view/pages/PageInterface";
 import { StartPage } from "../view/pages/StartPage";
 import { DataCollectionPage } from "../view/pages/DataCollectionPage/index";
-import { FinishPage } from "../view/pages/FinishPage/index";
 import { IState, States } from "../view/pages/State";
 import { PageController } from "./PageController";
 import { SensorManager } from "./SensorManager";
 import { MainController } from "./MainController";
+import { ResultPage } from "../view/pages/ResultPage/Result";
 
 
 /**
@@ -42,6 +42,18 @@ export class AIController implements PageController {
         //TODO Beim Registrieren des AIModelUsers sollte der Name weg oder eine Möglichkeit bestehen den Namen zu beziehen
         MainController.getInstance().getFacade().registerAIModelUser( "Gustav", +this.urlParams.get( "aiID" )! );
         this.modelID = modelID;
+        this.state.wait! = this.sensorManager.getAvailableSensors().then(
+            ( availableSensor ) => {
+                for ( let index = 0; index < availableSensor.length; index++ ) {
+                    const sensorTypID: number = availableSensor[ index ].sensorTypID;
+                    const sensorType: string = availableSensor[ index ].sensorType;
+                    const chosen: boolean = false;
+                    this.state.recordingSettings!.availableSensorTypes.push( { sensorTypID, sensorType, chosen } );
+
+                }
+                this.page.setState( this.state );
+            } );
+        this.update();
     }
 
     /**
@@ -50,8 +62,14 @@ export class AIController implements PageController {
     update () {
         this.state = this.page.getState();
         switch ( this.state.currentState ) {
-            case States.setUpSensorManager:
+            case States.ChangeToDataCollection:
                 this.start();
+                break;
+            case States.ChangeToFinish:
+                this.changeToFinish();
+                break;
+            case States.ClassifyResult:
+                this.classifyResult();
                 break;
             case States.SetLanguage:
                 this.page.setState( MainController.getInstance().setLanguage( this.state.languageCode ) );
@@ -60,13 +78,6 @@ export class AIController implements PageController {
                 this.state.messages = MainController.getInstance().getMessage( this.state.messages )!;
                 this.state.currentState = States.waitForDB;
                 this.page.setState( this.state );
-                break;
-            case States.StartDataRead:
-                this.sensorManager.readData( this.page );
-                this.changeToFinish();
-                break;
-            case States.ClassifyResult:
-                this.classifyResult();
                 break;
             default:
                 break;
@@ -83,9 +94,12 @@ export class AIController implements PageController {
         let waitTime = this.state.recordingSettings!.waitTime;
         let readTime = this.state.recordingSettings!.readTime;
         this.sensorManager.setUpDataRead( sensorTypes, dataSetName, waitTime, readTime, false );
+        this.page.detach( this );
         this.page = new DataCollectionPage();
         this.page.attach( this );
+        this.state.leadTime = this.sensorManager.getWaitTime();
         this.state = this.page.getState();
+        this.sensorManager.readData( this.page );
     }
 
     /**
@@ -93,7 +107,8 @@ export class AIController implements PageController {
      */
     //TODO Seite sollte für den AIModelUser noch angepasst werden. Hier wird ja nur Klassifiziert.
     private changeToFinish () {
-        this.page = new FinishPage();
+        this.page.detach( this );
+        this.page = new ResultPage();
         this.page.attach( this );
         this.state = this.page.getState();
         this.state.dataRows! = MainController.getInstance().getFacade().getCurrentDataRows()!.dataRows!;

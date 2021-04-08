@@ -19,10 +19,9 @@ export class ResultPage implements Page {
      * Konstruktor der Darstellungseite
      * @param admin Name der Person für den aufgenommen wird
      */
-    constructor ( admin: string ) {
+    constructor () {
         this.state = new State();
         this.update();
-        NotificationManager.success( admin );
     }
 
     /**
