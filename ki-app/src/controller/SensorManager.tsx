@@ -123,6 +123,7 @@ export class SensorManager {
                 state.currentState = States.LoadError;
             }
         }
+        console.log( "DA" );
         page.setState( state );
     }
 
