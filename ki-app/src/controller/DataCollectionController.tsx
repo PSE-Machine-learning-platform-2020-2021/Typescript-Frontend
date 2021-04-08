@@ -62,6 +62,8 @@ export class DataCollectionController implements PageController {
                     MainController.getInstance().getFacade().sendDataPointsAgain();
                 } else {
                 }
+                this.state.currentState = States.waitForDB;
+                this.page.setState( state );
                 break;
             //case States.SetWaitTime:
             //    PubSub.publish('nextCount', this.state.recordingSettings!.waitTime);
