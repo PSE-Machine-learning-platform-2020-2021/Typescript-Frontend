@@ -110,8 +110,8 @@ export class SensorManager {
                     }
                 }, 1000 );
             }
+            this.checkForErrors( state, page );
         }, 1000 );
-        this.checkForErrors( state, page );
     }
 
     private async checkForErrors ( state: State, page: Page ) {
