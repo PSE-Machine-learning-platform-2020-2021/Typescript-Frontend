@@ -2,11 +2,17 @@ import { Component, CSSProperties } from 'react';
 
 export default class Diagram extends Component {
 
+    /**
+     * der Datensatz für Linie-Diagramm und die Funktion für Seitewechsel, durch props übermittelt
+     */
     props = {
         dataRows: [{ sensorType: 1, datapoint: [{ value: [5], relativeTime: 5 }] }],
         pageChangeToFinish: function () { }
     };
 
+    /**
+     * der Datensatz in chart-js form
+     */
     state = {
         diagrammData: {
             lineLabels: [] as any[],
@@ -20,21 +26,21 @@ export default class Diagram extends Component {
             diagramOptions: {},
             color: ['rgba(46,190,87,1)', 'rgba(68,24,232,1)', 'rgba(238,173,14,1)', 'rgba(178,34,34,1)', 'rgba(238, 130, 238,1)', 'rgba(0, 0, 0,1)',
                 'rgba(106, 90, 205,1)', 'rgba(238, 118, 0,1)', 'rgba(105, 105, 105,1)'],
-            csscolor: ['2EBE57', 'CC00FF', 'EEAD0E', 'B22222', 'EE82EE', '000000',
-                '6A5ACD', 'EE7600', '696969'],
+            csscolor: ['#2EBE57', '#CC00FF', '#EEAD0E', '#B22222', '#EE82EE', '#000000',
+                '#6A5ACD', '#EE7600', '#696969'],
         }
     };
 
+    /**
+     * aktualisiert das Diagramm mit dem neuen Datensatz
+     */
     updateDiagramm() {
-        //PubSub.unsubscribe("startDiagram")
-        //put each value Array in State
         let diagrammData = this.state.diagrammData;
         diagrammData.lineLabels = [];
         diagrammData.sensorRow = [];
         diagrammData.datavalue = [];
         diagrammData.time = [];
         diagrammData.showDiagram = true;
-        this.setState({ diagrammData: diagrammData });
 
         var datavalues = [];
         for (var z = 0; z < this.props.dataRows.length; z++) {
@@ -47,7 +53,6 @@ export default class Diagram extends Component {
                 datavalues = [];
             }
         }
-        // eslint-disable-next-line
         for (var j = 0; j < this.props.dataRows[0].datapoint.length; j++) {
             this.state.diagrammData.time.push(this.props.dataRows[0].datapoint[j].relativeTime);
         }
@@ -58,6 +63,9 @@ export default class Diagram extends Component {
             var coordinate = ".X";
             var sensor = this.state.diagrammData.sensorRow[(i / 3) | 0];
             var sensorName = '';
+            /**
+                 * unterscheidet, welche Sensor es ist
+                 */
             switch (sensor) {
                 case 2:
                     sensorName = 'Accelerometer';
@@ -69,6 +77,9 @@ export default class Diagram extends Component {
                     sensorName = 'Magnetometer';
                     break;
             }
+            /**
+                 * unterscheidet, von welchem Koordinate dieser Datenpunkt ist
+                 */
             if (i % 3 === 1) {
                 coordinate = ".Y";
             }
@@ -102,17 +113,19 @@ export default class Diagram extends Component {
         diagrammData.diagramData = data;
         diagrammData.lineLabels = lineLabels;
         diagrammData.diagramOptions = options;
-        this.setState({ diagrammData: diagrammData });
     }
 
     submit = () => {
         this.props.pageChangeToFinish();
     };
 
+    /**
+     * Rendert diese Diagram-Komponente
+     * @returns Diagramm-Teil
+     */
     render() {
         var LineChart = require("react-chartjs").Line;
         this.updateDiagramm();
-        console.log(this.state.diagrammData);
         return (
             <div>
                 {this.state.diagrammData.lineLabels}

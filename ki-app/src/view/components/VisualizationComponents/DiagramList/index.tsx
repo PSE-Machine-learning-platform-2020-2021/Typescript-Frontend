@@ -1,6 +1,10 @@
 import React, { Component } from 'react'
 import "./DiagramList.css"
 export default class DiagramList extends Component {
+
+    /**
+     * Variablen und Methoden welche der Klasse zur verfügung gestellt werden müssen
+     */
     props = {
         currentDataSets: [] as { dataSetID: number, rows: { sensorType: number, datapoint: { value: number[], relativeTime: number }[] }[] }[],
     }
@@ -15,11 +19,19 @@ export default class DiagramList extends Component {
             '6A5ACD', 'EE7600', '696969']
     };
     diagramList = [] as any[];
+    /**
+     * Status für diese Komponente
+     */
     state = {
         showDiagramIndex: 0,
         diagramList: [] as any[]
     };
 
+    /**
+     * Nach Klicken auf Diagram das Zeigendiagram wechseln
+     * @param diagram gewählte Diagram
+     * @param index Diagramindex
+     */
     handleClick = (diagram: any, index: any) => {
         this.setState({ showDiagramIndex: index });
         // The following two console-log calls are just for parameter usage and have no actual meaning.
@@ -28,6 +40,10 @@ export default class DiagramList extends Component {
 
     };
 
+    /**
+     * Diagram erstellen
+     * @param dataSet Datensätze für Diagram
+     */
     updateDiagramm(dataSet: { dataSetID: any; rows: any[]; }) {
         this.diagrammData.lineLabels = []
         this.diagrammData.sensorRow = []
@@ -108,10 +124,16 @@ export default class DiagramList extends Component {
 
     }
 
+    /**
+     * Render Methode des Komponenten
+     * @returns Aufbau des Komponenten
+     */
     render() {
         var LineChart = require("react-chartjs").Line;
+
+        //jede Diagram nur einmal zeigen,und nur erneut mit neue Data
         // eslint-disable-next-line
-        /*this.props.currentDataSets?.map((dataSet, index) => {
+        this.props.currentDataSets?.map((dataSet, index) => {
             var flag = false
             // eslint-disable-next-line
             this.diagramList.map((diagram) => {
@@ -122,7 +144,7 @@ export default class DiagramList extends Component {
             })
             if (flag) { return dataSet }
             else { this.updateDiagramm(dataSet) }
-        })*/
+        })
         return (
             <div>
                 {this.diagramList.map((diagram, index) => {

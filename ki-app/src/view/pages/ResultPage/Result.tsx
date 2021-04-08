@@ -19,10 +19,9 @@ export class ResultPage implements Page {
      * Konstruktor der Darstellungseite
      * @param admin Name der Person für den aufgenommen wird
      */
-    constructor ( admin: string ) {
+    constructor () {
         this.state = new State();
         this.update();
-        NotificationManager.success( admin );
     }
 
     /**
@@ -35,6 +34,7 @@ export class ResultPage implements Page {
         const VDOM = (
             <div>
                 <h1>Klassifiziere, bitte warten</h1>
+                <h1>{ this.state.aiUserData!.result }</h1>
                 <NotificationContainer />
             </div>
         );

@@ -75,7 +75,7 @@ test( 'Login fehler test', async () => {
 
 test( 'LoadProject test', async () => {
   state.currentState = States.LoadProject;
-  state.currentProject = { projectID: 1, projectName: "NULL", choosenAIModelID: -1 };
+  state.currentProject = { projectID: 1, projectName: "NULL", AIModelID: [ -1 ] };
   let resolve = Promise.resolve( true );
   Facade.loadProject = jest.fn( () => {
     return resolve;
@@ -111,7 +111,7 @@ test( 'Register test', async () => {
 
 test( 'NewProjekt test und CreatQR test', async () => {
   state.currentState = States.NewProjekt;
-  state.currentProject = { projectID: 1, projectName: "TestName", choosenAIModelID: 1 };
+  state.currentProject = { projectID: 1, projectName: "TestName", AIModelID: [ 1 ] };
   let resolve = Promise.resolve( true );
   Facade.createProject = jest.fn( () => {
     return resolve;

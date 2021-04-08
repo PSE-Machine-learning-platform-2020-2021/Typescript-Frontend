@@ -1,3 +1,4 @@
+import { AIController } from "../controller/AIController";
 import { DeviceData } from "./DeviceData";
 import { Project } from "./Project";
 import { SensorData } from "./SensorData";
@@ -10,6 +11,7 @@ export abstract class User {
   protected name: string; //Der Name des Users
   protected device: DeviceData; //Das Benutzergerät des Benutzers
   protected currentProject?: Project;
+  private dataSetID: number;
 
   /**
    * Erstellt einen Benutzer
@@ -23,11 +25,12 @@ export abstract class User {
       this.id = id;
     }
     this.device = device;
-    if (name != null) {
+    if (name !== undefined) {
       this.name = name;
     } else {
       this.name = this.device.getName();
     }
+    this.dataSetID = -1;
   }
 
   /**
@@ -37,7 +40,16 @@ export abstract class User {
     if (this.currentProject != null) {
       return this.currentProject.getCurrentDataSetID();
     } else {
-      return -1;
+      return this.dataSetID;
+    }
+  }
+
+  setCurrentDataSetID(newID: number): void {
+    if (this.name === AIController.AI_MODEL_USER_NAME) {
+      this.dataSetID = newID;
+    }
+    else {
+      this.dataSetID = -1;
     }
   }
 
@@ -105,6 +117,7 @@ export abstract class User {
     if (this.currentProject != null) {
       return this.currentProject.createDataSet(dataRowSensors, dataSetID, dataSetName, generateDate);
     } else {
+      this.setCurrentDataSetID(dataSetID);
       return false;
     }
   }

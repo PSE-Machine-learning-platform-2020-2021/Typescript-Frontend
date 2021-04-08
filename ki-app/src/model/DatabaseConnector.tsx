@@ -43,8 +43,7 @@ export class DatabaseConnector {
    * @param userID die UserID, der Daten anlegen möchte
    * @param dataSetName der Name des Datensatzes
    * @param dataRow die zu erzeugenden Datenreihen, die sensorID muss schon existieren
-   * @returns dataSetID (dataRowID ist implizit, da es die ID der Position im Array von dataRow ist (beginnend mit 0))
-   *          bei fehler, -1
+   * @returns dataSetID (dataRowID ist implizit, da es die ID der Position im Array von dataRow ist (beginnend mit 1)), bei Fehler -1
    */
   async createDataSet(requestData: { sessionID: number, projectID: number, userID: number, dataSetName: string, dataRow: { sensorID: number, datarowName?: string; }[]; }): Promise<number> {
     const dataSetID: number = (await this.sendRequest("create_data_set", requestData)).dataSetID;

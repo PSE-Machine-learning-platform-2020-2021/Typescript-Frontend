@@ -2,11 +2,22 @@ import React, { Component } from 'react';
 import { nanoid } from 'nanoid';
 import { NotificationManager } from 'react-notifications';
 import 'react-notifications/lib/notifications.css';
+
+/**
+ * Behandeln Emailliste mit Hinzufügen und Löschen, wählen Eamils auszuliefern
+ */
 export default class EmailList extends Component {
+
+	/**
+	 * Variablen und Methoden welche der Klasse zur verfügung gestellt werden müssen
+	 */
 	props = {
 		delivery: function (chosenEmails: string[]) { }
 	};
 
+	/**
+	 * Status für diese Komponente
+	 */
 	state = {
 		mouse: false,
 		addButtonClick: false,
@@ -23,10 +34,17 @@ export default class EmailList extends Component {
 		}]
 	};
 
+	/**
+	 * Erstellen Eingabefeld
+	 */
 	handleCreate = () => {
 		this.setState({ addButtonClick: true });
 	};
 
+	/**
+	 * Eingabe Methode
+	 * @param e ChangeEventInput
+	 */
 	inputchange = (e: React.ChangeEvent<HTMLInputElement>) => {
 		// eslint-disable-next-line
 		if (e.target.value == '') {
@@ -36,6 +54,12 @@ export default class EmailList extends Component {
 		}
 
 	};
+
+	/**
+	 * Eingabe beschätigen
+	 * @param e KeyboardEvent
+	 * @returns 
+	 */
 	handleKeyUp = (e: React.KeyboardEvent<HTMLInputElement>) => {
 		this.deleteEmail('example');
 		const { keyCode } = e;
@@ -69,13 +93,22 @@ export default class EmailList extends Component {
 		this.setState({ addButtonClick: false });
 	};
 
-	//handle emailItem
+	/**
+	 * Behandeln Mausstatus
+	 * @param flag Mausstatus
+	 * @returns 
+	 */
 	handleMouse = (flag: boolean) => {
 		return () => {
 			this.setState({ mouse: flag });
 		};
 	};
 
+	/**
+	 * Wählen Email Methode
+	 * @param id gewählt EmailID
+	 * @param chosen gewählt oder nicht
+	 */
 	handleCheck = (id: string, chosen: boolean) => {
 		const { emails } = this.state;
 		const newEmails = emails.map((emailObj) => {
@@ -86,6 +119,10 @@ export default class EmailList extends Component {
 		this.setState({ emails: newEmails });
 	};
 
+	/**
+	 * Löschen Methode
+	 * @param id EmailID zu löschen
+	 */
 	handleDelete = (id: string) => {
 		if (window.confirm('Sind Sie sicher, die gewählt Emailadresse zu löschen?')) {
 			const { emails } = this.state;
@@ -143,7 +180,9 @@ export default class EmailList extends Component {
 			this.setState({ emails: newEmails });
 		}
 	};
-	//sendmethod
+	/**
+	 * Ausliefern-Methode
+	 */
 	delivery = () => {
 		const { emails } = this.state;
 		let emailaddressList: string[] = [];
@@ -154,6 +193,11 @@ export default class EmailList extends Component {
 		//console.log(emailaddressList)
 		this.props.delivery(emailaddressList);
 	};
+
+	/**
+	 * Render Methode des Komponenten
+	 * @returns Aufbau des Komponenten
+	 */
 	render() {
 		const { mouse, emails } = this.state;
 		const chosenCount = emails.reduce((pre, email) => pre + (email.chosen ? 1 : 0), 0);

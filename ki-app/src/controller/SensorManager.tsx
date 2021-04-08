@@ -2,8 +2,10 @@ import { MainController } from "./MainController";
 import { Page } from "../view/pages/PageInterface";
 import { IState, States } from "../view/pages/State";
 import { Facade } from "../model/Facade";
+import { State } from "../view/pages/ModelCreationPage/State";
 
 export class SensorManager {
+    private checkList: Promise<boolean>[] = [];
     private currentSensors: Sensor[] = [];
     //private currentSensorIDs: number[] = [];
     private facade: Facade = MainController.getInstance().getFacade();
@@ -97,7 +99,7 @@ export class SensorManager {
                     while ( this.dataPoints.length > 0 ) {
                         let newDataPoint = this.dataPoints.shift()!;
                         state.dataPoints!.push( newDataPoint );
-                        MainController.getInstance().getFacade().sendDataPoint( newDataPoint.rowId, { value: newDataPoint.value, relativeTime: newDataPoint.relativeTime } );
+                        this.checkList.push( MainController.getInstance().getFacade().sendDataPoint( newDataPoint.rowId, { value: newDataPoint.value, relativeTime: newDataPoint.relativeTime } ) );
                         page.setState( state );
                     }
                     if ( this.readTime === 0 ) {
@@ -105,10 +107,21 @@ export class SensorManager {
                         for ( let index = 0; index < this.currentSensors.length; index++ ) {
                             this.currentSensors[ index ].stop();
                         }
+                        this.checkForErrors( state, page );
                     }
                 }, 1000 );
             }
         }, 1000 );
+    }
+
+    private async checkForErrors ( state: State, page: Page ) {
+        for ( const element of this.checkList ) {
+            let errorWhenSend = !( await element );
+            if ( errorWhenSend ) {
+                state.currentState = States.LoadError;
+            }
+        }
+        page.setState( state );
     }
 
     private saveDatapointinRow ( dataPoint: { rowId: number, sensorType: number, value: number[]; relativeTime: number; } ) {
@@ -148,6 +161,9 @@ export class SensorManager {
     * @param sensorType Die ID des Sensortypes
     */
     private getData ( sensor: Magnetometer | Gyroscope | Accelerometer, rowId: number, sensorType: number ) {
+        if ( sensor.x === undefined || sensor.y === undefined || sensor.z === undefined ) {
+            return;
+        }
         const point = { rowId, sensorType, value: [ sensor.x!, sensor.y!, sensor.z! ], relativeTime: ( new Date().getTime() - this.startTime ) / 1000 };
         this.dataPoints.push( point );
         this.saveDatapointinRow( point );

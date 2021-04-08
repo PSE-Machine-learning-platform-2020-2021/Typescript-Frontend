@@ -57,6 +57,13 @@ export class DataCollectionController implements PageController {
             case States.ChangeToFinish:
                 MainController.getInstance().changeTo( new FinishController() );
                 break;
+            case States.LoadError:
+                if ( window.confirm( "Es wurden nicht alle Daten Erfolgreich gesendet. Stellen sie sicher das eine Internetverbindung besteht. Sollen die Daten erneut gesendet werden?" ) ) {
+                    MainController.getInstance().getFacade().sendDataPointsAgain();
+                }
+                this.state.currentState = States.waitForDB;
+                this.page.setState( state );
+                break;
             //case States.SetWaitTime:
             //    PubSub.publish('nextCount', this.state.recordingSettings!.waitTime);
             //    break;

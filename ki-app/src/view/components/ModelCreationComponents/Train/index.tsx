@@ -4,15 +4,23 @@ import { NotificationManager } from 'react-notifications';
 import 'react-notifications/lib/notifications.css';
 import './Train.css';
 export default class Train extends Component {
+
+	/**
+	 * Variablen und Methoden welche der Klasse zur verfügung gestellt werden müssen
+	 */
 	props = {
 		dataSetMetas: [] as { dataSetID: number, dataSetName: string; }[],
 		train: function (dataSets: number[], imputator: string, classifier: string, scaler: string, features: string[]) { },
 		changeToReferring: function () { }
 	};
+
+	/**
+	 * Status für diese Komponente
+	 */
 	state = {
 		mouse: false,
 		openNewWindow: false,
-		value: '',
+		value: '' as string,
 		databaseList: [] as { dataSetID: number, dataSetName: string, chosen: boolean; }[],
 		datasets: [] as { dataSetID: number, dataSetName: string, chosen: boolean; }[],
 		imputators: [
@@ -56,12 +64,13 @@ export default class Train extends Component {
 	 * Befüllt die beiden state-Variablen, die so aussehen, als müssten da die Datensätze des aktuellen Projekts rein, 
 	 * mit den Daten aus der props-Variable dataSetMetas.
 	 */
-	private fillState(): void {
+	componentWillReceiveProps(): void {
 		this.setState({ databaseList: [] })
 		for (const x of this.props.dataSetMetas) {
 			this.state.databaseList.push({ dataSetName: x.dataSetName, dataSetID: x.dataSetID, chosen: false });
 		}
 	}
+
 	/** 
 		componentDidMount() {
 			let newDatabaseList: { dataSetID: number, dataSetName: string, chosen: boolean; }[] = [];
@@ -72,12 +81,22 @@ export default class Train extends Component {
 			this.setState({ databaseList: newDatabaseList });
 		}*/
 
+	/**
+	 * Wechseln Mausstatus
+	 * @param flag Maus darauf
+	 * @returns 
+	 */
 	handleMouse = (flag: boolean) => {
 		return () => {
 			this.setState({ mouse: flag });
 		};
 	};
 
+	/**
+	 * Klicken für checkbox von Datensätze
+	 * @param id Gewählte ID
+	 * @param chosen checked oder nicht
+	 */
 	handleCheck = (id: number, chosen: boolean) => {
 		const { datasets } = this.state;
 		const newDatasets = datasets.map((dataset) => {
@@ -88,8 +107,12 @@ export default class Train extends Component {
 		this.setState({ datasets: newDatasets });
 	};
 
+	/**
+	 * Löschen Methode
+	 * @param id löscht DatasetID
+	 */
 	handleDelete = (id: number) => {
-		if (window.confirm('Sind Sie sicher, die gewählt Emailadresse löschen zu wollen?')) {
+		if (window.confirm('Sind Sie sicher, den gewählten Datensatz löschen zu wollen?')) {
 			const { datasets } = this.state;
 			const newDatasets = datasets.filter((dataset) => {
 				return dataset.dataSetID !== id;
@@ -99,16 +122,9 @@ export default class Train extends Component {
 		}
 	};
 
-	//addDataset for add new Dataset
-	addDataset = (datasetObj: { dataSetID: number, dataSetName: string, chosen: boolean; }) => {
-		//get orignal datasetList
-		const { datasets } = this.state;
-		//add new one
-		const newDatasets = [datasetObj, ...datasets];
-		//update datasetList
-		this.setState({ datasets: newDatasets });
-	};
-
+	/**
+	 * Erstellung neue Fenster für Datensätze wählen
+	 */
 	handleCreate = () => {
 		//if (this.state.databaseList == []) {
 		//	}
@@ -116,50 +132,59 @@ export default class Train extends Component {
 		this.setState({ openNewWindow: flag });
 	};
 
+	/**
+	 * Selektieren von DatabaseList
+	 * @param e ChangeEventSelect
+	 */
 	handleChange = (e: React.ChangeEvent<HTMLSelectElement>) => {
 		this.setState({
 			value: e.target.value
 		});
 	};
 
-	handleChoose = () => {
-		/* wait to change load model*/
-		this.setState({ openNewWindow: false });
-		// eslint-disable-next-line
-		if (this.state.value == '') {
+	/**
+	 * Diese Methode verarbeitet die Events, die ausgelöst werden, wenn im Datensatz-Auswahlfenster ein Datensatz
+	 * ausgewählt wird und diese Auswahl durch Drücken des zugehörigen Knopfes bestätigt wird.
+	 */
+	handleChoose = (): void => {
+		if (this.state.value === '') {
 			NotificationManager.error("Keine Option ausgewählt!", "", 3000);
-		} else {
-			const { databaseList } = this.state;
-			const newDatabaseList1 = databaseList.map((databaseObj) => {
-				// eslint-disable-next-line
-				if (databaseObj.dataSetName == this.state.value) {
-					databaseObj.chosen = true;
-					const datasetObj = { dataSetID: databaseObj.dataSetID, dataSetName: databaseObj.dataSetName, chosen: false };
-					this.addDataset(datasetObj);
-				}
-				return databaseObj;
-			}
-			);
-			const newDatabaseList2 = newDatabaseList1.filter((databaseObj) => {
-				// eslint-disable-next-line
-				return databaseObj.chosen == false;
-			});
-			//update emailList
-			this.setState({ databaseList: newDatabaseList2 });
+			this.setState({ "openNewWindow": false });
+			return;
 		}
+		let dataSets = this.state.datasets;
+		this.props.dataSetMetas.map((entry): boolean => {
+			if (entry.dataSetName == this.state.value) {
+				dataSets.push({ dataSetID: entry.dataSetID, dataSetName: entry.dataSetName, chosen: true });
+				return true;
+			}
+			return false;
+		});
+		this.setState({ "datasets": dataSets, "openNewWindow": false, "value": undefined });
 	};
 
-	options = () => {
-		const { databaseList } = this.state;
-		/*way to add new into list
-		and wait to get databaseList
-		const newdatabase = {id:'003', name:'dataset3', chosen: false}
-		databaseList.push(newdatabase)
-		*/
-		return databaseList.map(dataset =>
-			<option key={dataset.dataSetID} value={dataset.dataSetName}>{dataset.dataSetName}</option>);
+	/**
+	 * Erzeugt die Dropdown-Liste im Datensatz-Auswahlfenster.
+	 * Bereits ausgewählte Datensätze werden zwar angezeigt, sind aber ausgegraut.
+	 * 
+	 * @returns Ein Array aus JSX-DOM-Elementen
+	 */
+	options = (): JSX.Element[] => {
+		return this.props.dataSetMetas.map(dataset => {
+			if (this.state.datasets.map(entry => entry.dataSetID).includes(dataset.dataSetID)) {
+				return <option key={dataset.dataSetID} value={dataset.dataSetName} disabled={true}>{dataset.dataSetName}</option>;
+			}
+			else {
+				return <option key={dataset.dataSetID} value={dataset.dataSetName}>{dataset.dataSetName}</option>;
+			}
+		});
 	};
 
+	/**
+	 * Check Imputation
+	 * @param index Imputationindex
+	 * @returns 
+	 */
 	handleImputation = (index: number) => {
 		var newList = [...this.state.imputators];
 		var newChosen = this.state.chosenImputator;
@@ -174,8 +199,12 @@ export default class Train extends Component {
 		}
 	};
 
+	/**
+	 * Check Scaler
+	 * @param index Scalerindex 
+	 * @returns 
+	 */
 	handleScaler = (index: number) => {
-
 		var newList = [...this.state.scalers];
 		var newChosen = this.state.chosenScaler;
 		if (newList[index].checked) { newChosen--; }
@@ -191,12 +220,21 @@ export default class Train extends Component {
 
 	};
 
+	/**
+	 * Check Extraction
+	 * @param index Extractionindex
+	 */
 	handleExtraction = (index: number) => {
 		var newList = [...this.state.myfeatures];
 		newList[index].checked = !newList[index].checked;
 		this.setState({ features: newList });
 	};
 
+	/**
+	 * Check Classifier
+	 * @param index Classifierindex
+	 * @returns 
+	 */
 	handleClassifier = (index: number) => {
 		var newList = [...this.state.classifiers];
 		var newChosen = this.state.chosenclassifier;
@@ -212,6 +250,10 @@ export default class Train extends Component {
 		}
 	};
 
+	/**
+	 * Trainieren Methode
+	 * @returns 
+	 */
 	handleTrain = () => {
 		var dataSets: number[] = [], imputator = "", classifier = '', scaler = '', features: string[] = [];
 		const { datasets, imputators, classifiers, scalers, myfeatures } = this.state;
@@ -276,12 +318,18 @@ export default class Train extends Component {
 		this.props.train(dataSets, imputator, classifier, scaler, features);
 	};
 
+	/**
+	 * Wechseln zu Darstellungsseite
+	 */
 	handleChangePage() {
 		this.props.changeToReferring();
 	}
 
+	/**
+	 * Render Methode des Komponenten
+	 * @returns Aufbau des Komponenten
+	 */
 	render() {
-		this.fillState();
 		const { mouse, datasets, imputators, scalers, myfeatures, classifiers } = this.state;
 		return (
 			<div className="train">

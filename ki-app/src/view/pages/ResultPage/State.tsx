@@ -14,5 +14,6 @@ export class State implements IState {
   collectionTime: number = 5;
   name: string = "";
   wait?: Promise<any>;
+  aiUserData?: { name: string, result: string; } = { name: "NULL", result: "" };
 }
 
