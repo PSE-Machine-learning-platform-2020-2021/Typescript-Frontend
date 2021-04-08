@@ -116,9 +116,8 @@ export class SensorManager {
 
     private async checkForErrors ( state: State, page: Page ) {
         for ( const element of this.checkList ) {
-            let errorWhenSend = await element;
-            console.log( errorWhenSend );
-            if ( errorWhenSend && state.currentState != States.LoadError ) {
+            let errorWhenSend = !( await element );
+            if ( errorWhenSend ) {
                 state.currentState = States.LoadError;
             }
         }
