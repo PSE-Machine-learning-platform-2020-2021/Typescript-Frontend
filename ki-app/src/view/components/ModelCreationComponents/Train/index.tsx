@@ -12,7 +12,7 @@ export default class Train extends Component {
 	state = {
 		mouse: false,
 		openNewWindow: false,
-		value: '',
+		value: '' as string,
 		databaseList: [] as { dataSetID: number, dataSetName: string, chosen: boolean; }[],
 		datasets: [] as { dataSetID: number, dataSetName: string, chosen: boolean; }[],
 		imputators: [
@@ -120,16 +120,18 @@ export default class Train extends Component {
 	handleChoose = (): void => {
 		if (this.state.value === '') {
 			NotificationManager.error("Keine Option ausgewählt!", "", 3000);
-			this.setState({ "openNewWindow": false });
+			this.setState({ openNewWindow: false });
 			return;
 		} 
 		let dataSets = this.state.datasets;
-		this.props.dataSetMetas.map((entry): void => {
-			if (entry.dataSetName === this.state.value) {
+		this.props.dataSetMetas.map((entry): boolean => {
+			if (entry.dataSetName == this.state.value) {
 				dataSets.push({ dataSetID: entry.dataSetID, dataSetName: entry.dataSetName, chosen: true });
+				return true;
 			}
+			return false;
 		});
-		this.setState({"datasets": dataSets, "openNewWindow": false});
+		this.setState({datasets: dataSets, openNewWindow: false});
 	};
 
 	/**
@@ -270,7 +272,6 @@ export default class Train extends Component {
 	}
 
 	render() {
-		//this.fillState();
 		const { mouse, datasets, imputators, scalers, myfeatures, classifiers } = this.state;
 		return (
 			<div className="train">
