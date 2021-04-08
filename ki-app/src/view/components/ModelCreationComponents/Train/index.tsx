@@ -100,16 +100,6 @@ export default class Train extends Component {
 		}
 	};
 
-	//addDataset for add new Dataset
-	addDataset = (datasetObj: { dataSetID: number, /*dataSetName: string, */chosen: boolean; }) => {
-		//get orignal datasetList
-		const { datasets } = this.state;
-		//add new one
-		const newDatasets = [datasetObj, ...datasets];
-		//update datasetList
-		this.setState({ datasets: newDatasets });
-	};
-
 	handleCreate = () => {
 		//if (this.state.databaseList == []) {
 		//	}
@@ -128,18 +118,18 @@ export default class Train extends Component {
 	 * ausgewählt wird und diese Auswahl durch Drücken des zugehörigen Knopfes bestätigt wird.
 	 */
 	handleChoose = (): void => {
-		/* wait to change load model*/
-		this.setState({ openNewWindow: false });
 		if (this.state.value === '') {
 			NotificationManager.error("Keine Option ausgewählt!", "", 3000);
-		} else {
-			this.props.dataSetMetas.map((entry) => {
-				if (entry.dataSetName === this.state.value) {
-					this.state.datasets.push({ dataSetID: entry.dataSetID, dataSetName: entry.dataSetName, chosen: true });
-				}
-			});
-			//update emailList
-		}
+			this.setState({ "openNewWindow": false });
+			return;
+		} 
+		let dataSets = this.state.datasets;
+		this.props.dataSetMetas.map((entry): void => {
+			if (entry.dataSetName === this.state.value) {
+				dataSets.push({ dataSetID: entry.dataSetID, dataSetName: entry.dataSetName, chosen: true });
+			}
+		});
+		this.setState({"datasets": dataSets, "openNewWindow": false});
 	};
 
 	/**
