@@ -43,9 +43,27 @@ export class AIController implements PageController {
         //TODO Beim Registrieren des AIModelUsers sollte der Name weg oder eine Möglichkeit bestehen den Namen zu beziehen
         //MainController.getInstance().getFacade().registerAIModelUser( "Gustav", +this.urlParams.get( "aiID" )! );
         this.modelID = modelID;
-        this.state.recordingSettings!.availableSensorTypes.push( { sensorTypID: 2, sensorType: "TEST", chosen: true } );
+        this.setUpSensorShown();
         this.page.setState( this.state );
         this.update();
+    }
+
+    private setUpSensorShown () {
+        let sensorTypes: number[] = this.urlParams.get( "sensorTypes" )!.split( "," ).map( x => +x );
+        let text: string = "Sie benötigen folgenede Sensoren: ";
+        for ( const element of sensorTypes ) {
+            switch ( element ) {
+                case 2:
+                    text += "Beschleunigungssensor ";
+                    break;
+                case 3:
+                    text += "Gyroskop ";
+                    break;
+                default:
+                    break;
+            }
+        }
+        this.state.recordingSettings!.availableSensorTypes.push( { sensorTypID: -1, sensorType: text, chosen: true } );
     }
 
     /**
