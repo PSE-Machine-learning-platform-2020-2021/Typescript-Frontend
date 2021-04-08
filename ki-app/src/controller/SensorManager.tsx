@@ -106,15 +106,16 @@ export class SensorManager {
                         for ( let index = 0; index < this.currentSensors.length; index++ ) {
                             this.currentSensors[ index ].stop();
                         }
-                    }
-                    checkList.forEach( element => {
-                        element.then( ( errorWhenSend: Boolean ) => {
-                            if ( errorWhenSend ) {
-                                state.currentState = States.LoadError;
-                                page.setState( state );
-                            }
+                        checkList.forEach( element => {
+                            element.then( ( errorWhenSend: Boolean ) => {
+                                if ( errorWhenSend ) {
+                                    state.currentState = States.LoadError;
+                                    page.setState( state );
+                                }
+                            } );
                         } );
-                    } );
+                    }
+
                 }, 1000 );
             }
         }, 1000 );
