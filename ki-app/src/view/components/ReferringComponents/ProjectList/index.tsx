@@ -5,9 +5,14 @@ import ModelList from '../ModelList';
 import QRImage from '../QRImage';
 import './ProjectList.css';
 
-
+/**
+ * Projektliste
+ */
 export default class ProjectList extends Component {
 
+    /**
+     * Variablen und Methoden welche der Klasse zur verfügung gestellt werden müssen
+     */
     props = {
         projectData: [{ projectID: -1, projectName: "null", AIModelID: [-1], }],
         pageSetCurrentprojekt: function (currentProject: { projectID: number; projectName: string; AIModelID: number[]; }) { },
@@ -17,6 +22,9 @@ export default class ProjectList extends Component {
         qr: ''
     };
 
+    /**
+     * Status für diese Komponente
+     */
     state = {
         value: null,
         click: false,
@@ -24,12 +32,19 @@ export default class ProjectList extends Component {
         currentProject: { projectID: -1, projectName: "", AIModelID: [] }
     };
 
+    /**
+     * Selektieren in Modelliste
+     * @param e ChangeEvent
+     */
     private handleChange = (e: React.ChangeEvent<HTMLSelectElement>) => {
         this.setState({
             value: e.target.value
         });
     };
 
+    /**
+     * Wenn es gibt, erstellt Modelliste nach Klicken
+     */
     private handleChoose() {
         if (this.state.value === null) {
             NotificationManager.error("Sie haben noch kein Projekt gewählt", "", 3000);
@@ -56,6 +71,9 @@ export default class ProjectList extends Component {
         }
     }
 
+    /**
+     * Methode für Projekt laden
+     */
     private handleLoad() {
         if (this.state.value === null) {
             NotificationManager.error("Sie haben noch kein Projekt gewählt", "", 3000);
@@ -71,6 +89,10 @@ export default class ProjectList extends Component {
         }
     }
 
+    /**
+     * Render Methode des Komponenten
+     * @returns Aufbau des Komponenten
+     */
     render() {
         return (
             <section className='projectlist'>

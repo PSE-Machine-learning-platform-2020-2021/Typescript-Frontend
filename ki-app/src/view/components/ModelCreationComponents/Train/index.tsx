@@ -4,11 +4,19 @@ import { NotificationManager } from 'react-notifications';
 import 'react-notifications/lib/notifications.css';
 import './Train.css';
 export default class Train extends Component {
+
+	/**
+	 * Variablen und Methoden welche der Klasse zur verfügung gestellt werden müssen
+	 */
 	props = {
 		dataSetMetas: [] as { dataSetID: number, dataSetName: string; }[],
 		train: function (dataSets: number[], imputator: string, classifier: string, scaler: string, features: string[]) { },
 		changeToReferring: function () { }
 	};
+
+	/**
+	 * Status für diese Komponente
+	 */
 	state = {
 		mouse: false,
 		openNewWindow: false,
@@ -56,7 +64,7 @@ export default class Train extends Component {
 	 * Befüllt die beiden state-Variablen, die so aussehen, als müssten da die Datensätze des aktuellen Projekts rein, 
 	 * mit den Daten aus der props-Variable dataSetMetas.
 	 */
-	 componentWillReceiveProps(): void {
+	componentWillReceiveProps(): void {
 		this.setState({ databaseList: [] })
 		for (const x of this.props.dataSetMetas) {
 			this.state.databaseList.push({ dataSetName: x.dataSetName, dataSetID: x.dataSetID, chosen: false });
@@ -73,12 +81,22 @@ export default class Train extends Component {
 			this.setState({ databaseList: newDatabaseList });
 		}*/
 
+	/**
+	 * Wechseln Mausstatus
+	 * @param flag Maus darauf
+	 * @returns 
+	 */
 	handleMouse = (flag: boolean) => {
 		return () => {
 			this.setState({ mouse: flag });
 		};
 	};
 
+	/**
+	 * Klicken für checkbox von Datensätze
+	 * @param id Gewählte ID
+	 * @param chosen checked oder nicht
+	 */
 	handleCheck = (id: number, chosen: boolean) => {
 		const { datasets } = this.state;
 		const newDatasets = datasets.map((dataset) => {
@@ -89,6 +107,10 @@ export default class Train extends Component {
 		this.setState({ datasets: newDatasets });
 	};
 
+	/**
+	 * Löschen Methode
+	 * @param id löscht DatasetID
+	 */
 	handleDelete = (id: number) => {
 		if (window.confirm('Sind Sie sicher, den gewählten Datensatz löschen zu wollen?')) {
 			const { datasets } = this.state;
@@ -100,6 +122,9 @@ export default class Train extends Component {
 		}
 	};
 
+	/**
+	 * Erstellung neue Fenster für Datensätze wählen
+	 */
 	handleCreate = () => {
 		//if (this.state.databaseList == []) {
 		//	}
@@ -107,6 +132,10 @@ export default class Train extends Component {
 		this.setState({ openNewWindow: flag });
 	};
 
+	/**
+	 * Selektieren von DatabaseList
+	 * @param e ChangeEventSelect
+	 */
 	handleChange = (e: React.ChangeEvent<HTMLSelectElement>) => {
 		this.setState({
 			value: e.target.value
@@ -122,7 +151,7 @@ export default class Train extends Component {
 			NotificationManager.error("Keine Option ausgewählt!", "", 3000);
 			this.setState({ "openNewWindow": false });
 			return;
-		} 
+		}
 		let dataSets = this.state.datasets;
 		this.props.dataSetMetas.map((entry): boolean => {
 			if (entry.dataSetName == this.state.value) {
@@ -131,7 +160,7 @@ export default class Train extends Component {
 			}
 			return false;
 		});
-		this.setState({"datasets": dataSets, "openNewWindow": false, "value": undefined});
+		this.setState({ "datasets": dataSets, "openNewWindow": false, "value": undefined });
 	};
 
 	/**
@@ -151,6 +180,11 @@ export default class Train extends Component {
 		});
 	};
 
+	/**
+	 * Check Imputation
+	 * @param index Imputationindex
+	 * @returns 
+	 */
 	handleImputation = (index: number) => {
 		var newList = [...this.state.imputators];
 		var newChosen = this.state.chosenImputator;
@@ -165,8 +199,12 @@ export default class Train extends Component {
 		}
 	};
 
+	/**
+	 * Check Scaler
+	 * @param index Scalerindex 
+	 * @returns 
+	 */
 	handleScaler = (index: number) => {
-
 		var newList = [...this.state.scalers];
 		var newChosen = this.state.chosenScaler;
 		if (newList[index].checked) { newChosen--; }
@@ -182,12 +220,21 @@ export default class Train extends Component {
 
 	};
 
+	/**
+	 * Check Extraction
+	 * @param index Extractionindex
+	 */
 	handleExtraction = (index: number) => {
 		var newList = [...this.state.myfeatures];
 		newList[index].checked = !newList[index].checked;
 		this.setState({ features: newList });
 	};
 
+	/**
+	 * Check Classifier
+	 * @param index Classifierindex
+	 * @returns 
+	 */
 	handleClassifier = (index: number) => {
 		var newList = [...this.state.classifiers];
 		var newChosen = this.state.chosenclassifier;
@@ -203,6 +250,10 @@ export default class Train extends Component {
 		}
 	};
 
+	/**
+	 * Trainieren Methode
+	 * @returns 
+	 */
 	handleTrain = () => {
 		var dataSets: number[] = [], imputator = "", classifier = '', scaler = '', features: string[] = [];
 		const { datasets, imputators, classifiers, scalers, myfeatures } = this.state;
@@ -267,10 +318,17 @@ export default class Train extends Component {
 		this.props.train(dataSets, imputator, classifier, scaler, features);
 	};
 
+	/**
+	 * Wechseln zu Darstellungsseite
+	 */
 	handleChangePage() {
 		this.props.changeToReferring();
 	}
 
+	/**
+	 * Render Methode des Komponenten
+	 * @returns Aufbau des Komponenten
+	 */
 	render() {
 		const { mouse, datasets, imputators, scalers, myfeatures, classifiers } = this.state;
 		return (
