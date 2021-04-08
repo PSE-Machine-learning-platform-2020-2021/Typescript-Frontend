@@ -60,7 +60,6 @@ export class DataCollectionController implements PageController {
             case States.LoadError:
                 if ( window.confirm( "Es wurden nicht alle Daten Erfolgreich gesendet. Stellen sie sicher das eine Internetverbindung besteht. Sollen die Daten erneut gesendet werden?" ) ) {
                     MainController.getInstance().getFacade().sendDataPointsAgain();
-                } else {
                 }
                 this.state.currentState = States.waitForDB;
                 this.page.setState( state );

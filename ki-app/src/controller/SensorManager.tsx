@@ -107,11 +107,11 @@ export class SensorManager {
                         for ( let index = 0; index < this.currentSensors.length; index++ ) {
                             this.currentSensors[ index ].stop();
                         }
-                        this.checkForErrors( state, page );
                     }
                 }, 1000 );
             }
         }, 1000 );
+        this.checkForErrors( state, page );
     }
 
     private async checkForErrors ( state: State, page: Page ) {
