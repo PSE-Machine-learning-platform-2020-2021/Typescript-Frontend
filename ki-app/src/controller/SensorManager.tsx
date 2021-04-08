@@ -111,20 +111,16 @@ export class SensorManager {
                     }
                 }, 1000 );
             }
-
         }, 1000 );
     }
 
     private async checkForErrors ( state: State, page: Page ) {
-        console.log( "HIER" );
         for ( const element of this.checkList ) {
-            let errorWhenSend = ( await element );
-            console.log( errorWhenSend );
+            let errorWhenSend = !( await element );
             if ( errorWhenSend ) {
                 state.currentState = States.LoadError;
             }
         }
-        console.log( "DA" );
         page.setState( state );
     }
 
