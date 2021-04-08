@@ -67,8 +67,14 @@ export class Facade {
       return -1;
     }
     let sessionID: number = this.getSessionID();
-    if (sessionID >= 0) {
+    if (sessionID === undefined) {
+      sessionID = 0;
+    }
+    if (sessionID > 0 || this.user.getName() === AIController.AI_MODEL_USER_NAME) {
       let projectID: number = this.user.getCurrentProjectID();
+      if (projectID === undefined) {
+        projectID = 0;
+      }
       let userID: number = this.user.getID();
       let dataRow: { sensorID: number, datarowName?: string; }[] = [];
       for (let i = 0; i < sensorTypeID.length; i++) {
@@ -112,7 +118,7 @@ export class Facade {
    * @return true, wenn der Datenpunkt erfolgreich an die Datenbank gesendet wurde
    */
   async sendDataPoint(dataRowID: number, datapoint: { value: number[], relativeTime: number; }): Promise<boolean> {
-    if (this.user != null) {
+    if (this.user !== undefined) {
       let sessionID: number = this.getSessionID();
       let userID: number = this.user.getID();
       let dataSetID: number = this.user.getCurrentDataSetID();

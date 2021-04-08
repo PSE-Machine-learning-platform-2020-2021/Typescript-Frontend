@@ -1,3 +1,4 @@
+import { AIController } from "../controller/AIController";
 import { DeviceData } from "./DeviceData";
 import { Project } from "./Project";
 import { SensorData } from "./SensorData";
@@ -10,47 +11,58 @@ export abstract class User {
   protected name: string; //Der Name des Users
   protected device: DeviceData; //Das Benutzergerät des Benutzers
   protected currentProject?: Project;
+  private dataSetID: number;
 
   /**
    * Erstellt einen Benutzer
    * @param id eindeutige Benutzer ID
    * @param name Name des Benutzer
    */
-  constructor ( id: number, device: DeviceData, name?: string ) {
-    if ( id < 0 ) {
+  constructor(id: number, device: DeviceData, name?: string) {
+    if (id < 0) {
       this.id = -1;
     } else {
       this.id = id;
     }
     this.device = device;
-    if ( name != null ) {
+    if (name !== undefined) {
       this.name = name;
     } else {
       this.name = this.device.getName();
     }
+    this.dataSetID = -1;
   }
 
   /**
    * Gibt vom aktuellen Projekt die aktuelle Datensatz ID zurück, falls diese nicht existiert wird -1 zurück gegeben.
    */
-  getCurrentDataSetID (): number {
-    if ( this.currentProject != null ) {
+  getCurrentDataSetID(): number {
+    if (this.currentProject !== undefined) {
       return this.currentProject.getCurrentDataSetID();
     } else {
-      return -1;
+      return this.dataSetID;
     }
   }
 
-  getCurrentProjectID (): number {
-    if ( this.currentProject != null ) {
+  setCurrentDataSetID(newID: number): void {
+    if (this.name === AIController.AI_MODEL_USER_NAME) {
+      this.dataSetID = newID;
+    }
+    else {
+      this.dataSetID = -1;
+    }
+  }
+
+  getCurrentProjectID(): number {
+    if (this.currentProject != null) {
       return this.currentProject.getID();
     }
     return -1;
   }
 
-  addDatapoint ( dataRowID: number, datapoint: { value: number[], relativeTime: number; } ): boolean {
-    if ( this.currentProject != null ) {
-      return this.currentProject.addDatapoint( dataRowID, datapoint );
+  addDatapoint(dataRowID: number, datapoint: { value: number[], relativeTime: number; }): boolean {
+    if (this.currentProject != null) {
+      return this.currentProject.addDatapoint(dataRowID, datapoint);
     }
     return false;
 
@@ -61,9 +73,9 @@ export abstract class User {
    * @param dataSetID die Datensatz ID von der die Datenreihen gelesen werden sollen
    * @returns die Sensordaten von der Datenreihe
    */
-  getDataRows ( dataSetID: number ): { dataRows: { sensorType: number, datapoint: { value: number[], relativeTime: number; }[]; }[]; } {
-    if ( this.currentProject != null ) {
-      return this.currentProject.getDataRows( dataSetID );
+  getDataRows(dataSetID: number): { dataRows: { sensorType: number, datapoint: { value: number[], relativeTime: number; }[]; }[]; } {
+    if (this.currentProject != null) {
+      return this.currentProject.getDataRows(dataSetID);
     } else {
       return { dataRows: [] };
     }
@@ -74,8 +86,8 @@ export abstract class User {
    * @param dataSetID die Datensatz ID von der die Datenreihen gelesen werden sollen
    * @returns die Sensordaten von der Datenreihe
    */
-  getCurrentDataRows (): { dataRows: { sensorType: number, datapoint: { value: number[], relativeTime: number; }[]; }[]; } {
-    if ( this.currentProject != null ) {
+  getCurrentDataRows(): { dataRows: { sensorType: number, datapoint: { value: number[], relativeTime: number; }[]; }[]; } {
+    if (this.currentProject != null) {
       return this.currentProject.getCurrentDataRows();
     } else {
       return { dataRows: [] };
@@ -85,8 +97,8 @@ export abstract class User {
   /**
    * Gibt die Session ID des aktuellen Projekts zurück, -1 falls kein aktuelles Projekt existiert
    */
-  getSessionID (): number {
-    if ( this.currentProject != null ) {
+  getSessionID(): number {
+    if (this.currentProject != null) {
       return this.currentProject.getSessionID();
     } else {
       return -1;
@@ -101,10 +113,13 @@ export abstract class User {
      * @param generateDate die Erstellungszeit von dem Datensatz
      * @returns false, falls kein aktuelles Prokekt existiert
      */
-  createDataSet ( dataRowSensors: SensorData[], dataSetID: number, dataSetName: string, generateDate?: number ): boolean {
-    if ( this.currentProject !== undefined ) {
-      return this.currentProject.createDataSet( dataRowSensors, dataSetID, dataSetName, generateDate );
+  createDataSet(dataRowSensors: SensorData[], dataSetID: number, dataSetName: string, generateDate?: number): boolean {
+    console.log(this.currentProject)
+    console.log(dataSetID)
+    if (this.currentProject !== undefined) {
+      return this.currentProject.createDataSet(dataRowSensors, dataSetID, dataSetName, generateDate);
     } else {
+      this.setCurrentDataSetID(dataSetID);
       return false;
     }
   }
@@ -114,9 +129,9 @@ export abstract class User {
    * @param dataSetID die Datensatz ID
    * @returns gibt die ProjektID zurück, zu dem der Datensatz gehörte, -1 falls der Datensatz nicht existiert hat
    */
-  deleteDataSet ( dataSetID: number ): boolean {
-    if ( this.currentProject != null ) {
-      return this.currentProject.deleteDataSet( dataSetID );
+  deleteDataSet(dataSetID: number): boolean {
+    if (this.currentProject != null) {
+      return this.currentProject.deleteDataSet(dataSetID);
     }
     return false;
   }
@@ -128,9 +143,9 @@ export abstract class User {
    * @param end Ist die Endzeit des Labels.
    * @returns false, falls kein aktueller Datensatz existiert oder die LabelID für diesen Datensatz nicht eindeutig ist
    */
-  createLabel ( labelID: number, span: { start: number, end: number; }, labelName: string ): boolean {
-    if ( this.currentProject != null ) {
-      return this.currentProject.createLabel( labelID, span, labelName );
+  createLabel(labelID: number, span: { start: number, end: number; }, labelName: string): boolean {
+    if (this.currentProject != null) {
+      return this.currentProject.createLabel(labelID, span, labelName);
     } else {
       return false;
     }
@@ -142,9 +157,9 @@ export abstract class User {
    * @param start startzeit des Labels in Millisekunden
    * @param end endzeit des Labels in Millisekunden
    */
-  setLabel ( labelID: number, span: { start: number, end: number; }, labelName?: string ): boolean {
-    if ( this.currentProject != null ) {
-      return this.currentProject.setLabel( labelID, span, labelName );
+  setLabel(labelID: number, span: { start: number, end: number; }, labelName?: string): boolean {
+    if (this.currentProject != null) {
+      return this.currentProject.setLabel(labelID, span, labelName);
     }
     return false;
   }
@@ -154,9 +169,9 @@ export abstract class User {
    * @param labelID die Label ID
    * @returns false, falls kein aktueller Datensatz existiert oder kein Label mit der Label ID existiert
    */
-  deleteLabel ( labelID: number ): boolean {
-    if ( this.currentProject != null ) {
-      return this.currentProject.deleteLabel( labelID );
+  deleteLabel(labelID: number): boolean {
+    if (this.currentProject != null) {
+      return this.currentProject.deleteLabel(labelID);
     } else {
       return false;
     }
@@ -166,8 +181,8 @@ export abstract class User {
    * Gibt alle Daten von allen Labeln vom aktuellen Datensatz zurück.
    * @returns leer, falls kein aktueller Datensatz existiert
    */
-  getLabels (): { labels: { name: string, labelID: number, start: number, end: number; }[]; } {
-    if ( this.currentProject != null ) {
+  getLabels(): { labels: { name: string, labelID: number, start: number, end: number; }[]; } {
+    if (this.currentProject != null) {
       return this.currentProject.getLabels();
     }
     return { labels: [] };
@@ -178,7 +193,7 @@ export abstract class User {
   * @param project die Projektdaten
   * @returns false, falls die Projekt ID schon existiert
   */
-  abstract loadProject ( project: {
+  abstract loadProject(project: {
     projectID: number, sessionID: number, projectName: string, projectData?: {
       aiModelID?: number[],
       dataSet?: {
@@ -190,7 +205,7 @@ export abstract class User {
         label: { name: string, labelID: number, start: number, end: number; }[];
       }[];
     };
-  } ): boolean;
+  }): boolean;
 
   /**
    * Gibt alle Sensoren aus, die das Benutzergerät und das Programm unterstützt
@@ -209,8 +224,8 @@ export abstract class User {
    * Gibt von allen Datensätzen vom aktuellen Projekt Informationen zurück
    * @returns dataSetID ist die DatensatzID und dataSetName ist der Datensatzname
    */
-  getDataSetMetas (): { dataSetID: number, dataSetName: string; }[] {
-    if ( this.currentProject !== undefined ) {
+  getDataSetMetas(): { dataSetID: number, dataSetName: string; }[] {
+    if (this.currentProject !== undefined) {
       return this.currentProject.getDataSetMetas();
     } else {
       return [];
@@ -221,14 +236,14 @@ export abstract class User {
    * Setzt einen neuen Benutzernamen
    * @param name der neue Benutzername
    */
-  setName ( name: string ): void {
+  setName(name: string): void {
     this.name = name;
   }
 
   /**
    * Gibt den Benutzernamen zurück
    */
-  getName (): string {
+  getName(): string {
     return this.name;
   }
 
@@ -236,21 +251,21 @@ export abstract class User {
    * Setzt ein neues Benutzergerät
    * @param device das Benutzergerät
    */
-  setDevice ( device: DeviceData ) {
+  setDevice(device: DeviceData) {
     this.device = device;
   }
 
   /**
    * Gibt falls ein Benutzergerät verfügbar ist dieses zurück
    */
-  getDevice (): { device?: DeviceData; } {
+  getDevice(): { device?: DeviceData; } {
     return { device: this.device };
   }
 
   /**
    * Gibt die Benutzer ID zurück
    */
-  getID (): number {
+  getID(): number {
     return this.id;
   }
 }
@@ -269,7 +284,7 @@ export class Admin extends User {
    * @param adminName der Name des Admins
    * @param email die Emailadresse des Admins
    */
-  constructor ( adminID: number, deviceID: number, adminName: string, email: string );
+  constructor(adminID: number, deviceID: number, adminName: string, email: string);
 
   /**
    * Für die Implementierung eines Bestehenden Admins
@@ -279,20 +294,20 @@ export class Admin extends User {
    * @param email die Emailadresse des Admins
    * @param device das Gerät des Admins
    */
-  constructor ( adminID: number, deviceID: number, adminName: string, email: string,
-    device: { deviceID?: number, deviceName: string, deviceType: string, firmware: string, generation: string, MACADRESS: string, sensorInformation: { sensorTypeID: number, sensorName: string, sensorUniqueID: number; }[]; } );
+  constructor(adminID: number, deviceID: number, adminName: string, email: string,
+    device: { deviceID?: number, deviceName: string, deviceType: string, firmware: string, generation: string, MACADRESS: string, sensorInformation: { sensorTypeID: number, sensorName: string, sensorUniqueID: number; }[]; });
   ////////////////////////////////////////TODO
 
-  constructor ( adminID: number, deviceID: number, adminName: string, email: string,
-    device?: { MACADRESS: string, deviceName: string, firmware: string, generation: string, deviceType: string; } ) {
-    super( adminID, DeviceData.loadDevice( deviceID, device ), adminName );
+  constructor(adminID: number, deviceID: number, adminName: string, email: string,
+    device?: { MACADRESS: string, deviceName: string, firmware: string, generation: string, deviceType: string; }) {
+    super(adminID, DeviceData.loadDevice(deviceID, device), adminName);
     this.email = email;
   }
 
   /**
    * Implementiert die abstrakte Methode von User
    */
-  loadProject ( project: {
+  loadProject(project: {
     projectID: number, sessionID: number, projectName: string, projectData?: {
       aiModelID?: number[],
       dataSet: {
@@ -304,14 +319,14 @@ export class Admin extends User {
         label: { name: string, labelID: number, start: number, end: number; }[];
       }[];
     };
-  } ): boolean {
-    var id = this.existProject( project.projectID );
-    var newProject: Project = new Project( project.projectID, project.sessionID, project.projectName, project.projectData );
+  }): boolean {
+    var id = this.existProject(project.projectID);
+    var newProject: Project = new Project(project.projectID, project.sessionID, project.projectName, project.projectData);
     this.currentProject = newProject;
-    if ( id === -1 ) {
-      this.project.push( newProject );
+    if (id === -1) {
+      this.project.push(newProject);
     } else {
-      this.project[ id ] = newProject;
+      this.project[id] = newProject;
     }
     return true;
   }
@@ -323,10 +338,10 @@ export class Admin extends User {
    * @param projectName der Name des Projektes
    * @returns Bei angabe einer Project ID, die schon existiert wird false zurück gegeben
    */
-  createProject ( projectID: number, sessionID: number, projectName: string ): boolean {
-    if ( this.existProject( projectID ) === -1 ) {
-      var newproject: Project = new Project( projectID, sessionID, projectName );
-      this.project.push( newproject );
+  createProject(projectID: number, sessionID: number, projectName: string): boolean {
+    if (this.existProject(projectID) === -1) {
+      var newproject: Project = new Project(projectID, sessionID, projectName);
+      this.project.push(newproject);
       this.currentProject = newproject;
       return true;
     } else {
@@ -339,9 +354,9 @@ export class Admin extends User {
    * @param projectID 
    * @returns -1 falls das Projekt nicht existiert oder die Array Position des Projekts
    */
-  private existProject ( projectID: number ): number {
-    for ( let i = 0; i < this.project.length; i++ ) {
-      if ( this.project[ i ].getID() === projectID ) {
+  private existProject(projectID: number): number {
+    for (let i = 0; i < this.project.length; i++) {
+      if (this.project[i].getID() === projectID) {
         return i;
       }
     }
@@ -351,7 +366,7 @@ export class Admin extends User {
   /**
    * Gibt die Admin Emailadresse zurück
    */
-  getEmail (): string {
+  getEmail(): string {
     return this.email;
   }
 }
@@ -366,14 +381,14 @@ export class Dataminer extends User {
    * @param name der Benutzername
    * @param deviceID die Geräte ID
    */
-  constructor ( id: number, deviceID: number, name?: string ) {
-    super( id, DeviceData.loadDevice( deviceID ), name );
+  constructor(id: number, deviceID: number, name?: string) {
+    super(id, DeviceData.loadDevice(deviceID), name);
   }
 
   /**
    * Implementiert die abstrakte Methode von User
    */
-  loadProject ( project: {
+  loadProject(project: {
     projectID: number, sessionID: number, projectName: string, projectData?: {
       aiModelID?: number[],
       dataSet: {
@@ -385,8 +400,8 @@ export class Dataminer extends User {
         label: { name: string, labelID: number, start: number, end: number; }[];
       }[];
     };
-  } ): boolean {
-    this.currentProject = new Project( project.projectID, project.sessionID, project.projectName, project.projectData );
+  }): boolean {
+    this.currentProject = new Project(project.projectID, project.sessionID, project.projectName, project.projectData);
     return true;
   }
 }
@@ -401,13 +416,13 @@ export class AIModelUser extends User {
    * @param name der Benutzername
    * @param deviceID die Geräte ID
    */
-  constructor ( id: number, deviceID: number, name?: string ) {
-    super( id, DeviceData.loadDevice( deviceID ), name );
+  constructor(id: number, deviceID: number, name?: string) {
+    super(id, DeviceData.loadDevice(deviceID), name);
   }
   /**
    * Implementiert die abstrakte Methode von User
    */
-  loadProject ( project: {
+  loadProject(project: {
     projectID: number, sessionID: number, projectName: string, projectData?: {
       aiModelID?: number[],
       dataSet: {
@@ -419,8 +434,8 @@ export class AIModelUser extends User {
         label: { name: string, labelID: number, start: number, end: number; }[];
       }[];
     };
-  } ): boolean {
-    this.currentProject = new Project( project.projectID, project.sessionID, project.projectName, project.projectData );
+  }): boolean {
+    this.currentProject = new Project(project.projectID, project.sessionID, project.projectName, project.projectData);
     return true;
   }
 }
