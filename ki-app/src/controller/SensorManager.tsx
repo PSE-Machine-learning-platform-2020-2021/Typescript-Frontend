@@ -159,6 +159,9 @@ export class SensorManager {
     * @param sensorType Die ID des Sensortypes
     */
     private getData ( sensor: Magnetometer | Gyroscope | Accelerometer, rowId: number, sensorType: number ) {
+        if ( sensor.x === undefined || sensor.y === undefined || sensor.z === undefined ) {
+            return;
+        }
         const point = { rowId, sensorType, value: [ sensor.x!, sensor.y!, sensor.z! ], relativeTime: ( new Date().getTime() - this.startTime ) / 1000 };
         this.dataPoints.push( point );
         this.saveDatapointinRow( point );
