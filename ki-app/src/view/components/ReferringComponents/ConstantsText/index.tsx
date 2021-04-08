@@ -6,6 +6,7 @@ import './ConstantsText.css';
  * Überschrift
  */
 export default class ConstantsText extends React.Component {
+    /** 
     //nur für test button auch
     props = {
         changeToDelivery: function () { },
@@ -15,6 +16,8 @@ export default class ConstantsText extends React.Component {
         this.props.changeToDelivery()
     }
 
+    <button onClick={() => this.handleCreate()} type='button'>Für test DeliveryPage</button>
+*/
     /**
      * Render Methode des Komponenten
      * @returns Aufbau des Komponenten
@@ -24,8 +27,6 @@ export default class ConstantsText extends React.Component {
         return (
             <div>
                 <h1 className='title'>{MainController.getInstance().getText().title}</h1>
-
-                <button onClick={() => this.handleCreate()} type='button'>Für test DeliveryPage</button>
             </div>
         );
     }

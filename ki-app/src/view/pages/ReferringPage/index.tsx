@@ -35,8 +35,8 @@ export class ReferringPage implements Page {
         const VDOM = (
             <div>
                 <ConstantsText
-                    //nur für test
-                    changeToDelivery={this.changeToDelivery.bind(this)}
+                //nur für test
+                //changeToDelivery={this.changeToDelivery.bind(this)}
                 />
                 <LoginWindow pageRegister={this.register.bind(this)} pageLogin={this.login.bind(this)} />
                 <br /><br /><br /><br /><br />
@@ -194,12 +194,13 @@ export class ReferringPage implements Page {
         this.update();
     }
 
+    /**
     //nur für test DeliveryPage
     private changeToDelivery() {
         this.state.currentState = States.ChangeToDelivery;
         this.notify();
     }
-
+ */
     /**
      * Setzt einen neuen Zustand für die Seite und aktualisiert sie
      * @param state neuer Zustand für die Seite

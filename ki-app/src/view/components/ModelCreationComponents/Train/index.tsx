@@ -413,7 +413,7 @@ export default class Train extends Component {
 
 				<div className="clearfloat">
 					<button onClick={() => this.handleTrain()} className="train-btn" type='button' >Train Start!</button>
-					<button onClick={() => this.handleChangePage()} className="train-btn" type='button' >Zur Verweisseite zurück</button>
+					<button onClick={() => this.handleChangePage()} className="changepage-btn" type='button' >Zur Verweisseite zurück</button>
 				</div>
 			</div>
 
