@@ -46,7 +46,7 @@ export class AIController implements PageController {
         this.page.attach( this );
         this.state = this.page.getState();
         //TODO Beim Registrieren des AIModelUsers sollte der Name weg oder eine Möglichkeit bestehen den Namen zu beziehen
-        MainController.getInstance().getFacade().registerDataminer(AIController.AI_MODEL_USER_NAME, -1);
+        MainController.getInstance().getFacade().registerDataminer( AIController.AI_MODEL_USER_NAME, -1 );
         this.modelID = modelID;
         this.setUpSensorShown();
         this.page.setState( this.state );
@@ -142,11 +142,16 @@ export class AIController implements PageController {
     /**
      * Die Methode wird durch das Model aufgerufen falls ein Ergebnis der Klassifiziereung vorhanden ist.
      */
-    public callback ( prediction: any): any {
-        this.state.aiUserData!.result = prediction;
-        this.state.currentState = States.ClassifyResult;
+    public callback ( prediction: any ): any {
+        if ( prediction === undefined ) {
+            this.state.aiUserData!.result = "Fehler bei der Klassifizierung";
+
+        } else {
+            this.state.aiUserData!.result = prediction;
+        }
+        this.state.currentState = States.waitForDB;
         this.page.setState( this.state );
         const x: any = undefined;
-        return x
+        return x;
     }
 }
