@@ -43,6 +43,7 @@ export class AIController implements PageController {
         //TODO Beim Registrieren des AIModelUsers sollte der Name weg oder eine Möglichkeit bestehen den Namen zu beziehen
         //MainController.getInstance().getFacade().registerAIModelUser( "Gustav", +this.urlParams.get( "aiID" )! );
         this.modelID = modelID;
+        this.state.recordingSettings!.availableSensorTypes.push( { sensorTypID: 2, sensorType: "TEST", chosen: true } );
         this.page.setState( this.state );
         this.update();
     }
