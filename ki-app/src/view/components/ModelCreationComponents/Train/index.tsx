@@ -90,7 +90,7 @@ export default class Train extends Component {
 	};
 
 	handleDelete = (id: number) => {
-		if (window.confirm('Sind Sie sicher, die gewählt Emailadresse löschen zu wollen?')) {
+		if (window.confirm('Sind Sie sicher, den gewählten Datensatz löschen zu wollen?')) {
 			const { datasets } = this.state;
 			const newDatasets = datasets.filter((dataset) => {
 				return dataset.dataSetID !== id;
@@ -120,7 +120,7 @@ export default class Train extends Component {
 	handleChoose = (): void => {
 		if (this.state.value === '') {
 			NotificationManager.error("Keine Option ausgewählt!", "", 3000);
-			this.setState({ openNewWindow: false });
+			this.setState({ "openNewWindow": false });
 			return;
 		} 
 		let dataSets = this.state.datasets;
@@ -131,7 +131,7 @@ export default class Train extends Component {
 			}
 			return false;
 		});
-		this.setState({datasets: dataSets, openNewWindow: false});
+		this.setState({"datasets": dataSets, "openNewWindow": false, "value": undefined});
 	};
 
 	/**
