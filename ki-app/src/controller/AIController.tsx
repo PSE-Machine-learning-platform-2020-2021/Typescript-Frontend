@@ -45,6 +45,7 @@ export class AIController implements PageController {
         this.modelID = modelID;
         this.state.wait! = this.sensorManager.getAvailableSensors().then(
             ( availableSensor ) => {
+                console.log( availableSensor );
                 for ( let index = 0; index < availableSensor.length; index++ ) {
                     const sensorTypID: number = availableSensor[ index ].sensorTypID;
                     const sensorType: string = availableSensor[ index ].sensorType;
