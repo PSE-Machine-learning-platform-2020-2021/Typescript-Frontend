@@ -107,7 +107,7 @@ export class SensorManager {
                             this.currentSensors[ index ].stop();
                         }
                         checkList.forEach( element => {
-                            element.then( ( errorWhenSend: Boolean ) => {
+                            element.then( ( errorWhenSend: boolean ) => {
                                 if ( errorWhenSend ) {
                                     if ( state.currentState != States.LoadError ) {
                                         state.currentState = States.LoadError;

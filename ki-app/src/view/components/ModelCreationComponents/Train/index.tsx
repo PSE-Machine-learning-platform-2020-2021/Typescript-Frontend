@@ -53,22 +53,15 @@ export default class Train extends Component {
 	};
 
 	/**
-	 * Befüllt die state-Variable databaseList mit den Daten aus der props-Variable dataSetMetas.
-	 * Diese ehemals private Methode musste in den Konstruktor ausgelagert werden, 
-	 * da setState in render zu Endlosschleifen führt.#
-	 * 
-	 * @param props - Die "XML-Attribute", die diesem Objekt bei seiner Erstellung mitgegeben wurden.
+	 * Befüllt die beiden state-Variablen, die so aussehen, als müssten da die Datensätze des aktuellen Projekts rein, 
+	 * mit den Daten aus der props-Variable dataSetMetas.
 	 */
-	constructor(props: {}) {
-		super(props);
-		let dbList = [] as {dataSetID: number, dataSetName: string, chosen: boolean}[];
+	 componentWillReceiveProps(): void {
+		this.setState({ databaseList: [] })
 		for (const x of this.props.dataSetMetas) {
-			dbList.push({ dataSetName: x.dataSetName, dataSetID: x.dataSetID, chosen: false });
+			this.state.databaseList.push({ dataSetName: x.dataSetName, dataSetID: x.dataSetID, chosen: false });
 		}
-		this.state.databaseList = dbList;
 	}
-
-	
 
 	/** 
 		componentDidMount() {
@@ -108,7 +101,7 @@ export default class Train extends Component {
 	};
 
 	//addDataset for add new Dataset
-	addDataset = (datasetObj: { dataSetID: number, dataSetName: string, chosen: boolean; }) => {
+	addDataset = (datasetObj: { dataSetID: number, /*dataSetName: string, */chosen: boolean; }) => {
 		//get orignal datasetList
 		const { datasets } = this.state;
 		//add new one
@@ -130,42 +123,40 @@ export default class Train extends Component {
 		});
 	};
 
-	handleChoose = () => {
+	/**
+	 * Diese Methode verarbeitet die Events, die ausgelöst werden, wenn im Datensatz-Auswahlfenster ein Datensatz
+	 * ausgewählt wird und diese Auswahl durch Drücken des zugehörigen Knopfes bestätigt wird.
+	 */
+	handleChoose = (): void => {
 		/* wait to change load model*/
 		this.setState({ openNewWindow: false });
-		// eslint-disable-next-line
-		if (this.state.value == '') {
+		if (this.state.value === '') {
 			NotificationManager.error("Keine Option ausgewählt!", "", 3000);
 		} else {
-			const { databaseList } = this.state;
-			const newDatabaseList1 = databaseList.map((databaseObj) => {
-				// eslint-disable-next-line
-				if (databaseObj.dataSetName == this.state.value) {
-					databaseObj.chosen = true;
-					const datasetObj = { dataSetID: databaseObj.dataSetID, dataSetName: databaseObj.dataSetName, chosen: false };
-					this.addDataset(datasetObj);
+			this.props.dataSetMetas.map((entry) => {
+				if (entry.dataSetName === this.state.value) {
+					this.state.datasets.push({ dataSetID: entry.dataSetID, dataSetName: entry.dataSetName, chosen: true });
 				}
-				return databaseObj;
-			}
-			);
-			const newDatabaseList2 = newDatabaseList1.filter((databaseObj) => {
-				// eslint-disable-next-line
-				return databaseObj.chosen == false;
 			});
 			//update emailList
-			this.setState({ databaseList: newDatabaseList2 });
 		}
 	};
 
-	options = () => {
-		const { databaseList } = this.state;
-		/*way to add new into list
-		and wait to get databaseList
-		const newdatabase = {id:'003', name:'dataset3', chosen: false}
-		databaseList.push(newdatabase)
-		*/
-		return databaseList.map(dataset =>
-			<option key={dataset.dataSetID} value={dataset.dataSetName}>{dataset.dataSetName}</option>);
+	/**
+	 * Erzeugt die Dropdown-Liste im Datensatz-Auswahlfenster.
+	 * Bereits ausgewählte Datensätze werden zwar angezeigt, sind aber ausgegraut.
+	 * 
+	 * @returns Ein Array aus JSX-DOM-Elementen
+	 */
+	options = (): JSX.Element[] => {
+		return this.props.dataSetMetas.map(dataset => {
+			if (this.state.datasets.map(entry => entry.dataSetID).includes(dataset.dataSetID)) {
+				return <option key={dataset.dataSetID} value={dataset.dataSetName} disabled={true}>{dataset.dataSetName}</option>;
+			}
+			else {
+				return <option key={dataset.dataSetID} value={dataset.dataSetName}>{dataset.dataSetName}</option>;
+			}
+		});
 	};
 
 	handleImputation = (index: number) => {
