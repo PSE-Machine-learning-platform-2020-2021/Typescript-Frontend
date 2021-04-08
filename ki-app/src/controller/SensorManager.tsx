@@ -107,10 +107,9 @@ export class SensorManager {
                         for ( let index = 0; index < this.currentSensors.length; index++ ) {
                             this.currentSensors[ index ].stop();
                         }
+                        this.checkForErrors( state, page );
                     }
                 }, 1000 );
-                console.log( "WAS" );
-                this.checkForErrors( state, page );
             }
 
         }, 1000 );
