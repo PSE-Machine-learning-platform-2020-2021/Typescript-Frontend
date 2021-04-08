@@ -5,6 +5,7 @@ import { Admin, Dataminer, AIModelUser, User } from "./User";
 import { AIBuilder } from "./AIBuilder";
 import { AIDistributor } from "./AIDistributor";
 import { AccelerometerData, GyroscopeData, SensorData } from "./SensorData";
+import { AIController } from "../controller/AIController";
 //import { isBreakStatement } from "typescript";
 
 interface FacadeInterface {
@@ -95,7 +96,7 @@ export class Facade {
             break;
         }
       }
-      if (this.user.createDataSet(sensoren, dataSetID, dataSetName)) {
+      if (this.user.createDataSet(sensoren, dataSetID, dataSetName) || this.user.getName() === AIController.AI_MODEL_USER_NAME) {
         return dataSetID;
       }
       return -1;
