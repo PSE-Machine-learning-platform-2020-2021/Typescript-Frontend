@@ -114,17 +114,14 @@ export class SensorManager {
         }, 1000 );
     }
 
-    private checkForErrors ( state: State, page: Page ) {
-        this.checkList.forEach( async element => {
+    private async checkForErrors ( state: State, page: Page ) {
+        for ( const element of this.checkList ) {
             let errorWhenSend = await element;
             if ( errorWhenSend && state.currentState != States.LoadError ) {
-
                 state.currentState = States.LoadError;
-                page.setState( state );
-
             }
-
-        } );
+        }
+        page.setState( state );
     }
 
     private saveDatapointinRow ( dataPoint: { rowId: number, sensorType: number, value: number[]; relativeTime: number; } ) {
