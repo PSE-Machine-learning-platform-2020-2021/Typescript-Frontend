@@ -30,6 +30,7 @@ export class AIController implements PageController {
     */
     private urlParams: URLSearchParams;
 
+    private dataSetID = 0;
     /**
     * Der Constructor des Controllers verarbeitet die URL bereitet den Sensormanager vor und setzt die startpage auf.
     */
@@ -98,12 +99,12 @@ export class AIController implements PageController {
      * Holt sich alle wichtigen Daten für die Datenaufnahme aus der momentanen Seite. Darauf wird mit dem Sensormanager
      * die Datenaufnahme initialisiert. Zum Schluss wird der Seitenwechsel zur Erfassungseite durchgeführt. 
      */
-    private start () {
+    private async start () {
         let sensorTypes: number[] = this.urlParams.get( "sensorTypes" )!.split( "," ).map( x => +x );
         let dataSetName: string = "Undefined";
         let waitTime = this.state.recordingSettings!.waitTime;
         let readTime = this.state.recordingSettings!.readTime;
-        this.sensorManager.setUpDataRead( sensorTypes, dataSetName, waitTime, readTime, false );
+        this.dataSetID = await this.sensorManager.setUpDataRead( sensorTypes, dataSetName, waitTime, readTime, false );
         this.page.detach( this );
         this.page = new DataCollectionPage();
         this.page.attach( this );
@@ -131,8 +132,7 @@ export class AIController implements PageController {
      * Klassifiziert den Datensatz.
      */
     private classifyResult () {
-        let id: number = MainController.getInstance().getFacade().getDataSetMetas()[ 0 ].dataSetID;
-        MainController.getInstance().getFacade().classify( +this.urlParams.get( "aiID" )!, id, this.callback );
+        MainController.getInstance().getFacade().classify( +this.urlParams.get( "aiID" )!, this.dataSetID, this.callback );
     }
 
     /**
