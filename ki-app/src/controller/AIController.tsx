@@ -136,7 +136,7 @@ export class AIController implements PageController {
      * Klassifiziert den Datensatz.
      */
     private classifyResult () {
-        MainController.getInstance().getFacade().classify( +this.urlParams.get( "modelID" )!, this.dataSetID, this.callback );
+        MainController.getInstance().getFacade().classify( +this.urlParams.get( "modelID" )!, this.dataSetID, this.callback.bind( this ) );
     }
 
     /**
