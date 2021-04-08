@@ -5,6 +5,7 @@ import { Admin, Dataminer, AIModelUser, User } from "./User";
 import { AIBuilder } from "./AIBuilder";
 import { AIDistributor } from "./AIDistributor";
 import { AccelerometerData, GyroscopeData, SensorData } from "./SensorData";
+import { AIController } from "../controller/AIController";
 //import { isBreakStatement } from "typescript";
 
 interface FacadeInterface {
@@ -61,40 +62,46 @@ export class Facade {
    * @param dataSetName Name des Datensatzes
    * @returns true, wenn der Datensatz erstellt wurde. Dies ist der Fall, wenn ein Benutzer existiert welcher in einer Session ist und alle Sensortypen existieren.
    */
-  async createDataSet(sensorTypeID: number[], dataSetName: string, datarowNames?: string[]): Promise<boolean> {
-    if (this.user != null) {
-      let sessionID: number = this.getSessionID();
-      if (sessionID >= 0) {
-        let projectID: number = this.user.getCurrentProjectID();
-        let userID: number = this.user.getID();
-        let dataRow: { sensorID: number, datarowName?: string; }[] = [];
-        for (let i = 0; i < sensorTypeID.length; i++) {
-          let sensorID = sensorTypeID[i];
-          if (datarowNames != null && datarowNames.length >= i) {
-            dataRow.push({ sensorID, datarowName: datarowNames[i] });
-          } else {
-            dataRow.push({ sensorID });
-          }
+  async createDataSet(sensorTypeID: number[], dataSetName: string, datarowNames?: string[]): Promise<number> {
+    if (this.user === undefined) {
+      return -1;
+    }
+    let sessionID: number = this.getSessionID();
+    if (sessionID >= 0) {
+      let projectID: number = this.user.getCurrentProjectID();
+      let userID: number = this.user.getID();
+      let dataRow: { sensorID: number, datarowName?: string; }[] = [];
+      for (let i = 0; i < sensorTypeID.length; i++) {
+        let sensorID = sensorTypeID[i];
+        if (datarowNames != null && datarowNames.length >= i) {
+          dataRow.push({ sensorID, datarowName: datarowNames[i] });
         }
-        let dataSetID: number = await this.dbCon.createDataSet({ sessionID, projectID, userID, dataSetName, dataRow });
-        if (dataSetID >= 0) {
-          ///////////////////////////////DUMMY
-          var sensoren: SensorData[] = [];
-          for (let i = 0; i < sensorTypeID.length; i++) {
-            switch (sensorTypeID[i]) {
-              case 2:
-                sensoren.push(new AccelerometerData(-1, "", ""));
-                break;
-              case 3:
-                sensoren.push(new GyroscopeData(-1, "", ""));
-                break;
-            }
-          }
-          return this.user.createDataSet(sensoren, dataSetID, dataSetName);
+        else {
+          dataRow.push({ sensorID });
         }
       }
+      let dataSetID: number = await this.dbCon.createDataSet({ sessionID, projectID, userID, dataSetName, dataRow });
+      if (dataSetID <= 0) {
+        return -1;
+      }
+      ///////////////////////////////DUMMY
+      var sensoren: SensorData[] = [];
+      for (let i = 0; i < sensorTypeID.length; i++) {
+        switch (sensorTypeID[i]) {
+          case 2:
+            sensoren.push(new AccelerometerData(-1, "", ""));
+            break;
+          case 3:
+            sensoren.push(new GyroscopeData(-1, "", ""));
+            break;
+        }
+      }
+      if (this.user.createDataSet(sensoren, dataSetID, dataSetName) || this.user.getName() === AIController.AI_MODEL_USER_NAME) {
+        return dataSetID;
+      }
+      return -1;
     }
-    return false;
+    return -1;
   }
 
   /**

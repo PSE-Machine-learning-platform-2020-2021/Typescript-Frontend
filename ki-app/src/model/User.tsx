@@ -102,7 +102,7 @@ export abstract class User {
      * @returns false, falls kein aktuelles Prokekt existiert
      */
   createDataSet ( dataRowSensors: SensorData[], dataSetID: number, dataSetName: string, generateDate?: number ): boolean {
-    if ( this.currentProject != null ) {
+    if ( this.currentProject !== undefined ) {
       return this.currentProject.createDataSet( dataRowSensors, dataSetID, dataSetName, generateDate );
     } else {
       return false;

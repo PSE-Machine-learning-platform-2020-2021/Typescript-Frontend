@@ -2,8 +2,14 @@ import React, { Component } from 'react'
 import ProjectList from '../ProjectList'
 import './LoadModelButton.css'
 
-
+/**
+ * Erstellen PrjektList Knopf
+ */
 export default class LoadModelButton extends Component {
+
+  /**
+  * Variablen und Methoden welche der Klasse zur verfügung gestellt werden müssen
+  */
   props = {
     disabled: true,
     projectData: [] as { projectID: number, projectName: string, AIModelID: number[], }[],
@@ -14,11 +20,22 @@ export default class LoadModelButton extends Component {
     qr: ''
   }
 
+  /**
+   * Status für diese Komponente
+   */
   state = { click: false }
+
+  /**
+   * Erstellung von Projektliste Methode
+   */
   handleCreate = () => {
     this.setState({ click: true })
   }
 
+  /**
+  * Render Methode des Komponenten
+  * @returns Aufbau des Komponenten
+  */
   render() {
     return (
       <div className="loadProject">

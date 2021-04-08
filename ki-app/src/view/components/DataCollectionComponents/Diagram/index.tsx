@@ -53,7 +53,6 @@ export default class Diagram extends Component {
                 datavalues = [];
             }
         }
-        // eslint-disable-next-line
         for (var j = 0; j < this.props.dataRows[0].datapoint.length; j++) {
             this.state.diagrammData.time.push(this.props.dataRows[0].datapoint[j].relativeTime);
         }
@@ -127,7 +126,6 @@ export default class Diagram extends Component {
     render() {
         var LineChart = require("react-chartjs").Line;
         this.updateDiagramm();
-        console.log(this.state.diagrammData);
         return (
             <div>
                 {this.state.diagrammData.lineLabels}
