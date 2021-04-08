@@ -42,7 +42,7 @@ export class AIController implements PageController {
         this.page.attach( this );
         this.state = this.page.getState();
         //TODO Beim Registrieren des AIModelUsers sollte der Name weg oder eine Möglichkeit bestehen den Namen zu beziehen
-        //MainController.getInstance().getFacade().registerAIModelUser( "Gustav", +this.urlParams.get( "aiID" )! );
+        MainController.getInstance().getFacade().registerDataminer("KI-Modell-Anwender", -1);
         this.modelID = modelID;
         this.setUpSensorShown();
         this.page.setState( this.state );
