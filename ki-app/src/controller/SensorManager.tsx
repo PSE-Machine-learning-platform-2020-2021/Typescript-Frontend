@@ -109,8 +109,9 @@ export class SensorManager {
                         }
                     }
                 }, 1000 );
+                this.checkForErrors( state, page );
             }
-            this.checkForErrors( state, page );
+
         }, 1000 );
     }
 
