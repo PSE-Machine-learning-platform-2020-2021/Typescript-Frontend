@@ -12,7 +12,7 @@ import { ResultPage } from "../view/pages/ResultPage/Result";
 * Controller welcher für die Klassifizierung verantworlich ist.
 */
 export class AIController implements PageController {
-    private modelID: number = -1;
+    private modelID: number;
     /**
     * Für die Verwaltung der Sensoren verantwortlich
     */
@@ -20,7 +20,7 @@ export class AIController implements PageController {
     /**
     * Seite welche gerade von dem Controller verwaltet wird
     */
-    private page: Page = new StartPage( "Willkomen!" );
+    private page: Page;
     /**
     * Status der Seite
     */
@@ -37,10 +37,11 @@ export class AIController implements PageController {
         const queryString = window.location.search;
         this.urlParams = new URLSearchParams( queryString );
         this.sensorManager = new SensorManager();
+        this.page = new StartPage( "Willkomen!" );
         this.page.attach( this );
         this.state = this.page.getState();
         //TODO Beim Registrieren des AIModelUsers sollte der Name weg oder eine Möglichkeit bestehen den Namen zu beziehen
-        MainController.getInstance().getFacade().registerAIModelUser( "Gustav", +this.urlParams.get( "aiID" )! );
+        //MainController.getInstance().getFacade().registerAIModelUser( "Gustav", +this.urlParams.get( "aiID" )! );
         this.modelID = modelID;
         this.state.wait! = this.sensorManager.getAvailableSensors().then(
             ( availableSensor ) => {
@@ -49,10 +50,10 @@ export class AIController implements PageController {
                     const sensorType: string = availableSensor[ index ].sensorType;
                     const chosen: boolean = false;
                     this.state.recordingSettings!.availableSensorTypes.push( { sensorTypID, sensorType, chosen } );
-
+                    this.page.setState( this.state );
                 }
-                this.page.setState( this.state );
             } );
+        this.page.setState( this.state );
         this.update();
     }
 

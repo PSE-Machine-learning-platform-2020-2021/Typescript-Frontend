@@ -21,8 +21,8 @@ export class StartController implements PageController {
         this.urlParams = new URLSearchParams( queryString );
         let admin = this.urlParams.get( "Admin" )!;
         this.page = new StartPage( "Wilkommen! Sie erfassen für " + admin );
-        this.state = this.page.getState();
         this.page.attach( this );
+        this.state = this.page.getState();
         MainController.getInstance().getFacade().registerDataminer( "Miner", +this.urlParams.get( "SessionID" )! );
         this.state.wait! = this.sensorManager.getAvailableSensors().then(
             ( availableSensor ) => {
