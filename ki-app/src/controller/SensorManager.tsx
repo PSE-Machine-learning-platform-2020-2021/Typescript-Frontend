@@ -74,7 +74,7 @@ export class SensorManager {
     * Wartet zuerst für die angegebene Wartezeit und nimmt dann für die angegeben Lesezeit daten auf.
     */
     readData ( page: Page ) {
-        let checkList: Promise<boolean>[];
+        let checkList: Promise<boolean>[] = [];
         this.page = page;
         let state: IState = page.getState();
         state.recordingSettings!.usedSensorTypes = this.sensorTypes;
@@ -115,7 +115,6 @@ export class SensorManager {
                             } );
                         } );
                     }
-
                 }, 1000 );
             }
         }, 1000 );
