@@ -102,9 +102,9 @@ test( "Login, load Project, createDataSet", async () => {
     promise = facade.loadProject( 1 );
     sucsess = await promise;
     expect( sucsess ).toBeTruthy();
-    promise = facade.createDataSet( [ 2 ], "TEST", [ "TEST_ROW" ] );
-    sucsess = await promise;
-    expect( sucsess ).toBeTruthy();
+    const promiseN = facade.createDataSet( [ 2 ], "TEST", [ "TEST_ROW" ] );
+    const success = await promiseN;
+    expect( success ).toBeGreaterThan(0);
     expect( inputDB ).toStrictEqual( { sessionID: 1, projectID: 1, userID: loginData.admin.adminID, dataSetName: "TEST", dataRow: [ { sensorID: 2, datarowName: "TEST_ROW" } ] } );
     expect( inputUser ).toStrictEqual( { sensoren: [ new AccelerometerData( -1, "", "" ) ], dataSetID: 99, dataSetName: "TEST" } );
 } );

@@ -12,7 +12,7 @@ import { ResultPage } from "../view/pages/ResultPage/Result";
 * Controller welcher für die Klassifizierung verantworlich ist.
 */
 export class AIController implements PageController {
-    private modelID: number = -1;
+    private modelID: number;
     /**
     * Für die Verwaltung der Sensoren verantwortlich
     */
@@ -20,7 +20,7 @@ export class AIController implements PageController {
     /**
     * Seite welche gerade von dem Controller verwaltet wird
     */
-    private page: Page = new StartPage( "Willkomen!" );
+    private page: Page;
     /**
     * Status der Seite
     */
@@ -30,6 +30,7 @@ export class AIController implements PageController {
     */
     private urlParams: URLSearchParams;
 
+    private dataSetID = 0;
     /**
     * Der Constructor des Controllers verarbeitet die URL bereitet den Sensormanager vor und setzt die startpage auf.
     */
@@ -37,23 +38,33 @@ export class AIController implements PageController {
         const queryString = window.location.search;
         this.urlParams = new URLSearchParams( queryString );
         this.sensorManager = new SensorManager();
+        this.page = new StartPage( "Willkomen!" );
         this.page.attach( this );
         this.state = this.page.getState();
         //TODO Beim Registrieren des AIModelUsers sollte der Name weg oder eine Möglichkeit bestehen den Namen zu beziehen
-        MainController.getInstance().getFacade().registerAIModelUser( "Gustav", +this.urlParams.get( "aiID" )! );
+        MainController.getInstance().getFacade().registerDataminer("KI-Modell-Anwender", -1);
         this.modelID = modelID;
-        this.state.wait! = this.sensorManager.getAvailableSensors().then(
-            ( availableSensor ) => {
-                for ( let index = 0; index < availableSensor.length; index++ ) {
-                    const sensorTypID: number = availableSensor[ index ].sensorTypID;
-                    const sensorType: string = availableSensor[ index ].sensorType;
-                    const chosen: boolean = false;
-                    this.state.recordingSettings!.availableSensorTypes.push( { sensorTypID, sensorType, chosen } );
-
-                }
-                this.page.setState( this.state );
-            } );
+        this.setUpSensorShown();
+        this.page.setState( this.state );
         this.update();
+    }
+
+    private setUpSensorShown () {
+        let sensorTypes: number[] = this.urlParams.get( "sensorTypes" )!.split( "," ).map( x => +x );
+        let text: string = "Sie benötigen folgenede Sensoren: ";
+        for ( const element of sensorTypes ) {
+            switch ( element ) {
+                case 2:
+                    text += "Beschleunigungssensor ";
+                    break;
+                case 3:
+                    text += "Gyroskop ";
+                    break;
+                default:
+                    break;
+            }
+        }
+        this.state.recordingSettings!.availableSensorTypes.push( { sensorTypID: -1, sensorType: text, chosen: true } );
     }
 
     /**
@@ -88,12 +99,12 @@ export class AIController implements PageController {
      * Holt sich alle wichtigen Daten für die Datenaufnahme aus der momentanen Seite. Darauf wird mit dem Sensormanager
      * die Datenaufnahme initialisiert. Zum Schluss wird der Seitenwechsel zur Erfassungseite durchgeführt. 
      */
-    private start () {
+    private async start () {
         let sensorTypes: number[] = this.urlParams.get( "sensorTypes" )!.split( "," ).map( x => +x );
         let dataSetName: string = "Undefined";
         let waitTime = this.state.recordingSettings!.waitTime;
         let readTime = this.state.recordingSettings!.readTime;
-        this.sensorManager.setUpDataRead( sensorTypes, dataSetName, waitTime, readTime, false );
+        this.dataSetID = await this.sensorManager.setUpDataRead( sensorTypes, dataSetName, waitTime, readTime, false );
         this.page.detach( this );
         this.page = new DataCollectionPage();
         this.page.attach( this );
@@ -112,25 +123,26 @@ export class AIController implements PageController {
         this.page.attach( this );
         this.state = this.page.getState();
         this.state.dataRows! = MainController.getInstance().getFacade().getCurrentDataRows()!.dataRows!;
+        this.state.currentState = States.ClassifyResult;
         this.page.setState( this.state );
+
     }
 
     /**
      * Klassifiziert den Datensatz.
      */
     private classifyResult () {
-        let id: number = MainController.getInstance().getFacade().getDataSetMetas()[ 0 ].dataSetID;
-        MainController.getInstance().getFacade().classify( +this.urlParams.get( "aiID" )!, id, this.callback );
+        MainController.getInstance().getFacade().classify( +this.urlParams.get( "aiID" )!, this.dataSetID, this.callback );
     }
 
     /**
      * Die Methode wird durch das Model aufgerufen falls ein Ergebnis der Klassifiziereung vorhanden ist.
      */
-    public callback ( prediction: any, ) {
+    public callback ( prediction: any): any {
         this.state.aiUserData!.result = prediction;
         this.state.currentState = States.ClassifyResult;
         this.page.setState( this.state );
-        let R: any;
-        return R;
+        const x: any = undefined;
+        return x
     }
 }
