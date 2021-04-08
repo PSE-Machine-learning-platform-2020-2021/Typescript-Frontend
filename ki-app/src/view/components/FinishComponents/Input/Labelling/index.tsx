@@ -7,12 +7,14 @@ export default class Labelling extends Component {
     };
 
     props = {
+        //die Funktion für neues Label zu addieren, durch props übermittelt
         newLabel: function (label: {
             labelID: number;
             start: number;
             end: number;
             name: string;
         }) { },
+        //die Funktion für Label zu löschen, durch props übermittelt
         pagedeleteLabel: function (label: {
             labelID: number;
             start: number;
@@ -20,17 +22,35 @@ export default class Labelling extends Component {
             name: string;
         }) { }
     };
-    IDcounter: number = 0;
+    IDcounter: number = 0; //berechnet ID von Label
 
+    /**
+     * aktualisiert den State zu den eingegebenen Label-Namen
+     * @param e Eingabeaktion
+     */
     handleChangeLabel = (e: ChangeEvent<HTMLInputElement>) => {
         this.setState({ newName: e.target.value });
     };
+
+    /**
+     * aktualisiert den State zu dem eingegebenen Zeitfenstersanfang
+     * @param e Eingabeaktion
+     */
     handleChangeStart = (e: ChangeEvent<HTMLInputElement>) => {
         this.setState({ newStart: e.target.value });
     };
+
+    /**
+     * aktualisiert den State zu dem eingegebenen Zeitfenstersende
+     * @param e Eingabeaktion
+     */
     handleChangeEnd = (e: ChangeEvent<HTMLInputElement>) => {
         this.setState({ newEnd: e.target.value });
     };
+
+    /**
+     * anrufe die Addierenmethode und leere die Eingabefelder
+     */
     handleClick = () => {
         const { newStart, newEnd, newName } = this.state;
         const labelObj = { start: newStart, end: newEnd, name: newName };
@@ -38,6 +58,9 @@ export default class Labelling extends Component {
         this.setState({ newStart: "", newEnd: '', newName: "" });
     };
 
+    /**
+     * addiere das eingegebene Label
+     */
     addLabel = (labelObj: { start: string, end: string, name: string; }) => {
         const label: { labelID: number, start: number, end: number, name: string; } = { labelID: this.IDcounter, start: this.formatFloatInString(labelObj.start), end: this.formatFloatInString(labelObj.end), name: labelObj.name }; //was ist bei fehlerfall?? keine Zahlen
         this.props.newLabel(label);
@@ -46,7 +69,11 @@ export default class Labelling extends Component {
         this.setState({ labels: newLabels });
     };
 
-
+    /**
+     * lösche das entsprechende Label
+     * @param e die Klickaktion
+     * @param id ID von dem Label, das gelöscht wird
+     */
     deleteLabel = (e: React.MouseEvent<HTMLButtonElement>, id: number) => {
 
         const { labels } = this.state;
@@ -60,6 +87,11 @@ export default class Labelling extends Component {
         this.setState({ labels: newLabels });
     };
 
+    /**
+     * verwandelt String zur Nummer
+     * @param stringNumber das String, das verwandelt wird
+     * @returns die entsprechende Nummer
+     */
     private formatFloatInString(stringNumber: string): number {
         return (parseInt((parseFloat(stringNumber) * 1000).toString()) / 1000);
     }
