@@ -109,6 +109,7 @@ export class SensorManager {
                         }
                     }
                 }, 1000 );
+                console.log( "WAS" );
                 this.checkForErrors( state, page );
             }
 
