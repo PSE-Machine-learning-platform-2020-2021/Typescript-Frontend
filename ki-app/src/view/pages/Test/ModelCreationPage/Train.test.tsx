@@ -6,17 +6,13 @@ import Train from '../../../components/ModelCreationComponents/Train';
 test('Rendert', () => {
     Enzyme.configure({ adapter: new Adapter() })
     let train = jest.fn()
-
+    let changeToReferring = jest.fn()
     let dataSetMetas = [{ dataSetID: -1, dataSetName: 'ex' }]
-    const wrapper = shallow<Train>(<Train dataSetMetas={dataSetMetas} train={train} />)
+    const wrapper = shallow<Train>(<Train dataSetMetas={dataSetMetas} train={train} changeToReferring={changeToReferring} />)
     expect(wrapper.state().mouse).toEqual(false)
     expect(wrapper.state().openNewWindow).toEqual(false)
     expect(wrapper.state().value).toEqual('')
-    expect(wrapper.state().databaseList).toEqual([{
-        dataSetID: -1,
-        dataSetName: "ex",
-        chosen: false,
-    }])
+    expect(wrapper.state().databaseList).toEqual([])
     expect(wrapper.state().datasets).toEqual([])
     expect(wrapper.state().imputators).toEqual([
         { name: "Mittel", checked: true, tag: 'MEAN' },
@@ -59,8 +55,9 @@ test('Rendert', () => {
 test('no choice database', () => {
     Enzyme.configure({ adapter: new Adapter() })
     let train = jest.fn()
+    let changeToReferring = jest.fn()
     let dataSetMetas = [{ dataSetID: -1, dataSetName: 'ex' }]
-    const wrapper = shallow<Train>(<Train dataSetMetas={dataSetMetas} train={train} />)
+    const wrapper = shallow<Train>(<Train dataSetMetas={dataSetMetas} train={train} changeToReferring={changeToReferring} />)
 
     const create: any = wrapper.find({ className: "create-btn" })
     create.simulate("click");
@@ -76,8 +73,9 @@ test('no choice database', () => {
 test('add dataset and choose', () => {
     Enzyme.configure({ adapter: new Adapter() })
     let train = jest.fn()
+    let changeToReferring = jest.fn()
     let dataSetMetas = [{ dataSetID: -1, dataSetName: 'ex' }]
-    const wrapper = shallow<Train>(<Train dataSetMetas={dataSetMetas} train={train} />)
+    const wrapper = shallow<Train>(<Train dataSetMetas={dataSetMetas} train={train} changeToReferring={changeToReferring} />)
 
     const create: any = wrapper.find({ className: "create-btn" })
     create.simulate("click");
@@ -87,8 +85,8 @@ test('add dataset and choose', () => {
     change.simulate('change', { target: { value: 'ex' } });
     const choose: any = wrapper.find({ className: "choose-btn" })
     choose.simulate("click");
-    expect(wrapper.state().datasets).toEqual([{ dataSetID: -1, dataSetName: "ex", chosen: false }])
-    expect(wrapper.state().databaseList).toEqual([{ dataSetID: -1, dataSetName: "ex", chosen: false }])
+    expect(wrapper.state().datasets).toEqual([{ dataSetID: -1, dataSetName: "ex", chosen: true }])
+    expect(wrapper.state().databaseList).toEqual([])
 
     const datasetcheck1: any = wrapper.find("input").at(0);
     datasetcheck1.simulate('change', { target: { checked: true } })
@@ -101,8 +99,9 @@ test('add dataset and choose', () => {
 test('multiimputation', () => {
     Enzyme.configure({ adapter: new Adapter() })
     let train = jest.fn()
+    let changeToReferring = jest.fn()
     let dataSetMetas = [{ dataSetID: -1, dataSetName: 'ex' }]
-    const wrapper = shallow<Train>(<Train dataSetMetas={dataSetMetas} train={train} />)
+    const wrapper = shallow<Train>(<Train dataSetMetas={dataSetMetas} train={train} changeToReferring={changeToReferring} />)
 
     const testNotificationManager = NotificationManager.info('test')
     const imputation: any = wrapper.find("input").at(1);
@@ -114,8 +113,9 @@ test('multiimputation', () => {
 test('multiscaler', () => {
     Enzyme.configure({ adapter: new Adapter() })
     let train = jest.fn()
+    let changeToReferring = jest.fn()
     let dataSetMetas = [{ dataSetID: -1, dataSetName: 'ex' }]
-    const wrapper = shallow<Train>(<Train dataSetMetas={dataSetMetas} train={train} />)
+    const wrapper = shallow<Train>(<Train dataSetMetas={dataSetMetas} train={train} changeToReferring={changeToReferring} />)
 
     const testNotificationManager = NotificationManager.info('test')
     const scaler: any = wrapper.find("input").at(2);
@@ -127,8 +127,9 @@ test('multiscaler', () => {
 test('multiiclassifier', () => {
     Enzyme.configure({ adapter: new Adapter() })
     let train = jest.fn()
+    let changeToReferring = jest.fn()
     let dataSetMetas = [{ dataSetID: -1, dataSetName: 'ex' }]
-    const wrapper = shallow<Train>(<Train dataSetMetas={dataSetMetas} train={train} />)
+    const wrapper = shallow<Train>(<Train dataSetMetas={dataSetMetas} train={train} changeToReferring={changeToReferring} />)
 
     const testNotificationManager = NotificationManager.info('test')
     const classifier: any = wrapper.find("input").at(4);
@@ -140,8 +141,9 @@ test('multiiclassifier', () => {
 test('train', () => {
     Enzyme.configure({ adapter: new Adapter() })
     let train = jest.fn()
+    let changeToReferring = jest.fn()
     let dataSetMetas = [{ dataSetID: -1, dataSetName: 'ex' }]
-    const wrapper = shallow<Train>(<Train dataSetMetas={dataSetMetas} train={train} />)
+    const wrapper = shallow<Train>(<Train dataSetMetas={dataSetMetas} train={train} changeToReferring={changeToReferring} />)
 
     const testNotificationManager = NotificationManager.info('test')
     const trainbtn: any = wrapper.find({ className: "train-btn" })
@@ -210,12 +212,11 @@ test('train', () => {
         { name: "Maximum", checked: false, tag: 'MAX' },
         { name: "Varianz", checked: false, tag: 'VARIANCE' },
         { name: "Energie", checked: false, tag: 'ENERGY' },
-        { name: "Fourier-T", checked: false, tag: 'FOURIER_TRANSFORM' },
+        { name: "Fourier-Transformation", checked: false, tag: 'FOURIER_TRANSFORM' },
         { name: "Mittelwert", checked: false, tag: 'MEAN' },
         { name: "Autoregressiv", checked: false, tag: 'AUTOREGRESSIVE' },
         { name: "Abweichung", checked: false, tag: 'SKEWNESS' },
-        { name: "Wölbung", checked: false, tag: 'KURTOSIS' },
-        { name: "IQR", checked: false, tag: 'IQR' }
+        { name: "Wölbung", checked: false, tag: 'KURTOSIS' }
     ])
     expect(train.mock.calls.length).toBe(0)
     trainbtn.simulate('click')
