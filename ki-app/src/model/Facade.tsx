@@ -64,7 +64,7 @@ export class Facade {
    */
   async createDataSet(sensorTypeID: number[], dataSetName: string, datarowNames?: string[]): Promise<number> {
     if (this.user === undefined) {
-      return -1;
+      return -2;
     }
     let sessionID: number = this.getSessionID();
     if (sessionID === undefined) {
@@ -88,7 +88,7 @@ export class Facade {
       }
       let dataSetID: number = await this.dbCon.createDataSet({ sessionID, projectID, userID, dataSetName, dataRow });
       if (dataSetID <= 0) {
-        return -1;
+        return -3;
       }
       ///////////////////////////////DUMMY
       var sensoren: SensorData[] = [];
@@ -105,9 +105,9 @@ export class Facade {
       if (this.user.createDataSet(sensoren, dataSetID, dataSetName) || this.user.getName() === AIController.AI_MODEL_USER_NAME) {
         return dataSetID;
       }
-      return -1;
+      return -4;
     }
-    return -1;
+    return -5;
   }
 
   /**
