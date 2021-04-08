@@ -58,6 +58,52 @@ export class Project {
     }
   }
 
+  /* Methode die noch nicht benutzt wird aber eventuell das laufgeschehen verbessern
+    updateProject(projectID: number, sessionID: number, projectName: string, projectData?: {
+      aiModelID?: number[],
+      dataSet: {
+        dataRowSensors: SensorData[], dataSetID: number, dataSetName: string, generateDate: number,
+        dataRows: {
+          dataRowID: number,
+          dataRow: { value: number[], relativeTime: number; }[];
+        }[],
+        label: { name: string, labelID: number, start: number, end: number; }[];
+      }[];
+    }): boolean {
+      if (this.id == projectID && sessionID == this.session.getID()) {
+        this.name = projectName;
+        if (projectData !== undefined) {
+          if (projectData.aiModelID !== undefined) {
+            for (const id of projectData.aiModelID) {
+              for (let i: number = 0; i < this.aiModel.length; i++) {
+                if (id == this.aiModel[i].getID()) {
+                  break;
+                }
+                if (i == this.aiModel.length - 1) {
+                  this.aiModel.push(new AIModel(id));
+                }
+              }
+            }
+          }////////////////////////////////////////////////////////TODO
+          /*
+          for (const entry of projectData.dataSet) {
+            let dataSet = new DataSet(
+              entry.dataRowSensors,
+              entry.dataSetID,
+              entry.dataSetName,
+              entry.generateDate,
+              entry.dataRows,
+              entry.label
+            );
+            this.dataSet.push(dataSet);
+          }
+        }
+        return true;
+      }
+      return false;
+    }
+  */
+
   /**
    * Gibt den Projektnamen zurück
    */
@@ -172,7 +218,7 @@ export class Project {
    * Gibt die Session ID zurück
    */
   getSessionID(): number {
-    return this.session.getId();
+    return this.session.getID();
   }
 
   /**

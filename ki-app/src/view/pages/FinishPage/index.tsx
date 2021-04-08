@@ -7,15 +7,26 @@ import { State } from "./State";
 import ReactDOM from "react-dom";
 import { States } from "../State";
 
+/**
+ * Die Darstellungsseite für die Finishseite der Datenerfasser
+ */
 export class FinishPage implements Page {
   private state: State;
   private observers: PageController[] = [];
 
+  /**
+     * Konstruktor der Darstellungseite
+     */
   constructor() {
     this.state = new State();
     this.update();
   }
 
+  /**
+    * Update Methode der Darstellungsseite. Diese Methode wird nach jeder Änderung, die kein Seitenwechsel ist, aufgerufen. 
+    * Die Methode enthält den Aufbau der Seite und wird von ihr gerendert.
+    * Es werden durch notify() alle controller über ein Update informiert und alle Seiten Elemente werden aktualisiert und erneut gerendert. 
+    */
   private update() {
     this.notify();
     const VDOM = (
@@ -27,38 +38,25 @@ export class FinishPage implements Page {
         </div>
       </div>
     );
-    // <button type="submit" onSubmit={this.finish}>Finish</button>
     if (document.getElementById('root') !== null) {
       ReactDOM.render(VDOM, document.getElementById('root'));
     }
   }
 
-  //braucht nicht mehr
-  giveDiagram() {
-    //Beispiel
-    /*var exrows = []
-    exrows.push([{ sensorType: 85124, value: [55, 66, 12], relativeTime: 0 },
-    { sensorType: 85124, value: [26, 21, 2], relativeTime: 1 },
-    { sensorType: 85124, value: [91, 83, 50], relativeTime: 2 },
-    { sensorType: 85124, value: [22, 71, 23], relativeTime: 3 },
-    { sensorType: 85124, value: [14, 8, 77], relativeTime: 4 },
-    ])
-    exrows.push([{ sensorType: 45157, value: [83, 44, 1], relativeTime: 0 },
-    { sensorType: 45157, value: [78, 55, 2], relativeTime: 1 },
-    { sensorType: 45157, value: [51, 66, 3], relativeTime: 2 },
-    { sensorType: 45157, value: [23, 81, 50], relativeTime: 3 },
-    { sensorType: 45157, value: [13, 20, 5], relativeTime: 4 },
-    ])
-
-    PubSub.publish('finishDiagram', exrows)*/
-  }
-
+  /**
+   * Addiere ein neues Label
+   * @param label das label, das addiert wird
+   */
   newLabel(label: { labelID: number, start: number, end: number, name: string; }) {
     this.state.currentLabel = label;
     this.state.currentState = States.NewLabel;
     this.notify();
   }
 
+  /**
+   * Lösche ein Label
+   * @param label das label, das gelöscht wird
+   */
   pagedeleteLabel(label: { start: number, end: number, name: string, labelID: number; }) {
     var deleteLabel = { labelID: label.labelID, start: label.start, end: label.end, name: label.name };
     this.state.currentLabel = deleteLabel;
@@ -66,20 +64,19 @@ export class FinishPage implements Page {
     this.notify();
   }
 
-  finish() {
-    this.state.currentState = States.ChangeToVisual;
-    this.notify();
-  }
-
 
   /**
-   * Die Methoden für Beobachtermuster
-   * @param observer Beobachter,nähmlich Controller
-  */
+    * Durch diese Methode kann sich ein Controller als Beobachter anmelden.
+    * @param oberver neuer Beobachter
+    */
   attach(observer: PageController) {
     this.observers.push(observer);
   }
 
+  /**
+    * Durch diese Methode kann sich ein Controller als Beobachter abmelden.
+    * @param oberver Beobachter der zu entfernen ist
+    */
   detach(observer: PageController) {
     const index = this.observers.indexOf(observer, 0);
     if (index > -1) {
@@ -87,6 +84,9 @@ export class FinishPage implements Page {
     }
   }
 
+  /**
+    * Durch diese Methode werden alle Beobachter über eine Änderung auf der Seite informiert.
+    */
   notify() {
     for (let index = 0; index < this.observers.length; index++) {
       const element = this.observers[index];
@@ -94,9 +94,17 @@ export class FinishPage implements Page {
     }
   }
 
+  /**
+     * Setzt einen neuen Zustand für die Seite und aktualisiert sie
+     * @param state neuer Zustand für die Seite
+     */
   getState() {
     return this.state;
   }
+
+  /**
+    * Gibt den Status der Seite zurück
+    */
   setState(state: any) {
     this.state = state;
     this.update();

@@ -5,6 +5,7 @@ import { Admin, Dataminer, AIModelUser, User } from "./User";
 import { AIBuilder } from "./AIBuilder";
 import { AIDistributor } from "./AIDistributor";
 import { AccelerometerData, GyroscopeData, SensorData } from "./SensorData";
+import { AIController } from "../controller/AIController";
 //import { isBreakStatement } from "typescript";
 
 interface FacadeInterface {
@@ -66,8 +67,14 @@ export class Facade {
       return -1;
     }
     let sessionID: number = this.getSessionID();
-    if (sessionID >= 0) {
+    if (sessionID === undefined) {
+      sessionID = 0;
+    }
+    if (sessionID > 0 || this.user.getName() === AIController.AI_MODEL_USER_NAME) {
       let projectID: number = this.user.getCurrentProjectID();
+      if (projectID === undefined) {
+        projectID = 0;
+      }
       let userID: number = this.user.getID();
       let dataRow: { sensorID: number, datarowName?: string; }[] = [];
       for (let i = 0; i < sensorTypeID.length; i++) {
@@ -95,7 +102,7 @@ export class Facade {
             break;
         }
       }
-      if (this.user.createDataSet(sensoren, dataSetID, dataSetName)) {
+      if (this.user.createDataSet(sensoren, dataSetID, dataSetName) || this.user.getName() === AIController.AI_MODEL_USER_NAME) {
         return dataSetID;
       }
       return -1;
@@ -111,14 +118,12 @@ export class Facade {
    * @return true, wenn der Datenpunkt erfolgreich an die Datenbank gesendet wurde
    */
   async sendDataPoint(dataRowID: number, datapoint: { value: number[], relativeTime: number; }): Promise<boolean> {
-    if (this.user != null) {
+    if (this.user !== undefined) {
       let sessionID: number = this.getSessionID();
       let userID: number = this.user.getID();
       let dataSetID: number = this.user.getCurrentDataSetID();
       this.user.addDatapoint(dataRowID, datapoint);
-      var result = this.dbCon.sendDataPoint({ sessionID, userID, dataSetID, dataRowID, datapoint });
-      console.log(result);
-      return result;
+      return this.dbCon.sendDataPoint({ sessionID, userID, dataSetID, dataRowID, datapoint });
     }
     return false;
   }
@@ -162,6 +167,23 @@ export class Facade {
     }
     return false;
   }
+
+  /* Methode die noch nicht benutzt wird aber eventuell das laufgeschehen verbessern
+  /**
+     * Aktuallisiert aus der Datenbank das aktuelle Projekt, hierfür muss der Admin angemeldet sein und ein Projekt geladen sein
+     * @returns true, wenn das Projekt erfolgreich geladen wurde dies tritt nur ein, wenn eine Verbindung zur Datenbank besteht,
+     *          ein geladenes Projekt existiert und der Admin dafür angemeldet ist
+     
+  async updateCurrentProject(): Promise<boolean> {
+    if (this.user != null && this.user instanceof Admin) {
+      let projectID = this.user.getCurrentProjectID();
+      let adminEmail: string = this.user.getEmail();
+      let userID: number = this.user.getID();
+      return this.user.updateProject(await this.dbCon.updateProject({ userID, adminEmail, projectID }));
+    }
+    return false;
+  }*/
+
 
   /**
    * Lädt vom aktuell angemeldeten Admin von seinen Projekten den Namen, die Projekt ID und die AIModelIDs

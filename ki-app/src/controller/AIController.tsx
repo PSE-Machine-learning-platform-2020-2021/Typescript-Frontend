@@ -12,6 +12,10 @@ import { ResultPage } from "../view/pages/ResultPage/Result";
 * Controller welcher für die Klassifizierung verantworlich ist.
 */
 export class AIController implements PageController {
+    /**
+     * Der Name des KI-Modell-Nutzers in der Datenbank. Wird auch verwendet, um ihn später zu identifizieren...
+     */
+    public static readonly AI_MODEL_USER_NAME: string = "KI-Modell-Anwender";
     private modelID: number;
     /**
     * Für die Verwaltung der Sensoren verantwortlich
@@ -42,7 +46,7 @@ export class AIController implements PageController {
         this.page.attach( this );
         this.state = this.page.getState();
         //TODO Beim Registrieren des AIModelUsers sollte der Name weg oder eine Möglichkeit bestehen den Namen zu beziehen
-        MainController.getInstance().getFacade().registerDataminer("KI-Modell-Anwender", -1);
+        MainController.getInstance().getFacade().registerDataminer(AIController.AI_MODEL_USER_NAME, -1);
         this.modelID = modelID;
         this.setUpSensorShown();
         this.page.setState( this.state );
@@ -132,7 +136,7 @@ export class AIController implements PageController {
      * Klassifiziert den Datensatz.
      */
     private classifyResult () {
-        MainController.getInstance().getFacade().classify( +this.urlParams.get( "aiID" )!, this.dataSetID, this.callback );
+        MainController.getInstance().getFacade().classify( +this.urlParams.get( "modelID" )!, this.dataSetID, this.callback );
     }
 
     /**
