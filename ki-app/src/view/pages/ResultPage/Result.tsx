@@ -34,6 +34,7 @@ export class ResultPage implements Page {
         const VDOM = (
             <div>
                 <h1>Klassifiziere, bitte warten</h1>
+                <h1>{ this.state.aiUserData!.result }</h1>
                 <NotificationContainer />
             </div>
         );

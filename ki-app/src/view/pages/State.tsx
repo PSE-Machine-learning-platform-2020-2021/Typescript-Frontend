@@ -34,7 +34,6 @@ export interface IState {
     slidingWindowStep?: number;        // optional
   };
   islogedIn?: boolean;
-  classifyResult?: string;
   chosenEmails?: string[];
   wait?: Promise<any>;
   link?: string;
