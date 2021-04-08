@@ -1,3 +1,6 @@
+import { connected } from "node:process";
+import { LanguageService } from "typescript";
+
 /**
  * In dieser Klasse wird die aktuell geladene Sprache sowie alle Nachrichten auf dieser Sprache gespeichert.
  */
@@ -9,9 +12,9 @@ export class Language {
    * 1: SprachName
    * x: SensorTyp von x    |x sind alle SensorTypIDs 
    */
-  private language: string[]; //Alle Nachrichten auf der geladenen Sprache
+  private language: LanguageMessages; //Alle Nachrichten auf der geladenen Sprache
 
-  constructor(language: string[]) {
+  constructor(language: LanguageMessages) {
     this.language = language;
   }
 
@@ -19,8 +22,8 @@ export class Language {
    * Gibt den Sprachen Code zurück
    */
   getLanguageCode(): string {
-    if (this.language.length > 0) {
-      return this.language[0];
+    if (this.language !== undefined) {
+      return this.language.code;
     }
     return "";
   }
@@ -30,27 +33,21 @@ export class Language {
    * @param id Array von den IDs, von denen die Nachricht geladen werden soll
    * @returns id mit der Nachricht in der gleichen Reihenfolge, wie angefordert.
    */
-  getMessage(id: number[]): { messageID: number, message: string; }[] {
-    var messages: { messageID: number, message: string; }[] = [];
-    for (let i = 0; i < id.length; i++) {
-      if (this.language.length > id[i]) {
-        messages.push({ messageID: id[i], message: this.language[id[i]] });
-      } else {
-        messages.push({ messageID: id[i], message: "" });
-      }
-    }
-    return messages;
+  getMessage(): LanguageMessages {
+    return this.language;
   }
 
   /**
    * Setzt eine neue Sprache
    * @param languagePromise die neue Sprache die geladen werden soll, Stelle 0 ist der Sprachencode und Stelle 1 ist der Sprachenname
    */
-  setLanguage(language: string[]): boolean {
-    if (language.length > 2) {
-      this.language = language;
-      return true;
-    }
-    return false;
+  setLanguage(language: LanguageMessages): boolean {
+    this.language = language;
+    return true;
   }
+
+}
+export interface LanguageMessages {
+  code: string;
+  name: string;
 }

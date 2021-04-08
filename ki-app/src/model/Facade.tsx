@@ -1,6 +1,6 @@
 import { DeliveryFormat } from "./DeliveryFormat";
 import { DatabaseConnector } from "./DatabaseConnector";
-import { Language } from "./Language";
+import { Language, LanguageMessages } from "./Language";
 import { Admin, Dataminer, AIModelUser, User } from "./User";
 import { AIBuilder } from "./AIBuilder";
 import { AIDistributor } from "./AIDistributor";
@@ -52,7 +52,7 @@ export class Facade {
    */
   constructor(languageCode: string) {
     this.dbCon = new DatabaseConnector();
-    this.dbCon.loadLanguage({ languageCode }).then((language: string[]) => { this.language = new Language(language); });
+    this.dbCon.loadLanguage({ languageCode }).then((language: LanguageMessages) => { this.language = new Language(language); });
   }
 
   /**
@@ -245,11 +245,11 @@ export class Facade {
    * @param messageID alle IDs, von denen die Sprachnachricht geladen werden soll
    * @returns alle Nachrichten, in der gleichen Reihenfolge wie angefordert
    */
-  getMessage(messageID: number[]): { messageID: number, message: string; }[] {
+  getMessages(): LanguageMessages | null {
     if (this.language != null) {
-      return this.language.getMessage(messageID);
+      return this.language.getMessage();
     }
-    return [];
+    return null;
   }
 
   /**
@@ -275,11 +275,11 @@ export class Facade {
    */
   async setLanguage(languageCode: string): Promise<boolean> {
     if (this.language == null) {
-      const language: string[] = await this.dbCon.loadLanguage({ languageCode });
+      const language: LanguageMessages = await this.dbCon.loadLanguage({ languageCode });
       this.language = new Language(language);
       return true;
     } else if (languageCode !== this.language.getLanguageCode()) {
-      const language: string[] = await this.dbCon.loadLanguage({ languageCode });
+      const language: LanguageMessages = await this.dbCon.loadLanguage({ languageCode });
       return this.language.setLanguage(language);
     }
     return true;

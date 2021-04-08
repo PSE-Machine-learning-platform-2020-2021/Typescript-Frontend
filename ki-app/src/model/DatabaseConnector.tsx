@@ -1,3 +1,4 @@
+import { LanguageMessages } from "./Language";
 import { SensorData } from "./SensorData";
 
 //Die Schnittstelle zur Datenbank.
@@ -18,12 +19,11 @@ export class DatabaseConnector {
    * @param languageCode Sprachcode
    * @returns die Sprache
    */
-  async loadLanguage(requestData: { languageCode: string; }): Promise<string[]> {
-    const result: string[] = await this.sendRequest("load_language", requestData);
+  async loadLanguage(requestData: { languageCode: string; }): Promise<LanguageMessages> {
+    const result: LanguageMessages = await this.sendRequest("load_language", requestData);
     return result;
   }
 
-  //Erzeugt ein neues Projekt und setzt dieses als das momentan benutzte Projekt. Der Parameter projectName beinhaltet den Namen des neuen Projektes.
   /**
    * Erzeugt ein neues Projekt in der Datenbank
    * @param userID von dem Admin, der das Projekt erstellt
