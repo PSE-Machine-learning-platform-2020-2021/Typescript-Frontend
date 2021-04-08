@@ -109,8 +109,10 @@ export class SensorManager {
                         checkList.forEach( element => {
                             element.then( ( errorWhenSend: Boolean ) => {
                                 if ( errorWhenSend ) {
-                                    state.currentState = States.LoadError;
-                                    page.setState( state );
+                                    if ( state.currentState != States.LoadError ) {
+                                        state.currentState = States.LoadError;
+                                        page.setState( state );
+                                    }
                                 }
                             } );
                         } );
