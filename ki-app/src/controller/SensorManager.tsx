@@ -2,8 +2,10 @@ import { MainController } from "./MainController";
 import { Page } from "../view/pages/PageInterface";
 import { IState, States } from "../view/pages/State";
 import { Facade } from "../model/Facade";
+import { State } from "../view/pages/ModelCreationPage/State";
 
 export class SensorManager {
+    private checkList: Promise<boolean>[] = [];
     private currentSensors: Sensor[] = [];
     //private currentSensorIDs: number[] = [];
     private facade: Facade = MainController.getInstance().getFacade();
@@ -74,7 +76,6 @@ export class SensorManager {
     * Wartet zuerst für die angegebene Wartezeit und nimmt dann für die angegeben Lesezeit daten auf.
     */
     readData ( page: Page ) {
-        let checkList: Promise<boolean>[] = [];
         this.page = page;
         let state: IState = page.getState();
         state.recordingSettings!.usedSensorTypes = this.sensorTypes;
@@ -98,7 +99,7 @@ export class SensorManager {
                     while ( this.dataPoints.length > 0 ) {
                         let newDataPoint = this.dataPoints.shift()!;
                         state.dataPoints!.push( newDataPoint );
-                        checkList.push( MainController.getInstance().getFacade().sendDataPoint( newDataPoint.rowId, { value: newDataPoint.value, relativeTime: newDataPoint.relativeTime } ) );
+                        this.checkList.push( MainController.getInstance().getFacade().sendDataPoint( newDataPoint.rowId, { value: newDataPoint.value, relativeTime: newDataPoint.relativeTime } ) );
                         page.setState( state );
                     }
                     if ( this.readTime === 0 ) {
@@ -106,20 +107,24 @@ export class SensorManager {
                         for ( let index = 0; index < this.currentSensors.length; index++ ) {
                             this.currentSensors[ index ].stop();
                         }
-                        checkList.forEach( element => {
-                            element.then( ( errorWhenSend: Boolean ) => {
-                                if ( errorWhenSend ) {
-                                    if ( state.currentState != States.LoadError ) {
-                                        state.currentState = States.LoadError;
-                                        page.setState( state );
-                                    }
-                                }
-                            } );
-                        } );
+                        this.checkForErrors( state, page );
                     }
                 }, 1000 );
             }
         }, 1000 );
+    }
+
+    private checkForErrors ( state: State, page: Page ) {
+        this.checkList.forEach( async element => {
+            let errorWhenSend = await element;
+            if ( errorWhenSend && state.currentState != States.LoadError ) {
+
+                state.currentState = States.LoadError;
+                page.setState( state );
+
+            }
+
+        } );
     }
 
     private saveDatapointinRow ( dataPoint: { rowId: number, sensorType: number, value: number[]; relativeTime: number; } ) {
