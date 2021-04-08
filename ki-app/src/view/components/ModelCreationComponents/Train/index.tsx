@@ -53,15 +53,23 @@ export default class Train extends Component {
 	};
 
 	/**
-	 * Befüllt die beiden state-Variablen, die so aussehen, als müssten da die Datensätze des aktuellen Projekts rein, 
-	 * mit den Daten aus der props-Variable dataSetMetas.
+	 * Befüllt die state-Variable databaseList mit den Daten aus der props-Variable dataSetMetas.
+	 * Diese ehemals private Methode musste in den Konstruktor ausgelagert werden, 
+	 * da setState in render zu Endlosschleifen führt.#
+	 * 
+	 * @param props - Die "XML-Attribute", die diesem Objekt bei seiner Erstellung mitgegeben wurden.
 	 */
-	private fillState(): void {
-		this.setState({ databaseList: [] })
+	constructor(props: {}) {
+		super(props);
+		let dbList = [] as {dataSetID: number, dataSetName: string, chosen: boolean}[];
 		for (const x of this.props.dataSetMetas) {
-			this.state.databaseList.push({ dataSetName: x.dataSetName, dataSetID: x.dataSetID, chosen: false });
+			dbList.push({ dataSetName: x.dataSetName, dataSetID: x.dataSetID, chosen: false });
 		}
+		this.state.databaseList = dbList;
 	}
+
+	
+
 	/** 
 		componentDidMount() {
 			let newDatabaseList: { dataSetID: number, dataSetName: string, chosen: boolean; }[] = [];
@@ -281,7 +289,7 @@ export default class Train extends Component {
 	}
 
 	render() {
-		this.fillState();
+		//this.fillState();
 		const { mouse, datasets, imputators, scalers, myfeatures, classifiers } = this.state;
 		return (
 			<div className="train">
