@@ -23,17 +23,3 @@ test('DeleteLabel', () => {
     expect(currentLabel).toEqual({ labelID: 0, start: 1, end: 3, name: 'a' });
     expect(currentState).toBe(States.DeleteLabel);
 });
-
-test('ChangetoVisual', () => {
-    let page = new FinishPage();
-    let state = page.getState();
-    let result = state.currentState;
-    expect(result).toBe(States.NeedMessage);
-
-    // @ts-ignore
-    page.finish();
-    let newState = page.getState();
-    let newResult = newState.currentState;
-    expect(newResult).toBe(States.ChangeToVisual);
-});
-

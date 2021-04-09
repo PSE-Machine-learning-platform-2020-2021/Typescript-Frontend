@@ -1,4 +1,4 @@
-import React, { Component } from 'react'
+import React, { Component, CSSProperties } from 'react'
 import "./DiagramList.css"
 export default class DiagramList extends Component {
 
@@ -7,24 +7,28 @@ export default class DiagramList extends Component {
      */
     props = {
         currentDataSets: [] as { dataSetID: number, rows: { sensorType: number, datapoint: { value: number[], relativeTime: number }[] }[] }[],
+        //testDataSet: [] as { dataSetID: number, rows: { sensorType: number, datapoint: { value: number[], relativeTime: number }[] }[] }[],
     }
-    diagrammData = {
-        lineLabels: [] as any[],
-        sensorRow: [] as any[],
-        datavalue: [] as any[],
-        time: [] as any[],
-        color: ['rgba(46,190,87,1)', 'rgba(68,24,232,1)', 'rgba(238,173,14,1)', 'rgba(178,34,34,1)', 'rgba(238, 130, 238,1)', 'rgba(0, 0, 0,1)',
-            'rgba(106, 90, 205,1)', 'rgba(238, 118, 0,1)', 'rgba(105, 105, 105,1)'],
-        csscolor: ['2EBE57', 'CC00FF', 'EEAD0E', 'B22222', 'EE82EE', '000000',
-            '6A5ACD', 'EE7600', '696969']
-    };
-    diagramList = [] as any[];
+
     /**
      * Status für diese Komponente
      */
     state = {
         showDiagramIndex: 0,
-        diagramList: [] as any[]
+        diagramList: [] as any[],
+        diagrammData: {
+            lineLabels: [] as any[],
+            sensorRow: [] as any[],
+            datavalue: [] as any[],
+            time: [] as any[],
+
+        },
+        color: ['rgba(46,190,87,1)', 'rgba(68,24,232,1)', 'rgba(238,173,14,1)', 'rgba(178,34,34,1)', 'rgba(238, 130, 238,1)', 'rgba(0, 0, 0,1)',
+            'rgba(106, 90, 205,1)', 'rgba(238, 118, 0,1)', 'rgba(105, 105, 105,1)'],
+        csscolor: ['rgba(46,190,87,1)', 'rgba(68,24,232,1)', 'rgba(238,173,14,1)', 'rgba(178,34,34,1)', 'rgba(238, 130, 238,1)', 'rgba(0, 0, 0,1)',
+            'rgba(106, 90, 205,1)', 'rgba(238, 118, 0,1)', 'rgba(105, 105, 105,1)']
+        //csscolor: ['2EBE57', 'CC00FF', 'EEAD0E', 'B22222', 'EE82EE', '000000',
+        //     '6A5ACD', 'EE7600', '696969']
     };
 
     /**
@@ -35,8 +39,6 @@ export default class DiagramList extends Component {
     handleClick = (diagram: any, index: any) => {
         this.setState({ showDiagramIndex: index });
         // The following two console-log calls are just for parameter usage and have no actual meaning.
-        console.log(diagram);
-        console.log(index);
 
     };
 
@@ -44,34 +46,34 @@ export default class DiagramList extends Component {
      * Diagram erstellen
      * @param dataSet Datensätze für Diagram
      */
-    updateDiagramm(dataSet: { dataSetID: any; rows: any[]; }) {
-        this.diagrammData.lineLabels = []
-        this.diagrammData.sensorRow = []
-        this.diagrammData.datavalue = []
-        this.diagrammData.time = []
-
+    updateDiagramm(dataSet: { dataSetID: number; rows: any[]; }) {
+        let diagrammData = this.state.diagrammData
+        diagrammData.sensorRow = []
+        diagrammData.datavalue = []
+        diagrammData.time = []
+        this.setState({ diagrammData: diagrammData })
         var datavalues = [];
         for (var i = 0; i < dataSet.rows.length; i++) {
-            this.diagrammData.sensorRow.push(dataSet.rows[i].sensorType);
+            this.state.diagrammData.sensorRow.push(dataSet.rows[i].sensorType);
             for (var dataCoordinate = 0; dataCoordinate < 3; dataCoordinate++) {
                 for (var j = 0; j < dataSet.rows[i].datapoint.length; j++) {
                     datavalues.push(dataSet.rows[i].datapoint[j].value[dataCoordinate]);
                 }
-                this.diagrammData.datavalue.push(datavalues);
+                this.state.diagrammData.datavalue.push(datavalues);
                 datavalues = [];
             }
         }
         // eslint-disable-next-line
         for (var j = 0; j < dataSet.rows[0].datapoint.length; j++) {
-            this.diagrammData.time.push(dataSet.rows[0].datapoint[j].relativeTime);
+            this.state.diagrammData.time.push(dataSet.rows[0].datapoint[j].relativeTime);
         }
 
         var newDatasets = [];
         var lineLabels = [];
         // eslint-disable-next-line
-        for (var i = 0; i < this.diagrammData.sensorRow.length * 3; i++) {
+        for (var i = 0; i < this.state.diagrammData.sensorRow.length * 3; i++) {
             var coordinate = ".X";
-            var sensor = this.diagrammData.sensorRow[(i / 3) | 0];
+            var sensor = this.state.diagrammData.sensorRow[(i / 3) | 0];
             var sensorName = ''
             switch (sensor) {
                 case 2:
@@ -95,19 +97,20 @@ export default class DiagramList extends Component {
                 coordinate = ".Z";
             }
 
-            lineLabels.push(<span color={this.diagrammData.csscolor[i]}>■{sensorName + coordinate}<br /></span>);
+            let color: CSSProperties = { "color": this.state.csscolor[i] };
+            lineLabels.push(<span style={color}>■{sensorName + coordinate}<br /></span>);
             //this.setState({ lineLabels: lineLabels })
             newDatasets.push(
                 {
                     label: sensor + coordinate,
-                    strokeColor: this.diagrammData.color[i],
+                    strokeColor: this.state.color[i],
                     borderWidth: 1,
-                    data: this.diagrammData.datavalue[i],
+                    data: this.state.diagrammData.datavalue[i],
                 }
             );
         }
         const data = {
-            labels: this.diagrammData.time,
+            labels: this.state.diagrammData.time,
             datasets: newDatasets
         };
         const options = {
@@ -117,11 +120,10 @@ export default class DiagramList extends Component {
             offsetGridLines: false,
             pointDot: false
         };
-        const newList = this.diagramList
+        const newList = this.state.diagramList
         const id = dataSet.dataSetID
         newList.push({ dataSetID: id, lineLabels: lineLabels, data: data, options: options })
-        this.diagramList = newList
-
+        this.setState({ diagramList: newList })
     }
 
     /**
@@ -136,7 +138,7 @@ export default class DiagramList extends Component {
         this.props.currentDataSets?.map((dataSet, index) => {
             var flag = false
             // eslint-disable-next-line
-            this.diagramList.map((diagram) => {
+            this.state.diagramList.map((diagram) => {
                 if (diagram.dataSetID === dataSet.dataSetID) {
                     flag = true
                     return diagram
@@ -147,7 +149,7 @@ export default class DiagramList extends Component {
         })
         return (
             <div>
-                {this.diagramList.map((diagram, index) => {
+                {this.state.diagramList.map((diagram, index) => {
                     return (
                         <div key={index}>
                             {(this.state.showDiagramIndex === index) && (
@@ -163,7 +165,7 @@ export default class DiagramList extends Component {
                 })
                 }
                 <div className="diagramList">
-                    {this.diagramList.map((diagram, index) => {
+                    {this.state.diagramList.map((diagram, index) => {
                         return (
                             <div key={index}>
                                 <h5>{diagram.dataSetID}</h5>

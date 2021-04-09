@@ -11,7 +11,7 @@ test('Rendert', () => {
     { dataSetID: 4, rows: [{ sensorType: 0, datapoint: [{ value: [1, 2, 3], relativeTime: 0 }] }] }]
     const wrapper = shallow<DiagramList>(<DiagramList currentDataSets={currentDataSets} />)
 
-    const create: any = wrapper.find("LineChart");
+    const create: any = wrapper.find("LineChart").at(2);
     create.simulate("click");
     expect(wrapper.state().showDiagramIndex).toBe(1)
 });
