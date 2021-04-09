@@ -1,75 +1,42 @@
-import { Language } from "../Language";
+import { Language, LanguageMessages } from "../Language";
 
 /**
  * Prüft die einfache Nutzung, erstellen und prüfen ob der getter dies wieder zurück gibt
  */
 test("create and getter", () => {
-    const languageMessage: string[] = [
+    const languageMessage: LanguageMessages = { code: "de-de", name: "Deutsch" };
+    /*[
         "de-de",
         "Deutsch",
         "Accelerometer",
         "Gyroscope",
         "Magnetometer",
         "Wilkommen"
-    ];
+    ];*/
     var language = new Language(languageMessage);
-    const loadedLanguage = language.getMessage([0, 1, 2, 3, 4, 5]);
-    expect(loadedLanguage.length).toBe(languageMessage.length);
-    for (let i = 0; i < loadedLanguage.length; i++) {
-        expect(loadedLanguage[i].message).toBe(languageMessage[i]);
-        expect(loadedLanguage[i].messageID).toBe(i);
-    }
-    expect(language.getLanguageCode()).toBe(languageMessage[0]);
-    expect(language.getMessage([50])[0].messageID).toBe(50);
-    expect(language.getMessage([50])[0].message).toBe("");
-    //Ohne Sprache
-    language = new Language([]);
-    expect(language.getLanguageCode()).toBe("");
-    expect(language.getMessage([40])[0].messageID).toBe(40);
-    expect(language.getMessage([40])[0].message).toBe("");
+    const loadedLanguage = language.getMessage();
+    expect(loadedLanguage).toStrictEqual(languageMessage);
+    expect(language.getLanguageCode()).toBe(languageMessage.code);
 });
 
 /**
  * Prüft, ob setLanguage fehlerfrei läuft
  */
 test("setLanguage", () => {
-    const languageMessage: string[] = [
-        "de-de",
-        "Deutsch",
-        "Accelerometer",
-        "Gyroscope",
-        "Magnetometer",
-        "Wilkommen"
-    ];
+    const languageMessage: LanguageMessages = { code: "de-de", name: "Deutsch" };
     const language = new Language(languageMessage);
     //Normale Benutzung
-    const languageMessage2: string[] = [
-        "ru-ru",
+    const languageMessage2: LanguageMessages = { code: "ru-ru", name: "русский" };
+    /*   "ru-ru",
         "русский",
         "Акселерометр",
         "Гироскоп",
         "Магнитометр",
         "Добро пожаловать",
         "до свидания"
-    ];
+    ];*/
     expect(language.setLanguage(languageMessage2)).toBeTruthy();
-    var loadedLanguage = language.getMessage([0, 1, 2, 3, 4, 5, 6]);
-    expect(loadedLanguage.length).toBe(languageMessage2.length);
-    for (let i = 0; i < loadedLanguage.length; i++) {
-        expect(loadedLanguage[i].message).toBe(languageMessage2[i]);
-        expect(loadedLanguage[i].messageID).toBe(i);
-    }
-    expect(language.getLanguageCode()).toBe(languageMessage2[0]);
-    //Neue Sprache ist leer
-    expect(language.setLanguage([])).toBeFalsy();
-    //Neue Sprache hat nur 2 Wörter
-    expect(language.setLanguage(["1", "2"])).toBeFalsy();
-    //Test, dass keine falschen Änderungen aufkamen
-    loadedLanguage = language.getMessage([0, 1, 2, 3, 4, 5, 6]);
-    expect(loadedLanguage.length).toBe(languageMessage2.length);
-    for (let i = 0; i < loadedLanguage.length; i++) {
-        expect(loadedLanguage[i].message).toBe(languageMessage2[i]);
-        expect(loadedLanguage[i].messageID).toBe(i);
-    }
-    expect(language.getLanguageCode()).toBe(languageMessage2[0]);
+    var loadedLanguage = language.getMessage();
+    expect(loadedLanguage).toStrictEqual(languageMessage2);
+    expect(language.getLanguageCode()).toBe(languageMessage2.code);
 });
