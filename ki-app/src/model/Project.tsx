@@ -39,14 +39,24 @@ export class Project {
         }
       }
       for (const entry of projectData.dataSet) {
-        let dataSet = new DataSet(
-          entry.dataRowSensors,
-          entry.dataSetID,
-          entry.dataSetName,
-          entry.generateDate,
-          entry.dataRows,
-          entry.label
-        );
+        let dataSet: DataSet;
+        if (entry.generateDate !== undefined && entry.label !== undefined) {
+          dataSet = new DataSet(
+            entry.dataRowSensors,
+            entry.dataSetID,
+            entry.dataSetName,
+            entry.generateDate,
+            entry.dataRows,
+            entry.label
+          );
+        } else {
+          dataSet = new DataSet(
+            entry.dataRowSensors,
+            entry.dataSetID,
+            entry.dataSetName
+          );
+        }
+
         this.dataSet.push(dataSet);
       }
     }

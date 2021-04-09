@@ -73,13 +73,13 @@ export class DataRow {
       dataRow[i] = { value: this.datapoint[i].getValue(), relativeTime: this.datapoint[i].getRelativeTime() };
     }
     var sensorType: number = this.sensor.SensorTypeID;
-    dataRowST = { sensorType, dataRow };
+    dataRowST = { sensorType, datapoint: dataRow };
     return dataRowST;
   }
 }
 export interface IDataRowST {
   sensorType: number,
-  dataRow: IDataPoint[];
+  datapoint: IDataPoint[];
 }
 export interface IDataRowRID {
   dataRowID: number,

@@ -146,7 +146,7 @@ export class Facade {
       let dataSetID: number = this.user.getCurrentDataSetID();
       let rows = this.user.getCurrentDataRows();
       for (let i = 0; i < rows.dataRows.length; i++) {
-        var result = this.dbCon.sendDataPointsAgain({ sessionID, userID, dataSetID, dataRowID: i, datapoints: rows.dataRows[i].dataRow });
+        var result = this.dbCon.sendDataPointsAgain({ sessionID, userID, dataSetID, dataRowID: i, datapoints: rows.dataRows[i].datapoint });
         if (!result) {
           return false;
         }

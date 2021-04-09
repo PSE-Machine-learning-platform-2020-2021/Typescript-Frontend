@@ -578,8 +578,8 @@ function checkProject(user: User, project: { projectID: number, sessionID: numbe
             expect(user.getCurrentDataRows().dataRows.length).toBe(project.projectData.dataSet[d].dataRows.length);
             for (let i = 0; i < project.projectData.dataSet[d].dataRows.length; i++) {
                 //expect(user.getCurrentDataSetID()).toBe(project.projectData.dataSet[d].dataSetID);
-                expect(user.getCurrentDataRows().dataRows[i].dataRow.length).toBe(project.projectData.dataSet[d].dataRows[i].dataRow.length);
-                expect(user.getCurrentDataRows().dataRows[i].dataRow).toStrictEqual(project.projectData.dataSet[d].dataRows[i].dataRow);
+                expect(user.getCurrentDataRows().dataRows[i].datapoint.length).toBe(project.projectData.dataSet[d].dataRows[i].dataRow.length);
+                expect(user.getCurrentDataRows().dataRows[i].datapoint).toStrictEqual(project.projectData.dataSet[d].dataRows[i].dataRow);
 
                 ///////////////////////////////////
                 //DataRowID wird nicht verglichen//

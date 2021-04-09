@@ -465,9 +465,9 @@ function checkAll(project: Project, projectID: number, sessionID: number, projec
                 for (let i = 0; i < dataSet[d].dataRows!.length; i++) {
                     for (let j = 0; j < dataSet[d].dataRows![i].dataRow.length; j++) {
                         for (let k = 0; k < dataSet[d].dataRows![i].dataRow[j].value.length; k++) {
-                            expect(loadedDataRows.dataRows[i].dataRow[j].value[k]).toBe(dataSet[d].dataRows![i].dataRow[j].value[k]);
+                            expect(loadedDataRows.dataRows[i].datapoint[j].value[k]).toBe(dataSet[d].dataRows![i].dataRow[j].value[k]);
                         }
-                        expect(loadedDataRows.dataRows[i].dataRow[j].relativeTime).toBe(dataSet[d].dataRows![i].dataRow[j].relativeTime);
+                        expect(loadedDataRows.dataRows[i].datapoint[j].relativeTime).toBe(dataSet[d].dataRows![i].dataRow[j].relativeTime);
                     }
                 }
             } else {
