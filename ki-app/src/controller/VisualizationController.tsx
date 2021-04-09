@@ -18,7 +18,7 @@ export class VisualizationController implements PageController {
         this.page.attach(this);
         this.state = this.page.getState();
         this.state.currentProject = currentProject;
-        this.page.setState(this.state); // <--- DAS IST DAS PROBLEM!
+        //this.page.setState(this.state); // <--- DAS IST DAS PROBLEM!
         //Beispiel
         //this.getDatarows()
         this.SetDataRows();
