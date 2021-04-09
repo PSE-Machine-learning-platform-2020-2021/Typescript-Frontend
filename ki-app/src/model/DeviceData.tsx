@@ -64,7 +64,7 @@ export abstract class DeviceData {
   /**
    * Prüft welches Gerät aktuell benutzt wird und gibt dazu die Passende Klasse zurück
    */
-  static loadDevice(deviceID: number, device?: { MACADRESS: string, deviceName: string, firmware: string, generation: string, deviceType: string; }): DeviceData {
+  static loadDevice(deviceID: number, device?: IDevice): DeviceData {
     ////////////////////////////////////////////////////
     //Noch herrausfinden Smartphone oder anderes Gerät//
     ////////////////////////////////////////////////////
@@ -92,4 +92,14 @@ export class Smartphone extends DeviceData {
 export class Desktop extends DeviceData {
   protected deviceType: string = "Desktop";
   //protected searchSensor(): void { }
+}
+
+export interface IDevice {
+  deviceID?: number,
+  deviceName: string,
+  deviceType: string,
+  firmware: string,
+  generation: string,
+  MACADRESS: string,
+  sensorInformation: { sensorTypeID: number, sensorName: string, sensorUniqueID: number; }[];
 }

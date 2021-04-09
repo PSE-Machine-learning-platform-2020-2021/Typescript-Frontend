@@ -1,7 +1,11 @@
 import { AIController } from "../controller/AIController";
-import { DeviceData } from "./DeviceData";
-import { Project } from "./Project";
+import { IDataPoint } from "./DataPoint";
+import { IDataRowST } from "./DataRow";
+import { DeviceData, IDevice } from "./DeviceData";
+import { ILabel } from "./Label";
+import { IProjectData, Project } from "./Project";
 import { SensorData } from "./SensorData";
+import { ISpan } from "./TimeSpan";
 
 /**
  * Die Vorlage für alle existierenden Benutzer
@@ -59,7 +63,7 @@ export abstract class User {
     return -1;
   }
 
-  addDatapoint(dataRowID: number, datapoint: { value: number[], relativeTime: number; }): boolean {
+  addDatapoint(dataRowID: number, datapoint: IDataPoint): boolean {
     if (this.currentProject != null) {
       return this.currentProject.addDatapoint(dataRowID, datapoint);
     }
@@ -72,7 +76,7 @@ export abstract class User {
    * @param dataSetID die Datensatz ID von der die Datenreihen gelesen werden sollen
    * @returns die Sensordaten von der Datenreihe
    */
-  getDataRows(dataSetID: number): { dataRows: { sensorType: number, datapoint: { value: number[], relativeTime: number; }[]; }[]; } {
+  getDataRows(dataSetID: number): { dataRows: IDataRowST[]; } {
     if (this.currentProject != null) {
       return this.currentProject.getDataRows(dataSetID);
     } else {
@@ -85,7 +89,7 @@ export abstract class User {
    * @param dataSetID die Datensatz ID von der die Datenreihen gelesen werden sollen
    * @returns die Sensordaten von der Datenreihe
    */
-  getCurrentDataRows(): { dataRows: { sensorType: number, datapoint: { value: number[], relativeTime: number; }[]; }[]; } {
+  getCurrentDataRows(): { dataRows: IDataRowST[]; } {
     if (this.currentProject != null) {
       return this.currentProject.getCurrentDataRows();
     } else {
@@ -140,7 +144,7 @@ export abstract class User {
    * @param end Ist die Endzeit des Labels.
    * @returns false, falls kein aktueller Datensatz existiert oder die LabelID für diesen Datensatz nicht eindeutig ist
    */
-  createLabel(labelID: number, span: { start: number, end: number; }, labelName: string): boolean {
+  createLabel(labelID: number, span: ISpan, labelName: string): boolean {
     if (this.currentProject != null) {
       return this.currentProject.createLabel(labelID, span, labelName);
     } else {
@@ -154,7 +158,7 @@ export abstract class User {
    * @param start startzeit des Labels in Millisekunden
    * @param end endzeit des Labels in Millisekunden
    */
-  setLabel(labelID: number, span: { start: number, end: number; }, labelName?: string): boolean {
+  setLabel(labelID: number, span: ISpan, labelName?: string): boolean {
     if (this.currentProject != null) {
       return this.currentProject.setLabel(labelID, span, labelName);
     }
@@ -178,7 +182,7 @@ export abstract class User {
    * Gibt alle Daten von allen Labeln vom aktuellen Datensatz zurück.
    * @returns leer, falls kein aktueller Datensatz existiert
    */
-  getLabels(): { labels: { name: string, labelID: number, start: number, end: number; }[]; } {
+  getLabels(): { labels: ILabel[]; } {
     if (this.currentProject != null) {
       return this.currentProject.getLabels();
     }
@@ -190,19 +194,7 @@ export abstract class User {
   * @param project die Projektdaten
   * @returns false, falls die Projekt ID schon existiert
   */
-  abstract loadProject(project: {
-    projectID: number, sessionID: number, projectName: string, projectData?: {
-      aiModelID?: number[],
-      dataSet?: {
-        dataRowSensors: SensorData[], dataSetID: number, dataSetName: string, generateDate: number,
-        dataRows: {
-          dataRowID: number,
-          dataRow: { value: number[], relativeTime: number; }[];
-        }[],
-        label: { name: string, labelID: number, start: number, end: number; }[];
-      }[];
-    };
-  }): boolean;
+  abstract loadProject(project: IProject): boolean;
 
   /**
    * Gibt alle Sensoren aus, die das Benutzergerät und das Programm unterstützt
@@ -291,12 +283,10 @@ export class Admin extends User {
    * @param email die Emailadresse des Admins
    * @param device das Gerät des Admins
    */
-  constructor(adminID: number, deviceID: number, adminName: string, email: string,
-    device: { deviceID?: number, deviceName: string, deviceType: string, firmware: string, generation: string, MACADRESS: string, sensorInformation: { sensorTypeID: number, sensorName: string, sensorUniqueID: number; }[]; });
+  constructor(adminID: number, deviceID: number, adminName: string, email: string, device: IDevice);
   ////////////////////////////////////////TODO
 
-  constructor(adminID: number, deviceID: number, adminName: string, email: string,
-    device?: { MACADRESS: string, deviceName: string, firmware: string, generation: string, deviceType: string; }) {
+  constructor(adminID: number, deviceID: number, adminName: string, email: string, device?: IDevice) {
     super(adminID, DeviceData.loadDevice(deviceID, device), adminName);
     this.email = email;
   }
@@ -304,19 +294,7 @@ export class Admin extends User {
   /**
    * Implementiert die abstrakte Methode von User
    */
-  loadProject(project: {
-    projectID: number, sessionID: number, projectName: string, projectData?: {
-      aiModelID?: number[],
-      dataSet: {
-        dataRowSensors: SensorData[], dataSetID: number, dataSetName: string, generateDate: number,
-        dataRows: {
-          dataRowID: number,
-          dataRow: { value: number[], relativeTime: number; }[];
-        }[],
-        label: { name: string, labelID: number, start: number, end: number; }[];
-      }[];
-    };
-  }): boolean {
+  loadProject(project: IProject): boolean {
     var id = this.existProject(project.projectID);
     var newProject: Project = new Project(project.projectID, project.sessionID, project.projectName, project.projectData);
     this.currentProject = newProject;
@@ -411,19 +389,7 @@ export class Dataminer extends User {
   /**
    * Implementiert die abstrakte Methode von User
    */
-  loadProject(project: {
-    projectID: number, sessionID: number, projectName: string, projectData?: {
-      aiModelID?: number[],
-      dataSet: {
-        dataRowSensors: SensorData[], dataSetID: number, dataSetName: string, generateDate: number,
-        dataRows: {
-          dataRowID: number,
-          dataRow: { value: number[], relativeTime: number; }[];
-        }[],
-        label: { name: string, labelID: number, start: number, end: number; }[];
-      }[];
-    };
-  }): boolean {
+  loadProject(project: IProject): boolean {
     this.currentProject = new Project(project.projectID, project.sessionID, project.projectName, project.projectData);
     return true;
   }
@@ -446,20 +412,14 @@ export class AIModelUser extends User {
   /**
    * Implementiert die abstrakte Methode von User
    */
-  loadProject(project: {
-    projectID: number, sessionID: number, projectName: string, projectData?: {
-      aiModelID?: number[],
-      dataSet: {
-        dataRowSensors: SensorData[], dataSetID: number, dataSetName: string, generateDate: number,
-        dataRows: {
-          dataRowID: number,
-          dataRow: { value: number[], relativeTime: number; }[];
-        }[],
-        label: { name: string, labelID: number, start: number, end: number; }[];
-      }[];
-    };
-  }): boolean {
+  loadProject(project: IProject): boolean {
     this.currentProject = new Project(project.projectID, project.sessionID, project.projectName, project.projectData);
     return true;
   }
+}
+export interface IProject {
+  projectID: number,
+  sessionID: number,
+  projectName: string,
+  projectData?: IProjectData;
 }

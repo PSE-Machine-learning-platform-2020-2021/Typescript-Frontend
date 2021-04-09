@@ -1,7 +1,11 @@
 import { AIModel } from "./AIModel";
-import { DataSet } from "./DataSet";
+import { IDataPoint } from "./DataPoint";
+import { IDataRowRID, IDataRowST } from "./DataRow";
+import { DataSet, IDataSet } from "./DataSet";
+import { ILabel } from "./Label";
 import { SensorData } from "./SensorData";
 import { Session } from "./Session";
+import { ISpan } from "./TimeSpan";
 
 /**
  * Diese Klasse speichert alle Informationen zu einem Projekt.
@@ -24,17 +28,7 @@ export class Project {
      * @param aiModelID Die schon existierenden AIModel IDs
      * @param dataSet Die schon existierenden Datensätze
      */
-  constructor(projectID: number, sessionID: number, projectName: string, projectData?: {
-    aiModelID?: number[],
-    dataSet: {
-      dataRowSensors: SensorData[], dataSetID: number, dataSetName: string, generateDate: number,
-      dataRows: {
-        dataRowID: number,
-        dataRow: { value: number[], relativeTime: number; }[];
-      }[],
-      label: { name: string, labelID: number, start: number, end: number; }[];
-    }[];
-  }) {
+  constructor(projectID: number, sessionID: number, projectName: string, projectData?: IProjectData) {
     this.id = projectID;
     this.name = projectName;
     this.session = new Session(sessionID);
@@ -135,7 +129,6 @@ export class Project {
     return this.id;
   }
 
-
   /**
    * Erstellt einen neuen Datensatz und setzt diesen als aktuellen Datensatz.
    * @param dataRowSensors die Sensoren, von denen die Daten ausgelesen werden
@@ -174,7 +167,7 @@ export class Project {
    * @param datapoint der Datenpunkt
    * @returns true, wenn der Datenpunkt zur Datenreihe hinzugefügt werden konnte
    */
-  addDatapoint(dataRowID: number, datapoint: { value: number[], relativeTime: number; }): boolean {
+  addDatapoint(dataRowID: number, datapoint: IDataPoint): boolean {
     if (this.currentDataSet != null) {
       return this.currentDataSet.addDatapoint(dataRowID, datapoint);
     }
@@ -185,7 +178,7 @@ export class Project {
    * Gibt von allen Datensätzen Informationen zurück
    * @returns dataSetID ist die DatensatzID und dataSetName ist der Datensatzname
    */
-  getDataSetMetas(): { dataSetID: number, dataSetName: string; }[] {
+  getDataSetMetas(): IDataSetInfo[] {
     let dataSetMetas: { dataSetID: number, dataSetName: string; }[] = [];
     for (const dataSet of this.dataSet) {
       dataSetMetas.push({ "dataSetID": dataSet.getID(), "dataSetName": dataSet.getName() });
@@ -198,7 +191,7 @@ export class Project {
    * @param dataSetID die Datensatz ID von der die Datenreihen gelesen werden sollen
    * @returns die Sensordaten von der Datenreihe
    */
-  getDataRows(dataSetID: number): { dataRows: { sensorType: number, datapoint: { value: number[], relativeTime: number; }[]; }[]; } {
+  getDataRows(dataSetID: number): { dataRows: IDataRowST[]; } {
     for (let i = 0; i < this.dataSet.length; i++) {
       if (this.dataSet[i].getID() === dataSetID) {
         this.currentDataSet = this.dataSet[i];
@@ -212,7 +205,7 @@ export class Project {
    * Gibt die Datenreihen der aktuellen Datenreihe zurück
    * @returns die Sensordaten von der Datenreihe
    */
-  getCurrentDataRows(): { dataRows: { sensorType: number, datapoint: { value: number[], relativeTime: number; }[]; }[]; } {
+  getCurrentDataRows(): { dataRows: IDataRowST[]; } {
     if (this.currentDataSet != null) {
       return { dataRows: this.currentDataSet.getDataRows() };
     }
@@ -234,7 +227,7 @@ export class Project {
    * @param labelName Ist bei Angabe der neue Name des Labels.
    * @returns falls das Label nicht existiert oder es kein aktuellen Datensatz gibt wird false zurück gegeben
    */
-  createLabel(labelID: number, span: { start: number, end: number; }, labelName: string): boolean {
+  createLabel(labelID: number, span: ISpan, labelName: string): boolean {
     if (this.currentDataSet != null) {
       return this.currentDataSet.createLabel(labelID, span, labelName);
     }
@@ -248,7 +241,7 @@ export class Project {
    * @param labelName falls das Label neu benannt werden soll
    * @returns 
    */
-  setLabel(labelID: number, span: { start: number, end: number; }, labelName?: string): boolean {
+  setLabel(labelID: number, span: ISpan, labelName?: string): boolean {
     if (this.currentDataSet != null) {
       return this.currentDataSet.setLabel(labelID, span, labelName);
     }
@@ -272,10 +265,18 @@ export class Project {
    * Gibt alle Daten von allen Labeln vom aktuellen Datensatz zurück.
    * @returns leer, falls kein aktueller Datensatz existiert
    */
-  getLabels(): { labels: { name: string, labelID: number, start: number, end: number; }[]; } {
+  getLabels(): { labels: ILabel[]; } {
     if (this.currentDataSet != null) {
       return { labels: this.currentDataSet.getLabels() };
     }
     return { labels: [] };
   }
+}
+export interface IDataSetInfo {
+  dataSetID: number,
+  dataSetName: string;
+}
+export interface IProjectData {
+  aiModelID?: number[],
+  dataSet: IDataSet[];
 }
