@@ -1,4 +1,5 @@
 import { DataSet } from "../DataSet";
+import { ILabel } from "../Label";
 import { AccelerometerData, GyroscopeData } from "../SensorData";
 
 /**
@@ -26,9 +27,9 @@ test("creat and getter", () => {
                 { value: [1, 2, 321.15], relativeTime: 2.122 },
                 { value: [56, 0, 3.165], relativeTime: 270 }]
         }];
-    const labels = [
-        { name: "abgehoben", labelID: 17, start: 2.351, end: 3.1415 },
-        { name: "unterhoben", labelID: 18, start: 2, end: 2.7 }];
+    const labels: ILabel[] = [
+        { name: "abgehoben", labelID: 17, span: { start: 2.351, end: 3.1415 } },
+        { name: "unterhoben", labelID: 18, span: { start: 2, end: 2.7 } }];
     var dataSet = new DataSet([sensor, sensor], 33, "Die wundervolle Aufnahme", 132948239, dataRows, labels);
     expect(dataSet.getID()).toBe(33);
     for (let i = 0; i < dataRows.length; i++) {
@@ -44,8 +45,8 @@ test("creat and getter", () => {
     for (let i = 0; i < labels.length; i++) {
         expect(dataSet.getLabels()[i].name).toBe(labels[i].name);
         expect(dataSet.getLabels()[i].labelID).toBe(labels[i].labelID);
-        expect(dataSet.getLabels()[i].start).toBe(labels[i].start);
-        expect(dataSet.getLabels()[i].end).toBe(labels[i].end);
+        expect(dataSet.getLabels()[i].span.start).toBe(labels[i].span.start);
+        expect(dataSet.getLabels()[i].span.end).toBe(labels[i].span.end);
     }
     expect(dataSet.getName()).toBe("Die wundervolle Aufnahme");
 });
@@ -121,9 +122,9 @@ test("addDatapoint with a loaded Datarow and Labels", () => {
                 { value: [1, 2, 321.15], relativeTime: 2.122 },
                 { value: [56, 0, 3.165], relativeTime: 270 }]
         }];
-    const labels = [
-        { name: "abgehoben", labelID: 17, start: 2.351, end: 3.1415 },
-        { name: "unterhoben", labelID: 18, start: 2, end: 2.7 }];
+    const labels: ILabel[] = [
+        { name: "abgehoben", labelID: 17, span: { start: 2.351, end: 3.1415 } },
+        { name: "unterhoben", labelID: 18, span: { start: 2, end: 2.7 } }];
     var dataSet = new DataSet([sensor, sensor2], 33, "Die wundervolle Aufnahme", 132948239, dataRows, labels);
     //laden getestet in getter und setter test
     //Normale Nutzung Sensor 1
@@ -155,8 +156,8 @@ test("addDatapoint with a loaded Datarow and Labels", () => {
     for (let i = 0; i < labels.length; i++) {
         expect(dataSet.getLabels()[i].name).toBe(labels[i].name);
         expect(dataSet.getLabels()[i].labelID).toBe(labels[i].labelID);
-        expect(dataSet.getLabels()[i].start).toBe(labels[i].start);
-        expect(dataSet.getLabels()[i].end).toBe(labels[i].end);
+        expect(dataSet.getLabels()[i].span.start).toBe(labels[i].span.start);
+        expect(dataSet.getLabels()[i].span.end).toBe(labels[i].span.end);
     }
     expect(dataSet.getDataRows()[0].sensorType).toBe(2);
     expect(dataSet.getDataRows()[1].sensorType).toBe(3);
@@ -184,8 +185,8 @@ test("createLabel without loaded Labels", () => {
     //Normale Nutzung
     expect(dataSet.createLabel(1, { start: 200, end: 500 }, "Treppen laufen")).toBeTruthy();
     expect(dataSet.getLabels()[0].labelID).toBe(1);
-    expect(dataSet.getLabels()[0].start).toBe(200);
-    expect(dataSet.getLabels()[0].end).toBe(500);
+    expect(dataSet.getLabels()[0].span.start).toBe(200);
+    expect(dataSet.getLabels()[0].span.end).toBe(500);
     expect(dataSet.getLabels()[0].name).toBe("Treppen laufen");
     //ID existiert schon
     expect(dataSet.createLabel(1, { start: 200, end: 500 }, "Treppen laufen")).toBeFalsy();
@@ -198,8 +199,8 @@ test("createLabel without loaded Labels", () => {
     expect(dataSet.getDataRows()[1].sensorType).toBe(3);
     expect(dataSet.getLabels().length).toBe(1);
     expect(dataSet.getLabels()[0].labelID).toBe(1);
-    expect(dataSet.getLabels()[0].start).toBe(200);
-    expect(dataSet.getLabels()[0].end).toBe(500);
+    expect(dataSet.getLabels()[0].span.start).toBe(200);
+    expect(dataSet.getLabels()[0].span.end).toBe(500);
     expect(dataSet.getLabels()[0].name).toBe("Treppen laufen");
     expect(dataSet.getName()).toBe("Die wundervolle Aufnahme");
 });
@@ -221,16 +222,16 @@ test("createLabel with loaded Labels", () => {
                 { value: [1, 2, 321.15], relativeTime: 2.122 },
                 { value: [56, 0, 3.165], relativeTime: 270 }]
         }];
-    const labels = [
-        { name: "abgehoben", labelID: 17, start: 2.351, end: 3.1415 },
-        { name: "unterhoben", labelID: 18, start: 2, end: 2.7 }];
+    const labels: ILabel[] = [
+        { name: "abgehoben", labelID: 17, span: { start: 2.351, end: 3.1415 } },
+        { name: "unterhoben", labelID: 18, span: { start: 2, end: 2.7 } }];
     var dataSet = new DataSet([sensor, sensor2], 32, "Die wundervolle Aufnahme", 132948239, dataRows, labels);
     //laden getestet in getter und setter test
     //Normale Nutzung
     expect(dataSet.createLabel(3, { start: 200, end: 500 }, "Treppen laufen")).toBeTruthy();
     expect(dataSet.getLabels()[2].labelID).toBe(3);
-    expect(dataSet.getLabels()[2].start).toBe(200);
-    expect(dataSet.getLabels()[2].end).toBe(500);
+    expect(dataSet.getLabels()[2].span.start).toBe(200);
+    expect(dataSet.getLabels()[2].span.end).toBe(500);
     expect(dataSet.getLabels()[2].name).toBe("Treppen laufen");
     //ID existiert schon
     expect(dataSet.createLabel(3, { start: 200, end: 500 }, "Treppen laufen")).toBeFalsy();
@@ -252,15 +253,15 @@ test("createLabel with loaded Labels", () => {
     for (let i = 0; i < labels.length; i++) {
         expect(dataSet.getLabels()[i].name).toBe(labels[i].name);
         expect(dataSet.getLabels()[i].labelID).toBe(labels[i].labelID);
-        expect(dataSet.getLabels()[i].start).toBe(labels[i].start);
-        expect(dataSet.getLabels()[i].end).toBe(labels[i].end);
+        expect(dataSet.getLabels()[i].span.start).toBe(labels[i].span.start);
+        expect(dataSet.getLabels()[i].span.end).toBe(labels[i].span.end);
     }
     expect(dataSet.getDataRows()[0].sensorType).toBe(2);
     expect(dataSet.getDataRows()[1].sensorType).toBe(3);
     expect(dataSet.getLabels().length).toBe(3);
     expect(dataSet.getLabels()[2].labelID).toBe(3);
-    expect(dataSet.getLabels()[2].start).toBe(200);
-    expect(dataSet.getLabels()[2].end).toBe(500);
+    expect(dataSet.getLabels()[2].span.start).toBe(200);
+    expect(dataSet.getLabels()[2].span.end).toBe(500);
     expect(dataSet.getLabels()[2].name).toBe("Treppen laufen");
     expect(dataSet.getName()).toBe("Die wundervolle Aufnahme");
 });
@@ -282,22 +283,22 @@ test("setLabel", () => {
                 { value: [1, 2, 321.15], relativeTime: 2.122 },
                 { value: [56, 0, 3.165], relativeTime: 270 }]
         }];
-    const labels = [
-        { name: "abgehoben", labelID: 17, start: 2.351, end: 3.1415 },
-        { name: "unterhoben", labelID: 18, start: 2, end: 2.7 }];
+    const labels: ILabel[] = [
+        { name: "abgehoben", labelID: 17, span: { start: 2.351, end: 3.1415 } },
+        { name: "unterhoben", labelID: 18, span: { start: 2, end: 2.7 } }];
     var dataSet = new DataSet([sensor, sensor2], 32, "Die wundervolle Aufnahme", 132948239, dataRows, labels);
     //laden getestet in getter und setter test
     //Normale Nutzung mit neuem Labelnamen
     expect(dataSet.setLabel(17, { start: 200, end: 500 }, "Treppen laufen")).toBeTruthy();
     expect(dataSet.getLabels()[0].labelID).toBe(17);
-    expect(dataSet.getLabels()[0].start).toBe(200);
-    expect(dataSet.getLabels()[0].end).toBe(500);
+    expect(dataSet.getLabels()[0].span.start).toBe(200);
+    expect(dataSet.getLabels()[0].span.end).toBe(500);
     expect(dataSet.getLabels()[0].name).toBe("Treppen laufen");
     //Normale Nutzung ohne neuem Labelnamen
     expect(dataSet.setLabel(18, { start: 28, end: 55 })).toBeTruthy();
     expect(dataSet.getLabels()[1].labelID).toBe(18);
-    expect(dataSet.getLabels()[1].start).toBe(28);
-    expect(dataSet.getLabels()[1].end).toBe(55);
+    expect(dataSet.getLabels()[1].span.start).toBe(28);
+    expect(dataSet.getLabels()[1].span.end).toBe(55);
     expect(dataSet.getLabels()[1].name).toBe("unterhoben");
     //Datenreihen ID existiert nicht
     expect(dataSet.setLabel(-1, { start: 1, end: 2 }, "Fehler")).toBeFalsy();
@@ -321,12 +322,12 @@ test("setLabel", () => {
     expect(dataSet.getDataRows()[1].sensorType).toBe(3);
     expect(dataSet.getLabels().length).toBe(2);
     expect(dataSet.getLabels()[0].labelID).toBe(17);
-    expect(dataSet.getLabels()[0].start).toBe(200);
-    expect(dataSet.getLabels()[0].end).toBe(500);
+    expect(dataSet.getLabels()[0].span.start).toBe(200);
+    expect(dataSet.getLabels()[0].span.end).toBe(500);
     expect(dataSet.getLabels()[0].name).toBe("Treppen laufen");
     expect(dataSet.getLabels()[1].labelID).toBe(18);
-    expect(dataSet.getLabels()[1].start).toBe(28);
-    expect(dataSet.getLabels()[1].end).toBe(55);
+    expect(dataSet.getLabels()[1].span.start).toBe(28);
+    expect(dataSet.getLabels()[1].span.end).toBe(55);
     expect(dataSet.getLabels()[1].name).toBe("unterhoben");
     expect(dataSet.getName()).toBe("Die wundervolle Aufnahme");
 });
@@ -349,9 +350,9 @@ test("deleteLabel", () => {
                 { value: [56, 0, 3.165], relativeTime: 270 }]
         }];
     const labels = [
-        { name: "abgehoben", labelID: 17, start: 2.351, end: 3.1415 },
-        { name: "unterhoben", labelID: 18, start: 2, end: 2.7 },
-        { name: "Lufen", labelID: 19, start: 5.23, end: 17 }];
+        { name: "abgehoben", labelID: 17, span: { start: 2.351, end: 3.1415 } },
+        { name: "unterhoben", labelID: 18, span: { start: 2, end: 2.7 } },
+        { name: "Lufen", labelID: 19, span: { start: 5.23, end: 17 } }];
     var dataSet = new DataSet([sensor, sensor2], 32, "Die wundervolle Aufnahme", 132948239, dataRows, labels);
     //laden getestet in getter und setter test
     //Normale Nutzung

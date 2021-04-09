@@ -64,7 +64,7 @@ export abstract class DeviceData {
   /**
    * Prüft welches Gerät aktuell benutzt wird und gibt dazu die Passende Klasse zurück
    */
-  static loadDevice(deviceID: number, device?: IDevice): DeviceData {
+  static loadDevice(deviceID: number, device?: { MACADRESS: string, deviceName: string, firmware: string, generation: string, deviceType: string; }): DeviceData {
     ////////////////////////////////////////////////////
     //Noch herrausfinden Smartphone oder anderes Gerät//
     ////////////////////////////////////////////////////

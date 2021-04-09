@@ -7,23 +7,23 @@ import { AccelerometerData } from "../SensorData";
 test("creat and getter", () => {
   let sensorData1 = new AccelerometerData(234, "00-14-22-01-23-45", "Hubert");
   let datarow1 = new DataRow(sensorData1, 27);
-  expect(datarow1.getDataRow().datapoint.length).toBe(0);
+  expect(datarow1.getDataRow().dataRow.length).toBe(0);
   expect(datarow1.getID()).toBe(27);
   expect(datarow1.getDataRow().sensorType).toBe(2);
 
   expect(datarow1.addDatapoint({ value: [55, 28, 95], relativeTime: 0.2345 })).toBeTruthy();
-  expect(datarow1.getDataRow().datapoint[0].value[0]).toBe(55);
-  expect(datarow1.getDataRow().datapoint[0].value[1]).toBe(28);
-  expect(datarow1.getDataRow().datapoint[0].value[2]).toBe(95);
-  expect(datarow1.getDataRow().datapoint[0].relativeTime).toBe(0.2345);
-  expect(datarow1.getDataRow().datapoint.length).toBe(1);
+  expect(datarow1.getDataRow().dataRow[0].value[0]).toBe(55);
+  expect(datarow1.getDataRow().dataRow[0].value[1]).toBe(28);
+  expect(datarow1.getDataRow().dataRow[0].value[2]).toBe(95);
+  expect(datarow1.getDataRow().dataRow[0].relativeTime).toBe(0.2345);
+  expect(datarow1.getDataRow().dataRow.length).toBe(1);
 
   expect(datarow1.addDatapoint({ value: [1, 27, 1], relativeTime: 0.111 })).toBeTruthy();
-  expect(datarow1.getDataRow().datapoint[1].value[0]).toBe(1);
-  expect(datarow1.getDataRow().datapoint[1].value[1]).toBe(27);
-  expect(datarow1.getDataRow().datapoint[1].value[2]).toBe(1);
-  expect(datarow1.getDataRow().datapoint[1].relativeTime).toBe(0.111);
-  expect(datarow1.getDataRow().datapoint.length).toBe(2);
+  expect(datarow1.getDataRow().dataRow[1].value[0]).toBe(1);
+  expect(datarow1.getDataRow().dataRow[1].value[1]).toBe(27);
+  expect(datarow1.getDataRow().dataRow[1].value[2]).toBe(1);
+  expect(datarow1.getDataRow().dataRow[1].relativeTime).toBe(0.111);
+  expect(datarow1.getDataRow().dataRow.length).toBe(2);
 
   expect(datarow1.getID()).toBe(27);
   expect(datarow1.getDataRow().sensorType).toBe(2);
@@ -58,19 +58,19 @@ test("addDatapoint many points", () => {
   for (let i = 0; i < length; i++) {
     if (i == pos1) {
       for (let j = 0; j < value1.length; j++) {
-        expect(datarow.getDataRow().datapoint[i].value[j]).toBe(value1[j]);
+        expect(datarow.getDataRow().dataRow[i].value[j]).toBe(value1[j]);
       }
-      expect(datarow.getDataRow().datapoint[i].relativeTime).toBe(relativeTime1);
+      expect(datarow.getDataRow().dataRow[i].relativeTime).toBe(relativeTime1);
     } else if (i == pos2) {
       for (let j = 0; j < value2.length; j++) {
-        expect(datarow.getDataRow().datapoint[i].value[j]).toBe(value2[j]);
+        expect(datarow.getDataRow().dataRow[i].value[j]).toBe(value2[j]);
       }
-      expect(datarow.getDataRow().datapoint[i].relativeTime).toBe(relativeTime2);
+      expect(datarow.getDataRow().dataRow[i].relativeTime).toBe(relativeTime2);
     } else {
       for (let j = 0; j < value0.length; j++) {
-        expect(datarow.getDataRow().datapoint[i].value[j]).toBe(value0[j]);
+        expect(datarow.getDataRow().dataRow[i].value[j]).toBe(value0[j]);
       }
-      expect(datarow.getDataRow().datapoint[i].relativeTime).toBe(i);
+      expect(datarow.getDataRow().dataRow[i].relativeTime).toBe(i);
     }
   }
 });
