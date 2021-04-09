@@ -13,3 +13,10 @@ test('train', () => {
     expect(page.getState().trainingParameter!.features).toEqual(['test1', 'test2'])
 
 });
+
+test('changeToReferring', () => {
+    let page = new ModelCreationPage()
+    //@ts-ignore
+    page.changeToReferring()
+    expect(page.getState().currentState).toEqual(States.ChangeToRefferring)
+});

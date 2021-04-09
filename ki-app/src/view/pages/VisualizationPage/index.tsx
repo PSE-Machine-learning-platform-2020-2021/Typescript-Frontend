@@ -33,7 +33,9 @@ export class VisualizationPage implements Page {
         const VDOM = (
             <div className="visualizationpage">
 
-                <DiagramList currentDataSets={this.state.currentDataSets!} />
+                <DiagramList currentDataSets={this.state.currentDataSets!}
+                //   testDataSet={this.state.testDataSet!}
+                />
                 <FinishButton pageChangeToCreation={this.changetoCreation.bind(this)} />
 
                 <NotificationContainer />

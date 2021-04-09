@@ -19,7 +19,7 @@ export default class FinishButton extends Component {
      */
     render() {
         return (
-            <div>
+            <div className='cleardiagramfloat'>
                 <h4>Wählen Diagramm mit Klicken!</h4>
                 <button onClick={() => this.props.pageChangeToCreation()} className="finish-btn" >Train Anfang!</button>
             </div>
