@@ -12,10 +12,7 @@ export class Language {
    * Gibt den Sprachen Code zurück
    */
   getLanguageCode(): string {
-    if (this.language !== undefined) {
-      return this.language.code;
-    }
-    return "";
+    return this.language.code;
   }
 
   /**

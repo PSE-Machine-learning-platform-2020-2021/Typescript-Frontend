@@ -40,22 +40,14 @@ export class Project {
       }
       for (const entry of projectData.dataSet) {
         let dataSet: DataSet;
-        if (entry.generateDate !== undefined && entry.label !== undefined) {
-          dataSet = new DataSet(
-            entry.dataRowSensors,
-            entry.dataSetID,
-            entry.dataSetName,
-            entry.generateDate,
-            entry.dataRows,
-            entry.label
-          );
-        } else {
-          dataSet = new DataSet(
-            entry.dataRowSensors,
-            entry.dataSetID,
-            entry.dataSetName
-          );
-        }
+        dataSet = new DataSet(
+          entry.dataRowSensors,
+          entry.dataSetID,
+          entry.dataSetName,
+          entry.generateDate,
+          entry.dataRows,
+          entry.label
+        );
 
         this.dataSet.push(dataSet);
       }

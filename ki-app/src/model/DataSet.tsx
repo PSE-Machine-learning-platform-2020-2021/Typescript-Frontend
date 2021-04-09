@@ -159,7 +159,7 @@ export interface IDataSet {
   dataRowSensors: SensorData[],
   dataSetID: number,
   dataSetName: string,
-  generateDate?: number,
+  generateDate: number,
   dataRows: IDataRowRID[],
-  label?: ILabel[];
+  label: ILabel[];
 }
