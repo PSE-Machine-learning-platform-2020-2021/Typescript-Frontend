@@ -1,5 +1,5 @@
-import { DataPoint } from "./DataPoint";
-import { AccelerometerData, GyroscopeData } from "./SensorData";
+import { DataPoint, IDataPoint } from "./DataPoint";
+import { SensorData } from "./SensorData";
 
 /**
  * Die Klasse DataRow beschreibt eine Reihe aufgenommener Daten eines Sensors.
@@ -7,14 +7,14 @@ import { AccelerometerData, GyroscopeData } from "./SensorData";
 export class DataRow {
   private id: number; //Dies ist die DataRow ID, diese ist eindeutig für Datensätze.
   private datapoint: DataPoint[] = []; //Dies ist Datenreihe, eine Reihe von Datenpunkten.
-  private sensor: AccelerometerData | GyroscopeData; //Dies ist der Sensor von dem die Daten gelesen wurden.
+  private sensor: SensorData; //Dies ist der Sensor von dem die Daten gelesen wurden.
 
   /**
    * Eine neue Datenreihe erstellen.
    * @param sensor Sensor, von dem die Daten gelesen werden.
    * @param dataRowID Eine eindeutige Datenreihen ID.
    */
-  constructor(sensor: AccelerometerData | GyroscopeData, dataRowID: number);
+  constructor(sensor: SensorData, dataRowID: number);
 
   /**
    * Eine bereits existierende Datenreihe kann wie folgt in das Model geladen werden.
@@ -24,8 +24,8 @@ export class DataRow {
    * @param dataRow.value der Sensor Messwert
    * @param dataRow.relativeTime die relative Zeit zum Aufnahmestart
    */
-  constructor(sensor: AccelerometerData | GyroscopeData, dataRowID: number, dataRow: { value: number[], relativeTime: number; }[]);
-  constructor(sensor: AccelerometerData | GyroscopeData, dataRowID: number, dataRow?: { value: number[], relativeTime: number; }[]) {
+  constructor(sensor: SensorData, dataRowID: number, dataRow: IDataPoint[]);
+  constructor(sensor: SensorData, dataRowID: number, dataRow?: IDataPoint[]) {
     this.sensor = sensor;
     this.id = dataRowID;
     if (dataRow != null) {
@@ -44,19 +44,19 @@ export class DataRow {
 
   /**
    * Fügt den Datenpunkt der Datenreihe hinzu
-   * @param datapoint der Datenpunkt
+   * @param dataRow der Datenpunkt
    * @returns false, falls datapoint.value leer ist oder datapoint.relativeTime < 0
    */
-  public addDatapoint(datapoint: { value: number[], relativeTime: number; }): boolean {
+  public addDatapoint(dataRow: IDataPoint): boolean {
     for (let i = 0; i < this.datapoint.length; i++) {
-      if (this.datapoint[i].getValue().length !== datapoint.value.length || this.datapoint[i].getRelativeTime() === datapoint.relativeTime) {
+      if (this.datapoint[i].getValue().length !== dataRow.value.length || this.datapoint[i].getRelativeTime() === dataRow.relativeTime) {
         return false;
       }
     }
-    if (datapoint.value.length === 0 || datapoint.relativeTime < 0) {
+    if (dataRow.value.length === 0 || dataRow.relativeTime < 0) {
       return false;
     } else {
-      this.datapoint.push(new DataPoint(datapoint.value, datapoint.relativeTime));
+      this.datapoint.push(new DataPoint(dataRow.value, dataRow.relativeTime));
       return true;
     }
 
@@ -66,14 +66,27 @@ export class DataRow {
    * Gibt die Datenreihe zurück.
    * @returns value ist der Messwert und relativeTime die relative Zeit in Millisekunden zum Aufnahmestart.
    */
-  public getDataRow(): { sensorType: number, datapoint: { value: number[], relativeTime: number; }[]; } {
-    var dataRow: { sensorType: number, datapoint: { value: number[], relativeTime: number; }[]; };
-    var datapoint: { value: number[], relativeTime: number; }[] = [];
+  public getDataRow(): IDataRowST {
+    var dataRowST: IDataRowST;
+    var dataRow: IDataPoint[] = [];
     for (let i = 0; i < this.datapoint.length; i++) {
-      datapoint[i] = { value: this.datapoint[i].getValue(), relativeTime: this.datapoint[i].getRelativeTime() };
+      dataRow.push({ value: this.datapoint[i].getValue(), relativeTime: this.datapoint[i].getRelativeTime() });
     }
     var sensorType: number = this.sensor.SensorTypeID;
-    dataRow = { sensorType, datapoint };
-    return dataRow;
+    dataRowST = { sensorType, datapoint: dataRow };
+    return dataRowST;
   }
+}
+export interface IDataRowST {
+  sensorType: number,
+  datapoint: IDataPoint[];
+}
+export interface IDataRowRID {
+  dataRowID: number,
+  dataRow: IDataPoint[];
+}
+export interface IDataRowSTRID {
+  sensorType: number,
+  dataRowID: number,
+  dataRow: IDataPoint[];
 }

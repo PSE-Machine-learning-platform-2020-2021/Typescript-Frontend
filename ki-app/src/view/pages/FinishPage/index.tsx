@@ -1,11 +1,13 @@
 import Title from "../../components/FinishComponents/Title";
 import Body from "../../components/FinishComponents/Diagram";
 import Labelling from "../../components/FinishComponents/Input/Labelling";
+import 'react-notifications/lib/notifications.css';
 import { Page } from "../PageInterface";
 import { PageController } from "../../../controller/PageController";
 import { State } from "./State";
 import ReactDOM from "react-dom";
 import { States } from "../State";
+import { NotificationContainer } from "react-notifications";
 
 /**
  * Die Darstellungsseite für die Finishseite der Datenerfasser
@@ -36,6 +38,7 @@ export class FinishPage implements Page {
         <div className="label-container">
           <Labelling newLabel={this.newLabel.bind(this)} pagedeleteLabel={this.pagedeleteLabel.bind(this)} />
         </div>
+        <NotificationContainer />
       </div>
     );
     if (document.getElementById('root') !== null) {

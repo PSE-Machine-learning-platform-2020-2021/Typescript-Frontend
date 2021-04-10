@@ -93,3 +93,13 @@ export class Desktop extends DeviceData {
   protected deviceType: string = "Desktop";
   //protected searchSensor(): void { }
 }
+
+export interface IDevice {
+  deviceID?: number,
+  deviceName: string,
+  deviceType: string,
+  firmware: string,
+  generation: string,
+  MACADRESS: string,
+  sensorInformation: { sensorTypeID: number, sensorName: string, sensorUniqueID: number; }[];
+}

@@ -1,40 +1,46 @@
 import { DeliveryFormat } from "./DeliveryFormat";
 import { DatabaseConnector } from "./DatabaseConnector";
-import { Language } from "./Language";
+import { Language, LanguageMessages } from "./Language";
 import { Admin, Dataminer, AIModelUser, User } from "./User";
 import { AIBuilder } from "./AIBuilder";
 import { AIDistributor } from "./AIDistributor";
-import { AccelerometerData, GyroscopeData, SensorData } from "./SensorData";
+import { SensorData } from "./SensorData";
 import { AIController } from "../controller/AIController";
+import { IDataRowST, IDataRowSTRID } from "./DataRow";
+import { ILabel } from "./Label";
+import { ISpan } from "./TimeSpan";
+import { IDevice } from "./DeviceData";
+import { IDataPoint } from "./DataPoint";
 
 interface FacadeInterface {
-  createDataSet(sensorTypes: string[], dataSetName: string): boolean;
-  sendDataPoint(dataRowID: number, value: number[]): boolean;
-  readDataPoint(dataRowID: number): object;
-  loadProject(projectID: number): boolean;
-  getProjectMetas(): string[];
-  getDataSetMeta(): string[];
+  createDataSet(sensorTypeID: number[], dataSetName: string, datarowNames?: string[]): Promise<number>;
+  sendDataPoint(dataRowID: number, datapoint: IDataPoint): Promise<boolean>;
+  sendDataPointsAgain(): Promise<boolean>;
+  loadProject(projectID?: number): Promise<boolean>;
+  getProjectMetas(): Promise<{ projectID: number, projectName: string, AIModelID: number[]; }[]>;
+  getDataSetMetas(): { dataSetID: number, dataSetName: string; }[];
   getSessionID(): number;
-  getDataRows(dataSetID: number): number[][][];
-  getCurrentDataRows(): { value: number, relativeTime: number; }[];
-  getMessage(messageID: number): string;
-  setLanguage(languageCode: string): boolean;
-  getLanguageMetas(): object[];
-  getEmail(): string;
-  deleteDataSet(dataSetID: number): boolean;
-  registerAdmin(adminName: string, email: string, password: string): boolean;
-  registerDataminer(dataminerName: string, sessionID: number): boolean;
-  registerAIModelUser(aiModelUserName: string): boolean;
-  loginAdmin(email: string, password: string): boolean;
-  logoutAdmin(): boolean;
-  createProject(projectName: string): boolean;
-  setLabel(labelID: number, start: number, end: number): boolean;
-  createLabel(): number; //labelid von datenbank
-  getLabels(): object[];
-  checkLogin(): boolean;
-  classify(aiId: number, dataSetId: number, callBack: Function): void;
-  getAIModel(format: DeliveryFormat): object;
-  applyModel(modeldata: object): void;
+  getDataRows(dataSetID: number): { dataRows: IDataRowST[]; };
+  getCurrentDataRows(): { dataRows: IDataRowST[]; };
+  getMessages(): LanguageMessages | null;
+  setLanguage(languageCode: string): Promise<boolean>;
+  getLanguageMetas(): Promise<{ languageCode: number, languageName: string; }[]>;
+  getAdminEmail(): string;
+  deleteDataSet(dataSetID: number): Promise<boolean>;
+  registerAdmin(adminName: string, adminEmail: string, password: string): Promise<boolean>;
+  registerDataminer(dataminerName: string, sessionID: number): Promise<boolean>;
+  registerAIModelUser(aiModelUserName: string, modelID: number): Promise<boolean>;
+  loginAdmin(adminEmail: string, password: string): Promise<boolean>;
+  createProject(projectName: string): Promise<boolean>;
+  createLabel(span: ISpan, labelName: string): Promise<number>;
+  setLabel(labelID: number, span: ISpan, labelName?: string): Promise<boolean>;
+  deleteLabel(labelID: number): Promise<boolean>;
+  getLabels(): { labels: ILabel[]; };
+  classify(aiId: number, dataSetId: number, callBack: <R = unknown>(prediction: string | object) => R): void;
+  getAIModel(id: number, format: DeliveryFormat): object;
+  sendAIModel(model: number, ...recipients: string[]): boolean;
+  applyModel(dataSets: number[], imputator: string, classifier: string, scaler: string, features: string[],
+    trainingDataPercentage: number, slidingWindowSize: number, slidingWindowStep: number): void;
 } export type { FacadeInterface };
 
 /**
@@ -52,14 +58,15 @@ export class Facade {
    */
   constructor(languageCode: string) {
     this.dbCon = new DatabaseConnector();
-    this.dbCon.loadLanguage({ languageCode }).then((language: string[]) => { this.language = new Language(language); });
+    this.dbCon.loadLanguage({ languageCode }).then((language: LanguageMessages) => { this.language = new Language(language); });
   }
 
   /**
    * Erstellt ein Datensatz
    * @param sensorTypeID muss der Sensor Typ ID von einem Sensor des Gerätes übereinstimmen
    * @param dataSetName Name des Datensatzes
-   * @returns true, wenn der Datensatz erstellt wurde. Dies ist der Fall, wenn ein Benutzer existiert welcher in einer Session ist und alle Sensortypen existieren.
+   * @returns true, wenn der Datensatz erstellt wurde. 
+   * Dies ist der Fall, wenn ein Benutzer existiert welcher in einer Session ist und alle Sensortypen existieren.
    */
   async createDataSet(sensorTypeID: number[], dataSetName: string, datarowNames?: string[]): Promise<number> {
     if (this.user === undefined) {
@@ -89,19 +96,11 @@ export class Facade {
       if (dataSetID <= 0) {
         return -3;
       }
-      ///////////////////////////////DUMMY
-      var sensoren: SensorData[] = [];
+      var dataRows: IDataRowSTRID[] = [];
       for (let i = 0; i < sensorTypeID.length; i++) {
-        switch (sensorTypeID[i]) {
-          case 2:
-            sensoren.push(new AccelerometerData(-1, "", ""));
-            break;
-          case 3:
-            sensoren.push(new GyroscopeData(-1, "", ""));
-            break;
-        }
+        dataRows.push({ sensorType: sensorTypeID[i], dataRow: [], dataRowID: i });
       }
-      if (this.user.createDataSet(sensoren, dataSetID, dataSetName) || this.user.getName() === AIController.AI_MODEL_USER_NAME) {
+      if (this.user.createDataSet(dataSetID, dataSetName, new Date().getMilliseconds(), dataRows) || this.user.getName() === AIController.AI_MODEL_USER_NAME) {
         return dataSetID;
       }
       return -4;
@@ -116,7 +115,7 @@ export class Facade {
    * @param relativeTime die relative Zeit zum Aufnahmestart in Millisekunden
    * @return true, wenn der Datenpunkt erfolgreich an die Datenbank gesendet wurde
    */
-  async sendDataPoint(dataRowID: number, datapoint: { value: number[], relativeTime: number; }): Promise<boolean> {
+  async sendDataPoint(dataRowID: number, datapoint: IDataPoint): Promise<boolean> {
     if (this.user !== undefined) {
       let sessionID: number = this.getSessionID();
       let userID: number = this.user.getID();
@@ -221,7 +220,7 @@ export class Facade {
    * @param dataSetID die Datensatz ID von der die Datenreihen gelesen werden sollen
    * @returns die Sensordaten von der Datenreihe
    */
-  getDataRows(dataSetID: number): { dataRows: { sensorType: number, datapoint: { value: number[], relativeTime: number; }[]; }[]; } {
+  getDataRows(dataSetID: number): { dataRows: IDataRowST[]; } {
     if (this.user != null) {
       return this.user.getDataRows(dataSetID);
     }
@@ -233,7 +232,7 @@ export class Facade {
    * @param dataSetID die Datensatz ID von der die Datenreihen gelesen werden sollen
    * @returns die Sensordaten von der Datenreihe
    */
-  getCurrentDataRows(): { dataRows: { sensorType: number, datapoint: { value: number[], relativeTime: number; }[]; }[]; } {
+  getCurrentDataRows(): { dataRows: IDataRowST[]; } {
     if (this.user != null) {
       return this.user.getCurrentDataRows();
     }
@@ -245,11 +244,11 @@ export class Facade {
    * @param messageID alle IDs, von denen die Sprachnachricht geladen werden soll
    * @returns alle Nachrichten, in der gleichen Reihenfolge wie angefordert
    */
-  getMessage(messageID: number[]): { messageID: number, message: string; }[] {
+  getMessages(): LanguageMessages | null {
     if (this.language != null) {
-      return this.language.getMessage(messageID);
+      return this.language.getMessage();
     }
-    return [];
+    return null;
   }
 
   /**
@@ -275,11 +274,11 @@ export class Facade {
    */
   async setLanguage(languageCode: string): Promise<boolean> {
     if (this.language == null) {
-      const language: string[] = await this.dbCon.loadLanguage({ languageCode });
+      const language: LanguageMessages = await this.dbCon.loadLanguage({ languageCode });
       this.language = new Language(language);
       return true;
     } else if (languageCode !== this.language.getLanguageCode()) {
-      const language: string[] = await this.dbCon.loadLanguage({ languageCode });
+      const language: LanguageMessages = await this.dbCon.loadLanguage({ languageCode });
       return this.language.setLanguage(language);
     }
     return true;
@@ -322,8 +321,10 @@ export class Facade {
   //wann Device erstellen ??? + constructor in User anpassen mit neuem Device parameter 
   async registerAdmin(adminName: string, adminEmail: string, password: string): Promise<boolean> {
     //TODO Device
-    let device: { deviceID?: number, deviceName: string, deviceType: string, firmware: string, generation: string, MACADRESS: string, sensorInformation: { sensorTypeID: number, sensorName: string, sensorUniqueID: number; }[]; } = { deviceID: -1, deviceName: "", deviceType: "", firmware: "", generation: "", MACADRESS: "", sensorInformation: [] };
-    let IDs: { adminID: number, device: { deviceID: number, sensorID: number[]; }; } = await this.dbCon.registerAdmin({ adminName, adminEmail, password, device });
+    let device: IDevice = { deviceID: -1, deviceName: "", deviceType: "", firmware: "", generation: "", MACADRESS: "", sensorInformation: [] };
+    let IDs: {
+      adminID: number, device: { deviceID: number, sensorID: number[]; };
+    } = await this.dbCon.registerAdmin({ adminName, adminEmail, password, device });
     if (IDs.adminID >= 0) {
       this.user = new Admin(IDs.adminID, IDs.device.deviceID, adminName, adminEmail);
       return true;
@@ -333,8 +334,11 @@ export class Facade {
 
   async registerDataminer(dataminerName: string, sessionID: number): Promise<boolean> {
     //TODO Device
-    let device: { deviceID?: number, deviceName: string, deviceType: string, firmware: string, generation: string, MACADRESS: string, sensorInformation: { sensorTypeID: number, sensorName: string, sensorUniqueID: number; }[]; } = { deviceID: -1, deviceName: "", deviceType: "", firmware: "", generation: "", MACADRESS: "", sensorInformation: [] };
-    let dataminer: { dataminerID: number, device: { deviceID: number, sensorID: number[]; }, project: { projectID: number, projectName: string, sessionID: number; }; } = await this.dbCon.registerDataminer({ dataminerName, sessionID, device });
+    let device: IDevice = { deviceID: -1, deviceName: "", deviceType: "", firmware: "", generation: "", MACADRESS: "", sensorInformation: [] };
+    let dataminer:
+      {
+        dataminerID: number, device: { deviceID: number, sensorID: number[]; }, project: { projectID: number, projectName: string, sessionID: number; };
+      } = await this.dbCon.registerDataminer({ dataminerName, sessionID, device });
     if (dataminer.dataminerID >= 0 && dataminer.device.deviceID >= 0) {
       this.user = new Dataminer(dataminer.dataminerID, dataminer.device.deviceID, dataminerName);
       this.user.loadProject(dataminer.project);
@@ -349,8 +353,11 @@ export class Facade {
    */
   async registerAIModelUser(aiModelUserName: string, modelID: number): Promise<boolean> {
     //TODO Device
-    let device: { deviceID?: number, deviceName: string, deviceType: string, firmware: string, generation: string, MACADRESS: string, sensorInformation: { sensorTypeID: number, sensorName: string, sensorUniqueID: number; }[]; } = { deviceID: -1, deviceName: "", deviceType: "", firmware: "", generation: "", MACADRESS: "", sensorInformation: [] };
-    let aiModelUser: { aiModelUserID: number, device: { deviceID: number, sensorID: number[]; }, project: { projectID: number, projectName: string, sessionID: -1; }; } = await this.dbCon.registerAIModelUser({ aiModelUserName, modelID, device });
+    let device: IDevice = { deviceID: -1, deviceName: "", deviceType: "", firmware: "", generation: "", MACADRESS: "", sensorInformation: [] };
+    let aiModelUser: {
+      aiModelUserID: number, device: { deviceID: number, sensorID: number[]; },
+      project: { projectID: number, projectName: string, sessionID: number; };
+    } = await this.dbCon.registerAIModelUser({ aiModelUserName, modelID, device });
     if (aiModelUser.aiModelUserID >= 0 && aiModelUser.device.deviceID >= 0) {
       this.user = new AIModelUser(aiModelUser.aiModelUserID, aiModelUser.device.deviceID, aiModelUserName);
       this.user.loadProject(aiModelUser.project);
@@ -362,7 +369,9 @@ export class Facade {
   //TODO Device
   async loginAdmin(adminEmail: string, password: string): Promise<boolean> {
     if (this.user == null) {
-      let adminData: { admin: { adminID: number, deviceID: number, adminName: string, email: string, device: { deviceID?: number, deviceName: string, deviceType: string, firmware: string, generation: string, MACADRESS: string, sensorInformation: { sensorTypeID: number, sensorName: string, sensorUniqueID: number; }[]; }; }; } = await this.dbCon.loginAdmin({ adminEmail, password });
+      let adminData: {
+        admin: { adminID: number, deviceID: number, adminName: string, email: string, device: IDevice; };
+      } = await this.dbCon.loginAdmin({ adminEmail, password });
       if (adminData.admin != null && adminData.admin.adminID !== -1) {
         let admin = adminData.admin;
         this.user = new Admin(admin.adminID, admin.deviceID, admin.adminName, admin.email, admin.device);
@@ -403,7 +412,7 @@ export class Facade {
    * Erstellt ein neues Label für den aktuellen Datensatz
    * @param span Start und Endzeit des Zeitfensters in Sekunden
    */
-  async createLabel(span: { start: number, end: number; }, labelName: string): Promise<number> {
+  async createLabel(span: ISpan, labelName: string): Promise<number> {
     if (this.user != null) {
       let sessionID: number = this.getSessionID();
       let userID: number = this.user.getID();
@@ -424,7 +433,7 @@ export class Facade {
    * @param labelID die LabelID, die schon exisiteren muss und überschrieben wird
    * @param span Start und Endzeit des Zeitfensters in Sekunden
    */
-  async setLabel(labelID: number, span: { start: number, end: number; }, labelName?: string): Promise<boolean> {
+  async setLabel(labelID: number, span: ISpan, labelName?: string): Promise<boolean> {
     if (this.user != null) {
       let setted: boolean = this.user.setLabel(labelID, span, labelName);
       if (setted) {
@@ -458,7 +467,7 @@ export class Facade {
    * Gibt die geladenen Labels zurück von dem aktuellen Datensatz
    * @returns 
    */
-  getLabels(): { labels: { name: string, labelID: number, start: number, end: number; }[]; } {
+  getLabels(): { labels: ILabel[]; } {
     if (this.user != null) {
       return this.user.getLabels();
     }
@@ -497,11 +506,13 @@ export class Facade {
    * @param classifier             - Der Klassifizierer, der das Herzstück des zu erstellenden KI-Modells darstellt.
    * @param scaler                 - Der Scaler, der die Daten für den Klassifizierer aufbereitet.
    * @param features               - Die Merkmale, die aus den gegebenen Datensätzen herausgearbeitet werden sollen.
-   * @param trainingDataPercentage - Optional. Der Anteil der Daten, der zum Training des KI-Modells verwendet werden soll. Standardmäßig sind das alle übergebenen Daten, da wir noch kein serverseitiges Testen der KI-Modell-Qualität durchführen.
+   * @param trainingDataPercentage - Optional. Der Anteil der Daten, der zum Training des KI-Modells verwendet werden soll. 
+   *                                 Standardmäßig sind das alle übergebenen Daten, da wir noch kein serverseitiges Testen der KI-Modell-Qualität durchführen.
    * @param slidingWindowSize      - Optional. Die Größe der Datenblöcke, die jeweils verwertet werden. Standardwert ist 128 Datenpunkte.
    * @param slidingWindowStep      - Optional. Die Schrittweite von einem Datenblock zum nächsten. Standardwert ist 64 Datenpunkte. 
    */
-  applyModel(dataSets: number[], imputator: string, classifier: string, scaler: string, features: string[], trainingDataPercentage: number = 1, slidingWindowSize: number = 128, slidingWindowStep: number = 64): void {
+  applyModel(dataSets: number[], imputator: string, classifier: string, scaler: string, features: string[],
+    trainingDataPercentage: number = 1, slidingWindowSize: number = 128, slidingWindowStep: number = 64): void {
     const aiBuilder = new AIBuilder(-1);
     const projectID = this.user!.getCurrentProjectID();
     aiBuilder.applyModel(dataSets, imputator, classifier, scaler, features, projectID, trainingDataPercentage, slidingWindowSize, slidingWindowStep);

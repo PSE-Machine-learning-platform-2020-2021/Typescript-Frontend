@@ -1,4 +1,5 @@
 import React, { Component, ChangeEvent } from 'react';
+import { NotificationManager } from 'react-notifications';
 
 export default class Labelling extends Component {
     state = {
@@ -62,7 +63,28 @@ export default class Labelling extends Component {
      * addiere das eingegebene Label
      */
     addLabel = (labelObj: { start: string, end: string, name: string; }) => {
-        const label: { labelID: number, start: number, end: number, name: string; } = { labelID: this.IDcounter, start: this.formatFloatInString(labelObj.start), end: this.formatFloatInString(labelObj.end), name: labelObj.name }; //was ist bei fehlerfall?? keine Zahlen
+        if (labelObj.start === "" || labelObj.end === "") {
+            NotificationManager.error("Das Labelzeitfenster muss bestimmt werden!");
+            return;
+        }
+        if (labelObj.name === "") {
+            NotificationManager.error("Das Labelzeitfenster braucht einen Namen!");
+            return;
+        }
+        labelObj.start = labelObj.start.replace(",", ".");
+        labelObj.end = labelObj.end.replace(",", ".");
+        let start = this.formatFloatInString(labelObj.start);
+        let end = this.formatFloatInString(labelObj.end);
+        if (start === NaN && end === NaN) {
+            NotificationManager.success("Das Labelzeitfenster muss mit einer Start und Endzeit bestimmt werden,\n die Angabe ist in Sekunden.");
+            return;
+        }
+        const label: { labelID: number, start: number, end: number, name: string; } = {
+            labelID: this.IDcounter,
+            start: start,
+            end: end,
+            name: labelObj.name
+        }; //was ist bei fehlerfall?? keine Zahlen
         this.props.newLabel(label);
         const { labels } = this.state;
         const newLabels = [label, ...labels];
