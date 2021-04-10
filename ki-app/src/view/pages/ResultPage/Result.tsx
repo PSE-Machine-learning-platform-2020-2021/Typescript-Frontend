@@ -29,13 +29,19 @@ export class ResultPage implements Page {
     */
     private update() {
         this.notify();
-        const VDOM = (
+        let VDOM = (
             <div>
                 <h1>Klassifiziere, bitte warten</h1>
-                <h1>{this.state.aiUserData!.result}</h1>
                 <NotificationContainer />
-            </div>
-        );
+            </div>)
+        if (this.state.aiUserData!.result !== " ") {
+            VDOM = (
+                <div>
+                    <h1>{this.state.aiUserData!.result}</h1>
+                    <NotificationContainer />
+                </div>
+            );
+        }
         if (document.getElementById('root') !== null) {
             ReactDOM.render(VDOM, document.getElementById('root'));
         }

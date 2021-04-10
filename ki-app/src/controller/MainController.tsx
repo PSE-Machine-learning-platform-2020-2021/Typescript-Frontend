@@ -6,6 +6,7 @@ import { StartController } from "./StartController";
 
 import dataDE from '../model/language/de.json';
 import { AIController } from "./AIController";
+import { DeliveryController } from "./DeliveryController";
 
 /**
 * Hauptverwalter der Anwendung. Enthält momentane Seite, die Fassade und verwaltet die Sprache.
@@ -73,7 +74,11 @@ export class MainController implements MainControllerInterface {
     if ( urlParams.get( "isMiner" ) === "true" ) {
       this.currentPageController = new StartController();
     }
-    if ( urlParams.get( "deliverModel" ) === "true" ) {
+    else if ( urlParams.get( "deliverModel" ) === "true" ) {
+      let modelID: number = +urlParams.get( "modelID" )!;
+      this.currentPageController = new DeliveryController( modelID );
+    }
+    else if ( urlParams.get( "useModel" ) === "true" ) {
       let modelID: number = +urlParams.get( "modelID" )!;
       this.currentPageController = new AIController( modelID );
     }

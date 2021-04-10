@@ -30,6 +30,7 @@ export class VisualizationPage implements Page {
     */
     update(): void {
         this.notify()
+        console.log(this.state.currentDataSets!)
         const VDOM = (
             <div className="visualizationpage">
 

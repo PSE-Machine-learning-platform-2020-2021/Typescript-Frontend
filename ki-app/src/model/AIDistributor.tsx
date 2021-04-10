@@ -4,7 +4,7 @@ import { DeliveryFormat } from './DeliveryFormat';
  * Diese Klasse verwaltet die Auslieferungsformalitäten für trainierte KI-Modelle.
  */
 export class AIDistributor {
-    private static readonly url: string = "../deliverance/";
+    private static readonly url: string = "../src/deliverance/";
     private static readonly headers = { 'ContentType': 'application/json' };
     private format: DeliveryFormat;
     private id: number;
@@ -62,6 +62,7 @@ export class AIDistributor {
     sendAIModel ( emailList: string[] ): boolean {
         let recipients: { "email": string; }[] = [];
         emailList.forEach( ( address ) => recipients[ recipients.length ] = { "email": address } );
+        console.log({ "recipients": JSON.stringify( recipients ), "id": this.id, "job": "send" })
         let data = this.sendRequest( { "recipients": JSON.stringify( recipients ), "id": this.id, "job": "send" } );
         let success: boolean;
         try {
@@ -105,6 +106,7 @@ export class AIDistributor {
             for ( const [ header, content ] of Object.entries( AIDistributor.headers ) ) {
                 xhr.setRequestHeader( header, content );
             }
+            console.log( JSON.stringify( data ))
             xhr.send( JSON.stringify( data ) );
         } ).then( ( resolve ) => resolve, ( reject ) => reject );
     }
