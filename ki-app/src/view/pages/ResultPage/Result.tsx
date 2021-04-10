@@ -31,7 +31,8 @@ export class ResultPage implements Page {
         this.notify();
         let VDOM = (
             <div>
-                <h1>Klassifiziere, bitte warten</h1>
+                <h2 className='title'>Ergebnis</h2>
+                <h1 className='wait'>Klassifiziere, bitte warten</h1>
                 <NotificationContainer />
             </div>)
         if (this.state.aiUserData!.result !== " ") {

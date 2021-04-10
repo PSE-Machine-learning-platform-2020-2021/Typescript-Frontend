@@ -31,6 +31,7 @@ export class MainController implements MainControllerInterface {
    * Konstruktor des MainControllers. Holt sich die Fassade.
    */
   constructor () {
+    document.title = "Explorer App"
     this.facade = new Facade( "de-de" );
   }
 
