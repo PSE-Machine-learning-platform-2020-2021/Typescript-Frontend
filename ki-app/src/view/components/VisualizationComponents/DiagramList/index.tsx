@@ -1,6 +1,6 @@
 import Chart from 'chart.js';
-import React, { Component, CSSProperties } from 'react'
-import "./DiagramList.css"
+import React, { Component, CSSProperties } from 'react';
+import "./DiagramList.css";
 
 
 export default class DiagramList extends Component {
@@ -9,10 +9,10 @@ export default class DiagramList extends Component {
      * Variablen und Methoden welche der Klasse zur verfügung gestellt werden müssen
      */
     props = {
-        currentDataSets: [] as { dataSetID: number, rows: { sensorType: number, datapoint: { value: number[], relativeTime: number }[] }[] }[],
+        currentDataSets: [] as { dataSetID: number, rows: { sensorType: number, datapoint: { value: number[], relativeTime: number; }[]; }[]; }[],
         dataSetMetas: [] as { dataSetID: number, dataSetName: string; }[]
         //testDataSet: [] as { dataSetID: number, rows: { sensorType: number, datapoint: { value: number[], relativeTime: number }[] }[] }[],
-    }
+    };
 
     /**
      * Status für diese Komponente
@@ -51,11 +51,11 @@ export default class DiagramList extends Component {
      * @param dataSet Datensätze für Diagram
      */
     updateDiagramm(dataSet: { dataSetID: number; rows: any[]; }) {
-        let diagrammData = this.state.diagrammData
-        diagrammData.sensorRow = []
-        diagrammData.datavalue = []
-        diagrammData.time = []
-        this.setState({ diagrammData: diagrammData })
+        let diagrammData = this.state.diagrammData;
+        diagrammData.sensorRow = [];
+        diagrammData.datavalue = [];
+        diagrammData.time = [];
+        this.setState({ diagrammData: diagrammData });
         var datavalues = [];
         for (var i = 0; i < dataSet.rows.length; i++) {
             this.state.diagrammData.sensorRow.push(dataSet.rows[i].sensorType);
@@ -78,16 +78,16 @@ export default class DiagramList extends Component {
         for (var i = 0; i < this.state.diagrammData.sensorRow.length * 3; i++) {
             var coordinate = ".X";
             var sensor = this.state.diagrammData.sensorRow[(i / 3) | 0];
-            var sensorName = ''
+            var sensorName = '';
             switch (sensor) {
                 case 2:
-                    sensorName = 'Accelerometer'
+                    sensorName = 'Accelerometer';
                     break;
                 case 3:
-                    sensorName = 'Gyroscope'
+                    sensorName = 'Gyroscope';
                     break;
                 case 4:
-                    sensorName = 'Magnetometer'
+                    sensorName = 'Magnetometer';
                     break;
                 default:
                     break;
@@ -124,10 +124,10 @@ export default class DiagramList extends Component {
             offsetGridLines: false,
             pointDot: false,
         };
-        const newList = this.state.diagramList
-        const id = dataSet.dataSetID
-        newList.push({ dataSetID: id, lineLabels: lineLabels, data: data, options: options })
-        this.setState({ diagramList: newList })
+        const newList = this.state.diagramList;
+        const id = dataSet.dataSetID;
+        newList.push({ dataSetID: id, lineLabels: lineLabels, data: data, options: options });
+        this.setState({ diagramList: newList });
     }
 
     /**
@@ -135,30 +135,35 @@ export default class DiagramList extends Component {
      * @returns Aufbau des Komponenten
      */
     render() {
+
         var LineChart = require("react-chartjs").Line;
 
         //jede Diagram nur einmal zeigen,und nur erneut mit neue Data
         // eslint-disable-next-line
         this.props.currentDataSets?.map((dataSet, index) => {
-            var flag = false
+            var flag = false;
             // eslint-disable-next-line
             this.state.diagramList.map((diagram) => {
-                if (diagram.dataSetID === dataSet.dataSetID) {
-                    flag = true
-                    return diagram
+                if (
+                    diagram.dataSetID === dataSet.dataSetID
+                    && this.props.currentDataSets[dataSet.dataSetID] !== undefined) {
+                    if (this.state.diagrammData.datavalue.length === this.props.currentDataSets[dataSet.dataSetID].rows.length) {
+                        flag = true;
+                        return diagram;
+                    }
                 }
-            })
-            if (flag) { return dataSet }
-            else { this.updateDiagramm(dataSet) }
-        })
+            });
+            if (flag) { return dataSet; }
+            else { this.updateDiagramm(dataSet); }
+        });
         return (
             <div>
                 <div>
                     {this.state.diagramList.map((diagram, index) => {
-                        let datasetname = "Null"
+                        let datasetname = "Null";
                         this.props.dataSetMetas.forEach(dataset => {
                             if (dataset.dataSetID === diagram.dataSetID) {
-                                datasetname = dataset.dataSetName
+                                datasetname = dataset.dataSetName;
                             }
                         });
                         return (
@@ -171,7 +176,7 @@ export default class DiagramList extends Component {
                                     <LineChart data={diagram.data} options={diagram.options} width={window.innerWidth} height={300} />
                                 </div>
                             </div>
-                        )
+                        );
                     })}
                 </div>
             </div>
