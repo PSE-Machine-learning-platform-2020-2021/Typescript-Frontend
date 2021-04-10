@@ -333,7 +333,7 @@ export default class Train extends Component {
 		const { mouse, datasets, imputators, scalers, myfeatures, classifiers } = this.state;
 		return (
 			<div className="train">
-				<h3>Datasets</h3>
+				<h3  className="text">Datasets</h3>
 				{datasets.map(dataset => {
 					return (
 
@@ -351,12 +351,12 @@ export default class Train extends Component {
 					{this.state.openNewWindow && (
 						<NewWindow>
 							<div className="login-window">
-								<h1>DatabaseList</h1>
-								<select onChange={this.handleChange}>
-									<option value="">choose dataset</option>
+								<h1  className="text">DatabaseList</h1>
+								<select onChange={this.handleChange}   className="text" >
+									<option value=""   className="text">choose dataset</option>
 									{this.options()}
-								</select>
-								<button onClick={this.handleChoose} className="choose-btn" type='button' >Add!</button>
+								</select >
+								<button onClick={this.handleChoose} className="choose-btn" type='button' >Add</button>
 							</div>
 						</NewWindow>
 					)}
@@ -364,7 +364,7 @@ export default class Train extends Component {
 				</div>
 				<div className="list">
 					<div className="imputationlist">
-						<h3>Imputation</h3>
+						<h3  className="text">Imputation</h3>
 						{imputators.map((imputator, index) => {
 							return (
 								<div key={index}>
@@ -374,7 +374,7 @@ export default class Train extends Component {
 						})}
 					</div>
 					<div className="scalerlist">
-						<h3>Normalisierung</h3>
+						<h3   className="text">Normalisierung</h3>
 						{scalers.map((scaler, index) => {
 							return (
 								<div key={index}>
@@ -388,7 +388,7 @@ export default class Train extends Component {
 
 				<div className="list">
 					<div className="extractionlist">
-						<h3>Merkmalextraktion</h3>
+						<h3  className="text">Merkmalextraktion</h3>
 						{myfeatures.map((extraction, index) => {
 							return (
 								<div key={index}>
@@ -399,7 +399,7 @@ export default class Train extends Component {
 						}
 					</div>
 					<div className="classifierlist">
-						<h3>Modell</h3>
+						<h3  className="text">Modell</h3>
 						{classifiers.map((classifier, index) => {
 							return (
 								<div key={index}>

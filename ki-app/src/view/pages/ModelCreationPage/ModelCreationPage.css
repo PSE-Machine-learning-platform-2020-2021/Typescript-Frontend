@@ -1,3 +1,15 @@
 .checklist{ 
     float:left
 } 
+
+.title{
+    color: #000000;
+    font-family: 'Raleway',sans-serif;
+    font-size: 62px;
+    font-weight: 800;
+    line-height: 72px;
+    margin: 0 0 24px;
+    text-align: center;
+    text-transform: uppercase;
+    background-color: #7B7F80;
+}
