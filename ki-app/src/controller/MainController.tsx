@@ -6,6 +6,7 @@ import { StartController } from "./StartController";
 
 import dataDE from '../model/language/de.json';
 import { AIController } from "./AIController";
+import { DeliveryController } from "./DeliveryController";
 
 /**
 * Hauptverwalter der Anwendung. Enthält momentane Seite, die Fassade und verwaltet die Sprache.
@@ -75,7 +76,11 @@ export class MainController implements MainControllerInterface {
     }
     if ( urlParams.get( "deliverModel" ) === "true" ) {
       let modelID: number = +urlParams.get( "modelID" )!;
-      this.currentPageController = new AIController( modelID );
+      this.currentPageController = new DeliveryController( modelID );
+    }
+    if ( urlParams.get( "deliverModel" ) === "true" ) {
+      let modelID: number = +urlParams.get( "modelID" )!;
+      this.currentPageController = new DeliveryController( modelID );
     }
     else {
       this.currentPageController = new RefferingController();
