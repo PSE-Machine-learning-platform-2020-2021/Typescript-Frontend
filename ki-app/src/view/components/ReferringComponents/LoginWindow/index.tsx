@@ -86,7 +86,7 @@ export default class LoginWindow extends Component {
   render() {
     return (
       <div>
-        <div className="right">
+        <div className="left">
           <button className="login-button" onClick={this.openNewWindow} type='button'>Einloggen</button>
         </div>
         {this.state.openNewWindow && (
@@ -94,15 +94,15 @@ export default class LoginWindow extends Component {
             <div className="login-window">
               <form>
                 <label>
-                  <p>Benutzername</p>
+                  <p className = 'user'>Benutzername</p>
                   <input type="text" value={this.state.username} onChange={this.changeUsername} />
                 </label>
                 <label>
-                  <p>Email</p>
+                  <p className = 'mail'>Email</p>
                   <input type="text" value={this.state.email} onChange={this.changeEmail} />
                 </label>
                 <label>
-                  <p>Passwort</p>
+                  <p className = 'password'>Passwort</p>
                   <input type="password" value={this.state.password} onChange={this.changePassword} />
                 </label>
                 <div>

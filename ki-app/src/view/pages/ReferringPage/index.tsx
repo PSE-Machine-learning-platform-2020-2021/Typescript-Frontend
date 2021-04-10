@@ -39,7 +39,6 @@ export class ReferringPage implements Page {
                 //changeToDelivery={this.changeToDelivery.bind(this)}
                 />
                 <LoginWindow pageRegister={this.register.bind(this)} pageLogin={this.login.bind(this)} />
-                <br /><br /><br /><br /><br />
                 <NewProjectButton disabled={!this.state.islogedIn!}
                     pageNewProject={this.createNewProject.bind(this)}
                     qr={this.state.qr!}

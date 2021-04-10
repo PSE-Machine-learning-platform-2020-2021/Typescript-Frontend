@@ -26,7 +26,7 @@ export default class ConstantsText extends React.Component {
         console.log(MainController.getInstance().getText()!.title);
         return (
             <div>
-                <h1 className='title'>{MainController.getInstance().getText().title}</h1>
+                <h1 className='explorerTitle'>{MainController.getInstance().getText().title}</h1>
             </div>
         );
     }

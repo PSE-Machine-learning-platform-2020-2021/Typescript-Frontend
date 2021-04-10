@@ -1,4 +1,5 @@
 import { Component, CSSProperties } from 'react';
+import './index.css'
 
 export default class Diagram extends Component {
 
@@ -107,7 +108,20 @@ export default class Diagram extends Component {
             pointDotRadius: 2,
             pointHitDetectionRadius: 1,
             offsetGridLines: false,
-            pointDot: false
+            pointDot: false,
+            title: {
+                display: true,
+                text: 'Chart.js bar Chart'
+            },
+            scales: {
+                xAxes: [{
+                    ticks: {
+                        beginAtZero: true,
+                        callback: function (value: number) { if (Number.isInteger(value)) { return value; } },
+                        stepSize: 1
+                    }
+                }]
+            }
         };
         diagrammData = this.state.diagrammData;
         diagrammData.diagramData = data;
@@ -130,7 +144,7 @@ export default class Diagram extends Component {
             <div>
                 {this.state.diagrammData.lineLabels}
                 <LineChart data={this.state.diagrammData.diagramData} options={this.state.diagrammData.diagramOptions} width="400" height="200" redraw />
-                <button type="button" onClick={this.submit}>ChangeToFinish</button>
+                <button className = 'button' type="button" onClick={this.submit}>ChangeToFinish</button>
             </div>
         );
     }

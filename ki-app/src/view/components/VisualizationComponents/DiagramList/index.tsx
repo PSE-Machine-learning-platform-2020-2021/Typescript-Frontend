@@ -1,5 +1,8 @@
+import Chart from 'chart.js';
 import React, { Component, CSSProperties } from 'react'
 import "./DiagramList.css"
+
+
 export default class DiagramList extends Component {
 
     /**
@@ -7,6 +10,7 @@ export default class DiagramList extends Component {
      */
     props = {
         currentDataSets: [] as { dataSetID: number, rows: { sensorType: number, datapoint: { value: number[], relativeTime: number }[] }[] }[],
+        dataSetMetas: [] as { dataSetID: number, dataSetName: string; }[]
         //testDataSet: [] as { dataSetID: number, rows: { sensorType: number, datapoint: { value: number[], relativeTime: number }[] }[] }[],
     }
 
@@ -118,7 +122,7 @@ export default class DiagramList extends Component {
             pointDotRadius: 2,
             pointHitDetectionRadius: 1,
             offsetGridLines: false,
-            pointDot: false
+            pointDot: false,
         };
         const newList = this.state.diagramList
         const id = dataSet.dataSetID
@@ -149,28 +153,23 @@ export default class DiagramList extends Component {
         })
         return (
             <div>
-                {this.state.diagramList.map((diagram, index) => {
-                    return (
-                        <div key={index}>
-                            {(this.state.showDiagramIndex === index) && (
-                                <div className="showImage">
-                                    <h5>{diagram.dataSetID}</h5>
-                                    {diagram.lineLabels}
-                                    <LineChart data={diagram.data} options={diagram.options} width="500" height="250" />
-                                </div>)
-                            }
-
-                        </div>
-                    );
-                })
-                }
-                <div className="diagramList">
+                <div>
                     {this.state.diagramList.map((diagram, index) => {
+                        let datasetname = "Null"
+                        this.props.dataSetMetas.forEach(dataset => {
+                            if (dataset.dataSetID === diagram.dataSetID) {
+                                datasetname = dataset.dataSetName
+                            }
+                        });
                         return (
                             <div key={index}>
-                                <h5>{diagram.dataSetID}</h5>
-                                {diagram.lineLabels}
-                                <LineChart data={diagram.data} options={diagram.options} width="200" height="100" onClick={() => this.handleClick(diagram, index)} />
+                                <div className="diagramTop">
+                                    <h5 className="datasetName">{datasetname}</h5>
+                                    {diagram.lineLabels}
+                                </div>
+                                <div className="diagramList">
+                                    <LineChart data={diagram.data} options={diagram.options} width={window.innerWidth} height={300} />
+                                </div>
                             </div>
                         )
                     })}

@@ -2,5 +2,13 @@
 * Grauer Hintergrund
 */
 .title{
-	background-color: grey
+    color: #000000;
+    font-family: 'Raleway',sans-serif;
+    font-size: 26px;
+    font-weight: 800;
+    line-height: 72px;
+    margin: 0 0 24px;
+    text-align: center;
+    text-transform: uppercase;
+    background-color: #25d5ec;
 }

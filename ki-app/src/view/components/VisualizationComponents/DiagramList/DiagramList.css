@@ -1,3 +1,13 @@
 .diagramList {
+    background-color: #EFF0EC;
     float:left
+}
+
+.diagramTop {
+    background-color: #858987;
+}
+
+.dataSetname{
+    font-family: 'Raleway',sans-serif;
+    background-color: #EFF0EC
 }

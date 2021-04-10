@@ -2,8 +2,9 @@ import { Page } from "../PageInterface";
 import { PageController } from "../../../controller/PageController";
 import { State } from "./State";
 import ReactDOM from 'react-dom';
-import { NotificationContainer, NotificationManager } from 'react-notifications';
+import { NotificationContainer } from 'react-notifications';
 import 'react-notifications/lib/notifications.css';
+import './Result.css';
 
 
 /**
@@ -38,7 +39,9 @@ export class ResultPage implements Page {
         if (this.state.aiUserData!.result !== " ") {
             VDOM = (
                 <div>
+                    <h2 className='title'>Ergebnis</h2>
                     <h1>{this.state.aiUserData!.result}</h1>
+                    <button className='button' onClick = {this.reloadPage}>Erneut klassifizieren</button>
                     <NotificationContainer />
                 </div>
             );
@@ -46,6 +49,11 @@ export class ResultPage implements Page {
         if (document.getElementById('root') !== null) {
             ReactDOM.render(VDOM, document.getElementById('root'));
         }
+    }
+
+
+    reloadPage() {
+        window.location.reload()
     }
 
     /**

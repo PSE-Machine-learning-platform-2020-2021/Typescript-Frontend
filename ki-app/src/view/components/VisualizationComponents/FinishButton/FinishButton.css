@@ -1,6 +1,6 @@
 .finish-btn {
-    background-color: #25d5ec; 
-    border: 1px solid #25d5ec;
+    background-color: #1C2453; 
+    border: 1px solid #1C2453;
     border-radius: 20px;
     color: white;
     padding: 15px 32px;
@@ -8,8 +8,7 @@
     text-decoration: none;
     display: inline-block;
     font-size: 16px;
-}
-
-.cleardiagramfloat{
-    clear:left
+    position:absolute;
+    bottom: 5px;
+    left: 0vh;
 }

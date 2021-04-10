@@ -1,6 +1,6 @@
 .login-button {
-    background-color: #4CAF50; 
-    border: 1px solid #4CAF50;
+    background-color: #1C2453; 
+    border: 1px solid #1C2453;
     border-radius: 20px;
     color: white;
     padding: 15px 32px;
@@ -10,8 +10,21 @@
     font-size: 16px;
 }
 
-.right {
-    float: right;
+.password{
+    color: #EFF0EC;
+}
+
+.user{
+    color: #EFF0EC;
+}
+
+.mail{
+    color: #EFF0EC;
+}
+
+.left {
+    position:absolute;
+    right: 0vh;
 }
 input[type=text] {
     width: 50%;
@@ -33,8 +46,8 @@ input[type=password] {
 }
 
 .register {
-    background-color: #f08d0c; 
-    border: 1px solid #f08d0c;
+    background-color: #1C2453; 
+    border: 1px solid #1C2453;
     border-radius: 20px;
     margin-right:10px;
     color: white;
@@ -46,8 +59,8 @@ input[type=password] {
 }
 
 .login {
-    background-color: #7b1aca; 
-    border: 1px solid #7b1aca;
+    background-color: #1C2453; 
+    border: 1px solid #1C2453;
     border-radius: 20px;
     color: white;
     padding: 15px 32px;

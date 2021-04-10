@@ -1,5 +1,5 @@
-.title{
-     color: #4c13e9;
+.explorerTitle{
+     color: #000000;
      font-family: 'Raleway',sans-serif;
      font-size: 62px;
      font-weight: 800;
@@ -7,4 +7,5 @@
      margin: 0 0 24px;
      text-align: center;
      text-transform: uppercase;
+     background-color: #7B7F80;
 }

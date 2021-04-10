@@ -1,4 +1,5 @@
 import React, { Component } from 'react'
+import "./index.css"
 
 /**
  * Linktext für Verbindung
@@ -20,10 +21,10 @@ export default class LinkText extends Component {
         return (
             <div className="linktext">
                 <div className="linktext1">
-                    <p>QR-Code scannen oder Link folgen, um Daten zu erfassen</p>
+                    <p className = "text">QR-Code scannen oder Link folgen, um Daten zu erfassen</p>
                 </div>
 
-                <a href={this.props.link} type='link'>{this.props.link}</a>
+                <a className = "text" href={this.props.link} type='link'>{this.props.link}</a>
             </div>
         )
     }

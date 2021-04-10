@@ -30,11 +30,11 @@ export class VisualizationPage implements Page {
     */
     update(): void {
         this.notify()
-        console.log(this.state.currentDataSets!)
         const VDOM = (
             <div className="visualizationpage">
 
-                <DiagramList currentDataSets={this.state.currentDataSets!}
+                <DiagramList currentDataSets={this.state.currentDataSets! }
+                dataSetMetas = {this.state.dataSetMetas!}
                 //   testDataSet={this.state.testDataSet!}
                 />
                 <FinishButton pageChangeToCreation={this.changetoCreation.bind(this)} />
