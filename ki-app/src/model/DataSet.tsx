@@ -46,7 +46,11 @@ export class DataSet {
     }
     if (label != null) {
       for (let i = 0; i < label.length; i++) {
-        this.label.push(new Label(label[i].name, label[i].labelID, label[i].span));
+        if (label[i].span !== undefined) {
+          this.label.push(new Label(label[i].name, label[i].labelID, label[i].span));
+        } else if (label[i].start !== undefined && label[i].end !== undefined) {
+          this.label.push(new Label(label[i].name, label[i].labelID, { start: label[i].start!, end: label[i].end! }));
+        }
       }
     }
     if (generateDate != null) {
