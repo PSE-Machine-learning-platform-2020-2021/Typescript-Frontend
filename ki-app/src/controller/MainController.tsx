@@ -74,13 +74,13 @@ export class MainController implements MainControllerInterface {
     if ( urlParams.get( "isMiner" ) === "true" ) {
       this.currentPageController = new StartController();
     }
-    if ( urlParams.get( "deliverModel" ) === "true" ) {
+    else if ( urlParams.get( "deliverModel" ) === "true" ) {
       let modelID: number = +urlParams.get( "modelID" )!;
       this.currentPageController = new DeliveryController( modelID );
     }
-    if ( urlParams.get( "deliverModel" ) === "true" ) {
+    else if ( urlParams.get( "useModel" ) === "true" ) {
       let modelID: number = +urlParams.get( "modelID" )!;
-      this.currentPageController = new DeliveryController( modelID );
+      this.currentPageController = new AIController( modelID );
     }
     else {
       this.currentPageController = new RefferingController();
