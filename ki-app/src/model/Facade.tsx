@@ -6,7 +6,7 @@ import { AIBuilder } from "./AIBuilder";
 import { AIDistributor } from "./AIDistributor";
 import { SensorData } from "./SensorData";
 import { AIController } from "../controller/AIController";
-import { IDataRowST } from "./DataRow";
+import { IDataRowST, IDataRowSTRID } from "./DataRow";
 import { ILabel } from "./Label";
 import { ISpan } from "./TimeSpan";
 import { IDevice } from "./DeviceData";
@@ -96,12 +96,11 @@ export class Facade {
       if (dataSetID <= 0) {
         return -3;
       }
-      ///////////////////////////////DUMMY
-      var sensoren: SensorData[] = [];
+      var dataRows: IDataRowSTRID[] = [];
       for (let i = 0; i < sensorTypeID.length; i++) {
-        sensoren.push({ id: -1, SensorTypeID: sensorTypeID[i], MACADDRESS: "", deviceName: "" });
+        dataRows.push({ sensorType: sensorTypeID[i], dataRow: [], dataRowID: i });
       }
-      if (this.user.createDataSet(sensoren, dataSetID, dataSetName) || this.user.getName() === AIController.AI_MODEL_USER_NAME) {
+      if (this.user.createDataSet(dataSetID, dataSetName, new Date().getMilliseconds(), dataRows) || this.user.getName() === AIController.AI_MODEL_USER_NAME) {
         return dataSetID;
       }
       return -4;

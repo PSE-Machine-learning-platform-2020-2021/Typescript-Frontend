@@ -1,9 +1,8 @@
 import { AIModel } from "./AIModel";
 import { IDataPoint } from "./DataPoint";
-import { IDataRowRID, IDataRowST } from "./DataRow";
+import { IDataRowRID, IDataRowST, IDataRowSTRID } from "./DataRow";
 import { DataSet, IDataSet } from "./DataSet";
 import { ILabel } from "./Label";
-import { SensorData } from "./SensorData";
 import { Session } from "./Session";
 import { ISpan } from "./TimeSpan";
 
@@ -41,7 +40,6 @@ export class Project {
       for (const entry of projectData.dataSet) {
         let dataSet: DataSet;
         dataSet = new DataSet(
-          entry.dataRowSensors,
           entry.dataSetID,
           entry.dataSetName,
           entry.generateDate,
@@ -137,8 +135,8 @@ export class Project {
    * @param dataSetName der Datensatznamen
    * @param generateDate die Erstellungszeit von dem Datensatz
    */
-  createDataSet(dataRowSensors: SensorData[], dataSetID: number, dataSetName: string, generateDate?: number): boolean {
-    if (dataRowSensors.length <= 0 || dataSetID < 0 || dataSetName.length <= 0 || (generateDate != null && generateDate < 0)) {
+  createDataSet(dataSetID: number, dataSetName: string, generateDate: number, dataRow: IDataRowSTRID[]): boolean {
+    if (dataRow.length <= 0 || dataSetID < 0 || dataSetName.length <= 0 || (generateDate != null && generateDate < 0)) {
       return false;
     }
     for (let i = 0; i < this.dataSet.length; i++) {
@@ -146,7 +144,8 @@ export class Project {
         return false;
       }
     }
-    var dataSet: DataSet = new DataSet(dataRowSensors, dataSetID, dataSetName, generateDate);
+
+    var dataSet: DataSet = new DataSet(dataSetID, dataSetName, generateDate, dataRow);
     this.dataSet.push(dataSet);
     this.currentDataSet = dataSet;
     return true;

@@ -1,3 +1,4 @@
+import { IDataRowSTRID } from "../DataRow";
 import { DataSet } from "../DataSet";
 import { ILabel } from "../Label";
 import { SensorData } from "../SensorData";
@@ -7,8 +8,7 @@ import { SensorData } from "../SensorData";
  */
 test("creat and getter", () => {
     //Konstruktor ohne zusätze
-    const sensor: SensorData = { id: 111, SensorTypeID: 2, MACADDRESS: "oben", deviceName: "Samsung" };
-    var dataSet = new DataSet([sensor], 17, "Die tolle Aufnahme",);
+    var dataSet = new DataSet(17, "Die tolle Aufnahme", 255, [{ sensorType: 2, dataRow: [], dataRowID: 0 }]);
     expect(dataSet.getID()).toBe(17);
     expect(dataSet.getLabels().length).toBe(0);
     var dataRow = dataSet.getDataRows()[0];
@@ -16,21 +16,21 @@ test("creat and getter", () => {
     expect(dataRow.datapoint.length).toBe(0);
     expect(dataSet.getName()).toBe("Die tolle Aufnahme");
     //Konstruktor mit generateDate, dataRows
-    const dataRows = [
+    const dataRows: IDataRowSTRID[] = [
         {
-            dataRowID: 0, dataRow: [
+            sensorType: 2, dataRowID: 0, dataRow: [
                 { value: [24, 12, 33.15], relativeTime: 2.12 },
                 { value: [26, 7, 3.15], relativeTime: 259 }]
         },
         {
-            dataRowID: 1, dataRow: [
+            sensorType: 2, dataRowID: 1, dataRow: [
                 { value: [1, 2, 321.15], relativeTime: 2.122 },
                 { value: [56, 0, 3.165], relativeTime: 270 }]
         }];
     const labels: ILabel[] = [
         { name: "abgehoben", labelID: 17, span: { start: 2.351, end: 3.1415 } },
         { name: "unterhoben", labelID: 18, span: { start: 2, end: 2.7 } }];
-    var dataSet = new DataSet([sensor, sensor], 33, "Die wundervolle Aufnahme", 132948239, dataRows, labels);
+    var dataSet = new DataSet(33, "Die wundervolle Aufnahme", 132948239, dataRows, labels);
     expect(dataSet.getID()).toBe(33);
     for (let i = 0; i < dataRows.length; i++) {
         var datarow = dataSet.getDataRows()[i];
@@ -55,9 +55,7 @@ test("creat and getter", () => {
  * Prüft, ob addDatapoint ohne geladenen Datenreihen fehlerfrei läuft
  */
 test("addDatapoint without a loaded Datarow", () => {
-    const sensor: SensorData = { id: 111, SensorTypeID: 2, MACADDRESS: "oben", deviceName: "Samsung" };
-    const sensor2: SensorData = { id: 12, SensorTypeID: 3, MACADDRESS: "unten", deviceName: "Apple" };
-    var dataSet = new DataSet([sensor, sensor2], 17, "Die tolle Aufnahme",);
+    var dataSet = new DataSet(17, "Die tolle Aufnahme", 132948239, [{ sensorType: 2, dataRowID: 0, dataRow: [] }, { sensorType: 3, dataRowID: 1, dataRow: [] }]);
     //laden getestet in getter und setter test
     //Normale Nutzung Sensor 1
     expect(dataSet.addDatapoint(0, { value: [6, 7, 8], relativeTime: 20 })).toBeTruthy();
@@ -109,23 +107,21 @@ test("addDatapoint without a loaded Datarow", () => {
  * Prüft, ob addDatapoint mit geladenen Datenreihen fehlerfrei läuft
  */
 test("addDatapoint with a loaded Datarow and Labels", () => {
-    const sensor: SensorData = { id: 111, SensorTypeID: 2, MACADDRESS: "oben", deviceName: "Samsung" };
-    const sensor2: SensorData = { id: 12, SensorTypeID: 3, MACADDRESS: "unten", deviceName: "Apple" };
     const dataRows = [
         {
-            dataRowID: 0, dataRow: [
+            sensorType: 2, dataRowID: 0, dataRow: [
                 { value: [24, 12, 33.15], relativeTime: 2.12 },
                 { value: [26, 7, 3.15], relativeTime: 259 }]
         },
         {
-            dataRowID: 1, dataRow: [
+            sensorType: 3, dataRowID: 1, dataRow: [
                 { value: [1, 2, 321.15], relativeTime: 2.122 },
                 { value: [56, 0, 3.165], relativeTime: 270 }]
         }];
     const labels: ILabel[] = [
         { name: "abgehoben", labelID: 17, span: { start: 2.351, end: 3.1415 } },
         { name: "unterhoben", labelID: 18, span: { start: 2, end: 2.7 } }];
-    var dataSet = new DataSet([sensor, sensor2], 33, "Die wundervolle Aufnahme", 132948239, dataRows, labels);
+    var dataSet = new DataSet(33, "Die wundervolle Aufnahme", 132948239, dataRows, labels);
     //laden getestet in getter und setter test
     //Normale Nutzung Sensor 1
     expect(dataSet.addDatapoint(0, { value: [6, 7, 8], relativeTime: 20 })).toBeTruthy();
@@ -178,9 +174,7 @@ test("addDatapoint with a loaded Datarow and Labels", () => {
  * Prüft, ob createLabel ohne geladenen Labels fehlerfrei läuft
  */
 test("createLabel without loaded Labels", () => {
-    const sensor: SensorData = { id: 111, SensorTypeID: 2, MACADDRESS: "oben", deviceName: "Samsung" };
-    const sensor2: SensorData = { id: 12, SensorTypeID: 3, MACADDRESS: "unten", deviceName: "Apple" };
-    var dataSet = new DataSet([sensor, sensor2], 32, "Die wundervolle Aufnahme", 132948239);
+    var dataSet = new DataSet(32, "Die wundervolle Aufnahme", 132948239, [{ sensorType: 2, dataRowID: 0, dataRow: [] }, { sensorType: 3, dataRowID: 1, dataRow: [] }]);
     //laden getestet in getter und setter test
     //Normale Nutzung
     expect(dataSet.createLabel(1, { start: 200, end: 500 }, "Treppen laufen")).toBeTruthy();
@@ -209,23 +203,21 @@ test("createLabel without loaded Labels", () => {
  * Prüft, ob createLabel mit geladenen Labels fehlerfrei läuft
  */
 test("createLabel with loaded Labels", () => {
-    const sensor: SensorData = { id: 111, SensorTypeID: 2, MACADDRESS: "oben", deviceName: "Samsung" };
-    const sensor2: SensorData = { id: 12, SensorTypeID: 3, MACADDRESS: "unten", deviceName: "Apple" };
     const dataRows = [
         {
-            dataRowID: 0, dataRow: [
+            sensorType: 2, dataRowID: 0, dataRow: [
                 { value: [24, 12, 33.15], relativeTime: 2.12 },
                 { value: [26, 7, 3.15], relativeTime: 259 }]
         },
         {
-            dataRowID: 1, dataRow: [
+            sensorType: 3, dataRowID: 1, dataRow: [
                 { value: [1, 2, 321.15], relativeTime: 2.122 },
                 { value: [56, 0, 3.165], relativeTime: 270 }]
         }];
     const labels: ILabel[] = [
         { name: "abgehoben", labelID: 17, span: { start: 2.351, end: 3.1415 } },
         { name: "unterhoben", labelID: 18, span: { start: 2, end: 2.7 } }];
-    var dataSet = new DataSet([sensor, sensor2], 32, "Die wundervolle Aufnahme", 132948239, dataRows, labels);
+    var dataSet = new DataSet(32, "Die wundervolle Aufnahme", 132948239, dataRows, labels);
     //laden getestet in getter und setter test
     //Normale Nutzung
     expect(dataSet.createLabel(3, { start: 200, end: 500 }, "Treppen laufen")).toBeTruthy();
@@ -270,23 +262,21 @@ test("createLabel with loaded Labels", () => {
  * Prüft, ob setLabel fehlerfrei läuft
  */
 test("setLabel", () => {
-    const sensor: SensorData = { id: 111, SensorTypeID: 2, MACADDRESS: "oben", deviceName: "Samsung" };
-    const sensor2: SensorData = { id: 12, SensorTypeID: 3, MACADDRESS: "unten", deviceName: "Apple" };
     const dataRows = [
         {
-            dataRowID: 0, dataRow: [
+            sensorType: 2, dataRowID: 0, dataRow: [
                 { value: [24, 12, 33.15], relativeTime: 2.12 },
                 { value: [26, 7, 3.15], relativeTime: 259 }]
         },
         {
-            dataRowID: 1, dataRow: [
+            sensorType: 3, dataRowID: 1, dataRow: [
                 { value: [1, 2, 321.15], relativeTime: 2.122 },
                 { value: [56, 0, 3.165], relativeTime: 270 }]
         }];
     const labels: ILabel[] = [
         { name: "abgehoben", labelID: 17, span: { start: 2.351, end: 3.1415 } },
         { name: "unterhoben", labelID: 18, span: { start: 2, end: 2.7 } }];
-    var dataSet = new DataSet([sensor, sensor2], 32, "Die wundervolle Aufnahme", 132948239, dataRows, labels);
+    var dataSet = new DataSet(32, "Die wundervolle Aufnahme", 132948239, dataRows, labels);
     //laden getestet in getter und setter test
     //Normale Nutzung mit neuem Labelnamen
     expect(dataSet.setLabel(17, { start: 200, end: 500 }, "Treppen laufen")).toBeTruthy();
@@ -336,16 +326,14 @@ test("setLabel", () => {
  * Prüft, ob deleteLabel fehlerfrei läuft
  */
 test("deleteLabel", () => {
-    const sensor: SensorData = { id: 111, SensorTypeID: 2, MACADDRESS: "oben", deviceName: "Samsung" };
-    const sensor2: SensorData = { id: 12, SensorTypeID: 3, MACADDRESS: "unten", deviceName: "Apple" };
     const dataRows = [
         {
-            dataRowID: 0, dataRow: [
+            sensorType: 2, dataRowID: 0, dataRow: [
                 { value: [24, 12, 33.15], relativeTime: 2.12 },
                 { value: [26, 7, 3.15], relativeTime: 259 }]
         },
         {
-            dataRowID: 1, dataRow: [
+            sensorType: 3, dataRowID: 1, dataRow: [
                 { value: [1, 2, 321.15], relativeTime: 2.122 },
                 { value: [56, 0, 3.165], relativeTime: 270 }]
         }];
@@ -353,7 +341,7 @@ test("deleteLabel", () => {
         { name: "abgehoben", labelID: 17, span: { start: 2.351, end: 3.1415 } },
         { name: "unterhoben", labelID: 18, span: { start: 2, end: 2.7 } },
         { name: "Lufen", labelID: 19, span: { start: 5.23, end: 17 } }];
-    var dataSet = new DataSet([sensor, sensor2], 32, "Die wundervolle Aufnahme", 132948239, dataRows, labels);
+    var dataSet = new DataSet(32, "Die wundervolle Aufnahme", 132948239, dataRows, labels);
     //laden getestet in getter und setter test
     //Normale Nutzung
     expect(dataSet.getLabels().length).toBe(3);

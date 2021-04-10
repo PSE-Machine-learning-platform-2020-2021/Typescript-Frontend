@@ -1,6 +1,6 @@
 import { AIController } from "../controller/AIController";
 import { IDataPoint } from "./DataPoint";
-import { IDataRowST } from "./DataRow";
+import { IDataRowST, IDataRowSTRID } from "./DataRow";
 import { DeviceData, IDevice } from "./DeviceData";
 import { ILabel } from "./Label";
 import { IProjectData, Project } from "./Project";
@@ -110,15 +110,14 @@ export abstract class User {
 
   /**
      * Erstellt für das aktuelle Projekt einen neuen Datensatz und setzt diesen als aktuellen Datensatz.
-     * @param dataRowSensors die Sensoren, von denen die Daten ausgelesen werden
      * @param dataSetID die eindeutige Datensatz ID
      * @param dataSetName der Datensatznamen
      * @param generateDate die Erstellungszeit von dem Datensatz
      * @returns false, falls kein aktuelles Prokekt existiert
      */
-  createDataSet(dataRowSensors: SensorData[], dataSetID: number, dataSetName: string, generateDate?: number): boolean {
+  createDataSet(dataSetID: number, dataSetName: string, generateDate: number, dataRow: IDataRowSTRID[]): boolean {
     if (this.currentProject != null) {
-      return this.currentProject.createDataSet(dataRowSensors, dataSetID, dataSetName, generateDate);
+      return this.currentProject.createDataSet(dataSetID, dataSetName, generateDate, dataRow);
     } else {
       this.setCurrentDataSetID(dataSetID);
       return false;

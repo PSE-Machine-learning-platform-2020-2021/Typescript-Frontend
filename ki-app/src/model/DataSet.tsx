@@ -1,5 +1,5 @@
 import { IDataPoint } from "./DataPoint";
-import { DataRow, IDataRowRID, IDataRowST } from "./DataRow";
+import { DataRow, IDataRowRID, IDataRowST, IDataRowSTRID } from "./DataRow";
 import { ILabel, Label } from "./Label";
 import { SensorData } from "./SensorData";
 import { ISpan } from "./TimeSpan";
@@ -15,15 +15,6 @@ export class DataSet {
   private label: Label[] = []; //Dies sind die existierenden Labels für den Datensatz.
 
   /**
-   * Erstellt einen neuen Datensatz.
-   * @param dataRowSensors die Sensoren, von denen die Daten ausgelesen werden
-   * @param dataSetID die eindeutige Datensatz ID
-   * @param dataSetName der Datensatznamen
-   * @param generateDate die Erstellungszeit von dem Datensatz
-   */
-  constructor(dataRowSensors: SensorData[], dataSetID: number, dataSetName: string, generateDate?: number);
-
-  /**
    * Eine bereits existierende Datensatz kann wie folgt in das Model geladen werden.
    * @param dataRowSensors die Sensoren, von denen die Daten ausgelesen werden, 
    * die Anzahl muss mit der Anzahl der Datenreihen übereinstimmen. Und der i´te Sensor wird zur i´ten Datenreihe hinzugefügt.
@@ -33,15 +24,10 @@ export class DataSet {
    * @param dataRows die schon existierenden Datenreihen
    * @param label die schon existierenden Labels
    */
-  constructor(dataRowSensors: SensorData[], dataSetID: number, dataSetName: string, generateDate: number, dataRows: IDataRowRID[], label: ILabel[]);
-  constructor(dataRowSensors: SensorData[], dataSetID: number, dataSetName: string, generateDate?: number, dataRows?: IDataRowRID[], label?: ILabel[]) {
+  constructor(dataSetID: number, dataSetName: string, generateDate: number, dataRows: IDataRowSTRID[], label?: ILabel[]) {
     if (dataRows != null) {
-      for (let i = 0; i < dataRows.length && i < dataRowSensors.length; i++) {
-        this.dataRow.push(new DataRow(dataRowSensors[i], dataRows[i].dataRowID, dataRows[i].dataRow));
-      }
-    } else {
-      for (let i = 0; i < dataRowSensors.length; i++) {
-        this.dataRow.push(new DataRow(dataRowSensors[i], i));
+      for (let i = 0; i < dataRows.length; i++) {
+        this.dataRow.push(new DataRow({ SensorTypeID: dataRows[i].sensorType }, dataRows[i].dataRowID, dataRows[i].dataRow));
       }
     }
     if (label != null) {
@@ -160,10 +146,9 @@ export class DataSet {
   }
 }
 export interface IDataSet {
-  dataRowSensors: SensorData[],
   dataSetID: number,
   dataSetName: string,
   generateDate: number,
-  dataRows: IDataRowRID[],
+  dataRows: IDataRowSTRID[],
   label: ILabel[];
 }

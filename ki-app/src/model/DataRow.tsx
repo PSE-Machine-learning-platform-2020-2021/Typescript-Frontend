@@ -85,3 +85,8 @@ export interface IDataRowRID {
   dataRowID: number,
   dataRow: IDataPoint[];
 }
+export interface IDataRowSTRID {
+  sensorType: number,
+  dataRowID: number,
+  dataRow: IDataPoint[];
+}
