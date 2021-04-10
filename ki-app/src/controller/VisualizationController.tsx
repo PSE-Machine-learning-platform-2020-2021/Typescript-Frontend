@@ -21,7 +21,7 @@ export class VisualizationController implements PageController {
         //this.page.setState(this.state); // <--- DAS IST DAS PROBLEM!
         //Beispiel
         //this.getDatarows()
-        this.SetDataRows();
+        //this.SetDataRows();
     }
 
     /**
@@ -51,9 +51,12 @@ export class VisualizationController implements PageController {
         //Nur COPY damit es sofort da ist und nicht erst nach dem die intervall Zeit abgelaufen ist
         MainController.getInstance().getFacade().loadProject(this.state.currentProject!.projectID);
         var dataSets = MainController.getInstance().getFacade().getDataSetMetas();
+        console.log("DATENSÄTZE  " + dataSets.length)
+        console.log("ID   " + dataSets[0].dataSetID)
         this.state.currentDataSets! = [];
         for (let index = 0; index < dataSets.length; index++) {
-            let data = MainController.getInstance().getFacade().getDataRows(dataSets[index].dataSetID).dataRows!;
+            let data = MainController.getInstance().getFacade().getDataRows(dataSets[index].dataSetID).dataRows;
+            console.log("DATENREIHEN   " + data.length)
             this.state.currentDataSets!.push({ dataSetID: dataSets[index].dataSetID, rows: data });
             //PubSub.publish('visualizationDiagram', { dataSetID: dataSets[index].dataSetID, dataRows: data });
             this.page.setState(this.state);

@@ -22,12 +22,13 @@ export class DeliveryController implements PageController {
     * Konstruktor des Seitenverwalters. Registriert sich als Beobachter auf seiner Seite und setzt den start Status.
     * @param currentProject Die momentanen Projectdaten für welches man ein Model ausliefern möchte. 
     */
-    constructor(currentProject: { projectID: number, projectName: string, AIModelID: number[]; }, chosenAiModel: number) {
+    constructor(chosenAiModel: number) {
         this.page = new DeliveryPage();
         this.page.attach(this);
         this.state = this.page.getState();
-        this.state.currentProject = currentProject;
-        this.page.setState(this.state);
+        this.state.chosenAIModel = chosenAiModel
+        this.page.setState(this.state)
+        this.update()
     }
 
     /**
@@ -56,12 +57,9 @@ export class DeliveryController implements PageController {
     * Der Inhalt der Email gibt zugriff auf das Modell zur klassifizierung.
     */
     private deliverAsWebApp() {
-        //let emails: string[] = this.state.chosenEmails!;
-        // for (let index = 0; index < emails.length; index++) {
-        //const element: string = emails[index];
-        //let url = MainController.getInstance().getFacade().getAIModel(this.state.currentProject?.choosenAIModelID!, DeliveryFormat.WEB_APP);
-        //MainController.getInstance().getFacade().sendMail(url)
-        //   }
+        console.log(this.state.chosenEmails)
+        MainController.getInstance().getFacade().sendAIModel(this.state.chosenAIModel!, this.state.chosenEmails!)
+        
     }
 
     private deliverAsExe() {

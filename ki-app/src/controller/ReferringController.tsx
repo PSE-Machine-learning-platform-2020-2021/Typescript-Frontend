@@ -74,8 +74,7 @@ export class RefferingController implements PageController {
                 break;
             //nur für testdeliveryPage
             case States.ChangeToDelivery:
-                MainController.getInstance().changeTo( new DeliveryController(
-                    { projectID: -100, projectName: 'test', AIModelID: [ -2, -3 ] }, -2 ) );
+                this.loadModel();
                 break;
             default:
                 break;
@@ -96,6 +95,7 @@ export class RefferingController implements PageController {
                 this.state.projectData! = [];
                 let projectData: Promise<{ projectID: number; projectName: string; AIModelID: number[]; }[]> = MainController.getInstance().getFacade().getProjectMetas();
                 projectData.then( ( data: { projectID: number; projectName: string; AIModelID: number[]; }[] ) => {
+                    console.log(data)
                     this.state.projectData! = data;
                     this.page.setState( this.state );
                 } );
@@ -215,7 +215,7 @@ export class RefferingController implements PageController {
         this.page.setState( this.state );
         sucess.then( ( value: boolean ) => {
             if ( value ) {
-                let deliveryConroller: DeliveryController = new DeliveryController( this.state.currentProject!, this.state.chosenAIModel! );
+                let deliveryConroller: DeliveryController = new DeliveryController( this.state.chosenAIModel! );
                 MainController.getInstance().changeTo( deliveryConroller );
             } else {
                 this.state.currentState = States.LoadError;

@@ -483,7 +483,7 @@ export class Facade {
    * @param recipients - Die Liste der E-Mail-Adressen, an die das KI-Modell verteilt werden soll.
    * @returns True, wenn die Anfrage an den Server erfolgreich durchgeführt werden konnte, False sonst.
    */
-  sendAIModel(model: number, ...recipients: string[]): boolean {
+  sendAIModel(model: number, recipients: string[]): boolean {
     const distributor = new AIDistributor(model, DeliveryFormat.WEB_APP);
     return distributor.sendAIModel(recipients);
   }
