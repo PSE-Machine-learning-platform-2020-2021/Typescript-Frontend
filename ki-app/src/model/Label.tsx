@@ -65,5 +65,7 @@ export class Label {
 export interface ILabel {
   name: string,
   labelID: number,
-  span: ISpan;
+  span: ISpan,
+  start?: number,
+  end?: number;
 }

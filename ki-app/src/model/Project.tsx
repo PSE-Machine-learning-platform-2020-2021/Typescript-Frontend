@@ -48,7 +48,6 @@ export class Project {
           entry.dataRows,
           entry.label
         );
-
         this.dataSet.push(dataSet);
       }
     }

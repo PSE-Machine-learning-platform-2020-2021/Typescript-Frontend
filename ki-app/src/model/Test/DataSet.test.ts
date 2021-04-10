@@ -1,13 +1,13 @@
 import { DataSet } from "../DataSet";
 import { ILabel } from "../Label";
-import { AccelerometerData, GyroscopeData } from "../SensorData";
+import { SensorData } from "../SensorData";
 
 /**
  * Prüft die einfache Nutzung
  */
 test("creat and getter", () => {
     //Konstruktor ohne zusätze
-    var sensor = new AccelerometerData(111, "oben", "Samsung");
+    const sensor: SensorData = { id: 111, SensorTypeID: 2, MACADDRESS: "oben", deviceName: "Samsung" };
     var dataSet = new DataSet([sensor], 17, "Die tolle Aufnahme",);
     expect(dataSet.getID()).toBe(17);
     expect(dataSet.getLabels().length).toBe(0);
@@ -55,8 +55,8 @@ test("creat and getter", () => {
  * Prüft, ob addDatapoint ohne geladenen Datenreihen fehlerfrei läuft
  */
 test("addDatapoint without a loaded Datarow", () => {
-    var sensor = new AccelerometerData(111, "oben", "Samsung");
-    var sensor2 = new GyroscopeData(12, "unten", "Apple");
+    const sensor: SensorData = { id: 111, SensorTypeID: 2, MACADDRESS: "oben", deviceName: "Samsung" };
+    const sensor2: SensorData = { id: 12, SensorTypeID: 3, MACADDRESS: "unten", deviceName: "Apple" };
     var dataSet = new DataSet([sensor, sensor2], 17, "Die tolle Aufnahme",);
     //laden getestet in getter und setter test
     //Normale Nutzung Sensor 1
@@ -109,8 +109,8 @@ test("addDatapoint without a loaded Datarow", () => {
  * Prüft, ob addDatapoint mit geladenen Datenreihen fehlerfrei läuft
  */
 test("addDatapoint with a loaded Datarow and Labels", () => {
-    var sensor = new AccelerometerData(111, "oben", "Samsung");
-    var sensor2 = new GyroscopeData(12, "unten", "Apple");
+    const sensor: SensorData = { id: 111, SensorTypeID: 2, MACADDRESS: "oben", deviceName: "Samsung" };
+    const sensor2: SensorData = { id: 12, SensorTypeID: 3, MACADDRESS: "unten", deviceName: "Apple" };
     const dataRows = [
         {
             dataRowID: 0, dataRow: [
@@ -178,8 +178,8 @@ test("addDatapoint with a loaded Datarow and Labels", () => {
  * Prüft, ob createLabel ohne geladenen Labels fehlerfrei läuft
  */
 test("createLabel without loaded Labels", () => {
-    var sensor = new AccelerometerData(111, "oben", "Samsung");
-    var sensor2 = new GyroscopeData(12, "unten", "Apple");
+    const sensor: SensorData = { id: 111, SensorTypeID: 2, MACADDRESS: "oben", deviceName: "Samsung" };
+    const sensor2: SensorData = { id: 12, SensorTypeID: 3, MACADDRESS: "unten", deviceName: "Apple" };
     var dataSet = new DataSet([sensor, sensor2], 32, "Die wundervolle Aufnahme", 132948239);
     //laden getestet in getter und setter test
     //Normale Nutzung
@@ -209,8 +209,8 @@ test("createLabel without loaded Labels", () => {
  * Prüft, ob createLabel mit geladenen Labels fehlerfrei läuft
  */
 test("createLabel with loaded Labels", () => {
-    var sensor = new AccelerometerData(111, "oben", "Samsung");
-    var sensor2 = new GyroscopeData(12, "unten", "Apple");
+    const sensor: SensorData = { id: 111, SensorTypeID: 2, MACADDRESS: "oben", deviceName: "Samsung" };
+    const sensor2: SensorData = { id: 12, SensorTypeID: 3, MACADDRESS: "unten", deviceName: "Apple" };
     const dataRows = [
         {
             dataRowID: 0, dataRow: [
@@ -270,8 +270,8 @@ test("createLabel with loaded Labels", () => {
  * Prüft, ob setLabel fehlerfrei läuft
  */
 test("setLabel", () => {
-    var sensor = new AccelerometerData(111, "oben", "Samsung");
-    var sensor2 = new GyroscopeData(12, "unten", "Apple");
+    const sensor: SensorData = { id: 111, SensorTypeID: 2, MACADDRESS: "oben", deviceName: "Samsung" };
+    const sensor2: SensorData = { id: 12, SensorTypeID: 3, MACADDRESS: "unten", deviceName: "Apple" };
     const dataRows = [
         {
             dataRowID: 0, dataRow: [
@@ -336,8 +336,8 @@ test("setLabel", () => {
  * Prüft, ob deleteLabel fehlerfrei läuft
  */
 test("deleteLabel", () => {
-    var sensor = new AccelerometerData(111, "oben", "Samsung");
-    var sensor2 = new GyroscopeData(12, "unten", "Apple");
+    const sensor: SensorData = { id: 111, SensorTypeID: 2, MACADDRESS: "oben", deviceName: "Samsung" };
+    const sensor2: SensorData = { id: 12, SensorTypeID: 3, MACADDRESS: "unten", deviceName: "Apple" };
     const dataRows = [
         {
             dataRowID: 0, dataRow: [

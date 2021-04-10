@@ -2,7 +2,7 @@ import { IDataPoint } from "../DataPoint";
 import { IDataRowRID } from "../DataRow";
 import { ILabel } from "../Label";
 import { IProjectData, Project } from "../Project";
-import { AccelerometerData, GyroscopeData, SensorData } from "../SensorData";
+import { SensorData } from "../SensorData";
 import { IProject } from "../User";
 
 //1. Projekt (ohne extra Daten)
@@ -15,16 +15,16 @@ var projectName1: string;
 var projectID2: number;
 var sessionID2: number;
 var projectName2: string;
-var sensor: AccelerometerData | GyroscopeData;
-var dataRowSensors1: (AccelerometerData | GyroscopeData)[];
+var sensor: SensorData;
+var dataRowSensors1: SensorData[];
 var dataSetID1: number;
 var dataSetName1: string;
 var generateDate1: number;
 var dataRow1: IDataPoint[][];
 var dataRows1: IDataRowRID[];
 var labels1: ILabel[];
-var sensor2: AccelerometerData | GyroscopeData;
-var dataRowSensors2: (AccelerometerData | GyroscopeData)[];
+var sensor2: SensorData;
+var dataRowSensors2: SensorData[];
 var dataSetID2: number;
 var dataSetName2: string;
 var generateDate2: number;
@@ -54,7 +54,7 @@ function clearStart() {
     projectID2 = 931;
     sessionID2 = 233;
     projectName2 = "Bingo";
-    sensor = new AccelerometerData(12, "abc", "Bernd");
+    sensor = { id: 12, SensorTypeID: 2, MACADDRESS: "abc", deviceName: "Bernd" };
     dataRowSensors1 = [sensor, sensor];
     dataSetID1 = 42;
     dataSetName1 = "Renn!";
@@ -62,7 +62,7 @@ function clearStart() {
     dataRow1 = [[{ value: [234, 1234, 5463], relativeTime: 165 }, { value: [2345, 12, 4], relativeTime: 166 }], [{ value: [24, 124, 563], relativeTime: 1625 }, { value: [23425, 122, 224], relativeTime: 1626 }]];
     dataRows1 = [{ dataRowID: 12, dataRow: dataRow1[0] }, { dataRowID: 77, dataRow: dataRow1[1] }];
     labels1 = [{ name: "er Rennt", labelID: 26, span: { start: 15, end: 22 } }, { name: "er Rennt wieder", labelID: 27, span: { start: 26, end: 44 } }];
-    sensor2 = new GyroscopeData(13, "cdf", "Greta");
+    sensor2 = { id: 13, SensorTypeID: 3, MACADDRESS: "cdf", deviceName: "Greta" };
     dataRowSensors2 = [sensor, sensor2];
     dataSetID2 = 43;
     dataSetName2 = "RUN!";

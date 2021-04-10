@@ -4,7 +4,7 @@ import { Language, LanguageMessages } from "./Language";
 import { Admin, Dataminer, AIModelUser, User } from "./User";
 import { AIBuilder } from "./AIBuilder";
 import { AIDistributor } from "./AIDistributor";
-import { AccelerometerData, GyroscopeData, SensorData } from "./SensorData";
+import { SensorData } from "./SensorData";
 import { AIController } from "../controller/AIController";
 import { IDataRowST } from "./DataRow";
 import { ILabel } from "./Label";
@@ -99,14 +99,7 @@ export class Facade {
       ///////////////////////////////DUMMY
       var sensoren: SensorData[] = [];
       for (let i = 0; i < sensorTypeID.length; i++) {
-        switch (sensorTypeID[i]) {
-          case 2:
-            sensoren.push(new AccelerometerData(-1, "", ""));
-            break;
-          case 3:
-            sensoren.push(new GyroscopeData(-1, "", ""));
-            break;
-        }
+        sensoren.push({ id: -1, SensorTypeID: sensorTypeID[i], MACADDRESS: "", deviceName: "" });
       }
       if (this.user.createDataSet(sensoren, dataSetID, dataSetName) || this.user.getName() === AIController.AI_MODEL_USER_NAME) {
         return dataSetID;

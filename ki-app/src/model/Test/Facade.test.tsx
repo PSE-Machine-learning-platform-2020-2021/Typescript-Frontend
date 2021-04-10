@@ -1,6 +1,6 @@
 import { Facade } from "../Facade";
 import { DatabaseConnector } from "../DatabaseConnector";
-import { AccelerometerData, SensorData } from "../SensorData";
+import { SensorData } from "../SensorData";
 import { Admin, User } from "../User";
 import { AIBuilder } from "../AIBuilder";
 import { DeliveryFormat } from "../DeliveryFormat";
@@ -109,7 +109,6 @@ test("Login, load Project, createDataSet", async () => {
     const success = await promiseN;
     expect(success).toBeGreaterThan(0);
     expect(inputDB).toStrictEqual({ sessionID: 1, projectID: 1, userID: loginData.admin.adminID, dataSetName: "TEST", dataRow: [{ sensorID: 2, datarowName: "TEST_ROW" }] });
-    expect(inputUser).toStrictEqual({ sensoren: [new AccelerometerData(-1, "", "")], dataSetID: 99, dataSetName: "TEST" });
 });
 
 test("login und sendDataPoint", async () => {

@@ -1,11 +1,11 @@
 import { DataRow } from "../DataRow";
-import { AccelerometerData } from "../SensorData";
+import { SensorData } from "../SensorData";
 
 /**
  * Prüft die einfache Nutzung, erstellen und prüfen ob der getter dies wieder zurück gibt
  */
 test("creat and getter", () => {
-  let sensorData1 = new AccelerometerData(234, "00-14-22-01-23-45", "Hubert");
+  let sensorData1: SensorData = { id: 234, SensorTypeID: 2, MACADDRESS: "00-14-22-01-23-45", deviceName: "Hubert" };
   let datarow1 = new DataRow(sensorData1, 27);
   expect(datarow1.getDataRow().datapoint.length).toBe(0);
   expect(datarow1.getID()).toBe(27);
@@ -36,7 +36,7 @@ test("creat and getter", () => {
  * pos1 < length && pos2 < length...
  */
 test("addDatapoint many points", () => {
-  const sensorData = new AccelerometerData(1, "00-14-22-01-23-45", "Hubert");
+  const sensorData: SensorData = { id: 1, SensorTypeID: 2, MACADDRESS: "00-14-22-01-23-45", deviceName: "Hubert" };
   const datarow = new DataRow(sensorData, 27);
   const length = 50;
   const value0 = [1, 1, 1];
@@ -82,7 +82,7 @@ test("addDatapoint many points", () => {
  * value nicht leer
  */
 test("addDatapoint with negative relativeTime", () => {
-  const sensorData = new AccelerometerData(1, "00-14-22-01-23-45", "Hubert");
+  const sensorData: SensorData = { id: 1, SensorTypeID: 2, MACADDRESS: "00-14-22-01-23-45", deviceName: "Hubert" };
   const datarow = new DataRow(sensorData, 27);
   const value = [1, 1, 1];
   const relativeTime = -1;
@@ -96,7 +96,7 @@ test("addDatapoint with negative relativeTime", () => {
  * value leer
  */
 test("addDatapoint with empty value", () => {
-  const sensorData = new AccelerometerData(1, "00-14-22-01-23-45", "Hubert");
+  const sensorData: SensorData = { id: 1, SensorTypeID: 2, MACADDRESS: "00-14-22-01-23-45", deviceName: "Hubert" };
   const datarow = new DataRow(sensorData, 27);
   const value: number[] = [];
   const relativeTime = 1;
@@ -104,7 +104,7 @@ test("addDatapoint with empty value", () => {
 });
 
 test("addDatapoint with wrong value length", () => {
-  const sensorData = new AccelerometerData(1, "00-14-22-01-23-45", "Hubert");
+  const sensorData: SensorData = { id: 1, SensorTypeID: 2, MACADDRESS: "00-14-22-01-23-45", deviceName: "Hubert" };
   const datarow = new DataRow(sensorData, 27);
   var value: number[] = [1, 2, 3];
   var relativeTime = 1;
