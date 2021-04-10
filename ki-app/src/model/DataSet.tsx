@@ -1,6 +1,8 @@
-import { DataRow } from "./DataRow";
-import { Label } from "./Label";
+import { IDataPoint } from "./DataPoint";
+import { DataRow, IDataRowRID, IDataRowST } from "./DataRow";
+import { ILabel, Label } from "./Label";
 import { SensorData } from "./SensorData";
+import { ISpan } from "./TimeSpan";
 
 /**
  * Die Klasse fasst Datenreihen, welche Sensorwerte und deren relative Zeit besitzen, zu einem Datensatz zusammen.
@@ -31,8 +33,8 @@ export class DataSet {
    * @param dataRows die schon existierenden Datenreihen
    * @param label die schon existierenden Labels
    */
-  constructor(dataRowSensors: SensorData[], dataSetID: number, dataSetName: string, generateDate: number, dataRows: { dataRowID: number, dataRow: { value: number[], relativeTime: number; }[]; }[], label: { name: string, labelID: number, start: number, end: number; }[]);
-  constructor(dataRowSensors: SensorData[], dataSetID: number, dataSetName: string, generateDate?: number, dataRows?: { dataRowID: number, dataRow: { value: number[], relativeTime: number; }[]; }[], label?: { name: string, labelID: number, start: number, end: number; }[]) {
+  constructor(dataRowSensors: SensorData[], dataSetID: number, dataSetName: string, generateDate: number, dataRows: IDataRowRID[], label: ILabel[]);
+  constructor(dataRowSensors: SensorData[], dataSetID: number, dataSetName: string, generateDate?: number, dataRows?: IDataRowRID[], label?: ILabel[]) {
     if (dataRows != null) {
       for (let i = 0; i < dataRows.length && i < dataRowSensors.length; i++) {
         this.dataRow.push(new DataRow(dataRowSensors[i], dataRows[i].dataRowID, dataRows[i].dataRow));
@@ -44,7 +46,7 @@ export class DataSet {
     }
     if (label != null) {
       for (let i = 0; i < label.length; i++) {
-        this.label.push(new Label(label[i].name, label[i].labelID, label[i].start, label[i].end));
+        this.label.push(new Label(label[i].name, label[i].labelID, label[i].span));
       }
     }
     if (generateDate != null) {
@@ -70,7 +72,7 @@ export class DataSet {
     return this.name;
   }
 
-  addDatapoint(dataRowID: number, datapoint: { value: number[], relativeTime: number; }): boolean {
+  addDatapoint(dataRowID: number, datapoint: IDataPoint): boolean {
     for (let i = 0; i < this.dataRow.length; i++) {
       if (this.dataRow[i].getID() === dataRowID) {
         return this.dataRow[i].addDatapoint(datapoint);
@@ -83,8 +85,8 @@ export class DataSet {
    * Gibt alle Datenreihen zurück.
    * @returns Ein zwei Dimensionales Array, die Erste Dimension wählt die Datenreihe und die zweite Dimension den Datenpunkt.
    */
-  public getDataRows(): { sensorType: number, datapoint: { value: number[], relativeTime: number; }[]; }[] {
-    var dataRows: { sensorType: number, datapoint: { value: number[], relativeTime: number; }[]; }[] = [];
+  public getDataRows(): IDataRowST[] {
+    var dataRows: IDataRowST[] = [];
     for (let i = 0; i < this.dataRow.length; i++) {
       dataRows.push(this.dataRow[i].getDataRow());
     }
@@ -99,7 +101,7 @@ export class DataSet {
    * @param end die Endzeit des Zeitfensters in Millisekunden
    * @returns falls das Label mit der ID schon existiert wird false zurück gegeben
    */
-  public createLabel(labelID: number, span: { start: number, end: number; }, labelName: string): boolean {
+  public createLabel(labelID: number, span: ISpan, labelName: string): boolean {
     if (labelID < 0 || span.start < 0 || span.end < span.start) {
       return false;
     }
@@ -108,7 +110,7 @@ export class DataSet {
         return false;
       }
     }
-    this.label.push(new Label(labelName, labelID, span.start, span.end));
+    this.label.push(new Label(labelName, labelID, span));
     return true;
   }
 
@@ -119,7 +121,7 @@ export class DataSet {
    * @param labelName Ist bei Angabe der neue Name des Labels.
    * @returns falls das Label nicht existiert wird false zurück gegeben
    */
-  public setLabel(labelID: number, span: { start: number, end: number; }, labelName?: string): boolean {
+  public setLabel(labelID: number, span: ISpan, labelName?: string): boolean {
     for (let i = 0; i < this.label.length; i++) {
       if (this.label[i].getID() === labelID) {
         return this.label[i].setLabel(span, labelName);
@@ -134,7 +136,7 @@ export class DataSet {
    */
   public deleteLabel(labelID: number): boolean {
     for (let i = 0; i < this.label.length; i++) {
-      if (this.label[i].getID() === labelID) { //keine absolute gleichheit!
+      if (this.label[i].getID() === labelID) {
         this.label.splice(i, 1);
         return true;
       }
@@ -145,11 +147,19 @@ export class DataSet {
   /**
    * Gibt alle Daten von allen Labeln zurück.
    */
-  public getLabels(): { name: string, labelID: number, start: number, end: number; }[] {
-    var labelList: { name: string, labelID: number, start: number, end: number; }[] = [];
+  public getLabels(): ILabel[] {
+    var labelList: ILabel[] = [];
     for (let i = 0; i < this.label.length; i++) {
       labelList.push(this.label[i].getLabel());
     }
     return labelList;
   }
+}
+export interface IDataSet {
+  dataRowSensors: SensorData[],
+  dataSetID: number,
+  dataSetName: string,
+  generateDate: number,
+  dataRows: IDataRowRID[],
+  label: ILabel[];
 }

@@ -51,8 +51,8 @@ export class Session {
   /**
    * Gibt von allen verbundenen Usern die ID und den Namen zurück
    */
-  getConnectedUsers(): { userID: number, userName: string; }[] {
-    var users: { userID: number, userName: string; }[] = [];
+  getConnectedUsers(): IUserInfo[] {
+    var users: IUserInfo[] = [];
     for (let i = 0; i < this.connectedUser.length; i++) {
       users.push({ userID: this.connectedUser[i].getID(), userName: this.connectedUser[i].getName() });
     }
@@ -65,4 +65,9 @@ export class Session {
   getID(): number {
     return this.id;
   }
+}
+
+export interface IUserInfo {
+  userID: number,
+  userName: string;
 }

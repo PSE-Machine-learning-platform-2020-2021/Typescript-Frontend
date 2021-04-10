@@ -281,8 +281,10 @@ test("Label erlangen", async () => {
             labels: [{
                 name: "TEST",
                 labelID: 5,
-                start: 1,
-                end: 4
+                span: {
+                    start: 1,
+                    end: 4
+                }
             }]
         };
     });

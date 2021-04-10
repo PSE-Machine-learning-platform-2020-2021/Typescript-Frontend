@@ -11,14 +11,14 @@ export class TimeSpan {
    * @param start Startpunkt in Sekunden (start >= 0)
    * @param end Endpunkt in Sekunden (end >= start)
    */
-  public constructor(start: number, end: number) {
-    if (start >= 0) {
-      this.start = start;
+  public constructor(span: ISpan) {
+    if (span.start >= 0) {
+      this.start = span.start;
     } else {
       this.start = 0;
     }
-    if (end >= this.start) {
-      this.end = end;
+    if (span.end >= this.start) {
+      this.end = span.end;
     } else {
       this.end = this.start;
     }
@@ -28,7 +28,7 @@ export class TimeSpan {
    * Setzt das übergebene Zeitfenster als Zeitfenster, wenn dies den Anforderungen entspricht. (0 <= start <= end)
    * @returns false, falls das Zeitfenster nicht gesetzt wurde
    */
-  public setTimeSpan(span: { start: number, end: number; }): boolean {
+  public setTimeSpan(span: ISpan): boolean {
     if (span.end >= span.start && span.start >= 0) {
       this.start = span.start;
       this.end = span.end;
@@ -50,4 +50,8 @@ export class TimeSpan {
   public getEnd(): number {
     return this.end;
   }
+}
+export interface ISpan {
+  start: number,
+  end: number;
 }

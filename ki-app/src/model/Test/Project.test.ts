@@ -1,5 +1,9 @@
-import { Project } from "../Project";
+import { IDataPoint } from "../DataPoint";
+import { IDataRowRID } from "../DataRow";
+import { ILabel } from "../Label";
+import { IProjectData, Project } from "../Project";
 import { AccelerometerData, GyroscopeData, SensorData } from "../SensorData";
+import { IProject } from "../User";
 
 //1. Projekt (ohne extra Daten)
 var projectID1: number;
@@ -16,25 +20,25 @@ var dataRowSensors1: (AccelerometerData | GyroscopeData)[];
 var dataSetID1: number;
 var dataSetName1: string;
 var generateDate1: number;
-var dataRow1: { value: number[], relativeTime: number; }[][];
-var dataRows1: { dataRowID: number, dataRow: { value: number[], relativeTime: number; }[]; }[];
-var labels1: { name: string, labelID: number, start: number, end: number; }[];
+var dataRow1: IDataPoint[][];
+var dataRows1: IDataRowRID[];
+var labels1: ILabel[];
 var sensor2: AccelerometerData | GyroscopeData;
 var dataRowSensors2: (AccelerometerData | GyroscopeData)[];
 var dataSetID2: number;
 var dataSetName2: string;
 var generateDate2: number;
-var dataRow2: { value: number[], relativeTime: number; }[][];
-var dataRows2: { dataRowID: number, dataRow: { value: number[], relativeTime: number; }[]; }[];
-var labels2: { name: string, labelID: number, start: number, end: number; }[];
-var projectData1: { dataSet: { dataRowSensors: (AccelerometerData | GyroscopeData)[], dataSetID: number, dataSetName: string, generateDate: number, dataRows: { dataRowID: number, dataRow: { value: number[], relativeTime: number; }[]; }[], label: { name: string, labelID: number, start: number, end: number; }[]; }[]; };
+var dataRow2: IDataPoint[][];
+var dataRows2: IDataRowRID[];
+var labels2: ILabel[];
+var projectData1: IProjectData;
 //new Project(projectID2, sessionID2, projectName2, projectData1);
 
 //3. Projekt (mit Datensatz mit AIModelID)
-var projectData2: { aiModelID: number[], dataSet: { dataRowSensors: (AccelerometerData | GyroscopeData)[], dataSetID: number, dataSetName: string, generateDate: number, dataRows: { dataRowID: number, dataRow: { value: number[], relativeTime: number; }[]; }[], label: { name: string, labelID: number, start: number, end: number; }[]; }[]; };
+var projectData2: IProjectData;
 //new Project(projectID2, sessionID2, projectName2, projectData2);
 
-var projectData: { aiModelID?: number[], dataSet: { dataRowSensors: SensorData[], dataSetID: number, dataSetName: string, generateDate?: number, dataRows: { dataRowID: number, dataRow: { value: number[], relativeTime: number; }[]; }[], label?: { name: string, labelID: number, start: number, end: number; }[]; }[]; };
+var projectData: IProjectData;
 
 /**
  * Sollte vor jedem Test ausgeführt werden, es lädt die erwarteten Daten.
@@ -57,7 +61,7 @@ function clearStart() {
     generateDate1 = 1234567;
     dataRow1 = [[{ value: [234, 1234, 5463], relativeTime: 165 }, { value: [2345, 12, 4], relativeTime: 166 }], [{ value: [24, 124, 563], relativeTime: 1625 }, { value: [23425, 122, 224], relativeTime: 1626 }]];
     dataRows1 = [{ dataRowID: 12, dataRow: dataRow1[0] }, { dataRowID: 77, dataRow: dataRow1[1] }];
-    labels1 = [{ name: "er Rennt", labelID: 26, start: 15, end: 22 }, { name: "er Rennt wieder", labelID: 27, start: 26, end: 44 }];
+    labels1 = [{ name: "er Rennt", labelID: 26, span: { start: 15, end: 22 } }, { name: "er Rennt wieder", labelID: 27, span: { start: 26, end: 44 } }];
     sensor2 = new GyroscopeData(13, "cdf", "Greta");
     dataRowSensors2 = [sensor, sensor2];
     dataSetID2 = 43;
@@ -65,7 +69,7 @@ function clearStart() {
     generateDate2 = 13337;
     dataRow2 = [[{ value: [7, 6, 5], relativeTime: 14 }, { value: [22, 33, 44], relativeTime: 236 }], [{ value: [24, 25, 26], relativeTime: 165 }, { value: [25, 24, 23], relativeTime: 22 }]];
     dataRows2 = [{ dataRowID: 1, dataRow: dataRow2[0] }, { dataRowID: 777, dataRow: dataRow2[1] }];
-    labels2 = [{ name: "er lauft", labelID: 28, start: 150, end: 220 }, { name: "er lauft wieder", labelID: 29, start: 260, end: 440 }];
+    labels2 = [{ name: "er lauft", labelID: 28, span: { start: 150, end: 220 } }, { name: "er lauft wieder", labelID: 29, span: { start: 260, end: 440 } }];
     projectData1 = { dataSet: [{ dataRowSensors: dataRowSensors1, dataSetID: dataSetID1, dataSetName: dataSetName1, generateDate: generateDate1, dataRows: dataRows1, label: labels1 }, { dataRowSensors: dataRowSensors2, dataSetID: dataSetID2, dataSetName: dataSetName2, generateDate: generateDate2, dataRows: dataRows2, label: labels2 }] };
     //new Project(projectID2, sessionID2, projectName2, projectData1);
 
@@ -118,7 +122,7 @@ test("addDatapoint without loaded Datasets", () => {
     var dataSetName = "Alter Schwede";
     //Normale Benutzung
     expect(project.createDataSet(dataRowSensors2, dataSetID, dataSetName)).toBeTruthy();
-    projectData = { dataSet: [{ dataRowSensors: dataRowSensors2, dataSetID, dataSetName: dataSetName, dataRows: [{ dataRowID: 0, dataRow: [] }, { dataRowID: 1, dataRow: [] }] }] };
+    projectData = { dataSet: [{ dataRowSensors: dataRowSensors2, dataSetID, dataSetName: dataSetName, generateDate: 12, dataRows: [{ dataRowID: 0, dataRow: [] }, { dataRowID: 1, dataRow: [] }], label: [] }] };
     var currentDataRows = dataRowSensors2.length; //Da die Sensoren leere Datenreihen anlegen
     expect(project.addDatapoint(0, { value: [1, 2, 3], relativeTime: 12 })).toBeTruthy();
     projectData.dataSet[0].dataRows[0].dataRow.push({ value: [1, 2, 3], relativeTime: 12 });
@@ -236,7 +240,7 @@ test("createDataSet without loaded Datasets", () => {
     var dataSetName = "Alter Schwede";
     //Normale Benutzung
     expect(project.createDataSet(dataRowSensors2, dataSetID, dataSetName)).toBeTruthy();
-    var projectData = { dataSet: [{ dataRowSensors: dataRowSensors2, dataSetID, dataSetName: dataSetName, dataRows: [{ dataRowID: 0, dataRow: [] }, { dataRowID: 1, dataRow: [] }] }] };
+    var projectData: IProjectData = { dataSet: [{ dataRowSensors: dataRowSensors2, dataSetID, dataSetName: dataSetName, generateDate: 123, dataRows: [{ dataRowID: 0, dataRow: [] }, { dataRowID: 1, dataRow: [] }], label: [] }] };
     var currentDataRows = dataRowSensors2.length; //Da die Sensoren leere Datenreihen anlegen
     checkAll(project, projectID, sessionID, projectName, currentDataRows, projectData);
     //Mehrfache Anwendung
@@ -244,7 +248,7 @@ test("createDataSet without loaded Datasets", () => {
     var dataSetNameArr = ["Hi", "Mein", "Name", "ist"];
     for (let i = 0; i < dataSetIDArr.length; i++) {
         expect(project.createDataSet(dataRowSensors2, dataSetIDArr[i], dataSetNameArr[i])).toBeTruthy();
-        projectData.dataSet.push({ dataRowSensors: dataRowSensors2, dataSetID: dataSetIDArr[i], dataSetName: dataSetNameArr[i], dataRows: [{ dataRowID: 0, dataRow: [] }, { dataRowID: 1, dataRow: [] }] });
+        projectData.dataSet.push({ dataRowSensors: dataRowSensors2, dataSetID: dataSetIDArr[i], dataSetName: dataSetNameArr[i], generateDate: 1234, dataRows: [{ dataRowID: 0, dataRow: [] }, { dataRowID: 1, dataRow: [] }], label: [] });
     }
     checkAll(project, projectID, sessionID, projectName, currentDataRows, projectData);
     //Datensatz kann nicht erstellt werden
@@ -275,7 +279,7 @@ test("createDataSet with loaded Datasets", () => {
     var dataSetName = "Mamma mia!";
     expect(project.createDataSet(dataRowSensors2, dataSetID, dataSetName)).toBeTruthy();
     projectData = projectData2;
-    projectData.dataSet.push({ dataRowSensors: dataRowSensors2, dataSetID, dataSetName, dataRows: [{ dataRowID: 0, dataRow: [] }, { dataRowID: 1, dataRow: [] }] });
+    projectData.dataSet.push({ dataRowSensors: dataRowSensors2, dataSetID, dataSetName, generateDate: 42, dataRows: [{ dataRowID: 0, dataRow: [] }, { dataRowID: 1, dataRow: [] }], label: [] });
     var currentDataRows = dataRowSensors2.length; //Da die Sensoren leere Datenreihen anlegen
     checkAll(project, projectID, sessionID, projectName, currentDataRows, projectData);
     //Mehrfache Anwendung
@@ -283,7 +287,7 @@ test("createDataSet with loaded Datasets", () => {
     var dataSetNameArr = ["Hi", "Mein", "Name", "ist"];
     for (let i = 0; i < dataSetIDArr.length; i++) {
         expect(project.createDataSet(dataRowSensors2, dataSetIDArr[i], dataSetNameArr[i])).toBeTruthy();
-        projectData.dataSet.push({ dataRowSensors: dataRowSensors2, dataSetID: dataSetIDArr[i], dataSetName: dataSetNameArr[i], dataRows: [{ dataRowID: 0, dataRow: [] }, { dataRowID: 1, dataRow: [] }] });
+        projectData.dataSet.push({ dataRowSensors: dataRowSensors2, dataSetID: dataSetIDArr[i], dataSetName: dataSetNameArr[i], generateDate: 2341, dataRows: [{ dataRowID: 0, dataRow: [] }, { dataRowID: 1, dataRow: [] }], label: [] });
     }
     checkAll(project, projectID, sessionID, projectName, currentDataRows, projectData);
     //Datensatz kann nicht erstellt werden
@@ -311,17 +315,17 @@ test("createLabel", () => {
     //Normale benutzung auf aktueller Datenreihe
     project.getDataRows(dataSetID2); //Datensatz mit DatensatzID 43 als aktuellen Datensatz laden
     expect(project.createLabel(279, { start: 5, end: 17 }, "Aufstehen")).toBeTruthy();
-    projectData.dataSet[1].label!.push({ name: "Aufstehen", labelID: 279, start: 5, end: 17 });
+    projectData.dataSet[1].label!.push({ name: "Aufstehen", labelID: 279, span: { start: 5, end: 17 } });
     project.getDataRows(dataSetID1); //Datensatz mit DatensatzID 42 als aktuellen Datensatz laden
     expect(project.createLabel(289, { start: 18, end: 18 }, "Pennen")).toBeTruthy();
-    projectData.dataSet[0].label!.push({ name: "Pennen", labelID: 289, start: 18, end: 18 });
+    projectData.dataSet[0].label!.push({ name: "Pennen", labelID: 289, span: { start: 18, end: 18 } });
     var currentDataRows = 2;
     checkAll(project, projectID, sessionID, projectName, currentDataRows, projectData);
     //Bei neu erstelltem Datensatz
     project.createDataSet(dataRowSensors2, dataSetID, dataSetName);
-    projectData.dataSet.push({ dataRowSensors: dataRowSensors2, dataSetID, dataSetName, dataRows: [{ dataRowID: 0, dataRow: [] }, { dataRowID: 1, dataRow: [] }], label: [] });
+    projectData.dataSet.push({ dataRowSensors: dataRowSensors2, dataSetID, dataSetName, generateDate: 2342, dataRows: [{ dataRowID: 0, dataRow: [] }, { dataRowID: 1, dataRow: [] }], label: [] });
     expect(project.createLabel(299, { start: 19, end: 22 }, "Pennen 2.0")).toBeTruthy();
-    projectData.dataSet[2].label!.push({ name: "Pennen 2.0", labelID: 299, start: 19, end: 22 });
+    projectData.dataSet[2].label!.push({ name: "Pennen 2.0", labelID: 299, span: { start: 19, end: 22 } });
     checkAll(project, projectID, sessionID, projectName, currentDataRows, projectData);
     //Bei fehlerhaften übergabe
     expect(project.createLabel(-1, { start: 19, end: 22 }, "Pennen 2.0")).toBeFalsy();
@@ -351,22 +355,22 @@ test("setLabel", () => {
     //Normale benutzung auf aktueller Datenreihe
     project.getDataRows(dataSetID1); //Datensatz mit DatensatzID 43 als aktuellen Datensatz laden
     expect(project.setLabel(26, { start: 5, end: 17 }, "Aufstehen")).toBeTruthy();
-    projectData.dataSet[0].label![0] = { name: "Aufstehen", labelID: 26, start: 5, end: 17 };
+    projectData.dataSet[0].label![0] = { name: "Aufstehen", labelID: 26, span: { start: 5, end: 17 } };
     expect(project.setLabel(27, { start: 12, end: 15 },)).toBeTruthy();
-    projectData.dataSet[0].label![1] = { name: labels1[1].name, labelID: 27, start: 12, end: 15 };
+    projectData.dataSet[0].label![1] = { name: labels1[1].name, labelID: 27, span: { start: 12, end: 15 } };
     project.getDataRows(dataSetID2); //Datensatz mit DatensatzID 42 als aktuellen Datensatz laden
     expect(project.setLabel(28, { start: 17, end: 20 }, "Pennen")).toBeTruthy();
-    projectData.dataSet[1].label![0] = { name: "Pennen", labelID: 28, start: 17, end: 20 };
+    projectData.dataSet[1].label![0] = { name: "Pennen", labelID: 28, span: { start: 17, end: 20 } };
     expect(project.setLabel(29, { start: 18, end: 130 })).toBeTruthy();
-    projectData.dataSet[1].label![1] = { name: labels2[1].name, labelID: 29, start: 18, end: 130 };
+    projectData.dataSet[1].label![1] = { name: labels2[1].name, labelID: 29, span: { start: 18, end: 130 } };
     var currentDataRows = 2;
     checkAll(project, projectID, sessionID, projectName, currentDataRows, projectData);
     //Bei neu erstelltem Datensatz
     project.createDataSet(dataRowSensors2, dataSetID, dataSetName);
     project.createLabel(30, { start: 15, end: 22 }, "er lief");
-    projectData.dataSet.push({ dataRowSensors: dataRowSensors2, dataSetID, dataSetName, dataRows: [{ dataRowID: 0, dataRow: [] }, { dataRowID: 1, dataRow: [] }], label: [{ name: "er lief", labelID: 30, start: 15, end: 22 }] });
+    projectData.dataSet.push({ dataRowSensors: dataRowSensors2, dataSetID, dataSetName, generateDate: 456, dataRows: [{ dataRowID: 0, dataRow: [] }, { dataRowID: 1, dataRow: [] }], label: [{ name: "er lief", labelID: 30, span: { start: 15, end: 22 } }] });
     expect(project.setLabel(30, { start: 19, end: 23 }, "Pennen 2.0")).toBeTruthy();
-    projectData.dataSet[2].label![0] = { name: "Pennen 2.0", labelID: 30, start: 19, end: 23 };
+    projectData.dataSet[2].label![0] = { name: "Pennen 2.0", labelID: 30, span: { start: 19, end: 23 } };
     checkAll(project, projectID, sessionID, projectName, currentDataRows, projectData);
     //Bei fehlerhaften übergabe
     expect(project.setLabel(-1, { start: 19, end: 22 }, "Pennen 2.0")).toBeFalsy();
@@ -413,7 +417,7 @@ test("deleteLabel", () => {
     //Bei neu erstelltem Datensatz
     project.createDataSet(dataRowSensors2, dataSetID, dataSetName);
     project.createLabel(30, { start: 15, end: 22 }, "er lief");
-    projectData.dataSet.push({ dataRowSensors: dataRowSensors2, dataSetID, dataSetName, dataRows: [{ dataRowID: 0, dataRow: [] }, { dataRowID: 1, dataRow: [] }], label: [{ name: "er lief", labelID: 30, start: 15, end: 22 }] });
+    projectData.dataSet.push({ dataRowSensors: dataRowSensors2, dataSetID, dataSetName, generateDate: 123, dataRows: [{ dataRowID: 0, dataRow: [] }, { dataRowID: 1, dataRow: [] }], label: [{ name: "er lief", labelID: 30, span: { start: 15, end: 22 } }] });
     expect(project.deleteLabel(30)).toBeTruthy();
     projectData.dataSet[2].label!.pop();
     checkAll(project, projectID, sessionID, projectName, currentDataRows, projectData);
@@ -446,7 +450,7 @@ test("deleteLabel", () => {
  * @param currentDataRows Die Anzahl vom aktuellen Datensatz an Datenreihen
  * @param projectData Alle Daten zum AiModel, Datensatz und Label
  */
-function checkAll(project: Project, projectID: number, sessionID: number, projectName: string, currentDataRows?: number, projectData?: { aiModelID?: number[], dataSet: { dataRowSensors: SensorData[], dataSetID: number, dataSetName: string, generateDate?: number, dataRows?: { dataRowID: number, dataRow: { value: number[], relativeTime: number; }[]; }[], label?: { name: string, labelID: number, start: number, end: number; }[]; }[]; }) {
+function checkAll(project: Project, projectID: number, sessionID: number, projectName: string, currentDataRows?: number, projectData?: IProjectData) {
     expect(project.getID()).toBe(projectID);
     expect(project.getSessionID()).toBe(sessionID);
     expect(project.getName()).toBe(projectName);
