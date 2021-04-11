@@ -99,7 +99,7 @@ export default class ProjectList extends Component {
     render() {
         return (
             <section className='projectlist'>
-                <label>ProjektList</label>
+                <label>Projektliste</label>
                 <select onChange={this.handleChange}>
                     <option>Projekt wählen</option>
                     {this.props.projectData.map(projectObj => <option value={projectObj.projectID} key={projectObj.projectID}>{projectObj.projectName}</option>)}
