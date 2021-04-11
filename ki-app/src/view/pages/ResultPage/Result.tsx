@@ -14,9 +14,9 @@ export class ResultPage implements Page {
     private state: State;
     private observers: PageController[] = [];
 
-    private PAGE_TITLE = "Ergebnis"
-    private CLASSIFY = "Klassifiziere, bitte warten"
-    private RELOAD = "Erneut klassifizieren"
+    private static readonly PAGE_TITLE = "Ergebnis"
+    private static readonly CLASSIFY = "Klassifiziere, bitte warten"
+    private static readonly RELOAD = "Erneut klassifizieren"
 
     /**
      * Konstruktor der Darstellungseite
@@ -36,8 +36,8 @@ export class ResultPage implements Page {
         this.notify();
         let VDOM = (
             <div>
-                <h2 className='title'>{this.PAGE_TITLE}</h2>
-                <h1 className='wait'>{this.CLASSIFY}</h1>
+                <h2 className='title'>{ResultPage.PAGE_TITLE}</h2>
+                <h1 className='wait'>{ResultPage.CLASSIFY}</h1>
                 <NotificationContainer />
             </div>)
         if (this.state.aiUserData!.result !== " ") {
@@ -45,7 +45,7 @@ export class ResultPage implements Page {
                 <div>
                     <h2 className='title'>Ergebnis</h2>
                     <h1>{this.state.aiUserData!.result}</h1>
-                    <button className='button' onClick = {this.reloadPage}>{this.RELOAD}</button>
+                    <button className='button' onClick = {this.reloadPage}>{ResultPage.RELOAD}</button>
                     <NotificationContainer />
                 </div>
             );

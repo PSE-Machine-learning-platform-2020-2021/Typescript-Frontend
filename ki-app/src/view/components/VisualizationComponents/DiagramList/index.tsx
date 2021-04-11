@@ -4,6 +4,9 @@ import "./DiagramList.css";
 
 
 export default class DiagramList extends Component {
+    private static readonly T_ACCELEROMETER_DE: string = "Beschleunigungssensor";
+    private static readonly T_GYROSCOPE_DE: string = "Gyroskop";
+    private static readonly T_MAGNETOMETER_DE: string = "Magnetometer";
     private diagrammData: {
 
         datavalue: number,
@@ -87,13 +90,13 @@ export default class DiagramList extends Component {
             var sensorName = '';
             switch (sensor) {
                 case 2:
-                    sensorName = 'Accelerometer';
+                    sensorName = DiagramList.T_ACCELEROMETER_DE;
                     break;
                 case 3:
-                    sensorName = 'Gyroscope';
+                    sensorName = DiagramList.T_GYROSCOPE_DE;
                     break;
                 case 4:
-                    sensorName = 'Magnetometer';
+                    sensorName = DiagramList.T_MAGNETOMETER_DE;
                     break;
                 default:
                     break;

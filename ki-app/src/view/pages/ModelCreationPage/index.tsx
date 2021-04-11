@@ -14,7 +14,7 @@ export class ModelCreationPage implements Page {
 	private state: State;
 	private observers: PageController[] = [];
 
-	private PAGE_TITLE = "Modell Erstellung"
+	private static readonly T_PAGE_TITLE_DE = "Modellerstellung"
 
 	/**
 	* Konstruktor der Modellerstellungsseite.
@@ -33,7 +33,7 @@ export class ModelCreationPage implements Page {
 		this.notify();
 		const VDOM = (
 			<div>
-				<h1 className="title">{this.PAGE_TITLE}</h1>
+				<h1 className="title">{ModelCreationPage.T_PAGE_TITLE_DE}</h1>
 				<Train
 					dataSetMetas={this.state.dataSetMetas!}
 					train={this.train.bind(this)}

@@ -100,7 +100,7 @@ export default class Input extends Component {
        * Die eingegebene Zeit ist ungültig.
        */
       if (isNaN(+this.state.leadTime) || isNaN(+this.state.collectionTime)) {
-        NotificationManager.error("Die Eingabe der Zeit ist ungültig. Nur Ganze Zahlen sind Erlaubt");
+        NotificationManager.error("Die Eingabe der Zeit ist ungültig. Es sind nur ganze Zahlen erlaubt");
         return;
       }
 

@@ -9,7 +9,7 @@ export default class Title extends Component {
     render() {
         return (
             <div>
-                <h1 className={title.title}>Datenerfassungsanwendung</h1>
+                <h1 className={title.title}>Datenerfassung</h1>
             </div>
         );
     }

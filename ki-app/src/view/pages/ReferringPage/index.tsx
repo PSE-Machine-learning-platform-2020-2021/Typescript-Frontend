@@ -17,10 +17,10 @@ export class ReferringPage implements Page {
     private state: State;
     private observers: PageController[] = [];
 
-    private WELCOME = "Wilkommen "
-    private REG_ERROR = "Registrieren fehlgeschlagen!"
-    private MAIL_INVALID = "Email-Adresse nicht gültig"
-    private LOGIN_ERROR = "Login fehlgeschlagen!"
+    private static readonly T_WELCOME_DE = "Wilkommen ";
+    private static readonly E_REG_ERROR_DE = "Registrieren fehlgeschlagen!";
+    private static readonly E_MAIL_INVALID_DE = "Email-Adresse nicht gültig";
+    private static readonly E_LOGIN_ERROR_DE = "Login fehlgeschlagen!";
 
     /**
     * Konstruktor der Darstellungsseite.
@@ -39,10 +39,7 @@ export class ReferringPage implements Page {
         this.notify();
         const VDOM = (
             <div>
-                <ConstantsText
-                //nur für test
-                //changeToDelivery={this.changeToDelivery.bind(this)}
-                />
+                <ConstantsText />
                 <LoginWindow pageRegister={this.register.bind(this)} pageLogin={this.login.bind(this)} />
                 <NewProjectButton disabled={!this.state.islogedIn!}
                     pageNewProject={this.createNewProject.bind(this)}
@@ -57,10 +54,10 @@ export class ReferringPage implements Page {
                     pageLoadModel={this.loadmodel.bind(this)}
                     pageLoadProjekt={this.loadproject.bind(this)}
                     pageChangeToVisu={this.changetovisu.bind(this)}
-                    qr={this.state.qr!} 
+                    qr={this.state.qr!}
                     link={this.state.link!}
-                    />
-                    
+                />
+
                 <NotificationContainer />
             </div>
         );
@@ -124,17 +121,17 @@ export class ReferringPage implements Page {
     private register(username: string, email: string, password: string) {
         var pattern = /^([A-Za-z0-9_\-.])+@([A-Za-z0-9_\-.])+\.([A-Za-z])+$/;
         if (!pattern.test(email)) {
-            NotificationManager.error(this.MAIL_INVALID, "", 3000);
+            NotificationManager.error(ReferringPage.E_MAIL_INVALID_DE, "", 3000);
         } else {
             this.state.adminData! = { name: username, email: email, password: password };
             this.state.currentState = States.Register;
             this.update();
             this.state.wait!.then(() => {
                 if (this.state.currentState as States === States.LoginFail as States) {
-                    NotificationManager.error(this.REG_ERROR, "", 3000);
+                    NotificationManager.error(ReferringPage.E_REG_ERROR_DE, "", 3000);
                     return;
                 }
-                NotificationManager.success(this.WELCOME + this.state.adminData?.email);
+                NotificationManager.success(ReferringPage.T_WELCOME_DE + this.state.adminData?.email);
                 this.update();
             });
         }
@@ -146,19 +143,15 @@ export class ReferringPage implements Page {
      * @param password Passwort des Benutzers
      */
     private login(email: string, password: string) {
-        // console.log(this.state.currentState)
-        // eslint-disable-next-line
         this.state.adminData! = { name: "", email: email, password: password };
-        // eslint-disable-next-line
         this.state.currentState = States.Login;
         this.update();
         this.state.wait!.then(() => {
-            // eslint-disable-next-line
-            if (this.state.currentState as States == States.LoginFail as States) {
-                NotificationManager.error(this.LOGIN_ERROR, "", 3000);
+            if (this.state.currentState as States === States.LoginFail as States) {
+                NotificationManager.error(ReferringPage.E_LOGIN_ERROR_DE, "", 3000);
                 return;
             }
-            NotificationManager.success(this.WELCOME + this.state.adminData?.email);
+            NotificationManager.success(ReferringPage.T_WELCOME_DE + this.state.adminData?.email);
             this.update();
         });
     }
@@ -200,13 +193,6 @@ export class ReferringPage implements Page {
         this.update();
     }
 
-    /**
-    //nur für test DeliveryPage
-    private changeToDelivery() {
-        this.state.currentState = States.ChangeToDelivery;
-        this.notify();
-    }
- */
     /**
      * Setzt einen neuen Zustand für die Seite und aktualisiert sie
      * @param state neuer Zustand für die Seite

@@ -50,14 +50,14 @@ export default class ModelList extends Component {
     render() {
         return (
             <section>
-                <label>ModellList</label>
+                <label>Modell-Liste</label>
                 <select onChange={this.handleChange}>
-                    <option>Modell Wählen</option>
+                    <option>Modell auswählen</option>
                     {this.props.currentProject.AIModelID.map((modelObj) => {
                         return <option value={modelObj} key={modelObj} >Modell{modelObj}</option>;
                     })}
                 </select>
-                <button onClick={() => this.handleChoose()} className="btn" >Laden das gewählte Modell(zu Auslieferungsseite)</button>
+                <button onClick={() => this.handleChoose()} className="btn" >Gewähltes Modell laden (zur Auslieferungsseite)</button>
             </section>
         );
     }

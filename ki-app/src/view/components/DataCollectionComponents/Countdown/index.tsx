@@ -2,7 +2,7 @@ import { Component } from 'react';
 //import { NotificationManager } from 'react-notifications';
 
 export default class Countdown extends Component {
-
+    
     /**
      * die Vorlaufzeit und die gewählte Sensoren, durch props übermittelt
      */

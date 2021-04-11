@@ -15,7 +15,7 @@ export class DeliveryPage implements Page {
 	private state: State;
 	private observers: PageController[] = [];
 
-	private PAGE_TITLE = "Modell Auslieferung"
+	private static readonly T_PAGE_TITLE_DE = "Modellauslieferung";
 
 	/**
 	* Konstruktor der Auslieferungsseite.
@@ -34,7 +34,7 @@ export class DeliveryPage implements Page {
 		this.notify();
 		const VDOM = (
 			<div>
-				<h2 className='title'>{this.PAGE_TITLE}</h2>
+				<h2 className='title'>{DeliveryPage.T_PAGE_TITLE_DE}</h2>
 				<EmailList delivery={this.delivery.bind(this)} />
 				<DownloadButton download={this.download.bind(this)} />
 				<NotificationContainer />
