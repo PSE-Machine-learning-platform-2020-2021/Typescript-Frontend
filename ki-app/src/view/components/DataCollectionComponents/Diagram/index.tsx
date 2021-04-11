@@ -2,6 +2,10 @@ import { Component, CSSProperties } from 'react';
 import './index.css'
 
 export default class Diagram extends Component {
+    private static readonly T_ACCELEROMETER_DE: string = "Beschleunigungssensor";
+    private static readonly T_GYROSCOPE_DE: string = "Gyroskop";
+    private static readonly T_MAGNETOMETER_DE: string = "Magnetometer";
+    private static readonly T_BUTTON_NEXT_DE: string = "Zur Abschlussseite"
 
     /**
      * der Datensatz für Linie-Diagramm und die Funktion für Seitewechsel, durch props übermittelt
@@ -67,15 +71,15 @@ export default class Diagram extends Component {
             /**
                  * unterscheidet, welche Sensor es ist
                  */
-            switch (sensor) {
+             switch (sensor) {
                 case 2:
-                    sensorName = 'Accelerometer';
+                    sensorName = Diagram.T_ACCELEROMETER_DE;
                     break;
                 case 3:
-                    sensorName = 'Gyroscope';
+                    sensorName = Diagram.T_GYROSCOPE_DE;
                     break;
                 case 4:
-                    sensorName = 'Magnetometer';
+                    sensorName = Diagram.T_MAGNETOMETER_DE;
                     break;
             }
             /**
@@ -144,7 +148,7 @@ export default class Diagram extends Component {
             <div>
                 {this.state.diagrammData.lineLabels}
                 <LineChart data={this.state.diagrammData.diagramData} options={this.state.diagrammData.diagramOptions} width="400" height="200" redraw />
-                <button className = 'button' type="button" onClick={this.submit}>ChangeToFinish</button>
+                <button className = 'button' type="button" onClick={this.submit}>{Diagram.T_BUTTON_NEXT_DE}</button>
             </div>
         );
     }

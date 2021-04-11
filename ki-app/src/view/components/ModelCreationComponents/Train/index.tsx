@@ -4,6 +4,47 @@ import { NotificationManager } from 'react-notifications';
 import 'react-notifications/lib/notifications.css';
 import './Train.css';
 export default class Train extends Component {
+	private static readonly T_IMPUTER_MEAN_DE: string = "Arithmetischer Mittelwert";
+	private static readonly T_SCALER_STANDARD_DE: string = "Standard Scaler";
+	private static readonly T_SCALER_ROBUST_DE: string = "Robust Scaler";
+	private static readonly T_SCALER_MIN_MAX_DE: string = "Min-Max Scaler";
+	private static readonly T_SCALER_NORMALIZER_DE: string = "Normalizer";
+	private static readonly T_FEATURE_MIN_DE: string = "Minimum";
+	private static readonly T_FEATURE_MAX_DE: string = "Maximum";
+	private static readonly T_FEATURE_VARIANCE_DE: string = "Varianz";
+	private static readonly T_FEATURE_ENERGY_DE: string = "Energie";
+	private static readonly T_FEATURE_FOURIER_TRANSFORM_DE: string = "Fourier-Transformation";
+	private static readonly T_FEATURE_MEAN_DE: string = "Mittelwert";
+	private static readonly T_FEATURE_AUTOREGRESSIVE_DE: string = "Autoregression";
+	private static readonly T_FEATURE_SKEWNESS_DE: string = "Abweichung";
+	private static readonly T_FEATURE_KURTOSIS_DE: string = "Wölbung";
+	private static readonly T_FEATURE_IQR_DE: string = "Quantil-Regression";
+	private static readonly T_CLASSIFIER_MLP_DE: string = "Multi-Level-Perceptron (Neurales Netz)";
+	private static readonly T_CLASSIFIER_RANDOM_FOREST_DE: string = "Random-Forest-Klassifizierer";
+	private static readonly T_CLASSIFIER_K_NEIGHBORS_DE: string = "K-nächster-Nachbar-Methode";
+	private static readonly T_CLASSIFIER_SVM_DE: string = "Stützvektor-Maschine";
+	private static readonly Q_DATASET_DELETE_DE: string = 'Sind Sie sich sicher, den gewählten Datensatz löschen zu wollen?';
+	private static readonly E_DATASET_EMPTY_SELECTION_DE: string = "Kein Datensatz ausgewählt!";
+	private static readonly E_IMPUTER_MULTI_SELECTION_DE: string = "Es darf nur ein Imputer ausgewählt werden.";
+	private static readonly E_SCALER_MULTI_SELECTION_DE: string = "Es darf nur ein Scaler ausgewählt werden.";
+	private static readonly E_CLASSIFIER_MULTI_SELECTION_DE: string = "Es darf nur ein Klassifizierer ausgewählt werden.";
+	private static readonly E_DATASET_NO_SELECTION_DE: string = "Kein Datensatz ausgewählt!";
+	private static readonly E_IMPUTER_NO_SELECTION_DE: string = "Kein Imputer ausgewählt!";
+	private static readonly E_SCALER_NO_SELECTION_DE: string = "Kein Scaler ausgewählt!";
+	private static readonly E_FEATURE_NO_SELECTION_DE: string = "Keine Merkmale zur Extraktion ausgewählt!";
+	private static readonly E_CLASSIFIER_NO_SELECTION_DE: string = "Kein Klassifizierer ausgewählt!";
+	private static readonly T_DATASET_TITLE_DE: string = "Verwendete Datensätze";
+	private static readonly T_DATASET_DELETE_DE: string = "Löschen";
+	private static readonly T_DATASET_LIST_TITLE_DE: string = "Datensatzliste";
+	private static readonly T_DATASET_LIST_DROPDOWN_DE: string = "Datensatz auswählen";
+	private static readonly T_DATASET_LIST_ADD_DE: string = "Hinzufügen";
+	private static readonly T_DATASET_ADD_DE: string = "Datensatz hinzufügen";
+	private static readonly T_IMPUTER_TITLE_DE: string = "Imputation";
+	private static readonly T_SCALER_TITLE_DE: string = "Normalisierung (Scaling)";
+	private static readonly T_FEATURE_TITLE_DE: string = "Merkmalsextraktion";
+	private static readonly T_CLASSIFIER_TITLE_DE: string = "Klassifizierer";
+	private static readonly T_BUTTON_START_DE: string = "KI-Modell trainieren";
+	private static readonly T_BUTTON_HOME_DE: string = "Zurück zur Verweisseite";
 
 	/**
 	 * Variablen und Methoden welche der Klasse zur verfügung gestellt werden müssen
@@ -24,36 +65,37 @@ export default class Train extends Component {
 		databaseList: [] as { dataSetID: number, dataSetName: string, chosen: boolean; }[],
 		datasets: [] as { dataSetID: number, dataSetName: string, chosen: boolean; }[],
 		imputators: [
-			{ name: "Mittel", checked: true, tag: 'MEAN' },
+			{ name: Train.T_IMPUTER_MEAN_DE,  checked: true,  tag: 'MEAN'    },
 			/*			NOT IMPLEMENTED
-						{ name: "Letzer Wert fortgeführt", checked: false, tag: 'FORWARD' },
-						{ name: "Bewegter Durchschnitt", checked: false, tag: 'MOVING' },
-						{ name: "Lineare Interpolation", checked: false, tag: 'LINEAR' },
-						{ name: "Spline Interpolation", checked: false, tag: 'SPLINE' }*/
+			{ name: "Letze Werte fortführen", checked: false, tag: 'FORWARD' },
+			{ name: "Bewegter Durchschnitt",  checked: false, tag: 'MOVING'  },
+			{ name: "Lineare Interpolation",  checked: false, tag: 'LINEAR'  },
+			{ name: "Spline Interpolation",   checked: false, tag: 'SPLINE'  }*/
 		],
 		scalers: [
-			{ name: "Standard Scaler", checked: false, tag: 'STANDARD' },
-			{ name: "Robust Scaler", checked: false, tag: 'ROBUST' },
-			{ name: "Min-Max Scaler", checked: false, tag: 'MIN_MAX' },
-			{ name: "Normalizer", checked: false, tag: 'NORMALIZER' },
-			{ name: "Anteilstransformator", checked: false, tag: 'SHARE' }
+			{ name: Train.T_SCALER_STANDARD_DE,   checked: false, tag: 'STANDARD'   },
+			{ name: Train.T_SCALER_ROBUST_DE,     checked: false, tag: 'ROBUST'     },
+			{ name: Train.T_SCALER_MIN_MAX_DE,    checked: false, tag: 'MIN_MAX'    },
+			{ name: Train.T_SCALER_NORMALIZER_DE, checked: false, tag: 'NORMALIZER' },
+		/*	{ name: "Anteilstransformator",       checked: false, tag: 'SHARE'      }	NOT IMPLEMENTED */
 		],
 		myfeatures: [
-			{ name: "Minimum", checked: false, tag: 'MIN' },
-			{ name: "Maximum", checked: false, tag: 'MAX' },
-			{ name: "Varianz", checked: false, tag: 'VARIANCE' },
-			{ name: "Energie", checked: false, tag: 'ENERGY' },
-			{ name: "Fourier-Transformation", checked: false, tag: 'FOURIER_TRANSFORM' },
-			{ name: "Mittelwert", checked: false, tag: 'MEAN' },
-			{ name: "Autoregressiv", checked: false, tag: 'AUTOREGRESSIVE' },
-			{ name: "Abweichung", checked: false, tag: 'SKEWNESS' },
-			{ name: "Wölbung", checked: false, tag: 'KURTOSIS' },
+			{ name: Train.T_FEATURE_MIN_DE,               checked: false, tag: 'MIN'               },
+			{ name: Train.T_FEATURE_MAX_DE,               checked: false, tag: 'MAX'               },
+			{ name: Train.T_FEATURE_VARIANCE_DE,          checked: false, tag: 'VARIANCE'          },
+			{ name: Train.T_FEATURE_ENERGY_DE,            checked: false, tag: 'ENERGY'            },
+			{ name: Train.T_FEATURE_FOURIER_TRANSFORM_DE, checked: false, tag: 'FOURIER_TRANSFORM' },
+			{ name: Train.T_FEATURE_MEAN_DE,              checked: false, tag: 'MEAN'              },
+			{ name: Train.T_FEATURE_AUTOREGRESSIVE_DE,    checked: false, tag: 'AUTOREGRESSIVE'    },
+			{ name: Train.T_FEATURE_SKEWNESS_DE,          checked: false, tag: 'SKEWNESS'          },
+			{ name: Train.T_FEATURE_KURTOSIS_DE,          checked: false, tag: "KURTOSIS"          },
+			{ name: Train.T_FEATURE_IQR_DE,               checked: false, tag: "IQR"               }
 		],
 		classifiers: [
-			{ name: "MLPClassifier", checked: false, tag: 'MLP' },
-			{ name: "RandomForestClassifier", checked: false, tag: 'RANDOM_FOREST' },
-			{ name: "KNeighborsClassifier", checked: false, tag: 'K_NEIGHOBORS' },
-			{ name: "Support Vector Machine", checked: false, tag: 'SVM' }
+			{ name: Train.T_CLASSIFIER_MLP_DE,           checked: false, tag: 'MLP'           },
+			{ name: Train.T_CLASSIFIER_RANDOM_FOREST_DE, checked: false, tag: 'RANDOM_FOREST' },
+			{ name: Train.T_CLASSIFIER_K_NEIGHBORS_DE,   checked: false, tag: 'K_NEIGHOBORS'  },
+			{ name: Train.T_CLASSIFIER_SVM_DE,           checked: false, tag: 'SVM'           }
 		],
 		chosenScaler: 0,
 		chosenclassifier: 0,
@@ -70,16 +112,6 @@ export default class Train extends Component {
 			this.state.databaseList.push({ dataSetName: x.dataSetName, dataSetID: x.dataSetID, chosen: false });
 		}
 	}
-
-	/** 
-		componentDidMount() {
-			let newDatabaseList: { dataSetID: number, dataSetName: string, chosen: boolean; }[] = [];
-			this.props.dataSetMetas?.map((dataset) => {
-				newDatabaseList.push({ dataSetID: dataset.dataSetID, dataSetName: dataset.dataSetName, chosen: false });
-				return dataset;
-			});
-			this.setState({ databaseList: newDatabaseList });
-		}*/
 
 	/**
 	 * Wechseln Mausstatus
@@ -112,7 +144,7 @@ export default class Train extends Component {
 	 * @param id löscht DatasetID
 	 */
 	handleDelete = (id: number) => {
-		if (window.confirm('Sind Sie sicher, den gewählten Datensatz löschen zu wollen?')) {
+		if (window.confirm(Train.Q_DATASET_DELETE_DE)) {
 			const { datasets } = this.state;
 			const newDatasets = datasets.filter((dataset) => {
 				return dataset.dataSetID !== id;
@@ -126,10 +158,7 @@ export default class Train extends Component {
 	 * Erstellung neue Fenster für Datensätze wählen
 	 */
 	handleCreate = () => {
-		//if (this.state.databaseList == []) {
-		//	}
-		const flag = !this.state.openNewWindow;
-		this.setState({ openNewWindow: flag });
+		this.setState({ openNewWindow: !this.state.openNewWindow });
 	};
 
 	/**
@@ -148,7 +177,7 @@ export default class Train extends Component {
 	 */
 	handleChoose = (): void => {
 		if (this.state.value === '') {
-			NotificationManager.error("Keine Option ausgewählt!", "", 3000);
+			NotificationManager.error(Train.E_DATASET_EMPTY_SELECTION_DE, "", 3000);
 			this.setState({ "openNewWindow": false });
 			return;
 		}
@@ -194,7 +223,7 @@ export default class Train extends Component {
 			newList[index].checked = !newList[index].checked;
 			this.setState({ chosenImputator: newChosen, imputators: newList });
 		} else {
-			NotificationManager.error("Es darf nur ein Imputer ausgewählt werden.", "", 3000);
+			NotificationManager.error(Train.E_IMPUTER_MULTI_SELECTION_DE, "", 3000);
 			return;
 		}
 	};
@@ -214,7 +243,7 @@ export default class Train extends Component {
 			this.setState({ chosenScaler: newChosen });
 			this.setState({ scalers: newList });
 		} else {
-			NotificationManager.error("Es darf nur ein Scaler ausgewählt werden.", "", 3000);
+			NotificationManager.error(Train.E_SCALER_MULTI_SELECTION_DE, "", 3000);
 			return;
 		}
 
@@ -245,7 +274,7 @@ export default class Train extends Component {
 			this.setState({ chosenclassifier: newChosen });
 			this.setState({ classifiers: newList });
 		} else {
-			NotificationManager.error("Es darf nur ein Klassifizierer ausgewählt werden", "", 3000);
+			NotificationManager.error(Train.E_CLASSIFIER_MULTI_SELECTION_DE, "", 3000);
 			return;
 		}
 	};
@@ -294,23 +323,23 @@ export default class Train extends Component {
 			return featureObj;
 		});
 		if (datasetsflag) {
-			NotificationManager.error("Kein Datensatz ausgewählt!", "", 3000);
+			NotificationManager.error(Train.E_DATASET_NO_SELECTION_DE, "", 3000);
 			nochoice = true;
 		}
 		if (imputatorsflag) {
-			NotificationManager.error("Kein Imputer ausgewählt!", "", 3000);
+			NotificationManager.error(Train.E_IMPUTER_NO_SELECTION_DE, "", 3000);
 			nochoice = true;
 		}
 		if (classifiersflag) {
-			NotificationManager.error("Kein Klassifizierer ausgewählt!", "", 3000);
+			NotificationManager.error(Train.E_CLASSIFIER_NO_SELECTION_DE, "", 3000);
 			nochoice = true;
 		}
 		if (scalersflag) {
-			NotificationManager.error("Kein Scaler ausgewählt!", "", 3000);
+			NotificationManager.error(Train.E_SCALER_NO_SELECTION_DE, "", 3000);
 			nochoice = true;
 		}
 		if (featuresflag) {
-			NotificationManager.error("Keine Merkmale zur Extraktion ausgewählt!", "", 3000);
+			NotificationManager.error(Train.E_FEATURE_NO_SELECTION_DE, "", 3000);
 			nochoice = true;
 		}
 		if (nochoice) return;
@@ -333,16 +362,16 @@ export default class Train extends Component {
 		const { mouse, datasets, imputators, scalers, myfeatures, classifiers } = this.state;
 		return (
 			<div className="train">
-				<h3  className="text">Datasets</h3>
+				<h3  className="text">{Train.T_DATASET_TITLE_DE}</h3>
 				{datasets.map(dataset => {
 					return (
 
-						<li style={{ backgroundColor: mouse ? '#ddd' : 'white' }} onMouseEnter={this.handleMouse(true)} onMouseLeave={this.handleMouse(false)} className='list' >
+						<li style={{ backgroundColor: mouse ? '#ddd' : '#fff' }} onMouseEnter={this.handleMouse(true)} onMouseLeave={this.handleMouse(false)} className='list' >
 							<label>
 								<input type="checkbox" checked={dataset.chosen} onChange={(e: React.ChangeEvent<HTMLInputElement>): void => this.handleCheck(dataset.dataSetID, e.target.checked)} />
 								<span>{dataset.dataSetName}</span>
 							</label>
-							<button onClick={() => this.handleDelete(dataset.dataSetID)} type='button' className="btn-item" style={{ display: mouse ? 'block' : 'none' }}>Löschen</button>
+							<button onClick={() => this.handleDelete(dataset.dataSetID)} type='button' className="btn-item" style={{ display: mouse ? 'block' : 'none' }}>{Train.T_DATASET_DELETE_DE}</button>
 						</li>
 					);
 				})}
@@ -351,20 +380,20 @@ export default class Train extends Component {
 					{this.state.openNewWindow && (
 						<NewWindow>
 							<div className="login-window">
-								<h1  className="text">DatabaseList</h1>
-								<select onChange={this.handleChange}   className="text2" >
-									<option value=""   className="text2">choose dataset</option>
+								<h1  className="text">{Train.T_DATASET_LIST_TITLE_DE}</h1>
+								<select onChange={this.handleChange} className="text2" >
+									<option value=""  className="text2">{Train.T_DATASET_LIST_DROPDOWN_DE}</option>
 									{this.options()}
 								</select >
-								<button onClick={this.handleChoose} className="choose-btn" type='button' >Add</button>
+								<button onClick={this.handleChoose} className="choose-btn" type='button' >{Train.T_DATASET_LIST_ADD_DE}</button>
 							</div>
 						</NewWindow>
 					)}
-					<button onClick={() => this.handleCreate()} className="create-btn" type='button' >Add new Dataset</button>
+					<button onClick={() => this.handleCreate()} className="create-btn" type='button' >{Train.T_DATASET_ADD_DE}</button>
 				</div>
 				<div className="list">
 					<div className="imputationlist">
-						<h3  className="text">Imputation</h3>
+						<h3  className="text">{Train.T_IMPUTER_TITLE_DE}</h3>
 						{imputators.map((imputator, index) => {
 							return (
 								<div key={index}>
@@ -374,7 +403,7 @@ export default class Train extends Component {
 						})}
 					</div>
 					<div className="scalerlist">
-						<h3   className="text">Normalisierung</h3>
+						<h3   className="text">{Train.T_SCALER_TITLE_DE}</h3>
 						{scalers.map((scaler, index) => {
 							return (
 								<div key={index}>
@@ -388,7 +417,7 @@ export default class Train extends Component {
 
 				<div className="list">
 					<div className="extractionlist">
-						<h3  className="text">Merkmalextraktion</h3>
+						<h3  className="text">{Train.T_FEATURE_TITLE_DE}</h3>
 						{myfeatures.map((extraction, index) => {
 							return (
 								<div key={index}>
@@ -399,7 +428,7 @@ export default class Train extends Component {
 						}
 					</div>
 					<div className="classifierlist">
-						<h3  className="text">Modell</h3>
+						<h3  className="text">{Train.T_CLASSIFIER_TITLE_DE}</h3>
 						{classifiers.map((classifier, index) => {
 							return (
 								<div key={index}>
@@ -412,8 +441,8 @@ export default class Train extends Component {
 				<br></br>
 
 				<div className="clearfloat">
-					<button onClick={() => this.handleTrain()} className="train-btn" type='button' >Train Start!</button>
-					<button onClick={() => this.handleChangePage()} className="changepage-btn" type='button' >Zur Verweisseite zurück</button>
+					<button onClick={() => this.handleTrain()} className="train-btn" type='button' >{Train.T_BUTTON_START_DE}</button>
+					<button onClick={() => this.handleChangePage()} className="changepage-btn" type='button' >{Train.T_BUTTON_HOME_DE}</button>
 				</div>
 			</div>
 

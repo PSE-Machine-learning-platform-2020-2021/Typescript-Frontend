@@ -3,13 +3,24 @@ import { NotificationManager } from 'react-notifications';
 import './index.css'
 
 export default class Labelling extends Component {
+    private static readonly E_MISSING_DE: string = "Das Labelzeitfenster muss bestimmt werden!";
+    private static readonly E_NAME_MISSING_DE: string = "Das Labelzeitfenster braucht einen Namen!";
+    private static readonly E_TIME_INVALID_DE: string = "Das Labelzeitfenster muss mit einer Start und Endzeit bestimmt werden,\n die Angabe ist in Sekunden.";
+    private static readonly T_BUTTON_DELETE_DE: string = "Löschen";
+    private static readonly T_BUTTON_ADD_DE: string = "Label hinzufügen";
+    private static readonly T_TIME_FROM_DE: string = "Von";
+    private static readonly T_TIME_TO_DE: string = "bis";
+    private static readonly T_LABEL_START_DE: string = "Start";
+    private static readonly T_LABEL_END_DE: string = "Ende";
+    private static readonly T_LABEL_NAME_DE: string = "Label-Name";
+
     state = {
         labels: [] as { labelID: number, start: number, end: number, name: string; }[],
         newStart: "", newEnd: '', newName: ""
     };
 
     props = {
-        //die Funktion für neues Label zu addieren, durch props übermittelt
+        //die Funktion für neues Label hinzuzufügen, durch props übermittelt
         newLabel: function (label: {
             labelID: number;
             start: number;
@@ -61,15 +72,15 @@ export default class Labelling extends Component {
     };
 
     /**
-     * addiere das eingegebene Label
+     * füge das eingegebene Label hinzu
      */
     addLabel = (labelObj: { start: string, end: string, name: string; }) => {
         if (labelObj.start === "" || labelObj.end === "") {
-            NotificationManager.error("Das Labelzeitfenster muss bestimmt werden!");
+            NotificationManager.error(Labelling.E_MISSING_DE);
             return;
         }
         if (labelObj.name === "") {
-            NotificationManager.error("Das Labelzeitfenster braucht einen Namen!");
+            NotificationManager.error(Labelling.E_NAME_MISSING_DE);
             return;
         }
         labelObj.start = labelObj.start.replace(",", ".");
@@ -77,7 +88,7 @@ export default class Labelling extends Component {
         let start = this.formatFloatInString(labelObj.start);
         let end = this.formatFloatInString(labelObj.end);
         if (start === NaN && end === NaN) {
-            NotificationManager.success("Das Labelzeitfenster muss mit einer Start und Endzeit bestimmt werden,\n die Angabe ist in Sekunden.");
+            NotificationManager.success(Labelling.E_TIME_INVALID_DE);
             return;
         }
         const label: { labelID: number, start: number, end: number, name: string; } = {
@@ -85,7 +96,7 @@ export default class Labelling extends Component {
             start: start,
             end: end,
             name: labelObj.name
-        }; //was ist bei fehlerfall?? keine Zahlen
+        };
         this.props.newLabel(label);
         const { labels } = this.state;
         const newLabels = [label, ...labels];
@@ -127,23 +138,23 @@ export default class Labelling extends Component {
                     this.state.labels.map((label) => {
                         return (
                             <li >
-                                Von {label.start}s bis {label.end}s:  {label.name}
-                                <button className='delete' onClick={(e) => this.deleteLabel(e, label.labelID)}>Löschen</button>
+                                {Labelling.T_TIME_FROM_DE} {label.start} s {Labelling.T_TIME_TO_DE} {label.end} s:  {label.name}
+                                <button className='delete' onClick={(e) => this.deleteLabel(e, label.labelID)}>{Labelling.T_BUTTON_DELETE_DE}</button>
                             </li>
                         );
                     })}
                 <div>
-                    Start:
+                    {Labelling.T_LABEL_START_DE}:
                         <input type="text" value={this.state.newStart} onChange={this.handleChangeStart} /><br />
 
-                    End:
+                    {Labelling.T_LABEL_END_DE}:
                         <input type="text" value={this.state.newEnd} onChange={this.handleChangeEnd} /><br />
 
-                    Label:
+                    {Labelling.T_LABEL_NAME_DE}:
                         <input type="text" value={this.state.newName} onChange={this.handleChangeLabel} />
                     <br />
 
-                    <button className='add' type="button" onClick={() => this.handleClick()}>Add Label</button>
+                    <button className='add' type="button" onClick={() => this.handleClick()}>{Labelling.T_BUTTON_ADD_DE}</button>
                 </div>
 
             </div>

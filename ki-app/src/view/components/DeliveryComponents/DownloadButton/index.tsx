@@ -5,6 +5,7 @@ import './DownloadButton.css'
  * Herunterladen-Knopf
  */
 export default class DownloadButton extends Component {
+    private static readonly T_BUTTON_DOWNLOAD: string = "Herunterladen!";
 
     /**
      * Variablen und Methoden welche der Klasse zur verfügung gestellt werden müssen
@@ -27,7 +28,7 @@ export default class DownloadButton extends Component {
     render() {
         return (
             <div>
-                <button onClick={() => this.clicked()} className="download-btn" >Herunterladen!</button>
+                <button onClick={() => this.clicked()} className="download-btn" >{DownloadButton.T_BUTTON_DOWNLOAD}</button>
             </div>
         )
     }
