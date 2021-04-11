@@ -102,7 +102,7 @@ export default class ProjectList extends Component {
                 <label>ProjektList</label>
                 <select onChange={this.handleChange}>
                     <option>Projekt wählen</option>
-                    {() => this.props.projectData.map(projectObj => <option value={projectObj.projectID} key={projectObj.projectID}>{projectObj.projectName}</option>)}
+                    {this.props.projectData.map(projectObj => <option value={projectObj.projectID} key={projectObj.projectID}>{projectObj.projectName}</option>)}
                 </select>
                 <button onClick={() => this.handleChoose()} className="pl-btn" type="button" >Modellliste laden </button>
                 <button onClick={() => this.handleLoad()} className="pl-btn" type="button" >Projekt laden</button>
