@@ -11,7 +11,7 @@ test('Rendert', () => {
     let pageLoadProjekt = jest.fn()
     let pageChangeToVisu = jest.fn()
     let qr = ''
-    const wrapper = shallow<LoadModelButton>(<LoadModelButton disabled={disabled} projectData={projectData} qr={qr}
+    const wrapper = shallow<LoadModelButton>(<LoadModelButton link ={"TEST"} disabled={disabled} projectData={projectData} qr={qr}
         pageSetCurrentprojekt={pageSetCurrentprojekt} pageLoadModel={pageLoadModel} pageLoadProjekt={pageLoadProjekt} pageChangeToVisu={pageChangeToVisu} />)
 
     const create: any = wrapper.find("button").at(0);

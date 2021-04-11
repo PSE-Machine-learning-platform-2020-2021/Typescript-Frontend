@@ -12,7 +12,7 @@ test('Rendert', () => {
     let pageLoadProjekt = jest.fn()
     let pageChangeToVisu = jest.fn()
     let qr = ''
-    const wrapper = shallow<ProjectList>(<ProjectList projectData={projectData} qr={qr}
+    const wrapper = shallow<ProjectList>(<ProjectList projectData={projectData} qr={qr} link={"TEST"}
         pageSetCurrentprojekt={pageSetCurrentprojekt} pageLoadModel={pageLoadModel} pageLoadProjekt={pageLoadProjekt} pageChangeToVisu={pageChangeToVisu} />)
 
     expect(wrapper.state().value).toBe(null)
@@ -39,7 +39,7 @@ test('Gültige eingabe', () => {
     let pageLoadProjekt = jest.fn()
     let pageChangeToVisu = jest.fn()
     let qr = ''
-    const wrapper = shallow<ProjectList>(<ProjectList projectData={projectData} qr={qr}
+    const wrapper = shallow<ProjectList>(<ProjectList projectData={projectData} qr={qr} link={"TEST"}
         pageSetCurrentprojekt={pageSetCurrentprojekt} pageLoadModel={pageLoadModel} pageLoadProjekt={pageLoadProjekt} pageChangeToVisu={pageChangeToVisu} />)
 
     const change = wrapper.find("select").at(0);
@@ -68,7 +68,7 @@ test('kein model', () => {
     let pageLoadProjekt = jest.fn()
     let pageChangeToVisu = jest.fn()
     let qr = ''
-    const wrapper = shallow<ProjectList>(<ProjectList projectData={projectData} qr={qr}
+    const wrapper = shallow<ProjectList>(<ProjectList projectData={projectData} qr={qr} link={"test"}
         pageSetCurrentprojekt={pageSetCurrentprojekt} pageLoadModel={pageLoadModel} pageLoadProjekt={pageLoadProjekt} pageChangeToVisu={pageChangeToVisu} />)
 
     const change = wrapper.find("select").at(0);

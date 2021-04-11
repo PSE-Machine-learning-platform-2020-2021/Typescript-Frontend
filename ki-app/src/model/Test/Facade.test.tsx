@@ -328,7 +328,7 @@ test("Modell verteilen", async () => {
     const promise = facade.loginAdmin("TEST", "Test");
     const success = await promise;
     expect(success).toBeTruthy();
-    expect(facade.sendAIModel(4, "test-1@example.com", "test-2@example.com")).toBeTruthy();
+    expect(facade.sendAIModel(4, ["test-1@example.com", "test-2@example.com"])).toBeTruthy();
 });
 
 test("setze Sprache", async () => {
