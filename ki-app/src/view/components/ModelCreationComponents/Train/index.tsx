@@ -352,8 +352,8 @@ export default class Train extends Component {
 						<NewWindow>
 							<div className="login-window">
 								<h1  className="text">DatabaseList</h1>
-								<select onChange={this.handleChange}   className="text" >
-									<option value=""   className="text">choose dataset</option>
+								<select onChange={this.handleChange}   className="text2" >
+									<option value=""   className="text2">choose dataset</option>
 									{this.options()}
 								</select >
 								<button onClick={this.handleChoose} className="choose-btn" type='button' >Add</button>
