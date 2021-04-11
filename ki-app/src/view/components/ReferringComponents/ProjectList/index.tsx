@@ -1,6 +1,7 @@
 import React, { Component } from 'react';
 import { NotificationManager } from 'react-notifications';
 import ChangeToVisuBtn from '../ChangeToVisuBtn';
+import LinkText from '../LinkText';
 import ModelList from '../ModelList';
 import QRImage from '../QRImage';
 import './ProjectList.css';
@@ -19,7 +20,8 @@ export default class ProjectList extends Component {
         pageLoadModel: function (chosenmodelID: number) { },
         pageLoadProjekt: function (currentProject: { projectID: number; projectName: string; AIModelID: number[]; }) { },
         pageChangeToVisu: function () { },
-        qr: ''
+        qr: '',
+        link: ''
     };
 
     /**
@@ -107,7 +109,8 @@ export default class ProjectList extends Component {
                 </select>
                 <button onClick={() => this.handleChoose()} className="pl-btn" type="button" >Modellliste laden </button>
                 <button onClick={() => this.handleLoad()} className="pl-btn" type="button" >Projekt laden</button>
-                {this.state.loadclick ? <div> <QRImage qr={this.props.qr} /><ChangeToVisuBtn pageChangeToVisu={this.props.pageChangeToVisu} /></div> : null}
+                {this.state.loadclick ? <div> <QRImage qr={this.props.qr} /><ChangeToVisuBtn pageChangeToVisu={this.props.pageChangeToVisu} /> <LinkText link={this.props.link}/></div> : null}
+                
                 {this.state.click ? <div> <ModelList pageLoadModel={this.props.pageLoadModel} currentProject={this.state.currentProject} /></div> : null}
             </section>
 

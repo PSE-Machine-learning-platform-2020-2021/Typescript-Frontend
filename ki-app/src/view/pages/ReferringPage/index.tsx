@@ -52,8 +52,10 @@ export class ReferringPage implements Page {
                     pageLoadModel={this.loadmodel.bind(this)}
                     pageLoadProjekt={this.loadproject.bind(this)}
                     pageChangeToVisu={this.changetovisu.bind(this)}
-                    qr={this.state.qr!} />
-
+                    qr={this.state.qr!} 
+                    link={this.state.link!}
+                    />
+                    
                 <NotificationContainer />
             </div>
         );

@@ -17,7 +17,8 @@ export default class LoadModelButton extends Component {
     pageLoadModel: function (chosenmodelID: number) { },
     pageLoadProjekt: function (currentProject: { projectID: number; projectName: string; AIModelID: number[]; }) { },
     pageChangeToVisu: function () { },
-    qr: ''
+    qr: '',
+    link: ''
   }
 
   /**
@@ -41,6 +42,7 @@ export default class LoadModelButton extends Component {
       <div className="loadProject">
         <button onClick={() => this.handleCreate()} className="lp-btn" disabled={this.props.disabled} type='button'>Projekt und Model Wählen</button>
         {this.state.click ? <div><ProjectList
+          link={this.props.link}
           pageChangeToVisu={this.props.pageChangeToVisu}
           pageLoadProjekt={this.props.pageLoadProjekt}
           qr={this.props.qr}
