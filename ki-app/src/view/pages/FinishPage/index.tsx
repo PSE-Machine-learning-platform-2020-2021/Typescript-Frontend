@@ -8,6 +8,7 @@ import { State } from "./State";
 import ReactDOM from "react-dom";
 import { States } from "../State";
 import { NotificationContainer } from "react-notifications";
+import './index.css'
 
 /**
  * Die Darstellungsseite für die Finishseite der Datenerfasser
@@ -38,12 +39,17 @@ export class FinishPage implements Page {
         <div className="label-container">
           <Labelling newLabel={this.newLabel.bind(this)} pagedeleteLabel={this.pagedeleteLabel.bind(this)} />
         </div>
+        <button className='reload' onClick = {this.reloadPage}>Erneut Erfassen</button>
         <NotificationContainer />
       </div>
     );
     if (document.getElementById('root') !== null) {
       ReactDOM.render(VDOM, document.getElementById('root'));
     }
+  }
+
+  private reloadPage() {
+    window.location.reload()
   }
 
   /**

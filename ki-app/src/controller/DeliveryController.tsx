@@ -57,12 +57,10 @@ export class DeliveryController implements PageController {
     * Der Inhalt der Email gibt zugriff auf das Modell zur klassifizierung.
     */
     private deliverAsWebApp() {
-        console.log(this.state.chosenEmails)
         MainController.getInstance().getFacade().sendAIModel(this.state.chosenAIModel!, this.state.chosenEmails!)
-        
     }
 
     private deliverAsExe() {
-        //todo in Quality Controll
+        //todo
     }
 }

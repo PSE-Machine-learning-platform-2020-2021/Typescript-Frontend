@@ -1,5 +1,6 @@
 import React, { Component, ChangeEvent } from 'react';
 import { NotificationManager } from 'react-notifications';
+import './index.css'
 
 export default class Labelling extends Component {
     state = {
