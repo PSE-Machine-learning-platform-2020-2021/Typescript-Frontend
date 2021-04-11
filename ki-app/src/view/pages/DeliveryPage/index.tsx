@@ -12,8 +12,10 @@ import 'react-notifications/lib/notifications.css';
 //Auslieferungsseite
 export class DeliveryPage implements Page {
 
-	state: State;
-	observers: PageController[] = [];
+	private state: State;
+	private observers: PageController[] = [];
+
+	private PAGE_TITLE = "Modell Auslieferung"
 
 	/**
 	* Konstruktor der Auslieferungsseite.
@@ -32,7 +34,7 @@ export class DeliveryPage implements Page {
 		this.notify();
 		const VDOM = (
 			<div>
-				<h2 className='title'>Modell Auslieferung</h2>
+				<h2 className='title'>{this.PAGE_TITLE}</h2>
 				<EmailList delivery={this.delivery.bind(this)} />
 				<DownloadButton download={this.download.bind(this)} />
 				<NotificationContainer />

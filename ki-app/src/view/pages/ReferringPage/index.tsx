@@ -17,6 +17,11 @@ export class ReferringPage implements Page {
     private state: State;
     private observers: PageController[] = [];
 
+    private WELCOME = "Wilkommen "
+    private REG_ERROR = "Registrieren fehlgeschlagen!"
+    private MAIL_INVALID = "Email-Adresse nicht gültig"
+    private LOGIN_ERROR = "Login fehlgeschlagen!"
+
     /**
     * Konstruktor der Darstellungsseite.
     */
@@ -119,17 +124,17 @@ export class ReferringPage implements Page {
     private register(username: string, email: string, password: string) {
         var pattern = /^([A-Za-z0-9_\-.])+@([A-Za-z0-9_\-.])+\.([A-Za-z])+$/;
         if (!pattern.test(email)) {
-            NotificationManager.error("Email-Adresse nicht gültig", "", 3000);
+            NotificationManager.error(this.MAIL_INVALID, "", 3000);
         } else {
             this.state.adminData! = { name: username, email: email, password: password };
             this.state.currentState = States.Register;
             this.update();
             this.state.wait!.then(() => {
                 if (this.state.currentState as States === States.LoginFail as States) {
-                    NotificationManager.error("Registrieren fehlgeschlagen!", "", 3000);
+                    NotificationManager.error(this.REG_ERROR, "", 3000);
                     return;
                 }
-                NotificationManager.success("Wilkommen " + this.state.adminData?.email);
+                NotificationManager.success(this.WELCOME + this.state.adminData?.email);
                 this.update();
             });
         }
@@ -150,10 +155,10 @@ export class ReferringPage implements Page {
         this.state.wait!.then(() => {
             // eslint-disable-next-line
             if (this.state.currentState as States == States.LoginFail as States) {
-                NotificationManager.error("Login fehlgeschlagen!", "", 3000);
+                NotificationManager.error(this.LOGIN_ERROR, "", 3000);
                 return;
             }
-            NotificationManager.success("Wilkommen " + this.state.adminData?.email);
+            NotificationManager.success(this.WELCOME + this.state.adminData?.email);
             this.update();
         });
     }

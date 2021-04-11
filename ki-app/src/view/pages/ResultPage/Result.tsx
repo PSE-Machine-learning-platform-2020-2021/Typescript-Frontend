@@ -11,8 +11,12 @@ import './Result.css';
  * Die Darstellungsseite für die Startseite der Datenerfasser
  */
 export class ResultPage implements Page {
-    state: State;
-    observers: PageController[] = [];
+    private state: State;
+    private observers: PageController[] = [];
+
+    private PAGE_TITLE = "Ergebnis"
+    private CLASSIFY = "Klassifiziere, bitte warten"
+    private RELOAD = "Erneut klassifizieren"
 
     /**
      * Konstruktor der Darstellungseite
@@ -32,8 +36,8 @@ export class ResultPage implements Page {
         this.notify();
         let VDOM = (
             <div>
-                <h2 className='title'>Ergebnis</h2>
-                <h1 className='wait'>Klassifiziere, bitte warten</h1>
+                <h2 className='title'>{this.PAGE_TITLE}</h2>
+                <h1 className='wait'>{this.CLASSIFY}</h1>
                 <NotificationContainer />
             </div>)
         if (this.state.aiUserData!.result !== " ") {
@@ -41,7 +45,7 @@ export class ResultPage implements Page {
                 <div>
                     <h2 className='title'>Ergebnis</h2>
                     <h1>{this.state.aiUserData!.result}</h1>
-                    <button className='button' onClick = {this.reloadPage}>Erneut klassifizieren</button>
+                    <button className='button' onClick = {this.reloadPage}>{this.RELOAD}</button>
                     <NotificationContainer />
                 </div>
             );
