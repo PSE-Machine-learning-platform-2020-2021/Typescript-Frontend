@@ -11,8 +11,10 @@ import 'react-notifications/lib/notifications.css';
 
 //Modellerstellungsseite
 export class ModelCreationPage implements Page {
-	state: State;
-	observers: PageController[] = [];
+	private state: State;
+	private observers: PageController[] = [];
+
+	private PAGE_TITLE = "Modell Erstellung"
 
 	/**
 	* Konstruktor der Modellerstellungsseite.
@@ -31,7 +33,7 @@ export class ModelCreationPage implements Page {
 		this.notify();
 		const VDOM = (
 			<div>
-				<h1 className="title">Modell Erstellung</h1>
+				<h1 className="title">{this.PAGE_TITLE}</h1>
 				<Train
 					dataSetMetas={this.state.dataSetMetas!}
 					train={this.train.bind(this)}

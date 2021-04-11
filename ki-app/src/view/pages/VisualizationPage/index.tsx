@@ -13,6 +13,8 @@ export class VisualizationPage implements Page {
     private state: IState
     private observers: PageController[] = [];
 
+    private PAGE_TITLE = "Projekt Visualisierung"
+
     /**
     * Konstruktor der Visualisierungsseite.
     */
@@ -30,7 +32,7 @@ export class VisualizationPage implements Page {
         this.notify()
         const VDOM = (
             <div className="visualizationpage">
-                <h2 className='title'>Projekt Visualisierung</h2>
+                <h2 className='title'>{this.PAGE_TITLE}</h2>
                 <br/>
                 <FinishButton pageChangeToCreation={this.changetoCreation.bind(this)} />
                 <br/>
