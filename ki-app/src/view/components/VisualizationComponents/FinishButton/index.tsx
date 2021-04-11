@@ -22,6 +22,7 @@ export default class FinishButton extends Component {
             <div>
                 <button onClick={() => this.props.pageChangeToCreation()} className="finish-btn" >Train Anfang!</button>
             </div>
+            
         )
     }
 }

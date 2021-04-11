@@ -32,6 +32,7 @@ export class DeliveryPage implements Page {
 		this.notify();
 		const VDOM = (
 			<div>
+				<h2 className='title'>Modell Auslieferung</h2>
 				<EmailList delivery={this.delivery.bind(this)} />
 				<DownloadButton download={this.download.bind(this)} />
 				<NotificationContainer />
