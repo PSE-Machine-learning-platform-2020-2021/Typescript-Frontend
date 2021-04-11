@@ -66,7 +66,7 @@ export default class ProjectList extends Component {
                         this.setState({ click: true });
                     } else {
                         this.setState({ click: false });
-                        NotificationManager.error('Es gibt keine Model in diesem Projekt!', "", 3000);
+                        NotificationManager.error('Es gibt noch kein KI-Modell in diesem Projekt!', "", 3000);
                     }
                 }
                 return projectObj;
@@ -79,7 +79,7 @@ export default class ProjectList extends Component {
      */
     private handleLoad() {
         if (this.state.value === null) {
-            NotificationManager.error("Sie haben noch kein Projekt gewählt", "", 3000);
+            NotificationManager.error("Sie haben noch kein Projekt ausgewählt", "", 3000);
         } else {
             this.props.projectData.map((projectObj) => {
                 if (Number(this.state.value) === projectObj.projectID) {
@@ -104,7 +104,7 @@ export default class ProjectList extends Component {
                     <option>Projekt wählen</option>
                     {this.props.projectData.map(projectObj => <option value={projectObj.projectID} key={projectObj.projectID}>{projectObj.projectName}</option>)}
                 </select>
-                <button onClick={() => this.handleChoose()} className="pl-btn" type="button" >Modellliste laden </button>
+                <button onClick={() => this.handleChoose()} className="pl-btn" type="button" >Modellliste laden</button>
                 <button onClick={() => this.handleLoad()} className="pl-btn" type="button" >Projekt laden</button>
                 {this.state.loadclick ? <div> <QRImage qr={this.props.qr} /><ChangeToVisuBtn pageChangeToVisu={this.props.pageChangeToVisu} /> <LinkText link={this.props.link}/></div> : null}
                 
