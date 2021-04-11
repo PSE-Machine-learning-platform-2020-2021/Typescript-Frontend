@@ -27,13 +27,13 @@ export class DataCollectionController implements PageController {
      * Konstruktor des Seitenverwalters. Registriert sich als Beobachter auf seiner Seite und setzt den start Status.
      * Dieser Seitenverwalter benötigt einen SensorManager, welcher schon initilisiert wurde. 
      */
-    constructor ( sensorManager: SensorManager ) {
+    constructor(sensorManager: SensorManager) {
         this.sensorManager = sensorManager;
-        this.page.attach( this );
+        this.page.attach(this);
         this.state = this.page.getState();
         this.state.leadTime = this.sensorManager.getWaitTime();
 
-        this.sensorManager.readData( this.page );
+        this.sensorManager.readData(this.page);
 
 
     }
@@ -41,28 +41,33 @@ export class DataCollectionController implements PageController {
     /**
      * Die Update Methode des Seitenverwalters.
      */
-    update () {
+    update() {
         let state = this.page.getState();
-        switch ( state.currentState ) {
+        switch (state.currentState) {
             case States.StartDataRead:
-                this.sensorManager.readData( this.page );
+                this.sensorManager.readData(this.page);
                 break;
             case States.NeedMessage:
-                this.state.messages = MainController.getInstance().getMessage( this.state.messages )!;
+                this.state.messages = MainController.getInstance().getMessage(this.state.messages)!;
                 this.state.currentState = States.waitForDB;
-                this.page.setState( this.state );
+                this.page.setState(this.state);
                 break;
             case States.NeedInstantDiagram:
                 break;
             case States.ChangeToFinish:
-                MainController.getInstance().changeTo( new FinishController() );
+                MainController.getInstance().changeTo(new FinishController());
                 break;
             case States.LoadError:
-                if ( window.confirm( "Es wurden nicht alle Daten Erfolgreich gesendet. Stellen sie sicher das eine Internetverbindung besteht. Sollen die Daten erneut gesendet werden?" ) ) {
-                    MainController.getInstance().getFacade().sendDataPointsAgain();
+                if (window.confirm("Es wurden nicht alle Daten Erfolgreich gesendet. Stellen sie sicher das eine Internetverbindung besteht. Sollen die Daten erneut gesendet werden?")) {
+                    MainController.getInstance().getFacade().sendDataPointsAgain().then((result) => {
+                        if (!result) {
+                            this.state.currentState = States.LoadError;
+                            this.page.setState(state);
+                        }
+                    });
                 }
                 this.state.currentState = States.waitForDB;
-                this.page.setState( state );
+                this.page.setState(state);
                 break;
             //case States.SetWaitTime:
             //    PubSub.publish('nextCount', this.state.recordingSettings!.waitTime);
