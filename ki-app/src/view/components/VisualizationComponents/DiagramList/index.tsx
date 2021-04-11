@@ -4,6 +4,12 @@ import "./DiagramList.css";
 
 
 export default class DiagramList extends Component {
+    private diagrammData: {
+
+        datavalue: number,
+    }[] = [{
+        datavalue: 0,
+    }]
 
     /**
      * Variablen und Methoden welche der Klasse zur verfügung gestellt werden müssen
@@ -50,12 +56,12 @@ export default class DiagramList extends Component {
      * Diagram erstellen
      * @param dataSet Datensätze für Diagram
      */
-    updateDiagramm(dataSet: { dataSetID: number; rows: any[]; }) {
+    updateDiagramm(dataSet: { dataSetID: number; rows: any[]; }, index: number) {
         let diagrammData = this.state.diagrammData;
         diagrammData.sensorRow = [];
         diagrammData.datavalue = [];
         diagrammData.time = [];
-        this.setState({ diagrammData: diagrammData });
+        this.state.diagrammData = diagrammData;
         var datavalues = [];
         for (var i = 0; i < dataSet.rows.length; i++) {
             this.state.diagrammData.sensorRow.push(dataSet.rows[i].sensorType);
@@ -126,8 +132,13 @@ export default class DiagramList extends Component {
         };
         const newList = this.state.diagramList;
         const id = dataSet.dataSetID;
-        newList.push({ dataSetID: id, lineLabels: lineLabels, data: data, options: options });
-        this.setState({ diagramList: newList });
+        if(newList[index] !== undefined) {
+        newList[index] = { dataSetID: id, lineLabels: lineLabels, data: data, options: options };
+        } else {
+            newList.push({ dataSetID: id, lineLabels: lineLabels, data: data, options: options })
+        }
+        this.state.diagramList = newList;
+        this.diagrammData[index].datavalue = this.props.currentDataSets[index].rows[0].datapoint.length
     }
 
     /**
@@ -143,22 +154,25 @@ export default class DiagramList extends Component {
         this.props.currentDataSets?.map((dataSet, index) => {
             var flag = false;
             // eslint-disable-next-line
-            this.state.diagramList.map((diagram) => {
-                if (
-                    diagram.dataSetID === dataSet.dataSetID
-                    && this.props.currentDataSets[dataSet.dataSetID] !== undefined) {
-                    if (this.state.diagrammData.datavalue.length === this.props.currentDataSets[dataSet.dataSetID].rows.length) {
+            this.state.diagramList.map((diagram, index2) => {
+                console.log(this.props.currentDataSets[index2].rows.length)
+                if (diagram.dataSetID === dataSet.dataSetID) {
+                    if (this.diagrammData[index2] !== undefined && this.diagrammData[index2].datavalue != this.props.currentDataSets[index2].rows[0].datapoint.length) {
+                        this.updateDiagramm(dataSet, index2);
+                        this.diagrammData[index2].datavalue = this.props.currentDataSets[index].rows[0].datapoint.length
+                    }
                         flag = true;
                         return diagram;
-                    }
                 }
             });
             if (flag) { return dataSet; }
-            else { this.updateDiagramm(dataSet); }
+            else { 
+                this.diagrammData.push({datavalue: 0})
+                this.updateDiagramm(dataSet, index); 
+            }
         });
         return (
             <div>
-                <div>
                     {this.state.diagramList.map((diagram, index) => {
                         let datasetname = "Null";
                         this.props.dataSetMetas.forEach(dataset => {
@@ -179,7 +193,6 @@ export default class DiagramList extends Component {
                         );
                     })}
                 </div>
-            </div>
         );
     }
 }

@@ -1,5 +1,3 @@
-import React from 'react'
-import './VisualizationPage.css'
 import { Page } from "../PageInterface";
 import { PageController } from "../../../controller/PageController";
 import { State } from "./State";
@@ -32,13 +30,15 @@ export class VisualizationPage implements Page {
         this.notify()
         const VDOM = (
             <div className="visualizationpage">
-
+                <h2 className='title'>Projekt Visualisierung</h2>
+                <br/>
+                <FinishButton pageChangeToCreation={this.changetoCreation.bind(this)} />
+                <br/>
+                <br/>
                 <DiagramList currentDataSets={this.state.currentDataSets! }
                 dataSetMetas = {this.state.dataSetMetas!}
                 //   testDataSet={this.state.testDataSet!}
                 />
-                <FinishButton pageChangeToCreation={this.changetoCreation.bind(this)} />
-
                 <NotificationContainer />
             </div>
         );

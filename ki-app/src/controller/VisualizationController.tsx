@@ -68,15 +68,11 @@ export class VisualizationController implements PageController {
                 clearInterval(intervalId);
                 return;
             }
-            console.log("b");
             this.state.dataSetMetas = MainController.getInstance().getFacade().getDataSetMetas();
             MainController.getInstance().getFacade().loadProject(this.state.currentProject!.projectID);
             var dataSets = MainController.getInstance().getFacade().getDataSetMetas();
             this.state.currentDataSets! = [];
-            console.log("c");
-            console.log(dataSets);
             for (let index = 0; index < dataSets.length; index++) {
-                console.log("d: " + index);
                 let data = MainController.getInstance().getFacade().getDataRows(dataSets[index].dataSetID).dataRows;
                 this.state.currentDataSets!.push({ dataSetID: dataSets[index].dataSetID, rows: data });
                 //PubSub.publish('visualizationDiagram', { dataSetID: dataSets[index].dataSetID, dataRows: data });

@@ -2,6 +2,7 @@ import React, { Component } from 'react';
 import { nanoid } from 'nanoid';
 import { NotificationManager } from 'react-notifications';
 import 'react-notifications/lib/notifications.css';
+import "./index.css"
 
 /**
  * Behandeln Emailliste mit Hinzufügen und Löschen, wählen Eamils auszuliefern

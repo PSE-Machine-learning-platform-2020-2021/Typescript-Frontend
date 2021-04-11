@@ -31,6 +31,7 @@ export class ModelCreationPage implements Page {
 		this.notify();
 		const VDOM = (
 			<div>
+				<h1 className="title">Modell Erstellung</h1>
 				<Train
 					dataSetMetas={this.state.dataSetMetas!}
 					train={this.train.bind(this)}
