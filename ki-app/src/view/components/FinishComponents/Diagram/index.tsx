@@ -4,6 +4,10 @@ import { Component } from 'react';
  * Das fertige Diagramm auf der Finishseite
  */
 export default class Diagram extends Component {
+    private static readonly T_ACCELEROMETER_DE: string = "Beschleunigungssensor";
+    private static readonly T_GYROSCOPE_DE: string = "Gyroskop";
+    private static readonly T_MAGNETOMETER_DE: string = "Magnetometer";
+
     /**
      * der Datensatz für das Diagramm, durch props übermittelt
      */
@@ -69,13 +73,13 @@ export default class Diagram extends Component {
                  */
                 switch (sensor) {
                     case 2:
-                        sensorName = 'Accelerometer';
+                        sensorName = Diagram.T_ACCELEROMETER_DE;
                         break;
                     case 3:
-                        sensorName = 'Gyroscope';
+                        sensorName = Diagram.T_GYROSCOPE_DE;
                         break;
                     case 4:
-                        sensorName = 'Magnetometer';
+                        sensorName = Diagram.T_MAGNETOMETER_DE;
                         break;
                 }
                 /**

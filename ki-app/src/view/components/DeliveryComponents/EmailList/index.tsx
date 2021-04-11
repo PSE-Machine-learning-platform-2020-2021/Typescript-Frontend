@@ -8,6 +8,18 @@ import "./index.css"
  * Behandeln Emailliste mit Hinzufügen und Löschen, wählen Eamils auszuliefern
  */
 export default class EmailList extends Component {
+	private static readonly E_INPUT_EMPTY_DE: string = "Die Eingabe darf nicht leer sein!";
+	private static readonly E_INPUT_DUPLICATE_DE: string = "Diese E-Mail-Adresse ist schon in der Liste!";
+	private static readonly E_INPUT_INVALID_DE: string = "Der eingebene Wert kann keine gültige E-Mail-Adresse sein.";
+	private static readonly Q_DELETE_ADDRESS_SINGLE_DE: string = "Sind Sie sich sicher, die gewählte Emailadresse löschen zu wollen?";
+	private static readonly Q_DELETE_ADDRESS_MULTI_DE: string = "Sind Sie sich sicher, die gewählten Emailadressen löschen zu wollen?";
+	private static readonly T_ADD_BUTTON_DE: string = "Neue Emailadresse mit 'Enter' hinzufügen!";
+	private static readonly T_ADD_PLACEHOLDER_DE: string = "Ein Druck auf die 'Enter'-Taste fügt die Eingabe hinzu.";
+	private static readonly T_SELECTION_COUNT_PART_DE: string = "Gewählt";
+	private static readonly T_SELECTION_COUNT_FULL_DE: string = "Insgesamt";
+	private static readonly T_SEND_BUTTON_DE: string = "Ausliefern!";
+	private static readonly T_DELETE_BUTTON_DE: string = "Löschen";
+	private static readonly T_SELECT_ALL_BUTTON_DE: string = "Alle ausgewählten Emailadressen hinzufügen!";
 
 	/**
 	 * Variablen und Methoden welche der Klasse zur verfügung gestellt werden müssen
@@ -28,11 +40,7 @@ export default class EmailList extends Component {
 			address: '',
 			chosen: false
 		},
-		emails: [{
-			id: 'example',
-			address: 'xxxxx@xxx.xx(Beispiel, nach erstmal Addieren automatisch gelöscht)',
-			chosen: false
-		}]
+		emails: [] as { id: string, address: string, chosen: boolean }[]
 	};
 
 	/**
@@ -46,9 +54,8 @@ export default class EmailList extends Component {
 	 * Eingabe Methode
 	 * @param e ChangeEventInput
 	 */
-	inputchange = (e: React.ChangeEvent<HTMLInputElement>) => {
-		// eslint-disable-next-line
-		if (e.target.value == '') {
+	inputchange = (e: React.ChangeEvent<HTMLInputElement>): void => {
+		if (e.target.value === '') {
 			this.setState({ inputempty: true });
 		} else {
 			this.setState({ inputemail: { id: nanoid(), address: e.target.value, chosen: false }, inputempty: false });
@@ -57,64 +64,57 @@ export default class EmailList extends Component {
 	};
 
 	/**
-	 * Eingabe beschätigen
-	 * @param e KeyboardEvent
-	 * @returns 
+	 * Diese Methode verarbeitet eingegebene E-Mail-Adressen.
+	 * 
+	 * @param e KeyboardEvent - über dieses Event wird die Methode ausgelöst. Es enthält ein paar Werte, die im weiteren Verlauf noch benötigt werden.
 	 */
-	handleKeyUp = (e: React.KeyboardEvent<HTMLInputElement>) => {
-		this.deleteEmail('example');
+	handleKeyUp = (e: React.KeyboardEvent<HTMLInputElement>): void => {
 		const { keyCode } = e;
-		//check ENTER-key
+		// check ENTER-key
 		if (keyCode !== 13) return;
-		//cant add empty email
+		// cant add empty email
 		const { inputemail, inputempty, emails } = this.state;
 		if (inputempty) {
-			NotificationManager.error("Eingabe darf nicht leer sein!", "", 3000);
+			NotificationManager.error(EmailList.E_INPUT_EMPTY_DE, "", 3000);
 			return;
 		}
-		let exist = false;
-		emails.map((emailObj) => {
-			// eslint-disable-next-line
-			if (emailObj.address == inputemail.address) exist = true;
-			return emailObj;
-		});
-		if (exist) {
-			NotificationManager.error("Es gibt schon Emailadresse in List!", "", 3000);
+		const exists = emails.map(emailObj => emailObj.address === inputemail.address).includes(true);
+		if (exists) {
+			NotificationManager.error(EmailList.E_INPUT_DUPLICATE_DE, "", 3000);
 			return;
 		}
 		var pattern = /^([A-Za-z0-9_\-.])+@([A-Za-z0-9_\-.])+\.([A-Za-z])+$/;
 		if (pattern.test(inputemail.address)) {
 			this.addEmail(inputemail);
 		} else {
-			NotificationManager.error("Sie müssen eine Emailadresse eingeben!", "", 3000);
+			NotificationManager.error(EmailList.E_INPUT_INVALID_DE, "", 3000);
 			return;
 		}
 
-		//hide inputbox
+		// hide inputbox
 		this.setState({ addButtonClick: false });
 	};
 
 	/**
 	 * Behandeln Mausstatus
+	 * 
 	 * @param flag Mausstatus
-	 * @returns 
+	 * @returns Ein vorbereiteter Funktionsaufruf zur Statusaktualisierung.
 	 */
 	handleMouse = (flag: boolean) => {
-		return () => {
-			this.setState({ mouse: flag });
-		};
+		return () => this.setState({ mouse: flag });
 	};
 
 	/**
 	 * Wählen Email Methode
+	 * 
 	 * @param id gewählt EmailID
 	 * @param chosen gewählt oder nicht
 	 */
 	handleCheck = (id: string, chosen: boolean) => {
 		const { emails } = this.state;
 		const newEmails = emails.map((emailObj) => {
-			// eslint-disable-next-line
-			if (emailObj.id == id) return { ...emailObj, chosen };
+			if (emailObj.id === id) return { ...emailObj, chosen };
 			else return emailObj;
 		});
 		this.setState({ emails: newEmails });
@@ -122,82 +122,87 @@ export default class EmailList extends Component {
 
 	/**
 	 * Löschen Methode
+	 * 
 	 * @param id EmailID zu löschen
 	 */
-	handleDelete = (id: string) => {
-		if (window.confirm('Sind Sie sicher, die gewählt Emailadresse zu löschen?')) {
+	handleDelete = (id: string): void => {
+		if (window.confirm(EmailList.Q_DELETE_ADDRESS_SINGLE_DE)) {
 			const { emails } = this.state;
 			const newEmails = emails.filter((emailObj) => {
 				return emailObj.id !== id;
 			});
-			//update emailList
+			// update emailList
 			this.setState({ emails: newEmails });
 		}
 	};
 
-	//addEmail for add new Email
-	addEmail = (emailObj: { id: string, address: string, chosen: boolean; }) => {
-		//add new one
+	/**
+	 * Diese Methode fügt eine E-Mail-Adresse zur Liste der E-Mail-Adressen hinzu und aktualisiert die Ansicht.
+	 * 
+	 * @param emailObj Ein klassenloses Objekt, das die benötigten Daten einer E-Mail-Adresse enthält.
+	 */
+	addEmail = (emailObj: { id: string, address: string, chosen: boolean; }): void => {
 		const { emails } = this.state;
 		const newEmails = [emailObj, ...emails];
-		//update emailList
+		// update emailList
 		this.setState({ emails: newEmails });
 	};
 
-	//deleteEmail for delete emailObj
-	deleteEmail = (id: string) => {
-		//get orignal emailList
-		//delete emailObj with id
+	/**
+	 * Diese Methode löscht eine E-Mail-Adresse aus der Liste der E-Mail-Adressen und aktualisiert die Ansicht.
+	 * 
+	 * @param emailObj Die ID der zu löschenden Adresse.
+	 */
+	deleteEmail = (id: string): void => {
+		// get orignal emailList
+		// delete emailObj with id
 		const { emails } = this.state;
-		const newEmails = emails.filter((emailObj) => {
-			return emailObj.id !== id;
-		});
-		//update emailList
+		const newEmails = emails.filter(emailObj => emailObj.id !== id);
+		// update emailList
 		this.setState({ emails: newEmails });
 	};
 
-	//checkAllEmail for all chosen email
-	chooseAllEmail = (e: React.ChangeEvent<HTMLInputElement>) => {
-		//get orignal emailList
+	/**
+	 * Diese Methode wählt alle E-Mail-Adressen in der Liste aus und aktualisiert die Ansicht.
+	 * 
+	 * @param emailObj Das auslösende Event
+	 */
+	chooseAllEmail = (e: React.ChangeEvent<HTMLInputElement>): void => {
+		// get orignal emailList
 		const chosen = e.target.checked;
 		const { emails } = this.state;
-		const newEmails = emails.map((emailObj) => {
-			return { ...emailObj, chosen };
-		});
-		//update emailList
+		const newEmails = emails.map(emailObj => {return { ...emailObj, chosen };});
+		// update emailList
 		this.setState({ emails: newEmails });
 	};
 
-	//clearAllChosen for delete all emails
-	clearAllChosen = () => {
-		if (window.confirm('Sind Sie sicher, alle gewähte Emailadressen zu löschen?')) {
-			//get orignal emailList
-			const { emails } = this.state;
-			//filter datas
-			const newEmails = emails.filter((emailObj) => {
-				return !emailObj.chosen;
-			});
-			//update emailLists
+	/**
+	 * Diese Methode löscht alle ausgewählten E-Mail-Adresse 
+	 * aus der Liste der E-Mail-Adressen und aktualisiert die Ansicht.
+	 */
+	clearAllChosen = (): void => {
+		if (window.confirm(EmailList.Q_DELETE_ADDRESS_MULTI_DE)) {
+			// get orignal emailList
+			const { emails } = this.state;	
+			const newEmails = emails.filter(emailObj => !emailObj.chosen);
+			// update emaillist
 			this.setState({ emails: newEmails });
 		}
 	};
+
 	/**
 	 * Ausliefern-Methode
 	 */
-	delivery = () => {
+	delivery = (): void => {
 		const { emails } = this.state;
-		let emailaddressList: string[] = [];
-		emails.map((emailObj) => {
-			if (emailObj.chosen) emailaddressList.push(emailObj.address);
-			return emailObj;
-		});
-		//console.log(emailaddressList)
-		this.props.delivery(emailaddressList);
+		const emailAddressList: string[] = emails.filter(entry => entry.chosen).map(entry => entry.address);
+		this.props.delivery(emailAddressList);
 	};
 
 	/**
-	 * Render Methode des Komponenten
-	 * @returns Aufbau des Komponenten
+	 * Render Methode der Komponente
+	 * 
+	 * @returns Aufbau der Komponente
 	 */
 	render() {
 		const { mouse, emails } = this.state;
@@ -207,10 +212,10 @@ export default class EmailList extends Component {
 		return (
 			<div className="email-main">
 				<div className="addemailbutton">
-					<button onClick={() => this.handleCreate()} className="addemail-btn" >Addieren eine neue Emailadresse!(Addieren Eingaben mit 'Enter'-Taste)</button>
+					<button onClick={() => this.handleCreate()} className="addemail-btn" >{EmailList.T_ADD_BUTTON_DE}</button>
 					{this.state.addButtonClick ?
 						<div className="inputbox">
-							<input value={this.state.inputemail.address} onKeyUp={this.handleKeyUp} onChange={this.inputchange} type="text" placeholder="input email address with ENTER-key" className="emailinput" />
+							<input value={this.state.inputemail.address} onKeyUp={this.handleKeyUp} onChange={this.inputchange} type="text" placeholder={EmailList.T_ADD_PLACEHOLDER_DE} className="emailinput" />
 						</div>
 						: null}
 
@@ -218,12 +223,12 @@ export default class EmailList extends Component {
 
 				{emails.map(emailObj => {
 					return (
-						<li style={{ backgroundColor: mouse ? '#ddd' : 'white' }} onMouseEnter={this.handleMouse(true)} onMouseLeave={this.handleMouse(false)}>
+						<li style={{ backgroundColor: mouse ? '#ddd' : '#fff' }} onMouseEnter={this.handleMouse(true)} onMouseLeave={this.handleMouse(false)}>
 							<label>
 								<input className='emailitemcheck' type="checkbox" checked={emailObj.chosen} onChange={(e: React.ChangeEvent<HTMLInputElement>): void => this.handleCheck(emailObj.id, e.target.checked)} />
 								<span>{emailObj.address}</span>
 							</label>
-							<button onClick={() => this.handleDelete(emailObj.id)} className="btn-item" style={{ display: mouse ? 'block' : 'none' }}>Löschen</button>
+							<button onClick={() => this.handleDelete(emailObj.id)} className="btn-item" style={{ display: mouse ? 'block' : 'none' }}>{EmailList.T_DELETE_BUTTON_DE}</button>
 						</li>
 					);
 				})}
@@ -233,13 +238,13 @@ export default class EmailList extends Component {
 						<input className='chooseall' type="checkbox" onChange={this.chooseAllEmail} checked={chosenCount === total && total !== 0 ? true : false} />
 					</label>
 					<span>
-						<span>Gewählt: {chosenCount}</span> / Insegesamt: {total}
+						<span>{EmailList.T_SELECTION_COUNT_PART_DE}: {chosenCount}</span> / {EmailList.T_SELECTION_COUNT_FULL_DE}: {total}
 					</span>
-					<button onClick={() => this.clearAllChosen()} className="btn-clear">Löschen alle gewählte Emailadressen!</button>
+					<button onClick={() => this.clearAllChosen()} className="btn-clear">{EmailList.T_SELECT_ALL_BUTTON_DE}</button>
 				</div>
 
 				<div className="deliverybutton">
-					<button onClick={() => this.delivery()} className="delivery-btn" >Liefern Aus!</button>
+					<button onClick={() => this.delivery()} className="delivery-btn" >{EmailList.T_SEND_BUTTON_DE}</button>
 				</div>
 			</div>
 		);

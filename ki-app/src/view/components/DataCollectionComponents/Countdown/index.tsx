@@ -12,13 +12,13 @@ export default class Countdown extends Component {
 
     render() {
         /**
-         * unterscheidet ob die Erfassung schon startet
+         * unterscheidet, ob die Erfassung schon begonnen hat.
          */
         let countdown;
         if (this.props.countdownNumber > 0) {
             countdown = this.props.countdownNumber;
         } else {
-            countdown = "Aufnahme gestartet";
+            countdown = "Aufnahme läuft!";
         }
 
         /**
@@ -28,10 +28,10 @@ export default class Countdown extends Component {
         for (let sensor in this.props.chosenSensors) {
             switch (sensor) {
                 case "0":
-                    sensornames.push("Accelerometer");
+                    sensornames.push("Beschleunigungssensor");
                     break;
                 case "1":
-                    sensornames.push("Gyroscope");
+                    sensornames.push("Gyroskop");
                     break;
             }
         }
