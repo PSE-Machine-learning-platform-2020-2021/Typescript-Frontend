@@ -8,7 +8,5 @@ export enum Extraction {
     AUTOREGRESSIVE,
     SKEWNESS,
     KURTOSIS,
-    IQR,
-
-
+    IQR
 }
