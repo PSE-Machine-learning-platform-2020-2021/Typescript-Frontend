@@ -117,7 +117,7 @@ li.list {
 }
 
 li.list:not(:hover) button, .download-btn {
-    display: none;
+    display: none !important;
 }
 
 li.list:last-of-type {
