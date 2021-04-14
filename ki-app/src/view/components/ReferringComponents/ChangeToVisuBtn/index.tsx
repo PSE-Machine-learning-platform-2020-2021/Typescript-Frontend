@@ -1,5 +1,4 @@
 import { Component } from 'react';
-import './ChangeToVisuBtn.css';
 
 /**
  * Stellt die funktion eines Knopfes zum wechsel auf die Visualisierungsseite dar

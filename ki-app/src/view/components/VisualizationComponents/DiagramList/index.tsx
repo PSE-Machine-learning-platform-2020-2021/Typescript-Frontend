@@ -189,8 +189,8 @@ export default class DiagramList extends Component {
                                     <h5 className="datasetName">{datasetname}</h5>
                                     {diagram.lineLabels}
                                 </div>
-                                <div className="diagramList">
-                                    <LineChart data={diagram.data} options={diagram.options} width={window.innerWidth} height={300} />
+                                <div className="diagramList" id={index.toString()}>
+                                    <LineChart data={diagram.data} options={diagram.options} width={document.documentElement.clientWidth} height={320} />
                                 </div>
                             </div>
                         );

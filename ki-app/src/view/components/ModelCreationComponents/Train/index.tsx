@@ -397,7 +397,8 @@ export default class Train extends Component {
 						{imputators.map((imputator, index) => {
 							return (
 								<div key={index}>
-									<input className='imputationcheck' type="checkbox" value={index} checked={imputator.checked} onChange={() => this.handleImputation(index)} /><span>{imputator.name}</span>
+									<input className='imputationcheck' type="checkbox" id={"I" + index.toString()} value={index} checked={imputator.checked} onChange={() => this.handleImputation(index)} />
+									<label htmlFor={"I" + index.toString()}>{imputator.name}</label>
 								</div>
 							);
 						})}
@@ -407,7 +408,8 @@ export default class Train extends Component {
 						{scalers.map((scaler, index) => {
 							return (
 								<div key={index}>
-									<input className='scalercheck' type="checkbox" value={index} checked={scaler.checked} onChange={() => this.handleScaler(index)} /><span>{scaler.name}</span>
+									<input className='scalercheck' type="checkbox" id={"S" + index.toString()} value={index} checked={scaler.checked} onChange={() => this.handleScaler(index)} />
+									<label htmlFor={"S" + index.toString()}>{scaler.name}</label>
 								</div>
 							);
 						})
@@ -421,7 +423,8 @@ export default class Train extends Component {
 						{myfeatures.map((extraction, index) => {
 							return (
 								<div key={index}>
-									<input className='featurecheck' type="checkbox" value={index} checked={extraction.checked} onChange={() => this.handleExtraction(index)} /><span>{extraction.name}</span>
+									<input className='featurecheck' type="checkbox" id={"F" + index.toString()} value={index} checked={extraction.checked} onChange={() => this.handleExtraction(index)} />
+									<label htmlFor={"F" + index.toString()}>{extraction.name}</label>
 								</div>
 							);
 						})
@@ -432,7 +435,8 @@ export default class Train extends Component {
 						{classifiers.map((classifier, index) => {
 							return (
 								<div key={index}>
-									<input className='classifiercheck' type="checkbox" value={index} checked={classifier.checked} onChange={() => this.handleClassifier(index)} /><span>{classifier.name}</span>
+									<input className='classifiercheck' type="checkbox" id={"C" + index.toString()} value={index} checked={classifier.checked} onChange={() => this.handleClassifier(index)} />
+									<label htmlFor={"C" + index.toString()}>{classifier.name}</label>
 								</div>
 							);
 						})}

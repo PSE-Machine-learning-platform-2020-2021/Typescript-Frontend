@@ -1,6 +1,6 @@
 import React, { Component } from 'react';
 import NewWindow from "react-new-window";
-import './LoginWindow.css'
+import "./LoginWindow.css"
 
 /**
  * LoginFenster
@@ -12,6 +12,7 @@ export default class LoginWindow extends Component {
     private static readonly T_POPUP_LABEL_PASSWORD_DE: string = "Passwort";
     private static readonly T_POPUP_BUTTON_LOGIN_DE: string = "Anmelden";
     private static readonly T_POPUP_BUTTON_REGISTER_DE: string = "Registrieren";
+    private static readonly T_ATTR_FORM_SECTION: string = "form-section";
 
     /**
     * Variablen und Methoden welche der Klasse zur verfügung gestellt werden müssen
@@ -93,27 +94,33 @@ export default class LoginWindow extends Component {
         return (
             <div>
                 <div className="left">
-                    <button className="login-button" onClick={this.openNewWindow} type='button'>{LoginWindow.T_BUTTON_LOGIN_DE}</button>
+                    <button onClick={this.openNewWindow} type='button'>{LoginWindow.T_BUTTON_LOGIN_DE}</button>
                 </div>
                 {this.state.openNewWindow && (
                     <NewWindow title="Login">
                         <div className="login-window">
                             <form>
-                                <label>
-                                    <p className='user'>{LoginWindow.T_POPUP_LABEL_NAME_DE}</p>
+                                <div className={LoginWindow.T_ATTR_FORM_SECTION}>
+                                    <label>
+                                        {LoginWindow.T_POPUP_LABEL_NAME_DE}
+                                    </label>
                                     <input type="text" value={this.state.username} onChange={this.changeUsername} />
-                                </label>
-                                <label>
-                                    <p className='mail'>{LoginWindow.T_POPUP_LABEL_EMAIL_DE}</p>
+                                </div>
+                                <div className={LoginWindow.T_ATTR_FORM_SECTION}>
+                                    <label>
+                                        {LoginWindow.T_POPUP_LABEL_EMAIL_DE}
+                                    </label>
                                     <input type="text" value={this.state.email} onChange={this.changeEmail} />
-                                </label>
-                                <label>
-                                    <p className='password'>{LoginWindow.T_POPUP_LABEL_PASSWORD_DE}</p>
+                                </div>
+                                <div className={LoginWindow.T_ATTR_FORM_SECTION}>
+                                    <label>
+                                        {LoginWindow.T_POPUP_LABEL_PASSWORD_DE}
+                                    </label>
                                     <input type="password" value={this.state.password} onChange={this.changePassword} />
-                                </label>
-                                <div>
-                                    <button className="login" onClick={this.login} type='button'>{LoginWindow.T_POPUP_BUTTON_LOGIN_DE}</button>
-                                    <button className="register" onClick={this.register} type='button'>{LoginWindow.T_POPUP_BUTTON_REGISTER_DE}</button>
+                                </div>
+                                <div className={LoginWindow.T_ATTR_FORM_SECTION}>
+                                    <button onClick={this.login} type='button'>{LoginWindow.T_POPUP_BUTTON_LOGIN_DE}</button>
+                                    <button onClick={this.register} type='button'>{LoginWindow.T_POPUP_BUTTON_REGISTER_DE}</button>
                                 </div>
                             </form>
                         </div>

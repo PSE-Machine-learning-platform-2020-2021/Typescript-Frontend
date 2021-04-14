@@ -2,7 +2,6 @@ import React, { Component } from 'react';
 import { nanoid } from 'nanoid';
 import { NotificationManager } from 'react-notifications';
 import 'react-notifications/lib/notifications.css';
-import "./index.css"
 
 /**
  * Behandeln Emailliste mit Hinzufügen und Löschen, wählen Eamils auszuliefern
@@ -10,16 +9,16 @@ import "./index.css"
 export default class EmailList extends Component {
 	private static readonly E_INPUT_EMPTY_DE: string = "Die Eingabe darf nicht leer sein!";
 	private static readonly E_INPUT_DUPLICATE_DE: string = "Diese E-Mail-Adresse ist schon in der Liste!";
-	private static readonly E_INPUT_INVALID_DE: string = "Der eingebene Wert kann keine gültige E-Mail-Adresse sein.";
+	private static readonly E_INPUT_INVALID_DE: string = "Der eingebene Wert kann keine gültige E-Mail-Adresse sein!";
 	private static readonly Q_DELETE_ADDRESS_SINGLE_DE: string = "Sind Sie sich sicher, die gewählte Emailadresse löschen zu wollen?";
 	private static readonly Q_DELETE_ADDRESS_MULTI_DE: string = "Sind Sie sich sicher, die gewählten Emailadressen löschen zu wollen?";
-	private static readonly T_ADD_BUTTON_DE: string = "Neue Emailadresse mit 'Enter' hinzufügen!";
-	private static readonly T_ADD_PLACEHOLDER_DE: string = "Ein Druck auf die 'Enter'-Taste fügt die Eingabe hinzu.";
+	private static readonly T_ADD_BUTTON_DE: string = "Neue Emailadresse hinzufügen";
+	private static readonly T_ADD_PLACEHOLDER_DE: string = "Eingabe mit Eingabetaste abschließen";
 	private static readonly T_SELECTION_COUNT_PART_DE: string = "Gewählt";
 	private static readonly T_SELECTION_COUNT_FULL_DE: string = "Insgesamt";
-	private static readonly T_SEND_BUTTON_DE: string = "Ausliefern!";
+	private static readonly T_SEND_BUTTON_DE: string = "Ausliefern";
 	private static readonly T_DELETE_BUTTON_DE: string = "Löschen";
-	private static readonly T_SELECT_ALL_BUTTON_DE: string = "Alle ausgewählten Emailadressen hinzufügen!";
+	private static readonly T_DELETE_ALL_BUTTON_DE: string = "Alle ausgewählten Emailadressen löschen";
 
 	/**
 	 * Variablen und Methoden welche der Klasse zur verfügung gestellt werden müssen
@@ -211,39 +210,35 @@ export default class EmailList extends Component {
 		const total = emails.length;
 		return (
 			<div className="email-main">
-				<div className="addemailbutton">
+				<div className="view-section">
 					<button onClick={() => this.handleCreate()} className="addemail-btn" >{EmailList.T_ADD_BUTTON_DE}</button>
-					{this.state.addButtonClick ?
-						<div className="inputbox">
-							<input value={this.state.inputemail.address} onKeyUp={this.handleKeyUp} onChange={this.inputchange} type="text" placeholder={EmailList.T_ADD_PLACEHOLDER_DE} className="emailinput" />
-						</div>
-						: null}
-
 				</div>
-
-				{emails.map(emailObj => {
-					return (
-						<li style={{ backgroundColor: mouse ? '#ddd' : '#fff' }} onMouseEnter={this.handleMouse(true)} onMouseLeave={this.handleMouse(false)}>
-							<label>
-								<input className='emailitemcheck' type="checkbox" checked={emailObj.chosen} onChange={(e: React.ChangeEvent<HTMLInputElement>): void => this.handleCheck(emailObj.id, e.target.checked)} />
-								<span>{emailObj.address}</span>
-							</label>
-							<button onClick={() => this.handleDelete(emailObj.id)} className="btn-item" style={{ display: mouse ? 'block' : 'none' }}>{EmailList.T_DELETE_BUTTON_DE}</button>
-						</li>
-					);
-				})}
-
-				<div className="handleallemail">
-					<label>
-						<input className='chooseall' type="checkbox" onChange={this.chooseAllEmail} checked={chosenCount === total && total !== 0 ? true : false} />
-					</label>
+				{this.state.addButtonClick ?
+				<div className="inputbox view-section">
+					<input value={this.state.inputemail.address} onKeyUp={this.handleKeyUp} onChange={this.inputchange} type="text" placeholder={EmailList.T_ADD_PLACEHOLDER_DE} className="emailinput" />
+				</div> : null}
+				<div className="view-section">
+					{emails.map(emailObj => {
+						return (
+							<li  className="list" style={{ backgroundColor: mouse ? '#ddd' : '#fff' }} onMouseEnter={this.handleMouse(true)} onMouseLeave={this.handleMouse(false)}>
+								<label>
+									<input className='emailitemcheck' type="checkbox" checked={emailObj.chosen} onChange={(e: React.ChangeEvent<HTMLInputElement>): void => this.handleCheck(emailObj.id, e.target.checked)} />
+									<span>{emailObj.address}</span>
+								</label>
+								<button onClick={() => this.handleDelete(emailObj.id)} className="btn-item" style={{ display: mouse ? 'block' : 'none' }}>{EmailList.T_DELETE_BUTTON_DE}</button>
+							</li>
+						);
+					})}
+				</div>
+				<div className="view-section">
+					<input className='chooseall' type="checkbox" onChange={this.chooseAllEmail} checked={chosenCount === total && total !== 0 ? true : false} />
 					<span>
 						<span>{EmailList.T_SELECTION_COUNT_PART_DE}: {chosenCount}</span> / {EmailList.T_SELECTION_COUNT_FULL_DE}: {total}
 					</span>
-					<button onClick={() => this.clearAllChosen()} className="btn-clear">{EmailList.T_SELECT_ALL_BUTTON_DE}</button>
+					<button onClick={() => this.clearAllChosen()} disabled className="btn-clear">{EmailList.T_DELETE_ALL_BUTTON_DE}</button>
 				</div>
 
-				<div className="deliverybutton">
+				<div className="view-section">
 					<button onClick={() => this.delivery()} className="delivery-btn" >{EmailList.T_SEND_BUTTON_DE}</button>
 				</div>
 			</div>

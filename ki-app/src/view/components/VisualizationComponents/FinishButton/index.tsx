@@ -1,5 +1,4 @@
 import React, { Component } from 'react'
-import "./FinishButton.css"
 
 /**
  * Wechsel zu Modellerstellungsseite
