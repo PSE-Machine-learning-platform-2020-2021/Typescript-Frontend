@@ -157,7 +157,7 @@ export default class Diagram extends Component {
                     </div>
                 </div>
                 <div className="view-section">
-                    <button className='button' type="button" onClick={this.submit}>{Diagram.T_BUTTON_NEXT_DE}</button>
+                    <button className='specialButton' type="button" onClick={this.submit}>{Diagram.T_BUTTON_NEXT_DE}</button>
                 </div>
             </div>
         );

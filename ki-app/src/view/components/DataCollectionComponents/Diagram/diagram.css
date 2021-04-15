@@ -1,3 +1,9 @@
 .rightbound-button-container {
     text-align: right;
 }
+
+.specialButton {
+    position: absolute;
+    bottom: 0em;
+    left: 0em;
+}
