@@ -144,16 +144,17 @@ export default class Diagram extends Component {
     render() {
         var LineChart = require("react-chartjs").Line;
         this.updateDiagramm();
+        let dd = this.state.diagrammData;
         return (
             <div>
                 <div className="view-section">
                     <div className="view-section">
                         <span>
-                            {this.state.diagrammData.lineLabels}
+                            {dd.lineLabels}
                         </span>
                     </div>
                     <div className="view-section">
-                        <LineChart data={this.state.diagrammData.diagramData} options={this.state.diagrammData.diagramOptions} width={document.documentElement.clientWidth} height="200" redraw />
+                        <LineChart data={dd.diagramData} options={dd.diagramOptions} width={document.documentElement.clientWidth} height={200} redraw />
                     </div>
                 </div>
                 <div className="view-section">
