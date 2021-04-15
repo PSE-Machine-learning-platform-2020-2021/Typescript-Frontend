@@ -361,8 +361,8 @@ export default class Train extends Component {
 	render() {
 		const { mouse, datasets, imputators, scalers, myfeatures, classifiers } = this.state;
 		return (
-			<div className="train">
-				<h3  className="text">{Train.T_DATASET_TITLE_DE}</h3>
+			<div className="train view-section">
+				<h3 className="text">{Train.T_DATASET_TITLE_DE}</h3>
 				{datasets.map(dataset => {
 					return (
 
@@ -376,21 +376,24 @@ export default class Train extends Component {
 					);
 				})}
 
-				<div className="adddatasetbutton">
+				<div className="adddatasetbutton view-section">
 					{this.state.openNewWindow && (
 						<NewWindow>
 							<div className="login-window">
-								<h1  className="text">{Train.T_DATASET_LIST_TITLE_DE}</h1>
-								<select onChange={this.handleChange} className="text2" >
-									<option value=""  className="text2">{Train.T_DATASET_LIST_DROPDOWN_DE}</option>
-									{this.options()}
-								</select >
-								<button onClick={this.handleChoose} className="choose-btn" type='button' >{Train.T_DATASET_LIST_ADD_DE}</button>
+								<h1 className="view-section">{Train.T_DATASET_LIST_TITLE_DE}</h1>
+								<div className="view-section">
+									<select onChange={this.handleChange} className="text2" >
+										<option value=""  className="text2">{Train.T_DATASET_LIST_DROPDOWN_DE}</option>
+										{this.options()}
+									</select >
+									<button onClick={this.handleChoose} className="choose-btn" type='button' >{Train.T_DATASET_LIST_ADD_DE}</button>
+								</div>
 							</div>
 						</NewWindow>
 					)}
 					<button onClick={() => this.handleCreate()} className="create-btn" type='button' >{Train.T_DATASET_ADD_DE}</button>
 				</div>
+				<div className="view-section">
 				<div className="list">
 					<div className="imputationlist">
 						<h3  className="text">{Train.T_IMPUTER_TITLE_DE}</h3>
@@ -416,7 +419,6 @@ export default class Train extends Component {
 						}
 					</div>
 				</div>
-
 				<div className="list">
 					<div className="extractionlist">
 						<h3  className="text">{Train.T_FEATURE_TITLE_DE}</h3>
@@ -442,9 +444,9 @@ export default class Train extends Component {
 						})}
 					</div>
 				</div>
-				<br></br>
-
-				<div className="clearfloat">
+				<div className="clearfloat"></div>
+				</div>
+				<div className="view-section">
 					<button onClick={() => this.handleTrain()} className="train-btn" type='button' >{Train.T_BUTTON_START_DE}</button>
 					<button onClick={() => this.handleChangePage()} className="changepage-btn" type='button' >{Train.T_BUTTON_HOME_DE}</button>
 				</div>

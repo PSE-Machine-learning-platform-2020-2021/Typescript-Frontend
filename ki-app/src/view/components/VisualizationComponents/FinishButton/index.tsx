@@ -18,10 +18,9 @@ export default class FinishButton extends Component {
      */
     render() {
         return (
-            <div>
+            <div className="view-section">
                 <button onClick={() => this.props.pageChangeToCreation()} className="finish-btn" >Zur Modellerstellungsseite</button>
             </div>
-            
         )
     }
 }

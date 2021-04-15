@@ -1,4 +1,5 @@
 import React, { Component } from 'react'
+import "./linkText.css"
 
 /**
  * Linktext für Verbindung
@@ -20,11 +21,11 @@ export default class LinkText extends Component {
     render() {
         return (
             <div className="linktext">
-                <div className="linktext1">
-                    <p className = "text">{LinkText.T_LINK_DESCRIPTION_DE}</p>
-                </div>
-
-                <a className = "text" href={this.props.link} type='link'>{this.props.link}</a>
+                <p className="text">
+                    {LinkText.T_LINK_DESCRIPTION_DE}
+                    <br />
+                    <a className="text" href={this.props.link} type='link'>{this.props.link}</a>
+                </p>
             </div>
         )
     }

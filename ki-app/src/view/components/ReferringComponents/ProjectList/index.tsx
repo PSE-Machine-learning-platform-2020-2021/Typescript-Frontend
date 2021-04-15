@@ -107,7 +107,15 @@ export default class ProjectList extends Component {
                     <button onClick={() => this.handleChoose()} className="pl-btn" type="button" >Modellliste laden</button>
                     <button onClick={() => this.handleLoad()} className="pl-btn" type="button" >Projekt laden</button>
                 </div>
-                {this.state.loadclick ? <div className="view-section"> <QRImage qr={this.props.qr} /><ChangeToVisuBtn pageChangeToVisu={this.props.pageChangeToVisu} /> <LinkText link={this.props.link}/></div> : null}
+                {this.state.loadclick ?
+                <div className="view-section">
+                    <div className="view-section">
+                        <QRImage qr={this.props.qr} />
+                        <LinkText link={this.props.link}/>
+                    </div>
+                    <ChangeToVisuBtn pageChangeToVisu={this.props.pageChangeToVisu} /> 
+                </div>
+                 : null}
                 
                 {this.state.click ? <div className="view-section"> <ModelList pageLoadModel={this.props.pageLoadModel} currentProject={this.state.currentProject} /></div> : null}
             </section>

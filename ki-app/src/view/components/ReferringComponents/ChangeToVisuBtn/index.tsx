@@ -19,7 +19,7 @@ export default class ChangeToVisuBtn extends Component {
      */
     render() {
         return (
-            <div>
+            <div className="view-section">
                 <button onClick={() => this.props.pageChangeToVisu()} className="ctv-btn" type="button" >{ChangeToVisuBtn.T_BUTTON_NEXT_DE}</button>
             </div>
         );

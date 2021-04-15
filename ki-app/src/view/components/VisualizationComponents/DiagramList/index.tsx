@@ -175,27 +175,27 @@ export default class DiagramList extends Component {
             }
         });
         return (
-            <div>
-                    {this.state.diagramList.map((diagram, index) => {
-                        let datasetname = "Null";
-                        this.props.dataSetMetas.forEach(dataset => {
-                            if (dataset.dataSetID === diagram.dataSetID) {
-                                datasetname = dataset.dataSetName;
-                            }
-                        });
-                        return (
-                            <div key={index}>
-                                <div className="diagramTop">
-                                    <h5 className="datasetName">{datasetname}</h5>
-                                    {diagram.lineLabels}
-                                </div>
-                                <div className="diagramList" id={index.toString()}>
-                                    <LineChart data={diagram.data} options={diagram.options} width={document.documentElement.clientWidth} height={320} />
-                                </div>
+            <div className="view-section">
+                {this.state.diagramList.map((diagram, index) => {
+                    let datasetname = "Null";
+                    this.props.dataSetMetas.forEach(dataset => {
+                        if (dataset.dataSetID === diagram.dataSetID) {
+                            datasetname = dataset.dataSetName;
+                        }
+                    });
+                    return (
+                        <div key={index} className="view-section">
+                            <div className="diagramTop">
+                                <h5 className="datasetName">{datasetname}</h5>
+                                {diagram.lineLabels}
                             </div>
+                            <div className="diagramList" id={index.toString()}>
+                                <LineChart data={diagram.data} options={diagram.options} width={document.documentElement.clientWidth} height={320} />
+                            </div>
+                        </div>
                         );
                     })}
-                </div>
+            </div>
         );
     }
 }
