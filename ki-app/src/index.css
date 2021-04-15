@@ -116,22 +116,12 @@ li.list {
     padding-bottom: 0.125em;
 }
 
-li.list:not(:hover) button, .download-btn {
+li.list:not(:hover) button, .download-btn, input:disabled, button:disabled {
     display: none !important;
 }
 
 li.list:last-of-type {
     clear: right;
-}
-
-input:disabled {
-    color: #3A3A3A;
-    border-color: #1C2453;
-}
-
-button:disabled {
-    background-color: #3A3A3A;
-    color: #3A3A3A;
 }
 
 button:enabled:active, button:enabled:focus {
