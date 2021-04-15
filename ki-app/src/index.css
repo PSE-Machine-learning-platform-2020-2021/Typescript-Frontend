@@ -37,7 +37,7 @@ label, input[type=text], input[type=password] {
     margin: 0 0.5em;
 }
 
-label:not(li.list label)::after {
+label:not(li.list label, input[type=checkbox] + label)::after {
     content: ":";
 }
 
@@ -147,6 +147,7 @@ button:enabled:active, button:enabled:focus {
 
 .view-section {
     margin: 1em 0;
+    display: block;
 }
 
 .qr-code, .form-section, .linktext {
