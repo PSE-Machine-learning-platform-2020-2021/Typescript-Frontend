@@ -147,6 +147,7 @@ export default class Diagram extends Component {
         let dd = this.state.diagrammData;
         return (
             <div>
+                <div>
                 <div className="view-section">
                     <div className="view-section">
                         <span>
@@ -156,6 +157,8 @@ export default class Diagram extends Component {
                     <div className="view-section">
                         <LineChart data={dd.diagramData} options={dd.diagramOptions} width={document.documentElement.clientWidth} height={200} redraw />
                     </div>
+                </div>
+                <div id = 'divWithSpace'></div>
                 </div>
                 <div className="view-section">
                     <button className='specialButton' type="button" onClick={this.submit}>{Diagram.T_BUTTON_NEXT_DE}</button>
