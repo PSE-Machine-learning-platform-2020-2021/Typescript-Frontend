@@ -1,6 +1,5 @@
 import React, { Component } from "react";
 import { NotificationManager } from 'react-notifications';
-import './Input.css';
 
 
 /**
