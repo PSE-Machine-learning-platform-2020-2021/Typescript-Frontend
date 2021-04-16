@@ -124,7 +124,7 @@ export default class DiagramList extends Component {
             datasetFill: false,
             pointDotRadius: 2,
             pointHitDetectionRadius: 1,
-            offsetGridLines: false,
+            offsetGridLines: true,
             pointDot: false,
         };
         const newList = this.state.diagramList;
@@ -184,7 +184,7 @@ export default class DiagramList extends Component {
                                 {diagram.lineLabels}
                             </div>
                             <div className="diagramList">
-                                <LineChart data={diagram.data} options={diagram.options} width={document.documentElement.clientWidth} height={320} />
+                                <LineChart data={diagram.data} options={diagram.options} width={document.documentElement.clientWidth * 0.98} height={320} />
                             </div>
                         </div>
                         );
