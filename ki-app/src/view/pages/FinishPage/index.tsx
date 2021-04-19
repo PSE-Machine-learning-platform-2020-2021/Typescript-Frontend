@@ -41,7 +41,7 @@ export class FinishPage implements Page {
         <div className="label-container">
           <Labelling newLabel={this.newLabel.bind(this)} pagedeleteLabel={this.pagedeleteLabel.bind(this)} />
         </div>
-        <button className='reload' onClick = {this.reloadPage}>{FinishPage.T_BUTTON_RELOAD_DE}</button>
+        <button onClick = {this.reloadPage}>{FinishPage.T_BUTTON_RELOAD_DE}</button>
         <NotificationContainer />
       </div>
     );
