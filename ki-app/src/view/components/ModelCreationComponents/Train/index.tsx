@@ -295,7 +295,6 @@ export default class Train extends Component {
 	 */
 	render() {
 		const { datasets, imputators, scalers, myfeatures, classifiers, chooseDatasetsFlag, chooseFeatureFlag } = this.state;
-		console.log(datasets)
 		return (
 			<div className="train">
 				<div className="view-section">
