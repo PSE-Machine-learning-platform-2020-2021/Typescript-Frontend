@@ -150,6 +150,6 @@ button:enabled:active, button:enabled:focus {
     display: block;
 }
 
-.qr-code, .form-section, .linktext {
+.qr-code, .form-section, .linktext, div.list {
     padding: 0 0.5em;
 }
