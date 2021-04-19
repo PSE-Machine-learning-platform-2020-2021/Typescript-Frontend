@@ -38,8 +38,8 @@ export default class Train extends Component {
 	private static readonly T_CLASSIFIER_TITLE_DE: string = "Klassifizierer";
 	private static readonly T_BUTTON_START_DE: string = "KI-Modell trainieren";
 	private static readonly T_BUTTON_HOME_DE: string = "Zurück zur Verweisseite";
-	private static readonly T_DATASET_CHOOSEALL_DE: string = "Alle Datensätze Wählen!";
-	private static readonly T_FEATURE_CHOOSEALL_DE: string = "Alle Merkmalsextraktion Wählen!";
+	private static readonly T_DATASET_CHOOSEALL_DE: string = "Alle Datensätze wählen";
+	private static readonly T_FEATURE_CHOOSEALL_DE: string = "Alle Merkmale wählen";
 
 
 	/**
@@ -295,10 +295,11 @@ export default class Train extends Component {
 	 */
 	render() {
 		const { datasets, imputators, scalers, myfeatures, classifiers, chooseDatasetsFlag, chooseFeatureFlag } = this.state;
+		console.log(datasets)
 		return (
-			<div className="train view-section">
+			<div className="train">
 				<div className="view-section">
-					<div className="datasetlist">
+					<div className="list">
 						<h3 className="text">{Train.T_DATASET_TITLE_DE}</h3>
 						{datasets.map((dataset, index) => {
 							return (
