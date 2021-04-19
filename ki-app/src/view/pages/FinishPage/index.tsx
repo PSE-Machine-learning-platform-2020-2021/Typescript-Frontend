@@ -8,7 +8,6 @@ import { State } from "./State";
 import ReactDOM from "react-dom";
 import { States } from "../State";
 import { NotificationContainer } from "react-notifications";
-import './index.css'
 
 /**
  * Die Darstellungsseite für die Finishseite der Datenerfasser
