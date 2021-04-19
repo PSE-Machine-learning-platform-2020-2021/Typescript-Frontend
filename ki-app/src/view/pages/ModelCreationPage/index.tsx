@@ -100,9 +100,7 @@ export class ModelCreationPage implements Page {
 	 * @param features               - Die Merkmale, die aus den gegebenen Datensätzen herausgearbeitet werden sollen.
 	 */
 	private train(dataSets: number[], imputator: string, classifier: string, scaler: string, features: string[]) {
-		// eslint-disable-next-line
 		this.state.currentState = States.NeedKiTraining;
-		// eslint-disable-next-line
 		this.state.trainingParameter!.dataSets = dataSets;
 		this.state.trainingParameter!.imputator = imputator;
 		this.state.trainingParameter!.classifier = classifier;

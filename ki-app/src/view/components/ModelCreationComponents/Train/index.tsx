@@ -56,7 +56,7 @@ export default class Train extends Component {
 	 */
 	state = {
 		value: '' as string,
-		datasets: [] as { dataSetID: number, dataSetName: string, chosen: boolean; }[],
+		dataSets: [] as number[],
 		imputators: [
 			{ name: Train.T_IMPUTER_MEAN_DE, checked: true, tag: 'MEAN' },
 			/*			NOT IMPLEMENTED
@@ -93,29 +93,23 @@ export default class Train extends Component {
 		chosenScaler: 0,
 		chosenclassifier: 0,
 		chosenImputator: 0,
-		chooseDatasetsFlag: false,
+		chooseDataSetsFlag: false,
 		chooseFeatureFlag: false
 	};
 
 	/**
-	 * Befüllt die beiden state-Variablen, die so aussehen, als müssten da die Datensätze des aktuellen Projekts rein, 
-	 * mit den Daten aus der props-Variable dataSetMetas.
+	 * Diese Methode fertigt das Ereignis ab, das ausgelöst wird, wenn eine der Datensatz-Checkboxen angeklickt wird.
+	 * @param id Datasetindex
 	 */
-	componentWillReceiveProps(): void {
-		this.setState({ datasets: [] })
-		for (const x of this.props.dataSetMetas) {
-			this.state.datasets.push({ dataSetName: x.dataSetName, dataSetID: x.dataSetID, chosen: false });
+	handleDataset = (id: number): void => {
+		let dataSets = this.state.dataSets;
+		if (dataSets.includes(id)) {
+			this.setState({ dataSets: dataSets.filter(value => value != id) });
 		}
-	}
-
-	/**
-	 * Check Dataset
-	 * @param index Datasetindex
-	 */
-	handleDataset = (index: number) => {
-		var newList = [...this.state.datasets];
-		newList[index].chosen = !newList[index].chosen;
-		this.setState({ datasets: newList });
+		else {
+			dataSets.push(id)
+			this.setState({ dataSets: dataSets});
+		}
 	};
 
 	/**
@@ -124,11 +118,13 @@ export default class Train extends Component {
 	 */
 	chosenAllDatasets = (e: React.ChangeEvent<HTMLInputElement>): void => {
 		const chosen = e.target.checked;
-		const { datasets, chooseDatasetsFlag } = this.state;
-		const newflag = !chooseDatasetsFlag
-		const newList = datasets.map(dataset => { return { ...dataset, chosen }; });
-		this.setState({ datasets: newList });
-		this.setState({ chooseDatasetsFlag: newflag })
+		const newflag = !(this.state.chooseDataSetsFlag);
+		if(chosen) {
+			this.setState({ dataSets: this.props.dataSetMetas.map(dataSet => dataSet.dataSetID), chooseDataSetsFlag: newflag });
+		}
+		else {
+			this.setState({dataSets: [], chooseDataSetsFlag: newflag})
+		}
 	}
 
 	/**
@@ -136,9 +132,9 @@ export default class Train extends Component {
 	 * @param index Imputationindex
 	 * @returns 
 	 */
-	handleImputation = (index: number) => {
-		var newList = [...this.state.imputators];
-		var newChosen = this.state.chosenImputator;
+	handleImputation = (index: number): void => {
+		let newList = [...this.state.imputators];
+		let newChosen = this.state.chosenImputator;
 		if (newList[index].checked) { newChosen--; }
 		else { newChosen++; }
 		if (newChosen <= 1) {
@@ -146,7 +142,6 @@ export default class Train extends Component {
 			this.setState({ chosenImputator: newChosen, imputators: newList });
 		} else {
 			NotificationManager.error(Train.E_IMPUTER_MULTI_SELECTION_DE, "", 3000);
-			return;
 		}
 	};
 
@@ -155,28 +150,26 @@ export default class Train extends Component {
 	 * @param index Scalerindex 
 	 * @returns 
 	 */
-	handleScaler = (index: number) => {
-		var newList = [...this.state.scalers];
-		var newChosen = this.state.chosenScaler;
+	handleScaler = (index: number): void => {
+		let newList = [...this.state.scalers];
+		let newChosen = this.state.chosenScaler;
 		if (newList[index].checked) { newChosen--; }
 		else { newChosen++; }
 		if (newChosen <= 1) {
 			newList[index].checked = !newList[index].checked;
-			this.setState({ chosenScaler: newChosen });
-			this.setState({ scalers: newList });
-		} else {
-			NotificationManager.error(Train.E_SCALER_MULTI_SELECTION_DE, "", 3000);
-			return;
+			this.setState({ chosenScaler: newChosen, scalers: newList });
 		}
-
+		else {
+			NotificationManager.error(Train.E_SCALER_MULTI_SELECTION_DE, "", 3000);
+		}
 	};
 
 	/**
 	 * Check Extraction
 	 * @param index Extractionindex
 	 */
-	handleExtraction = (index: number) => {
-		var newList = [...this.state.myfeatures];
+	handleExtraction = (index: number): void => {
+		let newList = [...this.state.myfeatures];
 		newList[index].checked = !newList[index].checked;
 		this.setState({ features: newList });
 	};
@@ -190,8 +183,7 @@ export default class Train extends Component {
 		const { myfeatures, chooseFeatureFlag } = this.state;
 		const newflag = !chooseFeatureFlag
 		const newList = myfeatures.map(myfeature => { return { ...myfeature, checked }; });
-		this.setState({ myfeatures: newList });
-		this.setState({ chooseFeatureFlag: newflag })
+		this.setState({ myfeatures: newList, chooseFeatureFlag: newflag })
 	}
 
 	/**
@@ -199,18 +191,17 @@ export default class Train extends Component {
 	 * @param index Classifierindex
 	 * @returns 
 	 */
-	handleClassifier = (index: number) => {
-		var newList = [...this.state.classifiers];
-		var newChosen = this.state.chosenclassifier;
+	handleClassifier = (index: number): void => {
+		let newList = [...this.state.classifiers];
+		let newChosen = this.state.chosenclassifier;
 		if (newList[index].checked) { newChosen--; }
 		else { newChosen++; }
 		if (newChosen <= 1) {
 			newList[index].checked = !newList[index].checked;
-			this.setState({ chosenclassifier: newChosen });
-			this.setState({ classifiers: newList });
-		} else {
+			this.setState({ chosenclassifier: newChosen, classifiers: newList });
+		}
+		else {
 			NotificationManager.error(Train.E_CLASSIFIER_MULTI_SELECTION_DE, "", 3000);
-			return;
 		}
 	};
 
@@ -218,17 +209,10 @@ export default class Train extends Component {
 	 * Trainieren Methode
 	 * @returns 
 	 */
-	handleTrain = () => {
-		var dataSets: number[] = [], imputator = "", classifier = '', scaler = '', features: string[] = [];
-		const { datasets, imputators, classifiers, scalers, myfeatures } = this.state;
-		let datasetsflag = true, imputatorsflag = true, classifiersflag = true, scalersflag = true, featuresflag = true, nochoice = false;
-		datasets.map((datasetObj) => {
-			if (datasetObj.chosen) {
-				datasetsflag = false;
-				dataSets.push(datasetObj.dataSetID);
-			}
-			return datasetObj;
-		});
+	handleTrain = (): void => {
+		let imputator = "", classifier = '', scaler = '', features: string[] = [];
+		const { dataSets, imputators, classifiers, scalers, myfeatures } = this.state;
+		let imputatorsflag = true, classifiersflag = true, scalersflag = true, featuresflag = true, nochoice = false;
 		imputators.map((imputatorObj) => {
 			if (imputatorObj.checked) {
 				imputatorsflag = false;
@@ -257,7 +241,7 @@ export default class Train extends Component {
 			}
 			return featureObj;
 		});
-		if (datasetsflag) {
+		if (dataSets.length == 0) {
 			NotificationManager.error(Train.E_DATASET_NO_SELECTION_DE, "", 3000);
 			nochoice = true;
 		}
@@ -278,7 +262,6 @@ export default class Train extends Component {
 			nochoice = true;
 		}
 		if (nochoice) return;
-		//console.log(dataSets)
 		this.props.train(dataSets, imputator, classifier, scaler, features);
 	};
 
@@ -293,23 +276,23 @@ export default class Train extends Component {
 	 * Render Methode des Komponenten
 	 * @returns Aufbau des Komponenten
 	 */
-	render() {
-		const { datasets, imputators, scalers, myfeatures, classifiers, chooseDatasetsFlag, chooseFeatureFlag } = this.state;
+	render(): JSX.Element {
+		const { imputators, scalers, myfeatures, classifiers, chooseDataSetsFlag, chooseFeatureFlag } = this.state;
 		return (
-			<div className="train">
+			<div className="train view-section">
 				<div className="view-section">
 					<div className="list">
 						<h3 className="text">{Train.T_DATASET_TITLE_DE}</h3>
-						{datasets.map((dataset, index) => {
+						{this.props.dataSetMetas.map((dataSet, index) => {
 							return (
 								<div key={index}>
-									<input className='datasetscheck' type="checkbox" id={"D" + index.toString()} value={index} checked={dataset.chosen} onChange={() => this.handleDataset(index)} />
-									<label htmlFor={"D" + index.toString()}>{dataset.dataSetName}</label>
+									<input className='datasetscheck' type="checkbox" id={"D" + index.toString()} value={index} checked={this.state.dataSets.includes(dataSet.dataSetID)} onChange={() => this.handleDataset(dataSet.dataSetID)} />
+									<label htmlFor={"D" + index.toString()}>{dataSet.dataSetName}</label>
 
 								</div>
 							);
 						})}
-						<input className='chooseall' type="checkbox" id={"D"} onChange={this.chosenAllDatasets} checked={chooseDatasetsFlag} />
+						<input className='chooseall' type="checkbox" id={"D"} onChange={this.chosenAllDatasets} checked={chooseDataSetsFlag} />
 						<label htmlFor={"D"}>{Train.T_DATASET_CHOOSEALL_DE}</label>
 					</div>
 					<div className="list">

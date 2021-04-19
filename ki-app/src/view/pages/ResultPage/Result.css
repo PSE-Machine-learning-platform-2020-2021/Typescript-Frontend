@@ -1,25 +1,13 @@
 .title{
     color: #000000;
     font-family: 'Raleway',sans-serif;
-    font-size: 62px;
     font-weight: 800;
-    line-height: 72px;
-    margin: 0 0 24px;
+    line-height: 1.5em;
     text-align: center;
     text-transform: uppercase;
     background-color: #7B7F80;
 }
 
-.button{
-    background-color: #1C2453; 
-    border: 1px solid #1C2453;
-    border-radius: 20px;
-    color: white;
-    padding: 15px 32px;
-    text-align: center;
-    text-decoration: none;
-    display: inline-block;
-    font-size: 16px;
-    position:absolute;
-    bottom: 5px;
+.result {
+    line-height: 1.25em;
 }

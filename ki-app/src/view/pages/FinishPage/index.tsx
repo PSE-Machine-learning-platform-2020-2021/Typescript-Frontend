@@ -16,7 +16,7 @@ export class FinishPage implements Page {
   private state: State;
   private observers: PageController[] = [];
 
-  private static readonly T_BUTTON_RELOAD_DE = "Erneut Erfassen"
+  private static readonly T_BUTTON_RELOAD_DE = "Erneut erfassen"
 
   /**
      * Konstruktor der Darstellungseite
