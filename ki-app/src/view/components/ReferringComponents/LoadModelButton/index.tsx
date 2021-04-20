@@ -1,6 +1,5 @@
 import React, { Component } from 'react'
 import ProjectList from '../ProjectList'
-import './LoadModelButton.css'
 
 /**
  * Erstellen PrjektList Knopf
@@ -41,7 +40,9 @@ export default class LoadModelButton extends Component {
     render() {
         return (
             <div className="loadProject">
-                <button onClick={() => this.handleCreate()} className="lp-btn" disabled={this.props.disabled} type='button'>{LoadModelButton.T_BUTTON_OPEN_LOAD_DE}</button>
+                <div className="view-section">
+                    <button onClick={() => this.handleCreate()} className="lp-btn" disabled={this.props.disabled} type='button'>{LoadModelButton.T_BUTTON_OPEN_LOAD_DE}</button>
+                </div>
                 {this.state.click ? <div><ProjectList
                     link={this.props.link}
                     pageChangeToVisu={this.props.pageChangeToVisu}

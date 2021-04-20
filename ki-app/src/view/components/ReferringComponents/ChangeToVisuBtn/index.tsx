@@ -1,5 +1,4 @@
 import { Component } from 'react';
-import './ChangeToVisuBtn.css';
 
 /**
  * Stellt die funktion eines Knopfes zum wechsel auf die Visualisierungsseite dar
@@ -20,7 +19,7 @@ export default class ChangeToVisuBtn extends Component {
      */
     render() {
         return (
-            <div>
+            <div className="view-section">
                 <button onClick={() => this.props.pageChangeToVisu()} className="ctv-btn" type="button" >{ChangeToVisuBtn.T_BUTTON_NEXT_DE}</button>
             </div>
         );

@@ -4,7 +4,6 @@ import ChangeToVisuBtn from '../ChangeToVisuBtn';
 import LinkText from '../LinkText';
 import ModelList from '../ModelList';
 import QRImage from '../QRImage';
-import './ProjectList.css';
 
 /**
  * Projektliste
@@ -99,18 +98,27 @@ export default class ProjectList extends Component {
     render() {
         return (
             <section className='projectlist'>
-                <label>Projektliste</label>
-                <select onChange={this.handleChange}>
-                    <option>Projekt wählen</option>
-                    {this.props.projectData.map(projectObj => <option value={projectObj.projectID} key={projectObj.projectID}>{projectObj.projectName}</option>)}
-                </select>
-                <button onClick={() => this.handleChoose()} className="pl-btn" type="button" >Modellliste laden</button>
-                <button onClick={() => this.handleLoad()} className="pl-btn" type="button" >Projekt laden</button>
-                {this.state.loadclick ? <div> <QRImage qr={this.props.qr} /><ChangeToVisuBtn pageChangeToVisu={this.props.pageChangeToVisu} /> <LinkText link={this.props.link}/></div> : null}
+                <div className="view-section">
+                    <label>Projektliste</label>
+                    <select onChange={this.handleChange}>
+                        <option>Projekt wählen</option>
+                        {this.props.projectData.map(projectObj => <option value={projectObj.projectID} key={projectObj.projectID}>{projectObj.projectName}</option>)}
+                    </select>
+                    <button onClick={() => this.handleChoose()} className="pl-btn" type="button" >Modellliste laden</button>
+                    <button onClick={() => this.handleLoad()} className="pl-btn" type="button" >Projekt laden</button>
+                </div>
+                {this.state.loadclick ?
+                <div className="view-section">
+                    <div className="view-section">
+                        <QRImage qr={this.props.qr} />
+                        <LinkText link={this.props.link}/>
+                    </div>
+                    <ChangeToVisuBtn pageChangeToVisu={this.props.pageChangeToVisu} /> 
+                </div>
+                 : null}
                 
-                {this.state.click ? <div> <ModelList pageLoadModel={this.props.pageLoadModel} currentProject={this.state.currentProject} /></div> : null}
+                {this.state.click ? <div className="view-section"> <ModelList pageLoadModel={this.props.pageLoadModel} currentProject={this.state.currentProject} /></div> : null}
             </section>
-
         );
     }
 }

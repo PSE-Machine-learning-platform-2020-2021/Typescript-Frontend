@@ -17,7 +17,7 @@ export default class QRImage extends Component {
      */
     render() {
         return (
-            <div>
+            <div className="qr-code">
                 <img src={this.props.qr} alt="qrcode" style={{ width: 'auto' }} />
             </div>
         )

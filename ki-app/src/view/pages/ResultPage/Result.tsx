@@ -37,14 +37,14 @@ export class ResultPage implements Page {
         let VDOM = (
             <div>
                 <h2 className='title'>{ResultPage.PAGE_TITLE}</h2>
-                <h1 className='wait'>{ResultPage.CLASSIFY}</h1>
+                <h1 className='result'>{ResultPage.CLASSIFY}</h1>
                 <NotificationContainer />
             </div>)
         if (this.state.aiUserData!.result !== " ") {
             VDOM = (
                 <div>
                     <h2 className='title'>Ergebnis</h2>
-                    <h1>{this.state.aiUserData!.result}</h1>
+                    <h1 className="result">{this.state.aiUserData!.result}</h1>
                     <button className='button' onClick = {this.reloadPage}>{ResultPage.RELOAD}</button>
                     <NotificationContainer />
                 </div>

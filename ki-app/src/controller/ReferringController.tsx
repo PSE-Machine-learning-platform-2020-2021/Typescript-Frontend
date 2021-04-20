@@ -35,6 +35,11 @@ export class RefferingController implements PageController {
                 this.page.setState( this.state );
             } );
             this.state.islogedIn! = true;
+            this.state.adminData = {
+                name: "null",
+                email: MainController.getInstance().getFacade().getAdminMail(),
+                password: "null"
+            }
             this.page.setState( this.state );
         }
     }
@@ -44,7 +49,6 @@ export class RefferingController implements PageController {
      */
     update () {
         this.state = this.page.getState();
-        console.log( "controller update: " + this.state.currentState.toString() );
         switch ( this.state.currentState ) {
             case States.LoadProject:
                 this.loadProject();

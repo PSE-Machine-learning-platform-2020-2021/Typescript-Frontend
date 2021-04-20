@@ -126,6 +126,17 @@ export class Facade {
     return false;
   }
 
+/**
+ * Gibt die Email des Admins zurück
+ * @returns Email des Admins oder "undefined" wenn kein Admin angmeldet ist
+ */
+  getAdminMail(): string {
+    if (this.user != null && this.user instanceof Admin) {
+      return (this.user as Admin).getEmail()
+    }
+    return "error"
+  }
+
   /**
      * Sendet den aktuell bereits aufgenommenen Datensatz an die Datenbank
      * Dafür da, falls die Verbindung verloren ging und der Datensatz neu hochgeladen werden muss

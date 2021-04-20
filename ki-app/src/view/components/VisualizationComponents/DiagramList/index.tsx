@@ -40,8 +40,6 @@ export default class DiagramList extends Component {
             'rgba(106, 90, 205,1)', 'rgba(238, 118, 0,1)', 'rgba(105, 105, 105,1)'],
         csscolor: ['rgba(46,190,87,1)', 'rgba(68,24,232,1)', 'rgba(238,173,14,1)', 'rgba(178,34,34,1)', 'rgba(238, 130, 238,1)', 'rgba(0, 0, 0,1)',
             'rgba(106, 90, 205,1)', 'rgba(238, 118, 0,1)', 'rgba(105, 105, 105,1)']
-        //csscolor: ['2EBE57', 'CC00FF', 'EEAD0E', 'B22222', 'EE82EE', '000000',
-        //     '6A5ACD', 'EE7600', '696969']
     };
 
     /**
@@ -51,8 +49,6 @@ export default class DiagramList extends Component {
      */
     handleClick = (diagram: any, index: any) => {
         this.setState({ showDiagramIndex: index });
-        // The following two console-log calls are just for parameter usage and have no actual meaning.
-
     };
 
     /**
@@ -76,14 +72,12 @@ export default class DiagramList extends Component {
                 datavalues = [];
             }
         }
-        // eslint-disable-next-line
         for (var j = 0; j < dataSet.rows[0].datapoint.length; j++) {
             this.state.diagrammData.time.push(dataSet.rows[0].datapoint[j].relativeTime);
         }
 
         var newDatasets = [];
         var lineLabels = [];
-        // eslint-disable-next-line
         for (var i = 0; i < this.state.diagrammData.sensorRow.length * 3; i++) {
             var coordinate = ".X";
             var sensor = this.state.diagrammData.sensorRow[(i / 3) | 0];
@@ -130,7 +124,7 @@ export default class DiagramList extends Component {
             datasetFill: false,
             pointDotRadius: 2,
             pointHitDetectionRadius: 1,
-            offsetGridLines: false,
+            offsetGridLines: true,
             pointDot: false,
         };
         const newList = this.state.diagramList;
@@ -175,27 +169,27 @@ export default class DiagramList extends Component {
             }
         });
         return (
-            <div>
-                    {this.state.diagramList.map((diagram, index) => {
-                        let datasetname = "Null";
-                        this.props.dataSetMetas.forEach(dataset => {
-                            if (dataset.dataSetID === diagram.dataSetID) {
-                                datasetname = dataset.dataSetName;
-                            }
-                        });
-                        return (
-                            <div key={index}>
-                                <div className="diagramTop">
-                                    <h5 className="datasetName">{datasetname}</h5>
-                                    {diagram.lineLabels}
-                                </div>
-                                <div className="diagramList">
-                                    <LineChart data={diagram.data} options={diagram.options} width={window.innerWidth} height={300} />
-                                </div>
+            <div className="view-section">
+                {this.state.diagramList.map((diagram, index) => {
+                    let datasetname = "Null";
+                    this.props.dataSetMetas.forEach(dataset => {
+                        if (dataset.dataSetID === diagram.dataSetID) {
+                            datasetname = dataset.dataSetName;
+                        }
+                    });
+                    return (
+                        <div key={index} className="view-section">
+                            <div className="diagramTop" id={index.toString()}>
+                                <h5 className="datasetName">{datasetname}</h5>
+                                {diagram.lineLabels}
                             </div>
+                            <div className="diagramList">
+                                <LineChart data={diagram.data} options={diagram.options} width={document.documentElement.clientWidth * 0.98} height={320} />
+                            </div>
+                        </div>
                         );
                     })}
-                </div>
+            </div>
         );
     }
 }

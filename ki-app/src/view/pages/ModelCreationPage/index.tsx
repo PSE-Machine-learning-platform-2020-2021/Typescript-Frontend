@@ -94,15 +94,13 @@ export class ModelCreationPage implements Page {
 	/**
 	 * Trainierung
 	 * @param dataSets               - Die zum Training zu verwendenden Datensätze.
-		   * @param imputator              - Der zur Vervollständigung der Daten zu verwendende Imputer.
+	 * @param imputator              - Der zur Vervollständigung der Daten zu verwendende Imputer.
 	 * @param classifier             - Der Klassifizierer, der das Herzstück des zu erstellenden KI-Modells darstellt.
 	 * @param scaler                 - Der Scaler, der die Daten für den Klassifizierer aufbereitet.
 	 * @param features               - Die Merkmale, die aus den gegebenen Datensätzen herausgearbeitet werden sollen.
 	 */
 	private train(dataSets: number[], imputator: string, classifier: string, scaler: string, features: string[]) {
-		// eslint-disable-next-line
 		this.state.currentState = States.NeedKiTraining;
-		// eslint-disable-next-line
 		this.state.trainingParameter!.dataSets = dataSets;
 		this.state.trainingParameter!.imputator = imputator;
 		this.state.trainingParameter!.classifier = classifier;

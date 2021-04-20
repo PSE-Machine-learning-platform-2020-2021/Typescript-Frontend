@@ -1,5 +1,5 @@
 import { Component, CSSProperties } from 'react';
-import './index.css'
+import './diagram.css'
 
 export default class Diagram extends Component {
     private static readonly T_ACCELEROMETER_DE: string = "Beschleunigungssensor";
@@ -144,11 +144,25 @@ export default class Diagram extends Component {
     render() {
         var LineChart = require("react-chartjs").Line;
         this.updateDiagramm();
+        let dd = this.state.diagrammData;
         return (
             <div>
-                {this.state.diagrammData.lineLabels}
-                <LineChart data={this.state.diagrammData.diagramData} options={this.state.diagrammData.diagramOptions} width="400" height="200" redraw />
-                <button className = 'button' type="button" onClick={this.submit}>{Diagram.T_BUTTON_NEXT_DE}</button>
+                <div>
+                <div className="view-section">
+                    <div className="view-section">
+                        <span>
+                            {dd.lineLabels}
+                        </span>
+                    </div>
+                    <div className="view-section">
+                        <LineChart data={dd.diagramData} options={dd.diagramOptions} width={document.documentElement.clientWidth} height={200} redraw />
+                    </div>
+                </div>
+                <div id = 'divWithSpace'></div>
+                </div>
+                <div className="view-section">
+                    <button className='specialButton' type="button" onClick={this.submit}>{Diagram.T_BUTTON_NEXT_DE}</button>
+                </div>
             </div>
         );
     }

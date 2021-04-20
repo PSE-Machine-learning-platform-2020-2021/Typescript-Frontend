@@ -1,6 +1,5 @@
 import React, { Component } from "react";
 import { NotificationManager } from 'react-notifications';
-import './Input.css';
 
 
 /**
@@ -146,8 +145,8 @@ export default class Input extends Component {
           {
             this.props.availableSensorTypes.map((type: { sensorTypID: number, sensorType: string, chosen: boolean; }) => {
               return (<div>
-                <input className='checkbox' type="checkbox" value={type.sensorTypID} checked={type.chosen} onChange={(e: React.ChangeEvent<HTMLInputElement>): void => this.handleCheckBoxChange(e)} />
-                {type.sensorType}
+                <input className='checkbox' type="checkbox" id={type.sensorType} value={type.sensorTypID} checked={type.chosen} onChange={(e: React.ChangeEvent<HTMLInputElement>): void => this.handleCheckBoxChange(e)} />
+                <label htmlFor={type.sensorType}>{type.sensorType}</label>
               </div>);
             })
           }

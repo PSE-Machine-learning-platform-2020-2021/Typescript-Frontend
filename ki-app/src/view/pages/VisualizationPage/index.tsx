@@ -33,10 +33,7 @@ export class VisualizationPage implements Page {
         const VDOM = (
             <div className="visualizationpage">
                 <h2 className='title'>{VisualizationPage.PAGE_TITLE}</h2>
-                <br/>
                 <FinishButton pageChangeToCreation={this.changetoCreation.bind(this)} />
-                <br/>
-                <br/>
                 <DiagramList currentDataSets={this.state.currentDataSets! }
                 dataSetMetas = {this.state.dataSetMetas!}
                 //   testDataSet={this.state.testDataSet!}

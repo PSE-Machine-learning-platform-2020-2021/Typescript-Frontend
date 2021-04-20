@@ -2,5 +2,7 @@
 * Grauer Hintergrund
 */
 .title{
-	background-color: grey
+	background-color: #7B7F80;
+	line-height: 1.5em;
+	color: #000;
 }
