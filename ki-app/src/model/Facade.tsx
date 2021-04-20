@@ -4,7 +4,6 @@ import { Language, LanguageMessages } from "./Language";
 import { Admin, Dataminer, AIModelUser, User } from "./User";
 import { AIBuilder } from "./AIBuilder";
 import { AIDistributor } from "./AIDistributor";
-import { SensorData } from "./SensorData";
 import { AIController } from "../controller/AIController";
 import { IDataRowST, IDataRowSTRID } from "./DataRow";
 import { ILabel } from "./Label";
@@ -115,7 +114,7 @@ export class Facade {
    * @param relativeTime die relative Zeit zum Aufnahmestart in Millisekunden
    * @return true, wenn der Datenpunkt erfolgreich an die Datenbank gesendet wurde
    */
-  async sendDataPoint(dataRowID: number, datapoint: IDataPoint): Promise<boolean> {
+  async sendDataPoint(dataRowID: number, datapoint: IDataPoint[]): Promise<boolean> {
     if (this.user !== undefined) {
       let sessionID: number = this.getSessionID();
       let userID: number = this.user.getID();
@@ -126,15 +125,15 @@ export class Facade {
     return false;
   }
 
-/**
- * Gibt die Email des Admins zurück
- * @returns Email des Admins oder "undefined" wenn kein Admin angmeldet ist
- */
+  /**
+   * Gibt die Email des Admins zurück
+   * @returns Email des Admins oder "undefined" wenn kein Admin angmeldet ist
+   */
   getAdminMail(): string {
     if (this.user != null && this.user instanceof Admin) {
-      return (this.user as Admin).getEmail()
+      return (this.user as Admin).getEmail();
     }
-    return "error"
+    return "error";
   }
 
   /**
@@ -143,7 +142,7 @@ export class Facade {
      * @return true, wenn der Datensatz erfolgreich an die Datenbank gesendet wurde
      */
   async sendDataPointsAgain(): Promise<boolean> {
-    if (this.user != null) {
+    if (this.user !== undefined) {
       let sessionID: number = this.getSessionID();
       let userID: number = this.user.getID();
       let dataSetID: number = this.user.getCurrentDataSetID();
@@ -176,23 +175,6 @@ export class Facade {
     }
     return false;
   }
-
-  /* Methode die noch nicht benutzt wird aber eventuell das laufgeschehen verbessern
-  /**
-     * Aktuallisiert aus der Datenbank das aktuelle Projekt, hierfür muss der Admin angemeldet sein und ein Projekt geladen sein
-     * @returns true, wenn das Projekt erfolgreich geladen wurde dies tritt nur ein, wenn eine Verbindung zur Datenbank besteht,
-     *          ein geladenes Projekt existiert und der Admin dafür angemeldet ist
-     
-  async updateCurrentProject(): Promise<boolean> {
-    if (this.user != null && this.user instanceof Admin) {
-      let projectID = this.user.getCurrentProjectID();
-      let adminEmail: string = this.user.getEmail();
-      let userID: number = this.user.getID();
-      return this.user.updateProject(await this.dbCon.updateProject({ userID, adminEmail, projectID }));
-    }
-    return false;
-  }*/
-
 
   /**
    * Lädt vom aktuell angemeldeten Admin von seinen Projekten den Namen, die Projekt ID und die AIModelIDs
@@ -263,22 +245,6 @@ export class Facade {
   }
 
   /**
-   * Gibt die auswählbaren Sensoren als ID mit ihrer Art in der Passenden Sprache zurück
-  
-  getAvailableSensors(): { sensorTypID: number, sensorType: string; }[] {
-    if (this.user != null && this.language != null) {
-      var sensors: { sensorTypID: number, sensorType: string; }[] = [];
-      let message: { messageID: number, message: string; }[] = this.language.getMessage(this.user.getAvailableSensors());
-      for (let i = 0; i < message.length; i++) {
-        sensors.push({ sensorTypID: message[i].messageID, sensorType: message[i].message });
-      }
-      return sensors;
-    }
-    return [];
-  }
- */
-
-  /**
    * Lädt die Sprache aus der Datenbank mit dem übergebenen Sprachcode
    * @param languageCode Sprachcode
    * @returns true, falls die Sprache erfolgreich geladen wurde
@@ -329,7 +295,6 @@ export class Facade {
     return false;
   }
 
-  //wann Device erstellen ??? + constructor in User anpassen mit neuem Device parameter 
   async registerAdmin(adminName: string, adminEmail: string, password: string): Promise<boolean> {
     //TODO Device
     let device: IDevice = { deviceID: -1, deviceName: "", deviceType: "", firmware: "", generation: "", MACADRESS: "", sensorInformation: [] };
@@ -391,20 +356,6 @@ export class Facade {
     }
     return false;
   }
-
-  /* eventuell implementieren
-    logoutAdmin(): boolean {
-      if (this.user != null) {
-        let logout = this.dbCon.logoutAdmin(this.getAdminEmail());
-        if (logout) {
-          delete this.user;
-        } else {
-          return false;
-        }
-      }
-      return true;
-    }
-    */
 
   /**
    * Erstellt für den angemeldeten Admin ein neues Projekt

@@ -63,7 +63,7 @@ export abstract class User {
     return -1;
   }
 
-  addDatapoint(dataRowID: number, datapoint: IDataPoint): boolean {
+  addDatapoint(dataRowID: number, datapoint: IDataPoint[]): boolean {
     if (this.currentProject != null) {
       return this.currentProject.addDatapoint(dataRowID, datapoint);
     }

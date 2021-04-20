@@ -1,11 +1,11 @@
 import { Component, CSSProperties } from 'react';
-import './diagram.css'
+import './diagram.css';
 
 export default class Diagram extends Component {
     private static readonly T_ACCELEROMETER_DE: string = "Beschleunigungssensor";
     private static readonly T_GYROSCOPE_DE: string = "Gyroskop";
     private static readonly T_MAGNETOMETER_DE: string = "Magnetometer";
-    private static readonly T_BUTTON_NEXT_DE: string = "Zur Abschlussseite"
+    private static readonly T_BUTTON_NEXT_DE: string = "Zur Abschlussseite";
 
     /**
      * der Datensatz für Linie-Diagramm und die Funktion für Seitewechsel, durch props übermittelt
@@ -71,7 +71,7 @@ export default class Diagram extends Component {
             /**
                  * unterscheidet, welche Sensor es ist
                  */
-             switch (sensor) {
+            switch (sensor) {
                 case 2:
                     sensorName = Diagram.T_ACCELEROMETER_DE;
                     break;
@@ -148,17 +148,17 @@ export default class Diagram extends Component {
         return (
             <div>
                 <div>
-                <div className="view-section">
                     <div className="view-section">
-                        <span>
-                            {dd.lineLabels}
-                        </span>
+                        <div className="view-section">
+                            <span>
+                                {dd.lineLabels}
+                            </span>
+                        </div>
+                        <div className="view-section">
+                            <LineChart data={dd.diagramData} options={dd.diagramOptions} width={document.documentElement.clientWidth} height={200} redraw />
+                        </div>
                     </div>
-                    <div className="view-section">
-                        <LineChart data={dd.diagramData} options={dd.diagramOptions} width={document.documentElement.clientWidth} height={200} redraw />
-                    </div>
-                </div>
-                <div id = 'divWithSpace'></div>
+                    <div id='divWithSpace'></div>
                 </div>
                 <div className="view-section">
                     <button className='specialButton' type="button" onClick={this.submit}>{Diagram.T_BUTTON_NEXT_DE}</button>

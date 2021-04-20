@@ -81,17 +81,14 @@ export abstract class DeviceData {
       return new Smartphone(deviceID, "", "", "", "");
     }
   }
-  //protected abstract searchSensor(): void;
 }
 
 export class Smartphone extends DeviceData {
   protected deviceType: string = "Smartphone";
-  //protected searchSensor(): void { }
 }
 
 export class Desktop extends DeviceData {
   protected deviceType: string = "Desktop";
-  //protected searchSensor(): void { }
 }
 
 export interface IDevice {

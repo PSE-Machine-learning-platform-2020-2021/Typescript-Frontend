@@ -19,7 +19,7 @@ export class DataCollectionPage implements Page {
     /**
     * Konstruktor der Darstellungsseite.
     */
-    constructor () {
+    constructor() {
         this.state = new State();
     }
 
@@ -28,25 +28,25 @@ export class DataCollectionPage implements Page {
     * Die Methode enthält den Aufbau der Seite und wird von ihr gerendert.
     * Es werden durch notify() alle controller über ein Update informiert und alle Seiten Elemente werden aktualisiert und erneut gerendert. 
     */
-    private update () {
+    private update() {
         this.notify();
         const VDOM = (
             <div>
                 <Title />
-                <Countdown countdownNumber={ this.state.recordingSettings?.waitTime! } chosenSensors={ this.state.recordingSettings?.usedSensorTypes! } />
-                <Diagram dataRows={ this.state.dataRows! } pageChangeToFinish={ this.changeToFinish.bind( this ) } />
+                <Countdown countdownNumber={this.state.recordingSettings?.waitTime!} chosenSensors={this.state.recordingSettings?.usedSensorTypes!} />
+                <Diagram dataRows={this.state.dataRows!} pageChangeToFinish={this.changeToFinish.bind(this)} />
                 <NotificationContainer />
             </div>
         );
-        if ( document.getElementById( 'root' ) !== null ) {
-            ReactDOM.render( VDOM, document.getElementById( 'root' ) );
+        if (document.getElementById('root') !== null) {
+            ReactDOM.render(VDOM, document.getElementById('root'));
         }
     }
 
     /**
      * Wechsel der Seite zur Fertigungsseite.
      */
-    private changeToFinish () {
+    private changeToFinish() {
         this.state.currentState = States.ChangeToFinish;
         this.notify(); // Kein Update, da sonst die Seite neu rendert und der Seitenwechsel fehlschlägt
     }
@@ -55,27 +55,27 @@ export class DataCollectionPage implements Page {
     * Durch diese Methode kann sich ein Controller als Beobachter anmelden.
     * @param oberver neuer Beobachter
     */
-    attach ( observer: PageController ) {
-        this.observers.push( observer );
+    attach(observer: PageController) {
+        this.observers.push(observer);
     }
 
     /**
     * Durch diese Methode kann sich ein Controller als Beobachter abmelden.
     * @param oberver Beobachter der zu entfernen ist
     */
-    detach ( observer: PageController ) {
-        const index = this.observers.indexOf( observer, 0 );
-        if ( index > -1 ) {
-            this.observers.splice( index, 1 );
+    detach(observer: PageController) {
+        const index = this.observers.indexOf(observer, 0);
+        if (index > -1) {
+            this.observers.splice(index, 1);
         }
     }
 
     /**
     * Durch diese Methode werden alle Beobachter über eine Änderung auf der Seite informiert.
     */
-    notify () {
-        for ( let index = 0; index < this.observers.length; index++ ) {
-            const element = this.observers[ index ];
+    notify() {
+        for (let index = 0; index < this.observers.length; index++) {
+            const element = this.observers[index];
             element.update();
         }
     }
@@ -83,7 +83,7 @@ export class DataCollectionPage implements Page {
     /**
     * Gibt den Status der Seite zurück
     */
-    setState ( state: any ) {
+    async setState(state: any) {
         this.state = state;
         this.update();
     }
@@ -92,7 +92,7 @@ export class DataCollectionPage implements Page {
      * Setzt einen neuen Zustand für die Seite und aktualisiert sie
      * @param state neuer Zustand für die Seite
      */
-    getState () {
+    getState() {
         return this.state;
     }
 }

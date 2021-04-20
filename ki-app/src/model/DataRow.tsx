@@ -47,19 +47,20 @@ export class DataRow {
    * @param dataRow der Datenpunkt
    * @returns false, falls datapoint.value leer ist oder datapoint.relativeTime < 0
    */
-  public addDatapoint(dataRow: IDataPoint): boolean {
-    for (let i = 0; i < this.datapoint.length; i++) {
-      if (this.datapoint[i].getValue().length !== dataRow.value.length || this.datapoint[i].getRelativeTime() === dataRow.relativeTime) {
+  public addDatapoint(dataRow: IDataPoint[]): boolean {
+    for (let d = 0; d < dataRow.length; d++) {
+      for (let i = 0; i < this.datapoint.length; i++) {
+        if (this.datapoint[i].getValue().length !== dataRow[d].value.length || this.datapoint[i].getRelativeTime() === dataRow[d].relativeTime) {
+          return false;
+        }
+      }
+      if (dataRow[d].value.length === 0 || dataRow[d].relativeTime < 0) {
         return false;
+      } else {
+        this.datapoint.push(new DataPoint(dataRow[d].value, dataRow[d].relativeTime));
       }
     }
-    if (dataRow.value.length === 0 || dataRow.relativeTime < 0) {
-      return false;
-    } else {
-      this.datapoint.push(new DataPoint(dataRow.value, dataRow.relativeTime));
-      return true;
-    }
-
+    return true;
   }
 
   /**

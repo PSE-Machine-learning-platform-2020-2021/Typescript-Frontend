@@ -167,7 +167,7 @@ export class Project {
    * @param datapoint der Datenpunkt
    * @returns true, wenn der Datenpunkt zur Datenreihe hinzugefügt werden konnte
    */
-  addDatapoint(dataRowID: number, datapoint: IDataPoint): boolean {
+  addDatapoint(dataRowID: number, datapoint: IDataPoint[]): boolean {
     if (this.currentDataSet != null) {
       return this.currentDataSet.addDatapoint(dataRowID, datapoint);
     }

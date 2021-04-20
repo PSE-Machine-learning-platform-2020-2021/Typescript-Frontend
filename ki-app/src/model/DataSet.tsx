@@ -62,7 +62,7 @@ export class DataSet {
     return this.name;
   }
 
-  addDatapoint(dataRowID: number, datapoint: IDataPoint): boolean {
+  addDatapoint(dataRowID: number, datapoint: IDataPoint[]): boolean {
     for (let i = 0; i < this.dataRow.length; i++) {
       if (this.dataRow[i].getID() === dataRowID) {
         return this.dataRow[i].addDatapoint(datapoint);
