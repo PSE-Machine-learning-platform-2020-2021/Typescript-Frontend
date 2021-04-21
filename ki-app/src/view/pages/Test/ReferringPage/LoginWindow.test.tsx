@@ -37,7 +37,7 @@ test('register', () => {
     expect(wrapper.state().password).toBe("testpassword")
 
     expect(pageRegister.mock.calls.length).toBe(0)
-    const register: any = wrapper.find("button").at(1);
+    const register: any = wrapper.find("button").at(2);
     register.simulate("click");
     expect(wrapper.state().openNewWindow).toBe(false)
     expect(pageRegister.mock.calls.length).toBe(1)
@@ -54,7 +54,7 @@ test('login', () => {
     expect(wrapper.state().openNewWindow).toBe(true)
 
     expect(pageLogin.mock.calls.length).toBe(0)
-    const login: any = wrapper.find("button").at(2);
+    const login: any = wrapper.find("button").at(1);
     login.simulate("click");
     expect(wrapper.state().openNewWindow).toBe(false)
     expect(pageLogin.mock.calls.length).toBe(1)

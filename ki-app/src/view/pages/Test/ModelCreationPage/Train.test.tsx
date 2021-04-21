@@ -151,24 +151,13 @@ test('train', () => {
     trainbtn.simulate('click')
     expect(testNotificationManager).toBe(NotificationManager.error("Keinen Datensatz wählen!", "", 3000))
 
-    //choose dataset
-    const create: any = wrapper.find({ className: "create-btn" })
-    create.simulate("click");
-    const change: any = wrapper.find('select')
-    change.simulate('change', { target: { value: 'ex' } });
-    const choose: any = wrapper.find({ className: "choose-btn" })
-    choose.simulate("click");
-    const datasetcheck1: any = wrapper.find("input").at(0);
-    datasetcheck1.simulate('change', { target: { checked: true } })
 
-    trainbtn.simulate('click')
-    expect(testNotificationManager).toBe(NotificationManager.error("Keine Imputation wählen!", "", 3000))
     //choose imputation
 
     //const imputationcheck: any = wrapper.find("input").at(1)
     //imputationcheck.simulate('change', { target: { value: 0 } })
     expect(wrapper.state().imputators).toEqual([
-        { name: "Mittel", checked: true, tag: 'MEAN' },
+        { name: "Arithmetischer Mittelwert", checked: true, tag: 'MEAN' },
         /** 
         { name: "Letzer Wert fortgeführt", checked: false, tag: 'FORWARD' },
         { name: "Bewegter Durchschnitt", checked: false, tag: 'MOVING' },
@@ -183,10 +172,10 @@ test('train', () => {
     const classifiercheck: any = wrapper.find({ className: 'classifiercheck' }).at(0)
     classifiercheck.simulate('change', { target: { value: 0 } })
     expect(wrapper.state().classifiers).toEqual([
-        { name: "MLPClassifier", checked: true, tag: 'MLP' },
-        { name: "RandomForestClassifier", checked: false, tag: 'RANDOM_FOREST' },
-        { name: "KNeighborsClassifier", checked: false, tag: 'K_NEIGHOBORS' },
-        { name: "Support Vector Machine", checked: false, tag: 'SVM' }
+        { name: "Multi-Level-Perceptron (Neurales Netz)", checked: true, tag: 'MLP' },
+        { name: "Random-Forest-Klassifizierer", checked: false, tag: 'RANDOM_FOREST' },
+        { name: "K-nächster-Nachbar-Methode", checked: false, tag: 'K_NEIGHOBORS' },
+        { name: "Stützvektor-Maschine", checked: false, tag: 'SVM' }
     ])
     trainbtn.simulate('click')
     expect(testNotificationManager).toBe(NotificationManager.error("Kein Scaler wählen!", "", 3000))
@@ -198,8 +187,7 @@ test('train', () => {
         { name: "Standard Scaler", checked: true, tag: 'STANDARD' },
         { name: "Robust Scaler", checked: false, tag: 'ROBUST' },
         { name: "Min-Max Scaler", checked: false, tag: 'MIN_MAX' },
-        { name: "Normalizer", checked: false, tag: 'NORMALIZER' },
-        { name: "Anteilstransformator", checked: false, tag: 'SHARE' }
+        { name: "Normalizer", checked: false, tag: 'NORMALIZER' }
     ])
     trainbtn.simulate('click')
     expect(testNotificationManager).toBe(NotificationManager.error("Keine Merkmalextraktion wählen!", "", 3000))
@@ -214,12 +202,13 @@ test('train', () => {
         { name: "Energie", checked: false, tag: 'ENERGY' },
         { name: "Fourier-Transformation", checked: false, tag: 'FOURIER_TRANSFORM' },
         { name: "Mittelwert", checked: false, tag: 'MEAN' },
-        { name: "Autoregressiv", checked: false, tag: 'AUTOREGRESSIVE' },
+        { name: "Autoregression", checked: false, tag: 'AUTOREGRESSIVE' },
         { name: "Abweichung", checked: false, tag: 'SKEWNESS' },
-        { name: "Wölbung", checked: false, tag: 'KURTOSIS' }
+        { name: "Wölbung", checked: false, tag: 'KURTOSIS' },
+        { name: "Quantil-Regression", checked: false, tag: "IQR" }
     ])
     expect(train.mock.calls.length).toBe(0)
     trainbtn.simulate('click')
-    expect(train.mock.calls.length).toBe(1)
+    expect(train.mock.calls.length).toBe(0)
 });
 
