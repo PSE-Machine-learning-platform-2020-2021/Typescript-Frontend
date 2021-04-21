@@ -63,6 +63,7 @@ export class MainController implements MainControllerInterface {
    * @param destinationPageController Der neue Seitenverwalter
    */
   changeTo ( destinationPageController: PageController ) {
+    delete this.currentPageController
     this.currentPageController = destinationPageController;
   }
 
