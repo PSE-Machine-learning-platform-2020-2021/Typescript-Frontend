@@ -152,7 +152,6 @@ export default class DiagramList extends Component {
             var flag = false;
             // eslint-disable-next-line
             this.state.diagramList.map((diagram, index2) => {
-                console.log(this.props.currentDataSets[index2].rows.length)
                 if (diagram.dataSetID === dataSet.dataSetID) {
                     if (this.diagrammData[index2] !== undefined && this.diagrammData[index2].datavalue != this.props.currentDataSets[index2].rows[0].datapoint.length) {
                         this.updateDiagramm(dataSet, index2);
