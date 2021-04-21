@@ -196,19 +196,6 @@ export abstract class User {
   abstract loadProject(project: IProject): boolean;
 
   /**
-   * Gibt alle Sensoren aus, die das Benutzergerät und das Programm unterstützt
-  
-  getDeviceSensors(sensorTypeID: number[]): SensorData[] {
-    return this.device.getSensors(sensorTypeID);
-  }
-
-  /**
-   * Gibt die SensorTypID der auswählbaren Sensoren zurück
-  getAvailableSensors(): number[] {
-    return this.device.getAvailableSensors();
-  } */
-
-  /**
    * Gibt von allen Datensätzen vom aktuellen Projekt Informationen zurück
    * @returns dataSetID ist die DatensatzID und dataSetName ist der Datensatzname
    */
@@ -283,7 +270,6 @@ export class Admin extends User {
    * @param device das Gerät des Admins
    */
   constructor(adminID: number, deviceID: number, adminName: string, email: string, device: IDevice);
-  ////////////////////////////////////////TODO
 
   constructor(adminID: number, deviceID: number, adminName: string, email: string, device?: IDevice) {
     super(adminID, DeviceData.loadDevice(deviceID, device), adminName);
@@ -304,32 +290,6 @@ export class Admin extends User {
     }
     return true;
   }
-
-  /* Methode die noch nicht benutzt wird aber eventuell das laufgeschehen verbessern
-    /**
-     * Aktuallisiert das Projekt mit den übergebenen Daten
-     
-    updateProject(project: {
-      projectID: number, sessionID: number, projectName: string, projectData?: {
-        aiModelID?: number[],
-        dataSet: {
-          dataRowSensors: SensorData[], dataSetID: number, dataSetName: string, generateDate: number,
-          dataRows: {
-            dataRowID: number,
-            dataRow: { value: number[], relativeTime: number; }[];
-          }[],
-          label: { name: string, labelID: number, start: number, end: number; }[];
-        }[];
-      };
-    }): boolean {
-      var id = this.existProject(project.projectID);
-      if (id === -1) {
-        return false;
-      } else {
-        return this.project[id].updateProject(project.projectID, project.sessionID, project.projectName, project.projectData);
-      }
-    }
-    */
 
   /**
    * Fügt ein neues Projekt mit den übergebenen Parametern hinzu und setzt dieses Projekt als aktuelles Projekt

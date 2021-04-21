@@ -324,7 +324,7 @@ export class Facade {
   }
 
   /**
-   * 
+   * Registriert einen AIModelUser mit den übergebenen parametern
    * @param aiModelUserName 
    */
   async registerAIModelUser(aiModelUserName: string, modelID: number): Promise<boolean> {
