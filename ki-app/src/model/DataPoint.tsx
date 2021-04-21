@@ -29,6 +29,7 @@ export class DataPoint {
     return this.relativeTime;
   }
 }
+
 export interface IDataPoint {
   value: number[],
   relativeTime: number;

@@ -117,31 +117,31 @@ test("addDatapoint without loaded Datasets", () => {
     expect(project.createDataSet(dataSetID, dataSetName, 12, dataRowEmpty2)).toBeTruthy();
     projectData = { dataSet: [{ dataSetID, dataSetName: dataSetName, generateDate: 12, dataRows: dataRowEmpty2, label: [] }] };
     var currentDataRows = dataRowEmpty2.length; //Da die Sensoren leere Datenreihen anlegen
-    expect(project.addDatapoint(0, { value: [1, 2, 3], relativeTime: 12 })).toBeTruthy();
+    expect(project.addDatapoint(0, [{ value: [1, 2, 3], relativeTime: 12 }])).toBeTruthy();
     projectData.dataSet[0].dataRows[0].dataRow.push({ value: [1, 2, 3], relativeTime: 12 });
-    expect(project.addDatapoint(1, { value: [7, 8, 9], relativeTime: 14 })).toBeTruthy();
+    expect(project.addDatapoint(1, [{ value: [7, 8, 9], relativeTime: 14 }])).toBeTruthy();
     projectData.dataSet[0].dataRows[1].dataRow.push({ value: [7, 8, 9], relativeTime: 14 });
     checkAll(project, projectID, sessionID, projectName, currentDataRows, projectData);
     //Mehrfache Anwendung
     for (let i = 0; i < 20; i++) {
-        expect(project.addDatapoint(0, { value: [4 + i, 5 + 2 * i, 6 + 3 * i], relativeTime: 1 + i + i })).toBeTruthy();
+        expect(project.addDatapoint(0, [{ value: [4 + i, 5 + 2 * i, 6 + 3 * i], relativeTime: 1 + i + i }])).toBeTruthy();
         projectData.dataSet[0].dataRows[0].dataRow.push({ value: [4 + i, 5 + 2 * i, 6 + 3 * i], relativeTime: 1 + i + i });
     }
     checkAll(project, projectID, sessionID, projectName, currentDataRows, projectData);
     //Datensatz kann nicht erstellt werden
-    expect(project.addDatapoint(-1, { value: [1, 2, 3], relativeTime: 12 })).toBeFalsy();
-    expect(project.addDatapoint(3, { value: [1, 2, 3], relativeTime: 12 })).toBeFalsy();
-    expect(project.addDatapoint(0, { value: [], relativeTime: 12 })).toBeFalsy();
-    expect(project.addDatapoint(0, { value: [1], relativeTime: 12 })).toBeFalsy();
-    expect(project.addDatapoint(0, { value: [1, 2], relativeTime: 12 })).toBeFalsy();
-    expect(project.addDatapoint(0, { value: [1, 2, 3, 3], relativeTime: 2 })).toBeFalsy();
-    expect(project.addDatapoint(0, { value: [1, 2, 3], relativeTime: 12 })).toBeFalsy();
-    expect(project.addDatapoint(0, { value: [1, 2, 3], relativeTime: -1 })).toBeFalsy();
+    expect(project.addDatapoint(-1, [{ value: [1, 2, 3], relativeTime: 12 }])).toBeFalsy();
+    expect(project.addDatapoint(3, [{ value: [1, 2, 3], relativeTime: 12 }])).toBeFalsy();
+    expect(project.addDatapoint(0, [{ value: [], relativeTime: 12 }])).toBeFalsy();
+    expect(project.addDatapoint(0, [{ value: [1], relativeTime: 12 }])).toBeFalsy();
+    expect(project.addDatapoint(0, [{ value: [1, 2], relativeTime: 12 }])).toBeFalsy();
+    expect(project.addDatapoint(0, [{ value: [1, 2, 3, 3], relativeTime: 2 }])).toBeFalsy();
+    expect(project.addDatapoint(0, [{ value: [1, 2, 3], relativeTime: 12 }])).toBeFalsy();
+    expect(project.addDatapoint(0, [{ value: [1, 2, 3], relativeTime: -1 }])).toBeFalsy();
     //Ohne aktuellen Datensatz
     expect(project.deleteDataSet(dataSetID)).toBeTruthy();
     projectData.dataSet.pop();
     currentDataRows = 0; //Da gelöscht
-    expect(project.addDatapoint(0, { value: [1, 2, 3], relativeTime: 13 })).toBeFalsy();
+    expect(project.addDatapoint(0, [{ value: [1, 2, 3], relativeTime: 13 }])).toBeFalsy();
     //Test, dass keine falschen Änderungen aufkamen
     checkAll(project, projectID, sessionID, projectName, currentDataRows, projectData);
 });
@@ -159,27 +159,27 @@ test("addDatapoint with loaded Datasets", () => {
     //Normale Benutzung
     project.getDataRows(dataSetID1);//Läd richtigen Datensatz als aktuellen Datensatz
     var currentDataRows = dataRowEmpty2.length; //Da die Sensoren leere Datenreihen anlegen
-    expect(project.addDatapoint(12, { value: [1, 2, 3], relativeTime: 12 })).toBeTruthy();
+    expect(project.addDatapoint(12, [{ value: [1, 2, 3], relativeTime: 12 }])).toBeTruthy();
     projectData.dataSet[0].dataRows[0].dataRow.push({ value: [1, 2, 3], relativeTime: 12 });
-    expect(project.addDatapoint(77, { value: [7, 8, 9], relativeTime: 14 })).toBeTruthy();
+    expect(project.addDatapoint(77, [{ value: [7, 8, 9], relativeTime: 14 }])).toBeTruthy();
     projectData.dataSet[0].dataRows[1].dataRow.push({ value: [7, 8, 9], relativeTime: 14 });
     checkAll(project, projectID, sessionID, projectName, currentDataRows, projectData);
     //Mehrfache Anwendung
     project.getDataRows(dataSetID1);//Läd richtigen Datensatz als aktuellen Datensatz
     for (let i = 0; i < 20; i++) {
-        expect(project.addDatapoint(12, { value: [4 + i, 5 + 2 * i, 6 + 3 * i], relativeTime: 1 + i + i })).toBeTruthy();
+        expect(project.addDatapoint(12, [{ value: [4 + i, 5 + 2 * i, 6 + 3 * i], relativeTime: 1 + i + i }])).toBeTruthy();
         projectData.dataSet[0].dataRows[0].dataRow.push({ value: [4 + i, 5 + 2 * i, 6 + 3 * i], relativeTime: 1 + i + i });
     }
     checkAll(project, projectID, sessionID, projectName, currentDataRows, projectData);
     //Datensatz kann nicht erstellt werden
-    expect(project.addDatapoint(-1, { value: [1, 2, 3], relativeTime: 12 })).toBeFalsy();
-    expect(project.addDatapoint(3, { value: [1, 2, 3], relativeTime: 12 })).toBeFalsy();
-    expect(project.addDatapoint(0, { value: [], relativeTime: 12 })).toBeFalsy();
-    expect(project.addDatapoint(0, { value: [1], relativeTime: 12 })).toBeFalsy();
-    expect(project.addDatapoint(0, { value: [1, 2], relativeTime: 12 })).toBeFalsy();
-    expect(project.addDatapoint(0, { value: [1, 2, 3, 3], relativeTime: 2 })).toBeFalsy();
-    expect(project.addDatapoint(0, { value: [1, 2, 3], relativeTime: 12 })).toBeFalsy();
-    expect(project.addDatapoint(0, { value: [1, 2, 3], relativeTime: -1 })).toBeFalsy();
+    expect(project.addDatapoint(-1, [{ value: [1, 2, 3], relativeTime: 12 }])).toBeFalsy();
+    expect(project.addDatapoint(3, [{ value: [1, 2, 3], relativeTime: 12 }])).toBeFalsy();
+    expect(project.addDatapoint(0, [{ value: [], relativeTime: 12 }])).toBeFalsy();
+    expect(project.addDatapoint(0, [{ value: [1], relativeTime: 12 }])).toBeFalsy();
+    expect(project.addDatapoint(0, [{ value: [1, 2], relativeTime: 12 }])).toBeFalsy();
+    expect(project.addDatapoint(0, [{ value: [1, 2, 3, 3], relativeTime: 2 }])).toBeFalsy();
+    expect(project.addDatapoint(0, [{ value: [1, 2, 3], relativeTime: 12 }])).toBeFalsy();
+    expect(project.addDatapoint(0, [{ value: [1, 2, 3], relativeTime: -1 }])).toBeFalsy();
     //Test, dass keine falschen Änderungen aufkamen
     checkAll(project, projectID, sessionID, projectName, currentDataRows, projectData);
 });

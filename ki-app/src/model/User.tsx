@@ -4,7 +4,6 @@ import { IDataRowST, IDataRowSTRID } from "./DataRow";
 import { DeviceData, IDevice } from "./DeviceData";
 import { ILabel } from "./Label";
 import { IProjectData, Project } from "./Project";
-import { SensorData } from "./SensorData";
 import { ISpan } from "./TimeSpan";
 
 /**
@@ -63,12 +62,17 @@ export abstract class User {
     return -1;
   }
 
+  /**
+   * Fügt dem aktuellen Datensatz den Datenpunkt hinzu in die Datenreihe mit der Datenreihen ID
+   * @param dataRowID 
+   * @param datapoint 
+   * @returns 
+   */
   addDatapoint(dataRowID: number, datapoint: IDataPoint[]): boolean {
     if (this.currentProject != null) {
       return this.currentProject.addDatapoint(dataRowID, datapoint);
     }
     return false;
-
   }
 
   /**

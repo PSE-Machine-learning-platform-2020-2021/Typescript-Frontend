@@ -53,7 +53,7 @@ export class AIController implements PageController {
         this.update();
     }
 
-    private setUpSensorShown() {
+    private setUpSensorShown(): void {
         let sensorTypes: number[] = this.urlParams.get("sensorTypes")!.split(",").map(x => +x);
         let text: string = "Sie benötigen folgenede Sensoren: ";
         for (const element of sensorTypes) {
@@ -74,7 +74,7 @@ export class AIController implements PageController {
     /**
      * Die Update Methode des Seitenverwalters.
      */
-    update() {
+    update(): void {
         this.state = this.page.getState();
         switch (this.state.currentState) {
             case States.ChangeToDataCollection:
@@ -103,7 +103,7 @@ export class AIController implements PageController {
      * Holt sich alle wichtigen Daten für die Datenaufnahme aus der momentanen Seite. Darauf wird mit dem Sensormanager
      * die Datenaufnahme initialisiert. Zum Schluss wird der Seitenwechsel zur Erfassungseite durchgeführt. 
      */
-    private async start() {
+    private async start(): Promise<void> {
         let sensorTypes: number[] = this.urlParams.get("sensorTypes")!.split(",").map(x => +x);
         let dataSetName: string = "Undefined";
         let waitTime = this.state.recordingSettings!.waitTime;
@@ -121,7 +121,7 @@ export class AIController implements PageController {
      * Wechselt nach der Aufnahme des Datensatzes zur FinishPage.
      */
     //TODO Seite sollte für den AIModelUser noch angepasst werden. Hier wird ja nur Klassifiziert.
-    private changeToFinish() {
+    private changeToFinish(): void {
         this.page.detach(this);
         this.page = new ResultPage();
         this.page.attach(this);
@@ -129,13 +129,12 @@ export class AIController implements PageController {
         this.state.dataRows! = MainController.getInstance().getFacade().getCurrentDataRows().dataRows!;
         this.state.currentState = States.ClassifyResult;
         this.page.setState(this.state);
-
     }
 
     /**
      * Klassifiziert den Datensatz.
      */
-    private classifyResult() {
+    private classifyResult(): void {
         MainController.getInstance().getFacade().classify(+this.urlParams.get("modelID")!, this.dataSetID, this.callback.bind(this));
     }
 

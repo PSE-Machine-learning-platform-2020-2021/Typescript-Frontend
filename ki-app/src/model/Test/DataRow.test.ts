@@ -11,14 +11,14 @@ test("creat and getter", () => {
   expect(datarow1.getID()).toBe(27);
   expect(datarow1.getDataRow().sensorType).toBe(2);
 
-  expect(datarow1.addDatapoint({ value: [55, 28, 95], relativeTime: 0.2345 })).toBeTruthy();
+  expect(datarow1.addDatapoint([{ value: [55, 28, 95], relativeTime: 0.2345 }])).toBeTruthy();
   expect(datarow1.getDataRow().datapoint[0].value[0]).toBe(55);
   expect(datarow1.getDataRow().datapoint[0].value[1]).toBe(28);
   expect(datarow1.getDataRow().datapoint[0].value[2]).toBe(95);
   expect(datarow1.getDataRow().datapoint[0].relativeTime).toBe(0.2345);
   expect(datarow1.getDataRow().datapoint.length).toBe(1);
 
-  expect(datarow1.addDatapoint({ value: [1, 27, 1], relativeTime: 0.111 })).toBeTruthy();
+  expect(datarow1.addDatapoint([{ value: [1, 27, 1], relativeTime: 0.111 }])).toBeTruthy();
   expect(datarow1.getDataRow().datapoint[1].value[0]).toBe(1);
   expect(datarow1.getDataRow().datapoint[1].value[1]).toBe(27);
   expect(datarow1.getDataRow().datapoint[1].value[2]).toBe(1);
@@ -48,11 +48,11 @@ test("addDatapoint many points", () => {
   const pos2 = 38;
   for (let i = 0; i < length; i++) {
     if (i == pos1) {
-      expect(datarow.addDatapoint({ value: value1, relativeTime: relativeTime1 })).toBeTruthy();
+      expect(datarow.addDatapoint([{ value: value1, relativeTime: relativeTime1 }])).toBeTruthy();
     } else if (i == pos2) {
-      expect(datarow.addDatapoint({ value: value2, relativeTime: relativeTime2 })).toBeTruthy();
+      expect(datarow.addDatapoint([{ value: value2, relativeTime: relativeTime2 }])).toBeTruthy();
     } else {
-      expect(datarow.addDatapoint({ value: value0, relativeTime: i })).toBeTruthy();
+      expect(datarow.addDatapoint([{ value: value0, relativeTime: i }])).toBeTruthy();
     }
   }
   for (let i = 0; i < length; i++) {
@@ -86,7 +86,7 @@ test("addDatapoint with negative relativeTime", () => {
   const datarow = new DataRow(sensorData, 27);
   const value = [1, 1, 1];
   const relativeTime = -1;
-  expect(datarow.addDatapoint({ value: value, relativeTime: relativeTime })).toBeFalsy();
+  expect(datarow.addDatapoint([{ value: value, relativeTime: relativeTime }])).toBeFalsy();
 });
 
 /**
@@ -100,7 +100,7 @@ test("addDatapoint with empty value", () => {
   const datarow = new DataRow(sensorData, 27);
   const value: number[] = [];
   const relativeTime = 1;
-  expect(datarow.addDatapoint({ value: value, relativeTime: relativeTime })).toBeFalsy();
+  expect(datarow.addDatapoint([{ value: value, relativeTime: relativeTime }])).toBeFalsy();
 });
 
 test("addDatapoint with wrong value length", () => {
@@ -108,14 +108,14 @@ test("addDatapoint with wrong value length", () => {
   const datarow = new DataRow(sensorData, 27);
   var value: number[] = [1, 2, 3];
   var relativeTime = 1;
-  expect(datarow.addDatapoint({ value: value, relativeTime: relativeTime })).toBeTruthy();
+  expect(datarow.addDatapoint([{ value: value, relativeTime: relativeTime }])).toBeTruthy();
   var value: number[] = [1];
   var relativeTime = 2;
-  expect(datarow.addDatapoint({ value: value, relativeTime: relativeTime })).toBeFalsy();
+  expect(datarow.addDatapoint([{ value: value, relativeTime: relativeTime }])).toBeFalsy();
   var value: number[] = [1, 2];
   var relativeTime = 3;
-  expect(datarow.addDatapoint({ value: value, relativeTime: relativeTime })).toBeFalsy();
+  expect(datarow.addDatapoint([{ value: value, relativeTime: relativeTime }])).toBeFalsy();
   var value: number[] = [1, 2, 3, 3];
   var relativeTime = 4;
-  expect(datarow.addDatapoint({ value: value, relativeTime: relativeTime })).toBeFalsy();
+  expect(datarow.addDatapoint([{ value: value, relativeTime: relativeTime }])).toBeFalsy();
 });

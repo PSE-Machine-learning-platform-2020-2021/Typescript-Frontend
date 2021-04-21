@@ -78,14 +78,17 @@ export class DataRow {
     return dataRowST;
   }
 }
+
 export interface IDataRowST {
   sensorType: number,
   datapoint: IDataPoint[];
 }
+
 export interface IDataRowRID {
   dataRowID: number,
   dataRow: IDataPoint[];
 }
+
 export interface IDataRowSTRID {
   sensorType: number,
   dataRowID: number,

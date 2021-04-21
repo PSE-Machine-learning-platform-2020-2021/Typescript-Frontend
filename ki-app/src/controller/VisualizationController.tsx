@@ -24,7 +24,7 @@ export class VisualizationController implements PageController {
     /**
      * Die Update Methode des Seitenverwalters.
      */
-    update() {
+    update(): void {
         this.state = this.page.getState();
         switch (this.state.currentState) {
             case States.NeedMessage:
@@ -44,7 +44,7 @@ export class VisualizationController implements PageController {
     * Übergibt der Seite alle Datenreihen die verfügbar sind. Dies wird Alle drei Sekunden wiederholt bis der Seitenzustand auf
     * ChangeToCreation wechselt.
     */
-    private SetDataRows() {
+    private SetDataRows(): void {
         this.state.dataSetMetas = MainController.getInstance().getFacade().getDataSetMetas();
         MainController.getInstance().getFacade().loadProject(this.state.currentProject!.projectID);
         var dataSets = MainController.getInstance().getFacade().getDataSetMetas();

@@ -41,7 +41,7 @@ export class DataCollectionController implements PageController {
     /**
      * Die Update Methode des Seitenverwalters.
      */
-    update() {
+    update(): void {
         let state = this.page.getState();
         switch (state.currentState) {
             case States.StartDataRead:

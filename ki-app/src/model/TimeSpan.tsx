@@ -51,6 +51,7 @@ export class TimeSpan {
     return this.end;
   }
 }
+
 export interface ISpan {
   start: number,
   end: number;

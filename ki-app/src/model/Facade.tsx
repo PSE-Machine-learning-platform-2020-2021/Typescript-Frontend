@@ -323,10 +323,6 @@ export class Facade {
     return false;
   }
 
-  /**
-   * Registriert einen AIModelUser mit den übergebenen parametern
-   * @param aiModelUserName 
-   */
   async registerAIModelUser(aiModelUserName: string, modelID: number): Promise<boolean> {
     //TODO Device
     let device: IDevice = { deviceID: -1, deviceName: "", deviceType: "", firmware: "", generation: "", MACADRESS: "", sensorInformation: [] };
@@ -342,7 +338,6 @@ export class Facade {
     return false;
   }
 
-  //TODO Device
   async loginAdmin(adminEmail: string, password: string): Promise<boolean> {
     if (this.user == null) {
       let adminData: {

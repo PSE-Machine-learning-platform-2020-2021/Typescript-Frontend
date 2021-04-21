@@ -6,5 +6,5 @@ test('Rendert', () => {
     Enzyme.configure({ adapter: new Adapter() });
 
     const wrapper = shallow<Title>(<Title />);
-    expect(wrapper.text()).toBe('Datenerfassungsanwendung');
+    expect(wrapper.text()).toBe('Datenerfassung');
 });

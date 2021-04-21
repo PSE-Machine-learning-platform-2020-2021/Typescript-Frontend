@@ -31,7 +31,6 @@ export class Language {
     this.language = language;
     return true;
   }
-
 }
 export interface LanguageMessages {
   code: string;

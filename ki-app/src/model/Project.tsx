@@ -1,6 +1,6 @@
 import { AIModel } from "./AIModel";
 import { IDataPoint } from "./DataPoint";
-import { IDataRowRID, IDataRowST, IDataRowSTRID } from "./DataRow";
+import { IDataRowST, IDataRowSTRID } from "./DataRow";
 import { DataSet, IDataSet } from "./DataSet";
 import { ILabel } from "./Label";
 import { Session } from "./Session";
@@ -166,9 +166,6 @@ export class Project {
     return { dataRows: [] };
   }
 
-  /**
-   * Gibt die Session ID zurück
-   */
   getSessionID(): number {
     return this.session.getID();
   }
@@ -226,10 +223,12 @@ export class Project {
     return { labels: [] };
   }
 }
+
 export interface IDataSetInfo {
   dataSetID: number,
   dataSetName: string;
 }
+
 export interface IProjectData {
   aiModelID?: number[],
   dataSet: IDataSet[];

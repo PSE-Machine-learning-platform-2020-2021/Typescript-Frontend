@@ -3,7 +3,6 @@ import { Page } from "../view/pages/PageInterface";
 import { IState, States } from "../view/pages/State";
 import { Facade } from "../model/Facade";
 import { State } from "../view/pages/ModelCreationPage/State";
-import { shallow } from "enzyme";
 import { IDataPoint } from "../model/DataPoint";
 
 export class SensorManager {

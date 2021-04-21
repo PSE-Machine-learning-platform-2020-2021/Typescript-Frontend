@@ -262,7 +262,7 @@ test("createProject Admin", () => {
 test("addDatapoint", () => {
     clearProjectStart();
     var admin = new Admin(12, 2, "Rudi", "rudi@g.d", device);
-    expect(admin.addDatapoint(1, { value: [1, 2, 3], relativeTime: 12 })).toBeFalsy();
+    expect(admin.addDatapoint(1, [{ value: [1, 2, 3], relativeTime: 12 }])).toBeFalsy();
     expect(admin.createDataSet(2, "asd", new Date().getMilliseconds(), dataRowEmpty2)).toBeFalsy();
     expect(admin.deleteDataSet(2)).toBeFalsy();
     expect(admin.createLabel(2, { start: 12, end: 18 }, "label")).toBeFalsy();
@@ -272,7 +272,7 @@ test("addDatapoint", () => {
     addDataPointTest(admin, project1);
     clearProjectStart();
     var dataminer = new Dataminer(12, 2, "Rudi");
-    expect(dataminer.addDatapoint(1, { value: [1, 2, 3], relativeTime: 12 })).toBeFalsy();
+    expect(dataminer.addDatapoint(1, [{ value: [1, 2, 3], relativeTime: 12 }])).toBeFalsy();
     expect(dataminer.createDataSet(2, "asd", new Date().getMilliseconds(), dataRowEmpty2)).toBeFalsy();
     expect(dataminer.deleteDataSet(2)).toBeFalsy();
     expect(dataminer.createLabel(2, { start: 12, end: 18 }, "label")).toBeFalsy();
@@ -306,34 +306,34 @@ function addDataPointTest(user: User, projectPar: any) {
     } else {
         user.getDataRows(dataSetID1);
     }
-    expect(user.addDatapoint(0, { value: [1, 2, 3], relativeTime: 12 })).toBeTruthy();
+    expect(user.addDatapoint(0, [{ value: [1, 2, 3], relativeTime: 12 }])).toBeTruthy();
     project.projectData.dataSet[0].dataRows[0].dataRow.push({ value: [1, 2, 3], relativeTime: 12 });
-    expect(user.addDatapoint(1, { value: [7, 8, 9], relativeTime: 14 })).toBeTruthy();
+    expect(user.addDatapoint(1, [{ value: [7, 8, 9], relativeTime: 14 }])).toBeTruthy();
     project.projectData.dataSet[0].dataRows[1].dataRow.push({ value: [7, 8, 9], relativeTime: 14 });
     checkProject(user, project);
     //Mehrfache Anwendung
     for (let i = 0; i < 20; i++) {
-        expect(user.addDatapoint(0, { value: [4 + i, 5 + 2 * i, 6 + 3 * i], relativeTime: 1 + i + i })).toBeTruthy();
+        expect(user.addDatapoint(0, [{ value: [4 + i, 5 + 2 * i, 6 + 3 * i], relativeTime: 1 + i + i }])).toBeTruthy();
         project.projectData.dataSet[0].dataRows[0].dataRow.push({ value: [4 + i, 5 + 2 * i, 6 + 3 * i], relativeTime: 1 + i + i });
     }
     checkProject(user, project);
     //Datensatz kann nicht erstellt werden
-    expect(user.addDatapoint(-1, { value: [1, 2, 3], relativeTime: 12 })).toBeFalsy();
-    expect(user.addDatapoint(3, { value: [1, 2, 3], relativeTime: 12 })).toBeFalsy();
-    expect(user.addDatapoint(0, { value: [], relativeTime: 12 })).toBeFalsy();
-    expect(user.addDatapoint(0, { value: [1], relativeTime: 12 })).toBeFalsy();
-    expect(user.addDatapoint(0, { value: [1, 2], relativeTime: 12 })).toBeFalsy();
-    expect(user.addDatapoint(0, { value: [1, 2, 3, 3], relativeTime: 2 })).toBeFalsy();
-    expect(user.addDatapoint(0, { value: [1, 2, 3], relativeTime: 12 })).toBeFalsy();
-    expect(user.addDatapoint(0, { value: [1, 2, 3], relativeTime: -1 })).toBeFalsy();
+    expect(user.addDatapoint(-1, [{ value: [1, 2, 3], relativeTime: 12 }])).toBeFalsy();
+    expect(user.addDatapoint(3, [{ value: [1, 2, 3], relativeTime: 12 }])).toBeFalsy();
+    expect(user.addDatapoint(0, [{ value: [], relativeTime: 12 }])).toBeFalsy();
+    expect(user.addDatapoint(0, [{ value: [1], relativeTime: 12 }])).toBeFalsy();
+    expect(user.addDatapoint(0, [{ value: [1, 2], relativeTime: 12 }])).toBeFalsy();
+    expect(user.addDatapoint(0, [{ value: [1, 2, 3, 3], relativeTime: 2 }])).toBeFalsy();
+    expect(user.addDatapoint(0, [{ value: [1, 2, 3], relativeTime: 12 }])).toBeFalsy();
+    expect(user.addDatapoint(0, [{ value: [1, 2, 3], relativeTime: -1 }])).toBeFalsy();
     //Ohne aktuellen Datensatz
     expect(user.deleteDataSet(dataSetID)).toBeTruthy();
     project.projectData.dataSet.pop();
-    expect(user.addDatapoint(0, { value: [1, 2, 3], relativeTime: 13 })).toBeFalsy();
+    expect(user.addDatapoint(0, [{ value: [1, 2, 3], relativeTime: 13 }])).toBeFalsy();
     //Test, dass keine falschen Änderungen aufkamen
     checkProject(user, project);
 }
-///////////////////////////////////////////////////////////////////////////////////
+
 /**
  * Prüft, ob deleteDataSet fehlerfrei läuft
  */

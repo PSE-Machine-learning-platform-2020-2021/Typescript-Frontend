@@ -1,9 +1,7 @@
 import { Facade } from "../Facade";
 import { DatabaseConnector } from "../DatabaseConnector";
-import { SensorData } from "../SensorData";
 import { Admin, User } from "../User";
 import { AIBuilder } from "../AIBuilder";
-import { DeliveryFormat } from "../DeliveryFormat";
 import { AIDistributor } from "../AIDistributor";
 import { Language } from "../Language";
 
@@ -129,11 +127,11 @@ test("login und sendDataPoint", async () => {
     promise = facade.loadProject(1);
     sucsess = await promise;
     expect(sucsess).toBeTruthy();
-    promise = facade.sendDataPoint(64, { value: [5], relativeTime: 1 });
+    promise = facade.sendDataPoint(64, [{ value: [5], relativeTime: 1 }]);
     sucsess = await promise;
     expect(sucsess).toBeTruthy();
-    expect(inputUser).toStrictEqual({ dataRowID: 64, datapoint: { value: [5], relativeTime: 1 } });
-    expect(inputDB).toStrictEqual({ sessionID: 1, userID: 5, dataSetID: 99, dataRowID: 64, datapoint: { value: [5], relativeTime: 1 } });
+    expect(inputUser).toStrictEqual({ dataRowID: 64, datapoint: [{ value: [5], relativeTime: 1 }] });
+    expect(inputDB).toStrictEqual({ sessionID: 1, userID: 5, dataSetID: 99, dataRowID: 64, datapoint: [{ value: [5], relativeTime: 1 }] });
 });
 
 test("login und getProjectMetas", async () => {
