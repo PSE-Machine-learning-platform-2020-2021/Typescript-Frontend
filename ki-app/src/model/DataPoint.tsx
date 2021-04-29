@@ -32,5 +32,6 @@ export class DataPoint {
 
 export interface IDataPoint {
   value: number[],
-  relativeTime: number;
+  relativeTime: number,
+  rowId?: number;
 }

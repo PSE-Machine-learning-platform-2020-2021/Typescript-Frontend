@@ -97,7 +97,7 @@ export class SensorManager {
                         let rowID: number = this.dataPoints[0].rowId;
                         for (let i = 0; i < this.dataPoints.length; i++) {
                             if (rowID === this.dataPoints[i].rowId) {
-                                newDataPoint.push(this.dataPoints.splice(i, 1)[0]);
+                                newDataPoint.push({ value: this.dataPoints.splice(i, 1)[0].value, relativeTime: this.dataPoints.splice(i, 1)[0].relativeTime });
                             }
                         }
                         this.checkList.push(MainController.getInstance().getFacade().sendDataPoint(rowID, newDataPoint));

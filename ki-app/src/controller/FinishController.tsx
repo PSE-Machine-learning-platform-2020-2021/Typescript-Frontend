@@ -90,7 +90,7 @@ export class FinishController implements PageController {
     }
 
     /**
-     * Löscht das Label welches gemäß der Methode getDeleteLabelID von der momentanen Seite angegeben wurde.
+     * Löscht das Label welches in state.currentLabel.labelID von der momentanen Seite angegeben wurde.
      */
     private deleteDataLabel(): void {
         let sucess = MainController.getInstance().getFacade().deleteLabel(this.state.currentLabel!.labelID);
